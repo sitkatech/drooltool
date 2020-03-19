@@ -32,6 +32,7 @@ import { MultiLinkRendererComponent } from './shared/components/ag-grid/multi-li
 import { CreateUserCallbackComponent } from './pages/create-user-callback/create-user-callback.component';
 import { AboutComponent } from './pages/about/about.component';
 import { AppInitService } from './app.init';
+import { NeighborhoodExplorerComponent } from './pages/neighborhood-explorer/neighborhood-explorer.component';
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -50,6 +51,7 @@ export function init_app(appLoadService: AppInitService) {
     HelpComponent,
     CreateUserCallbackComponent,
     AboutComponent,
+    NeighborhoodExplorerComponent,
   ],
   imports: [
     AppRoutingModule,
