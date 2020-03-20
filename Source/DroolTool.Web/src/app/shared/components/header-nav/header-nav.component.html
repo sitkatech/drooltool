@@ -1,6 +1,6 @@
 <nav class="navbar navbar-drooltool navbar-expand-lg navbar-dark stroke">
     <a href="{{leadOrganizationHomeUrl()}}" class="navbar-brand" target="_blank">
-        <img src="assets/main/logos/rrbwsd_logo.png" class="navbarLogo">
+        <img src="assets/main/logos/{{leadOrganizationLogoFilename()}}" class="navbarLogo">
     </a>
     <a routerLink="/" routerLinkActive="active" class="navbar-brand nav-link">
         {{platformShortName()}}
@@ -11,7 +11,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item" routerLinkActive="active" *ngIf="isAdministrator()">
+            <li class="nav-item" routerLinkActive="active">
                 <a class="nav-link" routerLink="/neighborhood-explorer" routerLinkActive="active">
                     Neighborhood Explorer
                 </a>

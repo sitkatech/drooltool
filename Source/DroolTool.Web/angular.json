@@ -29,7 +29,8 @@
             ],
             
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/leaflet.fullscreen/Control.Fullscreen.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.slim.min.js",

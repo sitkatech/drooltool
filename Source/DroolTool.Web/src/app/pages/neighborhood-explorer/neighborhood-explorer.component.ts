@@ -2,6 +2,7 @@ import { AfterViewInit, ApplicationRef, ChangeDetectionStrategy, Component, Even
 import { environment } from "src/environments/environment";
 import * as L from 'leaflet';
 import '../../../../node_modules/leaflet.snogylop/src/leaflet.snogylop.js';
+import '../../../../node_modules/leaflet.fullscreen/Control.Fullscreen.js';
 import * as esri from 'esri-leaflet'
 import { BoundingBoxDto } from '../../shared/models/bounding-box-dto';
 import { CustomCompileService } from '../../shared/services/custom-compile.service';
@@ -96,10 +97,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
 
         this.overlayLayers = Object.assign({}, {
-          "Neighborhoods": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", neighborhoodsWMSOptions),
-          "Streams": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions),
-          "Watersheds": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedsWMSOptions),
-          "Stormwater Network": esri.dynamicMapLayer({url:"https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/"})
+          "<span><img src='../../assets/neighborhood-explorer/neighborhood.png' height='12px' style='margin-bottom:3px;' /> Neighborhoods</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", neighborhoodsWMSOptions),
+          "<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions),
+          "<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedsWMSOptions),
+          "<span>Stormwater Network <br/> <img src='../../assets/neighborhood-explorer/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({url:"https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/"})
         })
 
         this.compileService.configure(this.appRef);
@@ -127,9 +128,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
             maxZoom: 22,
             layers: [
                 this.tileLayers["Hillshade"],
-                this.overlayLayers["Streams"],
-                this.overlayLayers["Watersheds"]
-            ],
+                this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
+                this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
+            ]
             
         } as L.MapOptions;
 
@@ -146,12 +147,25 @@ export class NeighborhoodExplorerComponent implements OnInit {
         
         this.setControl();
         this.maskLayer.addTo(this.map);
+
+        let el = document.getElementById('NeighborhoodExplorerMap');
+        el.scrollIntoView();
       });              
     }
 
     public setControl(): void {
         this.layerControl = new L.Control.Layers(this.tileLayers, this.overlayLayers)
             .addTo(this.map);
+        this.map.zoomControl.setPosition('topright');
+        L.control.fullscreen({
+          position: 'topright',
+          title: 'View Fullscreen', // change the title of the button, default Full Screen
+          titleCancel: 'Exit fullscreen mode', // change the title of the button when fullscreen is on, default Exit Full Screen
+          content: null, // change the content of the button, can be HTML, default null
+          forceSeparateButton: true, // force seperate button to detach from zoom buttons, default false
+          forcePseudoFullscreen: true, // force use of pseudo full screen even if full screen API is available, default false
+          fullscreenElement: false // Dom element to render in full screen, false by default, fallback to map._container
+        }).addTo(this.map);
         this.afterSetControl.emit(this.layerControl);
     }
 }

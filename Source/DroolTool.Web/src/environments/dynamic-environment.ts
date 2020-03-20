@@ -68,4 +68,8 @@ export class DynamicEnvironment {
     public get leadOrganizationHomeUrl(){
         return window.config.leadOrganizationHomeUrl;
     }
+
+    public get leadOrganizationLogoFilename() {
+        return window.config.leadOrganizationLogoFilename;
+    }
 }
