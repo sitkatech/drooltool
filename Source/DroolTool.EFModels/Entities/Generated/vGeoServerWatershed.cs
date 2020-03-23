@@ -6,15 +6,12 @@ using NetTopologySuite.Geometries;
 
 namespace DroolTool.EFModels.Entities
 {
-    public partial class Watershed
+    public partial class vGeoServerWatershed
     {
-        [Key]
         public int WatershedID { get; set; }
-        [Column(TypeName = "geometry")]
-        public Geometry WatershedGeometry { get; set; }
         [StringLength(50)]
         public string WatershedName { get; set; }
         [Column(TypeName = "geometry")]
-        public Geometry WatershedGeometry4326 { get; set; }
+        public Geometry WatershedGeometry { get; set; }
     }
 }

@@ -1,14 +1,14 @@
 <featureType>
-  <id>FeatureTypeInfoImpl--18630a05:16eebb97b3c:-64cf</id>
-  <name>Wells</name>
-  <nativeName>vGeoServerWells</nativeName>
+  <id>FeatureTypeInfoImpl--18fb43ea:16bb3cec639:-b348</id>
+  <name>Watersheds</name>
+  <nativeName>vGeoServerWatershed</nativeName>
   <namespace>
-    <id>NamespaceInfoImpl-7b9aae14:16b8f8d06b8:cc1</id>
+    <id>NamespaceInfoImpl--4c8be7a1:15d76abd162:-7ffe</id>
   </namespace>
-  <title>vGeoServerWells</title>
+  <title>vGeoServerWatershed</title>
   <keywords>
     <string>features</string>
-    <string>vGeoServerWells</string>
+    <string>vGeoServerWatershed</string>
   </keywords>
   <nativeCRS>GEOGCS[&quot;WGS 84&quot;, 
   DATUM[&quot;World Geodetic System 1984&quot;, 
@@ -21,17 +21,17 @@
   AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]]</nativeCRS>
   <srs>EPSG:4326</srs>
   <nativeBoundingBox>
-    <minx>-119.46700528934005</minx>
-    <maxx>-119.08099891837998</maxx>
-    <miny>35.233173895336506</miny>
-    <maxy>35.4351760287035</maxy>
+    <minx>-117.82471349197476</minx>
+    <maxx>-117.36883651141554</maxx>
+    <miny>33.456950628238275</miny>
+    <maxy>33.716894070513284</maxy>
     <crs>EPSG:4326</crs>
   </nativeBoundingBox>
   <latLonBoundingBox>
-    <minx>-119.46700528934005</minx>
-    <maxx>-119.08099891837998</maxx>
-    <miny>35.233173895336506</miny>
-    <maxy>35.4351760287035</maxy>
+    <minx>-117.82471349197476</minx>
+    <maxx>-117.36883651141554</maxx>
+    <miny>33.456950628238275</miny>
+    <maxy>33.716894070513284</maxy>
     <crs>EPSG:4326</crs>
   </latLonBoundingBox>
   <projectionPolicy>FORCE_DECLARED</projectionPolicy>
@@ -40,7 +40,7 @@
     <entry key="cachingEnabled">false</entry>
   </metadata>
   <store class="dataStore">
-    <id>DataStoreInfoImpl--5295db08:16ba03a820a:-7ff9</id>
+    <id>DataStoreInfoImpl--7c524755:15d7bc5e18f:-7fff</id>
   </store>
   <serviceConfiguration>false</serviceConfiguration>
   <maxFeatures>0</maxFeatures>

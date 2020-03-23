@@ -7,26 +7,24 @@
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!-- a Named Layer is the basic building block of an SLD document -->
   <NamedLayer>
-    <Name>default_line</Name>
+    <Name>Neighborhood</Name>
     <UserStyle>
-    <!-- Styles can have names, titles and abstracts -->
-      <Title>Default Line</Title>
-      <Abstract>A sample style that draws a line</Abstract>
-      <!-- FeatureTypeStyles describe how to render different features -->
-      <!-- A FeatureTypeStyle for rendering lines -->
+      <Title>Neighborhood</Title>
+      <Abstract>Neighborhood</Abstract>
       <FeatureTypeStyle>
         <Rule>
-          <Name>rule1</Name>
-          <Title>Blue Line</Title>
-          <Abstract>A solid blue line with a 1 pixel width</Abstract>
-          <LineSymbolizer>
+          <Name>Neighborhood</Name>
+          <Title>Neighborhood</Title>
+          <Abstract>Neighborhood</Abstract>
+          <PolygonSymbolizer>
             <Stroke>
-              <CssParameter name="stroke">#0000FF</CssParameter>
+              <CssParameter name="stroke">#7f00ff</CssParameter>
+              <CssParameter name="stroke-width">2</CssParameter>
+              <CssParameter name="stroke-opacity">1</CssParameter>
             </Stroke>
-          </LineSymbolizer>
+          </PolygonSymbolizer>
         </Rule>
       </FeatureTypeStyle>
     </UserStyle>
   </NamedLayer>
 </StyledLayerDescriptor>
-

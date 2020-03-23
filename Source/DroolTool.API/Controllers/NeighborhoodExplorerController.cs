@@ -23,8 +23,8 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood-explorer/get-mask")]
         public ActionResult<string> GetNeighborhoodExplorerMask()
         {
-            var droolToolWatersheds = _dbContext.DroolToolWatershed.Select(x => x.DroolToolWatershedGeometry4326);
-            var geometry = UnaryUnionOp.Union(droolToolWatersheds);
+            var watersheds = _dbContext.Watershed.Select(x => x.WatershedGeometry4326);
+            var geometry = UnaryUnionOp.Union(watersheds);
             var feature = new Feature() { Geometry = geometry };
             var gjw = new GeoJsonWriter
             {

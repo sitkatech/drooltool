@@ -19,12 +19,15 @@ namespace DroolTool.EFModels.Entities
         public virtual DbSet<BackboneSegmentType> BackboneSegmentType { get; set; }
         public virtual DbSet<DatabaseMigration> DatabaseMigration { get; set; }
         public virtual DbSet<DroolToolRole> DroolToolRole { get; set; }
-        public virtual DbSet<DroolToolWatershed> DroolToolWatershed { get; set; }
         public virtual DbSet<Neighborhood> Neighborhood { get; set; }
         public virtual DbSet<RawDroolMetric> RawDroolMetric { get; set; }
         public virtual DbSet<RegionalSubbasin> RegionalSubbasin { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Watershed> Watershed { get; set; }
+        public virtual DbSet<vGeoServerBackbone> vGeoServerBackbone { get; set; }
+        public virtual DbSet<vGeoServerNeighborhood> vGeoServerNeighborhood { get; set; }
+        public virtual DbSet<vGeoServerWatershed> vGeoServerWatershed { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -94,11 +97,6 @@ namespace DroolTool.EFModels.Entities
                 entity.Property(e => e.DroolToolRoleDisplayName).IsUnicode(false);
 
                 entity.Property(e => e.DroolToolRoleName).IsUnicode(false);
-            });
-
-            modelBuilder.Entity<DroolToolWatershed>(entity =>
-            {
-                entity.Property(e => e.DroolToolWatershedName).IsUnicode(false);
             });
 
             modelBuilder.Entity<Neighborhood>(entity =>
@@ -186,6 +184,46 @@ namespace DroolTool.EFModels.Entities
                     .WithMany(p => p.User)
                     .HasForeignKey(d => d.RoleID)
                     .OnDelete(DeleteBehavior.ClientSetNull);
+            });
+
+            modelBuilder.Entity<Watershed>(entity =>
+            {
+                entity.Property(e => e.WatershedName).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<vGeoServerBackbone>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vGeoServerBackbone");
+
+                entity.Property(e => e.BackboneSegmentType).IsUnicode(false);
+
+                entity.Property(e => e.StreamName).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<vGeoServerNeighborhood>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vGeoServerNeighborhood");
+
+                entity.Property(e => e.DrainID).IsUnicode(false);
+
+                entity.Property(e => e.NeighborhoodID).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Watershed).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<vGeoServerWatershed>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vGeoServerWatershed");
+
+                entity.Property(e => e.WatershedID).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.WatershedName).IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);

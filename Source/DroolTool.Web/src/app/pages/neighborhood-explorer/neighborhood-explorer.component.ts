@@ -74,21 +74,21 @@ export class NeighborhoodExplorerComponent implements OnInit {
         }, this.tileLayers);
 
         let neighborhoodsWMSOptions = ({
-          layers: "OCStormwater:Neighborhoods",
+          layers: "DroolTool:Neighborhoods",
           transparent: true,
           format: "image/png",
           tiled: true
         } as L.WMSOptions);
 
         let backboneWMSOptions = ({
-          layers: "OCStormwater:Backbone",
+          layers: "DroolTool:Backbone",
           transparent: true,
           format: "image/png",
           tiled: true
         } as L.WMSOptions);
 
         let watershedsWMSOptions = ({
-          layers: "OCStormwater:DroolToolWatersheds",
+          layers: "DroolTool:Watersheds",
           transparent: true,
           format: "image/png",
           tiled: true
