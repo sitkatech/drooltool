@@ -2,9 +2,9 @@
     <a href="{{leadOrganizationHomeUrl()}}" class="navbar-brand" target="_blank">
         <img src="assets/main/logos/{{leadOrganizationLogoFilename()}}" class="navbarLogo">
     </a>
-    <a routerLink="/" routerLinkActive="active" class="navbar-brand nav-link">
+    <!-- <a routerLink="/" routerLinkActive="active" class="navbar-brand nav-link">
         {{platformShortName()}}
-    </a>
+    </a> -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -12,8 +12,23 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link" routerLink="/" routerLinkActive="active">
+                    About
+                </a>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
                 <a class="nav-link" routerLink="/neighborhood-explorer" routerLinkActive="active">
                     Neighborhood Explorer
+                </a>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link" routerLink="/neighborhood-explorer" routerLinkActive="active">
+                    Watershed Explorer
+                </a>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link" routerLink="/neighborhood-explorer" routerLinkActive="active">
+                    Take Action
                 </a>
             </li>
             <li class="nav-item dropdown" routerLinkActive="active" *ngIf="isAdministrator()">
@@ -28,7 +43,7 @@
                 </div>
             </li>
         </ul>
-        <ul class="navbar-nav flex-column mt-2 mt-lg-0 mr-sm-2">
+        <!-- <ul class="navbar-nav flex-column mt-2 mt-lg-0 mr-sm-2">
             <li class="nav-item" routerLinkActive="active" *ngIf="!isAuthenticated()">
                 <a href="javascript:void(0);" (click)="login()" routerLinkActive="active" class="nav-link">Sign In</a>
             </li>
@@ -44,6 +59,6 @@
                     <a href="javascript:void(0);" (click)="logout()" class="dropdown-item">Sign Out</a>
                 </div>
             </li>
-        </ul>
+        </ul> -->
     </div>
 </nav>
