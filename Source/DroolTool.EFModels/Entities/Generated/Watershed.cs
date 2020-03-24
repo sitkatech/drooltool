@@ -6,15 +6,15 @@ using NetTopologySuite.Geometries;
 
 namespace DroolTool.EFModels.Entities
 {
-    public partial class DroolToolWatershed
+    public partial class Watershed
     {
         [Key]
-        public int DroolToolWatershedID { get; set; }
+        public int WatershedID { get; set; }
         [Column(TypeName = "geometry")]
-        public Geometry DroolToolWatershedGeometry { get; set; }
+        public Geometry WatershedGeometry { get; set; }
         [StringLength(50)]
-        public string DroolToolWatershedName { get; set; }
+        public string WatershedName { get; set; }
         [Column(TypeName = "geometry")]
-        public Geometry DroolToolWatershedGeometry4326 { get; set; }
+        public Geometry WatershedGeometry4326 { get; set; }
     }
 }

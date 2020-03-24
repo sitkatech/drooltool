@@ -22,10 +22,14 @@
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#AAAAAA</CssParameter>
+              <CssParameter name="fill-opacity">.5</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#000000</CssParameter>
+              <CssParameter name="stroke">#BBBBBB</CssParameter>
               <CssParameter name="stroke-width">1</CssParameter>
+              <CssParameter name="stroke-opacity">.5</CssParameter>
+              <CssParameter name="stroke-linejoin">round</CssParameter>
+              <CssParameter name="stroke-linecap">round</CssParameter>
             </Stroke>
           </PolygonSymbolizer>
         </Rule>

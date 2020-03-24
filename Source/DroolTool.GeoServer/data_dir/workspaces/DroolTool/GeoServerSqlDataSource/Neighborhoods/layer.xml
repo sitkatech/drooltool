@@ -1,17 +1,17 @@
 <layer>
-  <name>AllParcels</name>
-  <id>LayerInfoImpl--5295db08:16ba03a820a:-7ff6</id>
+  <name>Neighborhoods</name>
+  <id>LayerInfoImpl--63f6f29:16e5c952716:-8ffe</id>
   <type>VECTOR</type>
   <defaultStyle>
-    <id>StyleInfoImpl-53e9eefb:16b9054e5ea:-6bb7</id>
+    <id>StyleInfoImpl--b785c50:16aeb140d5a:737c</id>
   </defaultStyle>
   <styles class="linked-hash-set">
     <style>
-      <id>StyleInfoImpl-74c98642:16baecba8e3:260a</id>
+      <id>StyleInfoImpl--b785c50:16aeb140d5a:737c</id>
     </style>
   </styles>
   <resource class="featureType">
-    <id>FeatureTypeInfoImpl--5295db08:16ba03a820a:-7ff7</id>
+    <id>FeatureTypeInfoImpl--63f6f29:16e5c952716:-8fff</id>
   </resource>
   <attribution>
     <logoWidth>0</logoWidth>

@@ -11,28 +11,26 @@
             <FeatureTypeStyle>
                 <Rule>
                     <Name>Border</Name>
-                    <MaxScaleDenominator>2000000</MaxScaleDenominator>
                     <PolygonSymbolizer>
                         <Fill>
                             <CssParameter name="fill">#dddddd</CssParameter>
                             <CssParameter name="fill-opacity">0.1</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke">#ffffff</CssParameter>
-                            <CssParameter name="stroke-width">0.1</CssParameter>
+                            <CssParameter name="stroke">#bbbbbb</CssParameter>
+                            <CssParameter name="stroke-width">1</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
                 <Rule>
                     <Name>Label</Name>
-                    <MaxScaleDenominator>40000</MaxScaleDenominator>
                     <TextSymbolizer>
                         <Label>
                             <ogc:PropertyName>ParcelNumber</ogc:PropertyName>
                         </Label>
                         <Font>
                             <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-size">10</CssParameter>
+                            <CssParameter name="font-size">8</CssParameter>
                             <CssParameter name="font-weight">bold</CssParameter>
                             <CssParameter name="font-style">italic</CssParameter>
                         </Font>
@@ -44,6 +42,12 @@
                                 </AnchorPoint>
                             </PointPlacement>
                         </LabelPlacement>
+                        <Halo>
+                          <Radius>2</Radius>
+                           <Fill>
+                             <CssParameter name="fill">#777777</CssParameter>
+                          </Fill>
+                        </Halo>
                         <Fill>
                             <CssParameter name="fill">#ffffff</CssParameter>
                         </Fill>
