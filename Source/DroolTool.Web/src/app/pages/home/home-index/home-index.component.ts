@@ -3,6 +3,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { RoleEnum } from 'src/app/shared/models/enums/role.enum';
 import { environment } from 'src/environments/environment';
 import { UserDto } from 'src/app/shared/models/user/user-dto';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
 
 @Component({
     selector: 'app-home-index',
@@ -12,6 +13,66 @@ import { UserDto } from 'src/app/shared/models/user/user-dto';
 export class HomeIndexComponent implements OnInit, OnDestroy {
     public watchUserChangeSubscription: any;
     public currentUser: UserDto;
+
+    public slides = [
+        {date: "Wednesday, March 2, 2020",
+         title: "Join Fix A Leak Week Through March"},
+         {date: "Wednesday, March 2, 2020",
+         title: "Join Fix A Leak Week Through March"},
+         {date: "Wednesday, March 2, 2020",
+         title: "Join Fix A Leak Week Through March"},
+         {date: "Wednesday, March 2, 2020",
+         title: "Join Fix A Leak Week Through March"},
+         {date: "Wednesday, March 2, 2020",
+         title: "Join Fix A Leak Week Through March"},
+         {date: "Wednesday, March 2, 2020",
+         title: "Join Fix A Leak Week Through March"},
+         {date: "Wednesday, March 2, 2020",
+         title: "Join Fix A Leak Week Through March"},
+         {date: "Wednesday, March 2, 2020",
+         title: "Join Fix A Leak Week Through March"}
+      ];
+    public slideConfig = {
+        "dots": true, 
+        "slidesToShow": 4, 
+        "slidesToScroll": 4,
+        "arrows": true,
+        "prevArrow": "<button type='button' class='prev'><i class='fas fa-chevron-left' aria-hidden='true'></i></button>",
+        "nextArrow": "<button type='button' class='next'><i class='fas fa-chevron-right' aria-hidden='true'></i></button>",
+        "responsive": [
+            {
+                "breakpoint": 1200,
+                "settings": {
+                    "slidesToShow": 3,
+                    "slidesToScroll": 3
+                }
+            },
+            {
+                "breakpoint": 991,
+                "settings": {
+                    "slidesToShow": 2,
+                    "slidesToScroll": 2
+                }
+            },
+            //although we only really have space for one, leave arrows on this size to help show it's a carousel
+            {
+                "breakpoint": 768,
+                "settings": {
+                    "slidesToShow": 1,
+                    "slidesToScroll": 1
+                }               
+            },
+            {
+                "breakpoint": 470,
+                "settings": {
+                    "slidesToShow": 1,
+                    "slidesToScroll": 1,
+                    "arrows": false
+                }               
+            }
+        ]
+
+    };
 
     constructor(private authenticationService: AuthenticationService) {
     }
@@ -93,4 +154,20 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
     public leadOrganizationHomeUrl(): string{
         return environment.leadOrganizationHomeUrl;
     }
+
+    slickInit(e) {
+        console.log('slick initialized');
+      }
+
+    public breakpoint(e) {
+        console.log('breakpoint');
+      }
+      
+    public  afterChange(e) {
+        console.log('afterChange');
+      }
+      
+    public  beforeChange(e) {
+        console.log('beforeChange');
+      }
 }

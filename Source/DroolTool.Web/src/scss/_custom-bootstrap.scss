@@ -1,3 +1,38 @@
+$grid-breakpoints: (
+  xs:0,
+  sm:576px,
+  md:768px,
+  lg:992px,
+  xl:1200px,
+  xxl: 1290px
+);
+
+$container-max-widths: (
+  sm: 512px,
+  md: 704px,
+  lg: 928px,
+  xl: 1136px,
+  xxl: 1224px
+);
+
+@media (min-width: map-get($grid-breakpoints, xs)) {
+  .row > .col,
+  .row > [class*="col-"] {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}
+
+@media (min-width: map-get($grid-breakpoints, sm)) {
+  .row > .col,
+  .row > [class*="col-"] {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+}
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
 // Navbar link contrast increase
 .navbar-dark .navbar-nav .nav-link {
   color: #e1e1e1;
@@ -26,7 +61,7 @@ abbr[data-original-title] {
 }
 
 // Maintain link color on hover
-a:hover {
+a, a:hover {
   color: #205c90;
 }
 
@@ -97,13 +132,13 @@ a:hover {
 
 .btn-drooltool
 {
-  background-color: #196004;
-  border-color: #196004;
+  background-color: #046B99;
+  border-color: #046B99;
   color:#fff;
 }
 
 .btn-drooltool:hover {
-  color:#0EF16D;
+  // color:#0EF16D;
 }
 
 .btn-toggle {
