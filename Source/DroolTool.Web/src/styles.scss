@@ -234,25 +234,22 @@ $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
 }
 
 .slide-container {
+  width:100%;
   text-align:center;
 }
 
-@media only screen and (max-width: 425px)
+@media only screen and (max-width: 359px)
 {
-  .slide-container {
-    width:100%;
-  }
-
   .slide-module-accent {
     left:-50px
   }
 }
 
-@media only screen and (min-width: 426px)
-{
-  .slide-container {
-    width:300px;
-    margin:auto;
-  }
-}
+// @media only screen and (min-width: 426px)
+// {
+//   .slide-container {
+//     width:300px;
+//     margin:auto;
+//   }
+// }
 //end ngx-slick-carousel styles
