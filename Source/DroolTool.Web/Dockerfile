@@ -5,8 +5,8 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS build
 WORKDIR /src
 
-ENV NODE_VERSION 12.7.12
-ENV NODE_DOWNLOAD_SHA 2e2cddf805112bd0b5769290bf2d1bc4bdd55ee44327e826fa94c459835a9d9a
+ENV NODE_VERSION 12.16.1
+ENV NODE_DOWNLOAD_SHA 4fe8c3454f9bee5bbe72d44aa25cd931859b3037b7a9473081b3b2bd1b465b95
 
 RUN curl -SL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz" --output nodejs.tar.gz \
     && echo "$NODE_DOWNLOAD_SHA nodejs.tar.gz" | sha256sum -c - \
