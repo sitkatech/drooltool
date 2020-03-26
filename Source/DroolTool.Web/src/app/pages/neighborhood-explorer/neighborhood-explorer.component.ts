@@ -2,7 +2,7 @@ import { AfterViewInit, ApplicationRef, ChangeDetectionStrategy, Component, Even
 import { environment } from "src/environments/environment";
 import * as L from 'leaflet';
 import '../../../../node_modules/leaflet.snogylop/src/leaflet.snogylop.js';
-import '../../../../node_modules/leaflet.fullscreen/Control.Fullscreen.js';
+import '../../../../node_modules/leaflet.fullscreen/Control.FullScreen.js';
 import * as esri from 'esri-leaflet'
 import { BoundingBoxDto } from '../../shared/models/bounding-box-dto';
 import { CustomCompileService } from '../../shared/services/custom-compile.service';
