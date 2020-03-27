@@ -30,7 +30,7 @@
             
             "styles": [
               "src/styles.scss",
-              "node_modules/leaflet.fullscreen/Control.Fullscreen.css",
+              "node_modules/leaflet.fullscreen/Control.FullScreen.css",
               "node_modules/slick-carousel/slick/slick.scss",
               "node_modules/slick-carousel/slick/slick-theme.scss"
             ],
