@@ -18,21 +18,22 @@
   
   .navbar.navbar-drooltool
   {
-    background-color: #194939;
+    font-family: Nunito;
+    background-color: #00728d;
   }
 
-  .navbar.navbar-drooltool a.nav-link,
-  .navbar.navbar-drooltool a.nav-link::before,
-  .navbar.navbar-drooltool a.nav-link::after {
-    transition: all .5s;
-  }
-  .navbar.navbar-drooltool a.nav-link:hover {
-    color:#0EF16D;
-  }
+  // .navbar.navbar-drooltool a.nav-link,
+  // .navbar.navbar-drooltool a.nav-link::before,
+  // .navbar.navbar-drooltool a.nav-link::after {
+  //   transition: all .5s;
+  // }
+  // .navbar.navbar-drooltool a.nav-link:hover {
+  //   color:#0EF16D;
+  // }
 
-  nav .dropdown-item:hover {
-    background-color: #E5FAF1;
-  }
+  // nav .dropdown-item:hover {
+  //   background-color: #E5FAF1;
+  // }
 
   .navbar.navbar-drooltool a.nav-link
   {

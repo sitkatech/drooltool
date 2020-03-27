@@ -1,9 +1,85 @@
-.homepageJumbotronImage {
-    background-size: cover;
-    background-position: center center;
-    height: 300px;
+.homeSection {
+    padding-top: 80px;
 }
 
-#homepageJumbotronImage1 {
-    background-image: url("/assets/main/home_image.jpg");
+h1 {
+    color:#ea842c 
+}
+
+.neighborhood-button {
+    margin-bottom: 20px
+}
+
+.container-fluid {
+    padding:20px;
+}
+
+#bottomImage {
+    max-width: 300px;
+    width:100%;
+    margin-bottom:-28px;
+}
+
+#resourceImage {
+    max-width: 500px;
+    width:100%;
+    background-color: lightgrey;
+    padding-top:100%;
+    margin:auto
+}
+
+#takeActionImage {
+    width:100%;
+    background-color:lightgrey;
+    padding-top:100%;
+}
+
+.row {
+    margin:0;
+}
+
+
+@media only screen and (min-width:576px)
+{
+    .container-fluid {
+        padding: 30px;
+    }
+
+    .neighborhood-button {
+        text-align:right;
+    }
+
+    .watershed-button {
+        text-align:left;
+    }
+
+    #bottomImage {
+        margin-bottom:-38px;
+    }
+
+    #takeActionImage, #resourceImage {
+        height:500px;
+        padding-top:0;
+    }
+}
+
+@media only screen and (min-width:768px) {
+    .text-overlay {
+        margin-left: -145px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .inner-text-overlay {
+        width:82%; 
+        position:relative; 
+        z-index:2; 
+        margin:auto;
+        text-align: center;
+    }
+
+    .text-over-picture {
+        position: relative;
+        z-index: 1;
+    }
 }

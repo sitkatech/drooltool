@@ -23,6 +23,7 @@ import { LinkRendererComponent } from './shared/components/ag-grid/link-renderer
 
 import { FormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { SlickCarouselModule} from 'ngx-slick-carousel';
 import { FontAwesomeIconLinkRendererComponent } from './shared/components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
 import { LoginCallbackComponent } from './pages/login-callback/login-callback.component';
 import { HelpComponent } from './pages/help/help.component';
@@ -67,7 +68,8 @@ export function init_app(appLoadService: AppInitService) {
     BrowserAnimationsModule,
     AgGridModule.withComponents([]),
     SelectDropDownModule,
-    MyDatePickerModule
+    MyDatePickerModule,
+    SlickCarouselModule
   ],  
   providers: [
     
