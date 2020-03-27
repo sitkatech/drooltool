@@ -33,10 +33,6 @@ export class DynamicEnvironment {
         return window.config.createAccountRedirectUrl;
     }
 
-    public get allowTrading() {
-        return window.config.allowTrading;
-    }
-
     public get keystoneSupportBaseUrl() {
         return window.config.keystoneSupportBaseUrl;
     }
