@@ -78,7 +78,6 @@ namespace DroolTool.Web
             ApiHostName = configuration["ApiHostName"];
             CreateAccountUrl = configuration["CreateAccountUrl"];
             CreateAccountRedirectUrl = configuration["CreateAccountRedirectUrl"];
-            AllowTrading = bool.Parse(configuration["AllowTrading"]);
             KeystoneSupportBaseUrl = configuration["KeystoneSupportBaseUrl"];
             GeoserverMapServiceUrl = configuration["GeoserverMapServiceUrl"];
             KeystoneAuthConfiguration = new KeystoneAuthConfigurationDto(configuration);
@@ -101,8 +100,6 @@ namespace DroolTool.Web
         public string CreateAccountUrl { get; set; }
         [JsonProperty("createAccountRedirectUrl")]
         public string CreateAccountRedirectUrl { get; set; }
-        [JsonProperty("allowTrading")]
-        public bool AllowTrading { get; set; }
         [JsonProperty("keystoneSupportBaseUrl")]
         public string KeystoneSupportBaseUrl { get; set; }
         [JsonProperty("geoserverMapServiceUrl")]
