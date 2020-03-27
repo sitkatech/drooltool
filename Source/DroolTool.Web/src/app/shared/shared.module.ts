@@ -12,6 +12,7 @@ import { LinkRendererComponent } from './components/ag-grid/link-renderer/link-r
 import { FontAwesomeIconLinkRendererComponent } from './components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
 import { MultiLinkRendererComponent } from './components/ag-grid/multi-link-renderer/multi-link-renderer.component';
 import { SelectDropDownModule } from 'ngx-select-dropdown';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
 
 @NgModule({
     declarations: [
@@ -30,6 +31,7 @@ import { SelectDropDownModule } from 'ngx-select-dropdown';
         NgProgressModule,
         RouterModule,
         SelectDropDownModule,
+        SlickCarouselModule
     ],
     exports: [
         CommonModule,

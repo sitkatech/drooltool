@@ -104,4 +104,8 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
     public leadOrganizationHomeUrl(): string{
         return environment.leadOrganizationHomeUrl;
     }
+
+    public leadOrganizationLogoFilename(): string {
+        return environment.leadOrganizationLogoFilename;
+    }
 }

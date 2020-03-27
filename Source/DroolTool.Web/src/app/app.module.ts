@@ -23,6 +23,7 @@ import { LinkRendererComponent } from './shared/components/ag-grid/link-renderer
 
 import { FormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { SlickCarouselModule} from 'ngx-slick-carousel';
 import { FontAwesomeIconLinkRendererComponent } from './shared/components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
 import { LoginCallbackComponent } from './pages/login-callback/login-callback.component';
 import { HelpComponent } from './pages/help/help.component';
@@ -32,6 +33,7 @@ import { MultiLinkRendererComponent } from './shared/components/ag-grid/multi-li
 import { CreateUserCallbackComponent } from './pages/create-user-callback/create-user-callback.component';
 import { AboutComponent } from './pages/about/about.component';
 import { AppInitService } from './app.init';
+import { NeighborhoodExplorerComponent } from './pages/neighborhood-explorer/neighborhood-explorer.component';
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -50,6 +52,7 @@ export function init_app(appLoadService: AppInitService) {
     HelpComponent,
     CreateUserCallbackComponent,
     AboutComponent,
+    NeighborhoodExplorerComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -65,7 +68,8 @@ export function init_app(appLoadService: AppInitService) {
     BrowserAnimationsModule,
     AgGridModule.withComponents([]),
     SelectDropDownModule,
-    MyDatePickerModule
+    MyDatePickerModule,
+    SlickCarouselModule
   ],  
   providers: [
     
