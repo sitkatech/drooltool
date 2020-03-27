@@ -30,13 +30,9 @@
             
             "styles": [
               "src/styles.scss",
-<<<<<<< HEAD
               "node_modules/leaflet.fullscreen/Control.Fullscreen.css",
               "node_modules/slick-carousel/slick/slick.scss",
               "node_modules/slick-carousel/slick/slick-theme.scss"
-=======
-              "node_modules/leaflet.fullscreen/Control.FullScreen.css"
->>>>>>> develop
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.slim.min.js",
