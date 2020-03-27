@@ -15,26 +15,42 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
     public currentUser: UserDto;
 
     public slides = [
-        {date: "Wednesday, March 2, 2020",
-         title: "Join Fix A Leak Week Through March"},
-         {date: "Wednesday, March 2, 2020",
-         title: "Join Fix A Leak Week Through March"},
-         {date: "Wednesday, March 2, 2020",
-         title: "Join Fix A Leak Week Through March"},
-         {date: "Wednesday, March 2, 2020",
-         title: "Join Fix A Leak Week Through March"},
-         {date: "Wednesday, March 2, 2020",
-         title: "Join Fix A Leak Week Through March"},
-         {date: "Wednesday, March 2, 2020",
-         title: "Join Fix A Leak Week Through March"},
-         {date: "Wednesday, March 2, 2020",
-         title: "Join Fix A Leak Week Through March"},
-         {date: "Wednesday, March 2, 2020",
-         title: "Join Fix A Leak Week Through March"}
-      ];
+        {
+            date: "Wednesday, March 2, 2020",
+            title: "Join Fix A Leak Week Through March"
+        },
+        {
+            date: "Wednesday, March 2, 2020",
+            title: "Join Fix A Leak Week Through March"
+        },
+        {
+            date: "Wednesday, March 2, 2020",
+            title: "Join Fix A Leak Week Through March"
+        },
+        {
+            date: "Wednesday, March 2, 2020",
+            title: "Join Fix A Leak Week Through March"
+        },
+        {
+            date: "Wednesday, March 2, 2020",
+            title: "Join Fix A Leak Week Through March"
+        },
+        {
+            date: "Wednesday, March 2, 2020",
+            title: "Join Fix A Leak Week Through March"
+        },
+        {
+            date: "Wednesday, March 2, 2020",
+            title: "Join Fix A Leak Week Through March"
+        },
+        {
+            date: "Wednesday, March 2, 2020",
+            title: "Join Fix A Leak Week Through March"
+        }
+    ];
     public slideConfig = {
-        "dots": true, 
-        "slidesToShow": 4, 
+        "dots": true,
+        "slidesToShow": 4,
         "slidesToScroll": 4,
         "arrows": true,
         "prevArrow": "<button type='button' class='prev'><i class='fas fa-chevron-left' aria-hidden='true'></i></button>",
@@ -60,7 +76,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
                 "settings": {
                     "slidesToShow": 1,
                     "slidesToScroll": 1
-                }               
+                }
             },
             {
                 "breakpoint": 470,
@@ -68,7 +84,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
                     "slidesToShow": 1,
                     "slidesToScroll": 1,
                     "arrows": false
-                }               
+                }
             }
         ]
 
@@ -78,40 +94,40 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        if (localStorage.getItem("loginOnReturn")){
+        if (localStorage.getItem("loginOnReturn")) {
             localStorage.removeItem("loginOnReturn");
             this.authenticationService.login();
         }
-        this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => { 
+        this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
             this.currentUser = currentUser;
         });
     }
 
     ngOnDestroy(): void {
-      this.watchUserChangeSubscription.unsubscribe();
+        this.watchUserChangeSubscription.unsubscribe();
     }
 
-    public userIsUnassigned(){
-        if (!this.currentUser){
+    public userIsUnassigned() {
+        if (!this.currentUser) {
             return false; // doesn't exist != unassigned
         }
-        
+
         return this.currentUser.Role.RoleID === RoleEnum.Unassigned;
     }
 
-    public userRoleIsDisabled(){
-        if (!this.currentUser){
+    public userRoleIsDisabled() {
+        if (!this.currentUser) {
             return false; // doesn't exist != unassigned
         }
-        
+
         return this.currentUser.Role.RoleID === RoleEnum.Disabled;
     }
 
-    public isUserAnAdministrator(){
+    public isUserAnAdministrator() {
         return this.authenticationService.isUserAnAdministrator(this.currentUser);
     }
 
-    public isUserALandowner(){
+    public isUserALandowner() {
         return this.authenticationService.isUserALandOwner(this.currentUser);
     }
 
@@ -119,55 +135,55 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         this.authenticationService.login();
     }
 
-    public createAccount(): void{
+    public createAccount(): void {
         this.authenticationService.createAccount();
     }
 
-    public forgotPasswordUrl() :string{
+    public forgotPasswordUrl(): string {
         return `${environment.keystoneSupportBaseUrl}/ForgotPassword`;
     }
 
-    public forgotUsernameUrl() :string{
+    public forgotUsernameUrl(): string {
         return `${environment.keystoneSupportBaseUrl}/ForgotUsername`;
     }
 
-    public keystoneSupportUrl():string{
+    public keystoneSupportUrl(): string {
         return `${environment.keystoneSupportBaseUrl}/Support/20`;
     }
 
-    public platformLongName():string{
+    public platformLongName(): string {
         return environment.platformLongName;
     }
 
-    public platformShortName():string{
+    public platformShortName(): string {
         return environment.platformShortName;
     }
 
-    public leadOrganizationShortName():string{
+    public leadOrganizationShortName(): string {
         return environment.leadOrganizationShortName;
     }
 
-    public leadOrganizationLongName(): string{
+    public leadOrganizationLongName(): string {
         return environment.leadOrganizationLongName;
     }
 
-    public leadOrganizationHomeUrl(): string{
+    public leadOrganizationHomeUrl(): string {
         return environment.leadOrganizationHomeUrl;
     }
 
     slickInit(e) {
         console.log('slick initialized');
-      }
+    }
 
     public breakpoint(e) {
         console.log('breakpoint');
-      }
-      
-    public  afterChange(e) {
+    }
+
+    public afterChange(e) {
         console.log('afterChange');
-      }
-      
-    public  beforeChange(e) {
+    }
+
+    public beforeChange(e) {
         console.log('beforeChange');
-      }
+    }
 }

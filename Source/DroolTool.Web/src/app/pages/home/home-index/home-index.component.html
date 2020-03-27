@@ -4,7 +4,8 @@
         <span>
             Welcome {{currentUser.FullName}}. You have successfully logged in to the {{platformLongName()}},
             but your
-            account is not yet configured. You will receive an email from the {{leadOrganizationShortName()}} Administrators when your account is
+            account is not yet configured. You will receive an email from the {{leadOrganizationShortName()}}
+            Administrators when your account is
             ready to
             use. You may <a routerLink="/help">Request Support</a> to contact the Administrators with any questions or
             comments.
@@ -13,23 +14,26 @@
 
     <ngb-alert *ngIf="userRoleIsDisabled()" [type]="'info'" [dismissible]="false">
         <span>
-            Your account is currently disabled. Please <a routerLink="/help">Request Support</a> if you would like to activate your account.
+            Your account is currently disabled. Please <a routerLink="/help">Request Support</a> if you would like to
+            activate your account.
         </span>
     </ngb-alert>
 
     <app-alert-display></app-alert-display>
-    <div class="row homeSection">   
+    <div class="row homeSection">
         <div class="col-12 col-md-5 text-center order-md-last">
             <div class="text-overlay">
                 <h1>Don't kick urban drool to the curb</h1>
                 <div class="inner-text-overlay">
-                    <p class="b1">Urban drool is dry weather water run-off from activities such as washing you car to overwatering the lawn.</p>
-                    <p class="b1">This water run-off contains pollutants harmful to the environment that can contaminate the waterways it joins.</p>
+                    <p class="b1">Urban drool is dry weather water run-off from activities such as washing you car to
+                        overwatering the lawn.</p>
+                    <p class="b1">This water run-off contains pollutants harmful to the environment that can contaminate
+                        the waterways it joins.</p>
                     <p class="b1"><a routerLink="/" routerLinkActive="true">Learn more about Urban Drool</a></p>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-7 order-md-first text-over-picture" >
+        <div class="col-12 col-md-7 order-md-first text-over-picture">
             <div style="background-color:lightgrey; height:325px;"></div>
         </div>
     </div>
@@ -62,14 +66,14 @@
             <div>
                 <h1>Take action in your community!</h1>
                 <p class="b2">Moulton Niguel Water District offers a variety of
-                             rebate programs you can participate in to reduce
-                            the amount of urban drool your household creates.
+                    rebate programs you can participate in to reduce
+                    the amount of urban drool your household creates.
                 </p>
                 <p class="b2">
                     <a href="https://www.mnwd.com/rebates/">Check out MNWD's Rebate Programs</a>
                 </p>
             </div>
-            
+
         </div>
         <div class="col-12 col-md-8">
             <div id="takeActionImage"></div>
@@ -85,12 +89,8 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <ngx-slick-carousel class="carousel" 
-                        #slickModal="slick-carousel" 
-                        [config]="slideConfig" 
-                        (init)="slickInit($event)"
-                        (breakpoint)="breakpoint($event)"
-                        (afterChange)="afterChange($event)"
+                    <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig"
+                        (init)="slickInit($event)" (breakpoint)="breakpoint($event)" (afterChange)="afterChange($event)"
                         (beforeChange)="beforeChange($event)">
                         <div ngxSlickItem *ngFor="let slide of slides" class="slide">
                             <div class="slide-container">
@@ -125,15 +125,16 @@
                         Weather-Based Smart Sprinkler Timers
                     </h3>
                     <p class="b2">MNWD offers a variety of rebate programs you can join
-                       to reduce the opportunities your household has to create
-                       urban drool.</p>
+                        to reduce the opportunities your household has to create
+                        urban drool.</p>
                 </div>
-            </div>           
+            </div>
         </div>
     </div>
     <div class="row homeSection">
         <div class="col-12 text-center">
-            <div id="bottomImage" style="background-color:lightgrey; height:300px; margin-left:auto; margin-right:auto"></div>
+            <div id="bottomImage" style="background-color:lightgrey; height:300px; margin-left:auto; margin-right:auto">
+            </div>
         </div>
     </div>
 </div>
