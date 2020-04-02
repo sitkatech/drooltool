@@ -141,22 +141,31 @@ $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
     color: #555555;   
   }
 
+  .b1, .b2, .b3, .b4 {
+    font-weight: 600; //semibold
+    text-align: center;
+    text-justify: auto;
+    font-family: 'Nunito', sans-serif;
+    color: #555555;
+  }
+
   //Large field values
   .b1 {
-    font-size: 20px;
+    font-size: 28px;
   }
 
   //Regular sized field values
   .b2 {
-    font-size: 18px;
-    font-weight: 600; //semibold
+    font-size: 24px;
   }
 
   //Field Title Descriptions
-  //Text with this class should be camel cased
   .b3 {
+    font-size: 20px;
+  }
+
+  .b4 {
     font-size: 16px;
-    font-weight: 600
   }
 
   h1, h2, h3, h4 {
@@ -165,7 +174,7 @@ $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
   }
 
   h1 {
-    font-size: 38px;
+    font-size: 40px;
   }
 
   //H2 elements should be camel cased
@@ -176,10 +185,6 @@ $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
 
   h3 {
     font-size: 22px;
-  }
-
-  h4 {
-    font-size: 18px;
   }
 
   //Begin ngx-slick-carousel styles
@@ -194,7 +199,7 @@ $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
     cursor: pointer;
     background: transparent;
     color: #555;
-    top: 30%;
+    top: 40%;
     -webkit-transform: translate(0, -50%);
     transform: translate(0, -50%);
     padding: 0;
@@ -217,20 +222,30 @@ $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
 
 .slide-background {
   display:inline-block; 
-  height:225px; 
-  width:225px; 
+  height:350px; 
+  width:350px; 
   background-color:lightgrey;
-  margin-bottom: 1rem;
+  margin-bottom: 23px;
 }
 
 .slide-module-accent {
-  height: 40px;
-  width: 125px;
+  width:230px;
   background-color: #89bf40;
   position: relative;
-  top: 169px;
+  top: 313px;
   display: inline-block;
-  left: -78px;
+}
+
+.slide-module-accent > p {
+  margin: 0 auto;
+  width: 173px;
+}
+
+.slide-link-text {
+  width:230px;
+  margin-top:20px;
+  margin-left:auto;
+  margin-right:auto;
 }
 
 .slide-container {

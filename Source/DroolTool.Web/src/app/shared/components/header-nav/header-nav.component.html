@@ -9,35 +9,39 @@
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse b4" id="navbarNav">
         <ul class="navbar-nav w-100">
             <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link b2" routerLink="/" routerLinkActive="active">
+                <a class="nav-link" routerLink="/" routerLinkActive="active">
                     About
                 </a>
             </li>
+            <div class="dropdown-divider"></div>
             <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link b2" routerLink="/neighborhood-explorer" routerLinkActive="active">
+                <a class="nav-link" routerLink="/neighborhood-explorer" routerLinkActive="active">
                     Neighborhood Explorer
                 </a>
             </li>
-            <li class="nav-item b2" routerLinkActive="active">
+            <div class="dropdown-divider"></div>
+            <li class="nav-item" routerLinkActive="active">
                 <a class="nav-link" routerLink="/neighborhood-explorer" routerLinkActive="active">
                     Watershed Explorer
                 </a>
             </li>
-            <li class="nav-item b2" routerLinkActive="active">
+            <div class="dropdown-divider"></div>
+            <li class="nav-item" routerLinkActive="active">
                 <a class="nav-link" routerLink="/neighborhood-explorer" routerLinkActive="active">
                     Take Action
                 </a>
             </li>
+            <div class="dropdown-divider"></div>
             <li class="nav-item dropdown" routerLinkActive="active" *ngIf="isAdministrator()">
                 <a href="#" class="nav-link dropdown-toggle b2" role="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
                     Manage
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a routerLink="/users" class="dropdown-item b2">
+                    <a routerLink="/users" class="dropdown-item">
                         View all Users
                     </a>
                 </div>

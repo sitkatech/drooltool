@@ -20,54 +20,25 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
             title: "Join Fix A Leak Week Through March"
         },
         {
-            date: "Wednesday, March 2, 2020",
-            title: "Join Fix A Leak Week Through March"
-        },
-        {
-            date: "Wednesday, March 2, 2020",
-            title: "Join Fix A Leak Week Through March"
-        },
-        {
-            date: "Wednesday, March 2, 2020",
-            title: "Join Fix A Leak Week Through March"
-        },
-        {
-            date: "Wednesday, March 2, 2020",
-            title: "Join Fix A Leak Week Through March"
-        },
-        {
-            date: "Wednesday, March 2, 2020",
-            title: "Join Fix A Leak Week Through March"
-        },
-        {
-            date: "Wednesday, March 2, 2020",
-            title: "Join Fix A Leak Week Through March"
-        },
-        {
-            date: "Wednesday, March 2, 2020",
-            title: "Join Fix A Leak Week Through March"
+            date: "Friday, March 19, 2020",
+            title: "Landscape Workshop"
         }
     ];
     public slideConfig = {
-        "dots": true,
-        "slidesToShow": 4,
-        "slidesToScroll": 4,
-        "arrows": true,
+        "dots": false,
+        "slidesToShow": 2,
+        "slidesToScroll": 2,
+        "arrows": false,
         "prevArrow": "<button type='button' class='prev'><i class='fas fa-chevron-left' aria-hidden='true'></i></button>",
         "nextArrow": "<button type='button' class='next'><i class='fas fa-chevron-right' aria-hidden='true'></i></button>",
         "responsive": [
             {
-                "breakpoint": 1240,
-                "settings": {
-                    "slidesToShow": 3,
-                    "slidesToScroll": 3
-                }
-            },
-            {
                 "breakpoint": 991,
                 "settings": {
-                    "slidesToShow": 2,
-                    "slidesToScroll": 2
+                    "slidesToShow": 1,
+                    "slidesToScroll": 1,
+                    "dots": true,
+                    "arrows": true
                 }
             },
             //although we only really have space for one, leave arrows on this size to help show it's a carousel
@@ -75,7 +46,8 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
                 "breakpoint": 768,
                 "settings": {
                     "slidesToShow": 1,
-                    "slidesToScroll": 1
+                    "slidesToScroll": 1,
+                    "dots": true
                 }
             },
             {
@@ -83,7 +55,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
                 "settings": {
                     "slidesToShow": 1,
                     "slidesToScroll": 1,
-                    "arrows": false
+                    "dots": true
                 }
             }
         ]
