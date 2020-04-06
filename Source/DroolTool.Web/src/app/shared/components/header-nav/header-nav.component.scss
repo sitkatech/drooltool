@@ -14,28 +14,40 @@
   
   .dropdown-menu {
     z-index: 1021;
+    background-color: #23AECF;
   }
   
   .navbar.navbar-drooltool
   {
     font-family: Nunito;
+  }
+
+  .header-outer {
     background-color: #00728d;
   }
 
   .navbar.navbar-drooltool a.nav-link,
   .navbar.navbar-drooltool a.nav-link::before,
-  .navbar.navbar-drooltool a.nav-link::after {
+  .navbar.navbar-drooltool a.nav-link::after,
+  .top-bar-nav-link,
+  .top-bar-nav-link::before,
+  .top-bar-nav-link::after,
+  .dropdown-item {
     transition: all .5s;
   }
-  .navbar.navbar-drooltool a.nav-link:hover {
+  .navbar.navbar-drooltool a.nav-link:hover,
+  .top-bar-nav-link:hover,
+  .dropdown-item:hover {
     color:#ea842c;
   }
 
-  // nav .dropdown-item:hover {
-  //   background-color: #E5FAF1;
-  // }
+  .dropdown-item:hover {
+    background-color: #23AECF;
+  }
 
-  .navbar.navbar-drooltool a.nav-link
+  .navbar.navbar-drooltool a.nav-link,
+  .top-bar-nav-link,
+  .dropdown-item
   {
     color: #fff;
   }
