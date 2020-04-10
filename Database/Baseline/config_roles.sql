@@ -2,9 +2,7 @@ print 'Getting logins to create'
 if object_id('tempdb.dbo.#accountsToCreate') is not null drop table #accountsToCreate
 select '${db-user}' as AccountName, 'S' as AccountType
 into #accountsToCreate
-union select '${db-batch-user}', 'U'
-union select 'Sitka\H2O QA Support', 'G'
-union select 'Sitka\H2O QA Tester', 'G'
+${other-sql-user-accounts-to-create}
 
 -- Clear out any existing logins
 print 'Clearing out any existing logins'
@@ -14,13 +12,7 @@ select a.AccountName, a.AccountType
 into #allAccounts
 from
 (
-    select 'DroolToolWebLocal' as AccountName, 'S' as AccountType
-    union select 'Sitka\DroolToolBatchQA', 'U'
-    union select 'Sitka\DroolToolBatchProd', 'U'
-    union select 'DroolToolTempTest', 'S'
-    union select 'Sitka\H2O QA Support', 'G'
-    union select 'Sitka\H2O QA Tester', 'G'
-    union select 'Sitka\H2O Production Support', 'G'
+${other-sql-user-accounts-to-delete}
 ) a left join #accountsToCreate ac on a.AccountName = ac.AccountName
 where ac.AccountName is null
 

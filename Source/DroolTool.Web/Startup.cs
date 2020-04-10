@@ -78,7 +78,6 @@ namespace DroolTool.Web
             ApiHostName = configuration["ApiHostName"];
             CreateAccountUrl = configuration["CreateAccountUrl"];
             CreateAccountRedirectUrl = configuration["CreateAccountRedirectUrl"];
-            AllowTrading = bool.Parse(configuration["AllowTrading"]);
             KeystoneSupportBaseUrl = configuration["KeystoneSupportBaseUrl"];
             GeoserverMapServiceUrl = configuration["GeoserverMapServiceUrl"];
             KeystoneAuthConfiguration = new KeystoneAuthConfigurationDto(configuration);
@@ -87,6 +86,8 @@ namespace DroolTool.Web
             LeadOrganizationShortName = configuration["LeadOrganizationShortName"];
             LeadOrganizationLongName = configuration["LeadOrganizationLongName"];
             LeadOrganizationHomeUrl = configuration["LeadOrganizationHomeUrl"];
+            FaviconFilename = configuration["FaviconFilename"];
+            LeadOrganizationLogoFilename = configuration["LeadOrganizationLogoFilename"];
         }
 
         [JsonProperty("production")]
@@ -101,8 +102,6 @@ namespace DroolTool.Web
         public string CreateAccountUrl { get; set; }
         [JsonProperty("createAccountRedirectUrl")]
         public string CreateAccountRedirectUrl { get; set; }
-        [JsonProperty("allowTrading")]
-        public bool AllowTrading { get; set; }
         [JsonProperty("keystoneSupportBaseUrl")]
         public string KeystoneSupportBaseUrl { get; set; }
         [JsonProperty("geoserverMapServiceUrl")]
@@ -119,6 +118,10 @@ namespace DroolTool.Web
         public string LeadOrganizationLongName { get; set; }
         [JsonProperty("leadOrganizationHomeUrl")]
         public string LeadOrganizationHomeUrl { get; set; }
+        [JsonProperty("faviconFilename")]
+        public string FaviconFilename {get; set;}
+        [JsonProperty("leadOrganizationLogoFilename")]
+        public string LeadOrganizationLogoFilename { get; set;}
     }
 
     public class KeystoneAuthConfigurationDto
