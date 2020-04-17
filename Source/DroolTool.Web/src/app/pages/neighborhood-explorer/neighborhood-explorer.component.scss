@@ -1,1 +1,34 @@
 @import '~leaflet.fullscreen/Control.FullScreen.css';
+@import '~src/scss/_variables.scss';
+
+.section-search {
+    background-color: $header-nav-color;
+}
+
+.section-stats * h3 {
+    color: #1E5668;
+    font-weight:bold;
+    line-height: 45px;
+}
+
+.section-rebates {
+    background-color: #1E5668
+}
+
+.section-rebates * h3 {
+    color: white;
+}
+
+.section-water-bill {
+    background-color: #4DC3D9;
+}
+
+.section-water-bill * h3,
+.section-water-bill * h4 {
+    color: #555555;
+}
+
+.search {
+    background-color: $drool-orange;
+    border-color: $drool-orange;
+}

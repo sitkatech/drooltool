@@ -1,1 +1,124 @@
-<div id={{mapID}} class="location-card" [style.height]="mapHeight"></div>
+<div class="row ml-0 mr-0" [style.height]="mapHeight">
+    <div class="col-lg-4 pl-0 pr-0">
+        <div class="container-lg" style="height:100%">
+            <div class="row p-4 section-search ml-0 mr-0">
+                <div class="col-12">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <h3 style="color:white">How is my neighborhood doing?</h3>
+                                <div class="input-group">
+                                    <input #searchText type="text" class="form-control b4 text-left"
+                                        placeholder="Enter address or zip code">
+                                    <div class="input-group-append">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-drooltool search" (click)="makeNominatimRequest(searchText.value)">
+                                                <i class="fas fa-search" style="color:white"></i>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row d-none d-lg-flex p-lg-5 section-stats">
+                <div class="col-12">
+                    <h3 class="text-justify">
+                        Learn about how your neighborhood is conserving water and protecting our streams and beaches
+                    </h3>
+                    <h3 class="text-center">
+                        Icon here
+                    </h3>
+                    <h3 class="text-justify">
+                        Click the exposed areas of the map to explore different neighborhood metrics
+                    </h3>
+                    <h3 class="text-center">
+                        or
+                    </h3>
+                    <h3 class="text-justify">
+                        Enter your address in the search bar for your own detailed urban drool snapshot
+                    </h3>
+                </div>
+            </div>
+            <div class="row d-none d-lg-flex mt-auto">
+                <div class="col-6 section-rebates">
+                    <div class="row p-lg-4">
+                        <div class="col-3">
+                            Icon
+                        </div>
+                        <div class="col-9">
+                            <h3>
+                                View Rebates and learn more about water efficiency
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 section-water-bill">
+                    <div class="row p-lg-4">
+                        <div class="col-3">
+                            Icon
+                        </div>
+                        <div class="col-9">
+                            <h3>
+                                Access my water bill
+                            </h3>
+                            <h4>
+                                Via Moulton Niguel Water District
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8 pl-0 pr-0">
+        <div id={{mapID}} class="location-card" [style.height]="mapHeight"></div>
+    </div>
+    <div class="col-12 d-lg-none">
+        <div class="row p-4" style="height:200px">
+            <div class="col text-center">
+                <span class="align-middle">1</span>
+            </div>
+            <div class="col text-center">
+                <span class="align-middle">2</span>
+            </div>
+            <div class="col text-center">
+                <span class="align-middle">3</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 d-lg-none">
+        <div class="row">
+            <div class="col-6 section-rebates">
+                <div class="row pt-4 pb-4">
+                    <div class="col-3">
+                        Icon
+                    </div>
+                    <div class="col-9">
+                        <h3>
+                            View Rebates and learn more about water efficiency
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 section-water-bill">
+                <div class="row pt-4 pb-4">
+                    <div class="col-3">
+                        Icon
+                    </div>
+                    <div class="col-9">
+                        <h3>
+                            Access my water bill
+                        </h3>
+                        <h4>
+                            Via Moulton Niguel Water District
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

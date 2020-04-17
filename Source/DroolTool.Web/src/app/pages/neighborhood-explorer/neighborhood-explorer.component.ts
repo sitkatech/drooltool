@@ -6,7 +6,9 @@ import '../../../../node_modules/leaflet.fullscreen/Control.FullScreen.js';
 import * as esri from 'esri-leaflet'
 import { BoundingBoxDto } from '../../shared/models/bounding-box-dto';
 import { CustomCompileService } from '../../shared/services/custom-compile.service';
-import { NeighborhoodExplorerService } from 'src/app/services/neighborhood-explorer/neighborhood-explorer.service'
+import { NeighborhoodExplorerService } from 'src/app/services/neighborhood-explorer/neighborhood-explorer.service';
+import { NominatimService } from '../../shared/services/nominatim.service';
+import { WfsService } from '../../shared/services/wfs.service';
 
 @Component({
   selector: 'drooltool-neighborhood-explorer',
@@ -31,13 +33,17 @@ export class NeighborhoodExplorerComponent implements OnInit {
     public tileLayers: { [key: string]: any } = {};
     public overlayLayers: { [key: string]: any } = {};
     public maskLayer: any;
+    public currentSearch: L.Layers;
+    public currentMask: L.Layers;
     
     boundingBox: BoundingBoxDto;
 
     constructor(
         private appRef: ApplicationRef,
         private compileService: CustomCompileService,
-        private neighborhoodExplorerService : NeighborhoodExplorerService
+        private neighborhoodExplorerService : NeighborhoodExplorerService,
+        private nominatimService : NominatimService,
+        private wfsService : WfsService
     ) {
     }
 
@@ -130,7 +136,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
                 this.tileLayers["Hillshade"],
                 this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
                 this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
-            ]
+            ],
+            scrollWheelZoom: false,
+            touchZoom: true
             
         } as L.MapOptions;
 
@@ -142,6 +150,23 @@ export class NeighborhoodExplorerComponent implements OnInit {
         this.map.on("moveend", (event: L.LeafletEvent) => {
             this.onMapMoveEnd.emit(event);
         });
+
+        let dblClickTimer = null;
+        
+        this.map.on("click", (event: L.LeafletEvent) => {
+          if (dblClickTimer !== null) {
+            return;
+          }
+          dblClickTimer = setTimeout(() => {
+            this.getNeighborhoodFromLatLong(event.latlng);
+            dblClickTimer = null;
+          }, 200);
+        }).on("dblclick", () => {
+          clearTimeout(dblClickTimer);
+          dblClickTimer = null;
+          this.map.zoomIn();
+        })
+
         this.map.fitBounds(this.maskLayer.getBounds(), this.defaultFitBoundsOptions);
         this.map.setZoom(12);
         
@@ -167,5 +192,69 @@ export class NeighborhoodExplorerComponent implements OnInit {
           fullscreenElement: false // Dom element to render in full screen, false by default, fallback to map._container
         }).addTo(this.map);
         this.afterSetControl.emit(this.layerControl);
+    }
+
+    public makeNominatimRequest(q:string): void {
+      this.nominatimService.makeNominatimRequest(q).subscribe(response => {
+        console.log(response);
+        if (response.length === 0)
+        {
+          return null;
+        }
+
+        let lat = +response[0].lat;
+        let lng = +response[0].lon;
+        let latlng = {'lat':lat, 'lng': lng};
+
+        this.getNeighborhoodFromLatLong(latlng);
+      });
+    }
+
+    public getNeighborhoodFromLatLong(latlng:Object):void { 
+      console.log(latlng);
+      this.wfsService.geoserverNeighborhoodLookup(latlng).subscribe(response => {
+        console.log(response);
+        if (response.features.length === 0)
+        {
+          return null;
+        }
+
+        if (this.currentSearch !== null && this.currentSearch !== undefined)
+        {
+          this.map.removeLayer(this.currentSearch);
+          this.map.removeLayer(this.currentMask);
+        }
+
+        this.currentSearch = L.geoJSON(response, {style: function (feature) {
+             return {
+                 fillColor: "#ffad0a",
+                 fill: true,
+                 fillOpacity: 0.4,
+                 color: "#ffff00",
+                 weight: 5,
+                 stroke: true
+             };
+           }
+         }).addTo(this.map);
+
+         this.currentMask = L.geoJSON(response, {
+           invert: true,
+           style: function (feature) {
+               return {
+                   fillColor: "#323232",
+                   fill: true,
+                   fillOpacity: 0.4,
+                   color: "#3388ff",
+                   weight: 5,
+                   stroke: true
+               };
+           }
+         }).addTo(this.map);
+
+        this.currentMask.bringToFront();
+        this.currentSearch.bringToFront();
+
+        this.map.fitBounds(this.currentSearch.getBounds());
+     })
     }
 }

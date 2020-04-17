@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { NotFoundComponent } from './pages';
 import { HeaderNavComponent } from './components';
 import { UnauthenticatedComponent } from './pages/unauthenticated/unauthenticated.component';
@@ -28,6 +28,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         CommonModule,
         FormsModule,
         HttpClientModule,
+        HttpClientJsonpModule,
         NgProgressModule,
         RouterModule,
         SelectDropDownModule,
