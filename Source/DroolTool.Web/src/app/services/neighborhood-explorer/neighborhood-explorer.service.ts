@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/shared/services';
 import { Observable } from 'rxjs';
+import { FeatureCollection } from 'geojson';
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +16,11 @@ export class NeighborhoodExplorerService {
 
     getStormshed(neighborhoodID:number): Observable<string> {
         let route = `/neighborhood-explorer/get-stormshed/${neighborhoodID}`;
+        return this.apiService.getFromApi(route);
+    }
+
+    getDownstreamBackboneTrace(neighborhoodID:number): Observable<string> {
+        let route = `/neighborhood-explorer/get-downstream-backbone-trace/${neighborhoodID}`;
         return this.apiService.getFromApi(route);
     }
 

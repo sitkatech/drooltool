@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using DroolTool.EFModels.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -98,11 +99,63 @@ namespace DroolTool.API.Controllers
                 .ToList();
 
             var featureCollection = new FeatureCollection();
-            var featureList = regionalSubbasinsInStormshed.Select(x =>
+            var feature = new Feature()
             {
-                var geometry = UnaryUnionOp.Union(x.NeighborhoodGeometry4326);
-                var feature = new Feature() {Geometry = geometry, Attributes = new AttributesTable()};
-                feature.Attributes.Add("NeighborhoodID", x.NeighborhoodID);
+                Geometry = UnaryUnionOp.Union(regionalSubbasinsInStormshed.Select(x => x.NeighborhoodGeometry4326)),
+                Attributes = new AttributesTable()
+            };
+
+            feature.Attributes.Add("NeighborhoodIDs",
+                regionalSubbasinsInStormshed.Select(x => x.NeighborhoodID).ToList());
+            
+            featureCollection.Add(feature);
+
+            var gjw = new GeoJsonWriter
+            {
+                SerializerSettings =
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    FloatParseHandling = FloatParseHandling.Decimal,
+                    Formatting = Formatting.Indented
+                }
+            };
+
+            var write = gjw.Write(featureCollection);
+
+            return Ok(write);
+        }
+
+        [HttpGet("neighborhood-explorer/get-downstream-backbone-trace/{neighborhoodID}")]
+        public ActionResult<string> GetDownstreamBackboneTrace([FromRoute] int neighborhoodID)
+        {
+            var backboneDownstream = new List<int>();
+
+            var lookingAt = _dbContext.Neighborhood
+                .Include(x => x.BackboneSegment)
+                .Single(x => x.NeighborhoodID == neighborhoodID)
+                .BackboneSegment
+                .Select(x => x.BackboneSegmentID);
+
+            while (lookingAt.Any())
+            {
+                backboneDownstream.AddRange(lookingAt);
+
+                var newEntities = _dbContext.BackboneSegment
+                    .Include(x => x.DownstreamBackboneSegment)
+                    .Where(x => lookingAt.Contains(x.BackboneSegmentID));
+
+                lookingAt = newEntities.Where(x => x.DownstreamBackboneSegment != null).Select(x => x.DownstreamBackboneSegment.BackboneSegmentID).Distinct().ToList();
+            }
+
+            var listOfBackboneFeatures =
+                _dbContext.BackboneSegment.Where(x => backboneDownstream.Contains(x.BackboneSegmentID)).ToList();
+
+            var featureCollection = new FeatureCollection();
+            var featureList = listOfBackboneFeatures.Select(x =>
+            {
+                var geometry = UnaryUnionOp.Union(x.BackboneSegmentGeometry4326);
+                var feature = new Feature() { Geometry = geometry, Attributes = new AttributesTable() };
+                feature.Attributes.Add("dummy", "dummy");
                 return feature;
             });
 

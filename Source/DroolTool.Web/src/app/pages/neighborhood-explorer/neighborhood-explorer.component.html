@@ -103,7 +103,9 @@
         </div>
     </div>
     <div class="col-lg-8 pl-0 pr-0">
-        <div id={{mapID}} class="location-card" [style.height]="mapHeight"></div>
+        <div id={{mapID}} class="location-card" [style.height]="mapHeight">
+            <button *ngIf="searchActive" (click)="displayTrace($event)" class="btn btn-drooltool" style="position:absolute; bottom:10px; right:10px; z-index:100000">Where does my water go?</button>
+        </div>
     </div>
     <div class="col-12 d-lg-none">
         <div class="row p-4" style="height:200px">

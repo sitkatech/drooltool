@@ -12,6 +12,8 @@ import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
 
+declare var $ : any;
+
 @Component({
   selector: 'drooltool-neighborhood-explorer',
   templateUrl: './neighborhood-explorer.component.html',
@@ -37,7 +39,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public maskLayer: any;
   public neighborhoodsWhereItIsOkayToClickIDs: number[];
 
+  public wmsParams: any;
   public stormshedLayer: L.Layers;
+  public backboneDetailLayer: L.Layers;
   public traceLayer: L.Layers;
   public currentSearchLayer: L.Layers;
   public currentMask: L.Layers;
@@ -94,21 +98,24 @@ export class NeighborhoodExplorerComponent implements OnInit {
       layers: "DroolTool:Neighborhoods",
       transparent: true,
       format: "image/png",
-      tiled: true
+      tiled: true,
+      pane: "droolToolOverlayPane"
     } as L.WMSOptions);
 
     let backboneWMSOptions = ({
       layers: "DroolTool:Backbone",
       transparent: true,
       format: "image/png",
-      tiled: true
+      tiled: true,
+      pane: "droolToolOverlayPane"
     } as L.WMSOptions);
 
     let watershedsWMSOptions = ({
       layers: "DroolTool:Watersheds",
       transparent: true,
       format: "image/png",
-      tiled: true
+      tiled: true,
+      pane: "droolToolOverlayPane"
     } as L.WMSOptions);
 
 
@@ -158,29 +165,11 @@ export class NeighborhoodExplorerComponent implements OnInit {
       } as L.MapOptions;
 
       this.map = L.map(this.mapID, mapOptions);
+      let droolToolOverlayPane = this.map.createPane("droolToolOverlayPane");
+      droolToolOverlayPane.style.zIndex=10000;
+      this.map.getPane("markerPane").style.zIndex=10001;
 
-      this.map.on('load', (event: L.LeafletEvent) => {
-        this.afterLoadMap.emit(event);
-      });
-      this.map.on("moveend", (event: L.LeafletEvent) => {
-        this.onMapMoveEnd.emit(event);
-      });
-
-      let dblClickTimer = null;
-
-      this.map.on("click", (event: L.LeafletEvent) => {
-        if (dblClickTimer !== null) {
-          return;
-        }
-        dblClickTimer = setTimeout(() => {
-          this.getNeighborhoodFromLatLong(event.latlng);
-          dblClickTimer = null;
-        }, 200);
-      }).on("dblclick", () => {
-        clearTimeout(dblClickTimer);
-        dblClickTimer = null;
-        this.map.zoomIn();
-      })
+      this.initializeMapEvents();
 
       this.map.fitBounds(this.maskLayer.getBounds(), this.defaultFitBoundsOptions);
       this.map.setZoom(12);
@@ -209,7 +198,33 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.afterSetControl.emit(this.layerControl);
   }
 
+  public initializeMapEvents() : void {
+    this.map.on('load', (event: L.LeafletEvent) => {
+      this.afterLoadMap.emit(event);
+    });
+    this.map.on("moveend", (event: L.LeafletEvent) => {
+      this.onMapMoveEnd.emit(event);
+    });
+
+    let dblClickTimer = null;
+
+    this.map.on("click", (event: L.LeafletEvent) => {
+      if (dblClickTimer !== null) {
+        return;
+      }
+      dblClickTimer = setTimeout(() => {
+        this.getNeighborhoodFromLatLong(event.latlng);
+        dblClickTimer = null;
+      }, 200);
+    }).on("dblclick", () => {
+      clearTimeout(dblClickTimer);
+      dblClickTimer = null;
+      this.map.zoomIn();
+    })
+  }
+
   public makeNominatimRequest(q: any): void {
+    this.removeCurrentSearchLayer();
     this.searchAddress = q.value;
     this.nominatimService.makeNominatimRequest(this.searchAddress).subscribe(response => {
       if (response.length === 0) {
@@ -226,96 +241,145 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public getNeighborhoodFromLatLong(latlng: Object): void {
+    this.removeCurrentSearchLayer();
     this.wfsService.geoserverNeighborhoodLookup(latlng).subscribe(response => {
       if (response.features.length === 0) {
         this.searchAddressNotFoundOrNotServiced();
       }
 
       this.selectedNeighborhoodID = response.features[0].properties.NeighborhoodID;
-      if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID))
-      {
+      if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
         this.displaySearchResults(response, latlng);
-        if(this.traceLayer)
-        {
+        if (this.traceLayer) {
           this.map.removeLayer(this.traceLayer);
         }
         console.log(this.selectedNeighborhoodID);
         this.displayStormshedAndBackboneDetail(this.selectedNeighborhoodID);
       }
-      else
-      {
+      else {
         this.searchAddressNotFoundOrNotServiced();
-      }      
+      }
     });
   }
 
   public displaySearchResults(response: FeatureCollection, latlng: Object): void {
-    this.removeCurrentSearchLayer();
 
-      this.currentSearchLayer = L.geoJSON(response, {
+    this.currentSearchLayer = L.geoJSON(response, {
+      style: function (feature) {
+        return {
+          fillColor: "#34FFCC",
+          fill: true,
+          fillOpacity: 1,
+          stroke: false
+        };
+      }
+    }).addTo(this.map);
+
+    this.currentMask = L.geoJSON(response, {
+      invert: true,
+      style: function (feature) {
+        return {
+          fillColor: "#323232",
+          fill: true,
+          fillOpacity: 0.4,
+          color: "#3388ff",
+          weight: 5,
+          stroke: true
+        };
+      }
+    }).addTo(this.map);
+
+    let icon = L.MakiMarkers.icon({
+      icon: "marker",
+      color: "#105745",
+      size: "m"
+    });
+
+    this.clickMarker = L.marker({ lat: latlng["lat"], lon: latlng["lng"] }, { icon: icon });
+
+    this.currentMask.bringToFront();
+    this.currentSearchLayer.bringToFront();
+    this.clickMarker.addTo(this.map);
+    this.searchActive = true;
+  }
+
+  public displayStormshedAndBackboneDetail(neighborhoodID: number): void {
+    this.neighborhoodExplorerService.getStormshed(neighborhoodID).subscribe(response => {
+      let featureCollection = (response) as any as FeatureCollection;
+      if (featureCollection.features.length === 0)
+      {
+        return null;
+      }
+      
+      this.stormshedLayer = L.geoJson(featureCollection, {
         style: function (feature) {
           return {
-            fillColor: "#ffad0a",
+            fillColor: "#C0FF6C",
             fill: true,
-            fillOpacity: 0.4,
-            color: "#ffff00",
-            weight: 5,
-            stroke: true
+            fillOpacity: 0.5,
+            stroke: false
           };
         }
-      }).addTo(this.map);
+      })
 
-      this.currentMask = L.geoJSON(response, {
+      this.stormshedLayer.addTo(this.map);
+      this.stormshedLayer.bringToBack();
+
+      this.map.removeLayer(this.currentMask);
+      //if we get a stormshed, move the mask out
+      this.currentMask = L.geoJSON(featureCollection, {
         invert: true,
         style: function (feature) {
           return {
             fillColor: "#323232",
             fill: true,
             fillOpacity: 0.4,
-            color: "#3388ff",
+            color: "#EA842C",
             weight: 5,
             stroke: true
           };
         }
       }).addTo(this.map);
 
-      let icon = L.MakiMarkers.icon({
-        icon: "marker",
-        color: "#105745",
-        size: "m"
-      });
+      let neighborhoodIDs = featureCollection.features[0].properties["NeighborhoodIDs"];
+      let cql_filter = "NeighborhoodID in (" + neighborhoodIDs.join(",") + ")";
 
-      this.clickMarker = L.marker({ lat: latlng["lat"], lon: latlng["lng"] }, { icon: icon });
+      let backboneWMSOptions = ({
+        layers: "DroolTool:Backbone",
+        transparent: true,
+        format: "image/png",
+        tiled: true,
+        styles: "backbone_narrow",
+        wmsParameterThatDoesNotExist: new Date(),
+        pane: "droolToolOverlayPane",
+        cql_filter: cql_filter
+      } as L.WMSOptions);
 
-      this.currentMask.bringToFront();
-      this.currentSearchLayer.bringToFront();
-      this.clickMarker.addTo(this.map);
+      this.backboneDetailLayer = L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions);
+      this.backboneDetailLayer.addTo(this.map);
+      this.backboneDetailLayer.bringToFront();
 
-      this.map.fitBounds(this.currentSearchLayer.getBounds());
-      this.searchActive = true;
+      this.map.fitBounds(this.stormshedLayer.getBounds());
+    });
   }
 
-  public displayStormshedAndBackboneDetail(neighborhoodID:number): void {
-    this.neighborhoodExplorerService.getStormshed(neighborhoodID).subscribe(response => {
-      if (this.stormshedLayer)
-      {
-        this.map.removeLayer(this.stormshedLayer);
-      }
-
-      this.stormshedLayer = L.geoJson(response, {style: function(feature) {
-        return {
-          fillColor: "#ffbd38",
-          fill: true,
-          fillOpacity: 0.4,
-          color: "#ffaf0f",
-          weight: 5,
-          stroke: true
-      };
-      }})
-
-      this.stormshedLayer.addTo(this.map);
-      this.stormshedLayer.bringToBack();
-    });
+  public displayTrace(event: Event): void {
+    event.stopPropagation();
+    this.neighborhoodExplorerService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
+      this.traceLayer = L.geoJSON(response, 
+        {
+          style: function (feature) {
+            return {
+              color: "#FF20F9",
+              weight: 3,
+              stroke:true
+            }
+          },
+          pane: "droolToolOverlayPane"
+        })
+      this.traceLayer.addTo(this.map);
+      this.map.fitBounds(this.traceLayer.getBounds());
+    })
   }
 
   public clearSearchResults(): void {
@@ -332,16 +396,16 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public removeCurrentSearchLayer(): void {
-    if (this.clickMarker) {
-      this.map.removeLayer(this.clickMarker);
-    }
-
-    if (this.currentSearchLayer) {
-      this.map.removeLayer(this.currentSearchLayer);
-    }
-
-    if (this.currentSearchLayer) {
-      this.map.removeLayer(this.currentMask);
-    }
+    [this.clickMarker,
+      this.currentSearchLayer,
+      this.currentMask,
+      this.stormshedLayer,
+      this.backboneDetailLayer,
+      this.traceLayer].forEach((x) => {
+        if (x) {
+          this.map.removeLayer(x);
+          x = null;
+        }
+      });
   }
 }
