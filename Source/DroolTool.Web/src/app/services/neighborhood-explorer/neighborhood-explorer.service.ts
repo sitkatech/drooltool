@@ -12,5 +12,15 @@ export class NeighborhoodExplorerService {
         let route = `/neighborhood-explorer/get-mask`;
         return this.apiService.getFromApi(route);
     }
+
+    getStormshed(neighborhoodID:number): Observable<string> {
+        let route = `/neighborhood-explorer/get-stormshed/${neighborhoodID}`;
+        return this.apiService.getFromApi(route);
+    }
+
+    getServicedNeighborhoodIds(): Observable<number[]> {
+        let route = `/neighborhood-explorer/get-serviced-neighborhood-ids`;
+        return this.apiService.getFromApi(route);
+    }
     
 }

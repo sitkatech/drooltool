@@ -1,6 +1,6 @@
-<div class="row ml-0 mr-0" [style.height]="mapHeight">
+<div class="row ml-0 mr-0">
     <div class="col-lg-4 pl-0 pr-0">
-        <div class="container-lg" style="height:100%">
+        <div class="container-lg">
             <div class="row p-4 section-search ml-0 mr-0">
                 <div class="col-12">
                     <div class="container">
@@ -12,7 +12,7 @@
                                         placeholder="Enter address or zip code">
                                     <div class="input-group-append">
                                         <span class="input-group-btn">
-                                            <a class="btn btn-drooltool search" (click)="makeNominatimRequest(searchText.value)">
+                                            <a class="btn btn-drooltool search" (click)="makeNominatimRequest(searchText)">
                                                 <i class="fas fa-search" style="color:white"></i>
                                             </a>
                                         </span>
@@ -23,7 +23,36 @@
                     </div>
                 </div>
             </div>
-            <div class="row d-none d-lg-flex p-lg-5 section-stats">
+            <div class="row ml-0 mr-0 p-2 section-active-search" *ngIf="searchActive">
+                <div class="col-12 align-middle text-center">
+                    <p class="b4 d-inline">{{searchAddress}} <span><a class="search-close" (click)="clearSearchResults()"><i class="fas fa-close"></i></a></span></p>
+                </div>
+            </div>
+            <div *ngIf="activeSearchNotFound" class="row ml-o mr-0 p-2">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12 text-right">
+                            <span><a class="search-close" (click)="clearSearchResults()"><i class="fas fa-close"></i></a></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            Icon here
+                        </div>
+                        <div class="col-10">
+                            <p>Sorry, the area you selected is not within the
+                                Urban Drool Tool service area.
+                            </p>
+                            <p>
+                                Select an area within the orange service
+                                boundary or enter an address in the search
+                                bar above to view results.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!activeSearchNotFound" class="row d-none d-lg-flex p-lg-5 section-stats">
                 <div class="col-12">
                     <h3 class="text-justify">
                         Learn about how your neighborhood is conserving water and protecting our streams and beaches

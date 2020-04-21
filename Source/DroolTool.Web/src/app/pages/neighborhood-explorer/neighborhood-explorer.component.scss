@@ -11,6 +11,10 @@
     line-height: 45px;
 }
 
+.section-active-search {
+    background-color: $drool-orange;
+}
+
 .section-rebates {
     background-color: #1E5668
 }
@@ -31,4 +35,8 @@
 .search {
     background-color: $drool-orange;
     border-color: $drool-orange;
+}
+
+.search-close {
+    cursor: pointer;
 }

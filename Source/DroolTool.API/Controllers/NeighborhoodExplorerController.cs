@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using DroolTool.EFModels.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Features;
 using NetTopologySuite.IO;
 using NetTopologySuite.Operation.Union;
@@ -37,6 +39,90 @@ namespace DroolTool.API.Controllers
             };
             var featureCollection = new FeatureCollection { feature };
             var write = gjw.Write(featureCollection);
+            return Ok(write);
+        }
+
+        [HttpGet("neighborhood-explorer/get-serviced-neighborhood-ids")]
+        public ActionResult<List<int>> GetServicedNeighborhoodIds()
+        {
+            return Ok(_dbContext.Neighborhood.Where(x => x.BackboneSegment.Any()).Select(x => x.NeighborhoodID).ToList());
+        }
+
+        [HttpGet("neighborhood-explorer/get-stormshed/{neighborhoodID}")]
+        public ActionResult<string> GetStormshed([FromRoute]int neighborhoodID)
+        {
+            var backboneAccumulated = new List<int>();
+
+            var startingPoint = _dbContext.Neighborhood
+                .Include(x => x.BackboneSegment)
+                .Single(x => x.NeighborhoodID == neighborhoodID).BackboneSegment;
+
+            var lookingAt = startingPoint.Where(x => x.BackboneSegmentTypeID != (int) BackboneSegmentTypeEnum.Channel).Select(x => x.BackboneSegmentID).ToList();
+
+            while (lookingAt.Any())
+            {
+                backboneAccumulated.AddRange(lookingAt);
+
+                var newEntities = _dbContext.BackboneSegment
+                    .Include(x => x.DownstreamBackboneSegment)
+                    .Include(x => x.InverseDownstreamBackboneSegment)
+                    .Where(x => lookingAt.Contains(x.BackboneSegmentID));
+
+                var downFromHere = newEntities.Where(x => x.DownstreamBackboneSegment != null)
+                    .Select(x => x.DownstreamBackboneSegment)
+                    .Where(x => x.BackboneSegmentTypeID != (int) BackboneSegmentTypeEnum.Channel)
+                    .Select(x => x.BackboneSegmentID)
+                    .Distinct()
+                    .ToList()
+                    .Except(backboneAccumulated);
+
+                var upFromHere = newEntities.SelectMany(x => x.InverseDownstreamBackboneSegment)
+                    .Where(x => x.BackboneSegmentTypeID != (int) BackboneSegmentTypeEnum.Channel)
+                    .Select(x => x.BackboneSegmentID)
+                    .Distinct()
+                    .ToList()
+                    .Except(backboneAccumulated);
+
+                lookingAt = upFromHere.Union(downFromHere).ToList();
+            }
+
+            var regionalSubbasinsInStormshedIds = _dbContext.BackboneSegment
+                .Include(x => x.Neighborhood)
+                .Where(x => backboneAccumulated.Contains(x.BackboneSegmentID))
+                .Select(x => x.NeighborhoodID)
+                .Distinct()
+                .ToList();
+
+            var regionalSubbasinsInStormshed = _dbContext.Neighborhood
+                .Where(x => regionalSubbasinsInStormshedIds.Contains(x.NeighborhoodID))
+                .ToList();
+
+            var featureCollection = new FeatureCollection();
+            var featureList = regionalSubbasinsInStormshed.Select(x =>
+            {
+                var geometry = UnaryUnionOp.Union(x.NeighborhoodGeometry4326);
+                var feature = new Feature() {Geometry = geometry, Attributes = new AttributesTable()};
+                feature.Attributes.Add("NeighborhoodID", x.NeighborhoodID);
+                return feature;
+            });
+
+            foreach (var feature in featureList)
+            {
+                featureCollection.Add(feature);
+            }
+
+            var gjw = new GeoJsonWriter
+            {
+                SerializerSettings =
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    FloatParseHandling = FloatParseHandling.Decimal,
+                    Formatting = Formatting.Indented
+                }
+            };
+
+            var write = gjw.Write(featureCollection);
+
             return Ok(write);
         }
     }
