@@ -1,8 +1,8 @@
 <div class="row ml-0 mr-0">
     <div class="col-lg-4 pl-0 pr-0">
-        <div class="container-lg">
-            <div class="row p-4 section-search ml-0 mr-0">
-                <div class="col-12">
+        <div class="container-lg d-inline d-lg-flex flex-column min-vh-100">
+            <div class="row ml-0 mr-0 flex-fill flex-column">
+                <div class="col-12 p-4 section-search">
                     <div class="container">
                         <div class="row">
                             <div class="col-12">
@@ -12,7 +12,8 @@
                                         placeholder="Enter address or zip code">
                                     <div class="input-group-append">
                                         <span class="input-group-btn">
-                                            <a class="btn btn-drooltool search" (click)="makeNominatimRequest(searchText)">
+                                            <a class="btn btn-drooltool search"
+                                                (click)="makeNominatimRequest(searchText)">
                                                 <i class="fas fa-search" style="color:white"></i>
                                             </a>
                                         </span>
@@ -22,17 +23,15 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row ml-0 mr-0 p-2 section-active-search" *ngIf="searchActive">
-                <div class="col-12 align-middle text-center">
-                    <p class="b4 d-inline">{{searchAddress}} <span><a class="search-close" (click)="clearSearchResults()"><i class="fas fa-close"></i></a></span></p>
+                <div *ngIf="searchActive" class="col-12 align-middle text-center p-2 section-active-search">
+                    <p class="b4 d-inline">{{searchAddress || "Location on map"}} <span><a class="search-close"
+                                (click)="clearSearchResults()"><i class="fas fa-close"></i></a></span></p>
                 </div>
-            </div>
-            <div *ngIf="activeSearchNotFound" class="row ml-o mr-0 p-2">
-                <div class="col-12">
+                <div *ngIf="activeSearchNotFound" class="col-12 p-lg-4 flex-fill">
                     <div class="row">
                         <div class="col-12 text-right">
-                            <span><a class="search-close" (click)="clearSearchResults()"><i class="fas fa-close"></i></a></span>
+                            <span><a class="search-close" (click)="clearSearchResults()"><i
+                                        class="fas fa-close"></i></a></span>
                         </div>
                     </div>
                     <div class="row">
@@ -51,51 +50,41 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div *ngIf="!activeSearchNotFound" class="row d-none d-lg-flex p-lg-5 section-stats">
-                <div class="col-12">
-                    <h3 class="text-justify">
-                        Learn about how your neighborhood is conserving water and protecting our streams and beaches
-                    </h3>
-                    <h3 class="text-center">
-                        Icon here
-                    </h3>
-                    <h3 class="text-justify">
-                        Click the exposed areas of the map to explore different neighborhood metrics
-                    </h3>
-                    <h3 class="text-center">
-                        or
-                    </h3>
-                    <h3 class="text-justify">
-                        Enter your address in the search bar for your own detailed urban drool snapshot
-                    </h3>
-                </div>
-            </div>
-            <div class="row d-none d-lg-flex mt-auto">
-                <div class="col-6 section-rebates">
-                    <div class="row p-lg-4">
-                        <div class="col-3">
-                            Icon
-                        </div>
-                        <div class="col-9">
-                            <h3>
-                                View Rebates and learn more about water efficiency
-                            </h3>
-                        </div>
+                <div *ngIf="!activeSearchNotFound" class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
+                    <div class="h-100 mt-auto mb-auto">
+                        <h3 class="text-justify">
+                            Learn about how your neighborhood is conserving water and protecting our streams and beaches
+                        </h3>
+                        <h3 class="text-center">
+                            Icon here
+                        </h3>
+                        <h3 class="text-justify">
+                            Click the exposed areas of the map to explore different neighborhood metrics
+                        </h3>
+                        <h3 class="text-center">
+                            or
+                        </h3>
+                        <h3 class="text-justify">
+                            Enter your address in the search bar for your own detailed urban drool snapshot
+                        </h3>
                     </div>
                 </div>
-                <div class="col-6 section-water-bill">
-                    <div class="row p-lg-4">
-                        <div class="col-3">
-                            Icon
+                <div class="col-12 d-none d-lg-block">
+                    <div class="row">
+                        <div class="col-6 section-rebates px-5 py-3 text-center">
+                            <div class="d-inline-block align-middle">
+                                <p class="b3 d-inline-block align-middle">
+                                    View Rebates and learn more about water efficiency
+                                </p>
+                            </div>
                         </div>
-                        <div class="col-9">
-                            <h3>
-                                Access my water bill
-                            </h3>
-                            <h4>
-                                Via Moulton Niguel Water District
-                            </h4>
+                        <div class="col-6 p-3 section-water-bill align-middle">
+                            <p class="b3">
+                                Access my <br /> water bill
+                            </p>
+                            <p class="b4">
+                                Via <br /> Moulton Niguel Water District
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -103,8 +92,9 @@
         </div>
     </div>
     <div class="col-lg-8 pl-0 pr-0">
-        <div id={{mapID}} class="location-card" [style.height]="mapHeight">
-            <button *ngIf="searchActive" (click)="displayTrace($event)" class="btn btn-drooltool" style="position:absolute; bottom:10px; right:10px; z-index:100000">Where does my water go?</button>
+        <div id={{mapID}} class="location-card" [style.min-height]="mapHeight" style="height:100%">
+            <button *ngIf="searchActive" (click)="displayTrace($event)" class="btn btn-drooltool"
+                style="position:absolute; bottom:10px; right:10px; z-index:100000">Where does my water go?</button>
         </div>
     </div>
     <div class="col-12 d-lg-none">
@@ -122,32 +112,20 @@
     </div>
     <div class="col-12 d-lg-none">
         <div class="row">
-            <div class="col-6 section-rebates">
-                <div class="row pt-4 pb-4">
-                    <div class="col-3">
-                        Icon
-                    </div>
-                    <div class="col-9">
-                        <h3>
-                            View Rebates and learn more about water efficiency
-                        </h3>
-                    </div>
+            <div class="col-6 section-rebates px-5 py-3 text-center">
+                <div class="d-inline-block align-middle">
+                    <p class="b3 d-inline-block align-middle">
+                        View Rebates and learn more about water efficiency
+                    </p>
                 </div>
             </div>
-            <div class="col-6 section-water-bill">
-                <div class="row pt-4 pb-4">
-                    <div class="col-3">
-                        Icon
-                    </div>
-                    <div class="col-9">
-                        <h3>
-                            Access my water bill
-                        </h3>
-                        <h4>
-                            Via Moulton Niguel Water District
-                        </h4>
-                    </div>
-                </div>
+            <div class="col-6 section-water-bill px-0 py-3">
+                <p class="b3">
+                    Access my <br /> water bill
+                </p>
+                <p class="b4">
+                    Via <br /> Moulton Niguel Water District
+                </p>
             </div>
         </div>
     </div>

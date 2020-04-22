@@ -168,6 +168,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
       let droolToolOverlayPane = this.map.createPane("droolToolOverlayPane");
       droolToolOverlayPane.style.zIndex=10000;
       this.map.getPane("markerPane").style.zIndex=10001;
+      this.map.getPane("popupPane").style.zIndex=10002;
 
       this.initializeMapEvents();
 
@@ -227,8 +228,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.removeCurrentSearchLayer();
     this.searchAddress = q.value;
     this.nominatimService.makeNominatimRequest(this.searchAddress).subscribe(response => {
+      debugger;
       if (response.length === 0) {
         this.searchAddressNotFoundOrNotServiced();
+        return null;
       }
 
       let lat = +response[0].lat;
@@ -245,15 +248,12 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.wfsService.geoserverNeighborhoodLookup(latlng).subscribe(response => {
       if (response.features.length === 0) {
         this.searchAddressNotFoundOrNotServiced();
+        return null;
       }
 
       this.selectedNeighborhoodID = response.features[0].properties.NeighborhoodID;
       if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
         this.displaySearchResults(response, latlng);
-        if (this.traceLayer) {
-          this.map.removeLayer(this.traceLayer);
-        }
-        console.log(this.selectedNeighborhoodID);
         this.displayStormshedAndBackboneDetail(this.selectedNeighborhoodID);
       }
       else {
@@ -295,11 +295,17 @@ export class NeighborhoodExplorerComponent implements OnInit {
       size: "m"
     });
 
+    let popupContent = "Neighborhood area for " + (this.searchAddress !== undefined && this.searchAddress !== null ? this.searchAddress : "selected location");
+    let popupOptions = {
+      'className' : 'search-popup'
+    }
     this.clickMarker = L.marker({ lat: latlng["lat"], lon: latlng["lng"] }, { icon: icon });
 
     this.currentMask.bringToFront();
     this.currentSearchLayer.bringToFront();
-    this.clickMarker.addTo(this.map);
+    this.clickMarker.addTo(this.map)
+                    .bindPopup(popupContent, popupOptions)
+                    .openPopup();
     this.searchActive = true;
   }
 
@@ -325,8 +331,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.stormshedLayer.addTo(this.map);
       this.stormshedLayer.bringToBack();
 
-      this.map.removeLayer(this.currentMask);
       //if we get a stormshed, move the mask out
+      this.clearLayer(this.currentMask);
       this.currentMask = L.geoJSON(featureCollection, {
         invert: true,
         style: function (feature) {
@@ -365,6 +371,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
   public displayTrace(event: Event): void {
     event.stopPropagation();
+    this.clearLayer(this.traceLayer);
     this.neighborhoodExplorerService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
       this.traceLayer = L.geoJSON(response, 
         {
@@ -402,10 +409,15 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.stormshedLayer,
       this.backboneDetailLayer,
       this.traceLayer].forEach((x) => {
-        if (x) {
-          this.map.removeLayer(x);
-          x = null;
-        }
+        this.clearLayer(x);
       });
+  }
+
+  public clearLayer(layer: L.Layer): void {
+    if (layer)
+    {
+      this.map.removeLayer(layer);
+      layer = null;
+    }
   }
 }

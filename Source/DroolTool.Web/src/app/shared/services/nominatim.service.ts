@@ -23,7 +23,6 @@ export class NominatimService {
 
     public makeNominatimRequest(q:string): Observable<any> {
         const url: string = `${this.baseURL}&format=json&q=${q}&viewbox=-117.82019474260474,33.440338462792681,-117.61081200648763,33.670204787351004&bounded=1`;
-        console.log(url);
         return this.http.get<any>(url);
     }
 }
