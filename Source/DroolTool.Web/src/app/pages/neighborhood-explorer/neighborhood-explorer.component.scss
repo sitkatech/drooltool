@@ -11,6 +11,11 @@
     line-height: 45px;
 }
 
+.section-search-not-found * h4 {
+    color: #1E5668;
+    font-weight:bold;
+}
+
 .section-active-search {
     background-color: #D6F1B6;
 }
@@ -42,6 +47,11 @@
 .search {
     background-color: $drool-orange;
     border-color: $drool-orange;
+}
+
+.search:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 .search-close {

@@ -3,16 +3,14 @@ import { environment } from "src/environments/environment";
 import * as L from 'leaflet';
 import '../../../../node_modules/leaflet.snogylop/src/leaflet.snogylop.js';
 import '../../../../node_modules/leaflet.fullscreen/Control.FullScreen.js';
-import '../../../assets/js/Leaflet-Makimarker-v3.js';
 import * as esri from 'esri-leaflet'
-import { BoundingBoxDto } from '../../shared/models/bounding-box-dto';
 import { CustomCompileService } from '../../shared/services/custom-compile.service';
 import { NeighborhoodExplorerService } from 'src/app/services/neighborhood-explorer/neighborhood-explorer.service';
 import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
 
-declare var $ : any;
+declare var $: any;
 
 @Component({
   selector: 'drooltool-neighborhood-explorer',
@@ -21,8 +19,7 @@ declare var $ : any;
 })
 export class NeighborhoodExplorerComponent implements OnInit {
 
-  public zoomMapToDefaultExtent = true;
-  public defaultFitBoundsOptions?: L.FitBoundsOptions = null;
+  public defaultMapZoom = 12;
   public afterSetControl = new EventEmitter();
   public afterLoadMap = new EventEmitter();
   public onMapMoveEnd = new EventEmitter();
@@ -49,7 +46,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public searchActive: boolean = false;
   public searchAddress: string;
   public activeSearchNotFound: boolean = false;
-  boundingBox: BoundingBoxDto;
 
   public selectedNeighborhoodID: number;
 
@@ -63,13 +59,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-
-    // Default bounding box
-    this.boundingBox = new BoundingBoxDto();
-    this.boundingBox.Left = -117.36883651141554;
-    this.boundingBox.Bottom = 33.45695062823788;
-    this.boundingBox.Right = -117.82471349197476;
-    this.boundingBox.Top = 33.71689407051289;
 
     this.tileLayers = Object.assign({}, {
       "Aerial": L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -155,7 +144,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
         minZoom: 6,
         maxZoom: 22,
         layers: [
-          this.tileLayers["Hillshade"],
+          this.tileLayers["Street"],
           this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
           this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
         ],
@@ -165,22 +154,24 @@ export class NeighborhoodExplorerComponent implements OnInit {
       } as L.MapOptions;
 
       this.map = L.map(this.mapID, mapOptions);
-      let droolToolOverlayPane = this.map.createPane("droolToolOverlayPane");
-      droolToolOverlayPane.style.zIndex=10000;
-      this.map.getPane("markerPane").style.zIndex=10001;
-      this.map.getPane("popupPane").style.zIndex=10002;
 
+      this.initializePanes();
       this.initializeMapEvents();
-
-      this.map.fitBounds(this.maskLayer.getBounds(), this.defaultFitBoundsOptions);
-      this.map.setZoom(12);
-
       this.setControl();
+
       this.maskLayer.addTo(this.map);
+      this.defaultFitBounds();
 
       let el = document.getElementById('NeighborhoodExplorerMap');
       el.scrollIntoView();
     });
+  }
+
+  public initializePanes(): void {
+    let droolToolOverlayPane = this.map.createPane("droolToolOverlayPane");
+    droolToolOverlayPane.style.zIndex = 10000;
+    this.map.getPane("markerPane").style.zIndex = 10001;
+    this.map.getPane("popupPane").style.zIndex = 10002;
   }
 
   public setControl(): void {
@@ -199,7 +190,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.afterSetControl.emit(this.layerControl);
   }
 
-  public initializeMapEvents() : void {
+  public initializeMapEvents(): void {
     this.map.on('load', (event: L.LeafletEvent) => {
       this.afterLoadMap.emit(event);
     });
@@ -214,7 +205,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
         return;
       }
       dblClickTimer = setTimeout(() => {
-        this.getNeighborhoodFromLatLong(event.latlng);
+        this.getNeighborhoodFromLatLong(event.latlng, true);
         dblClickTimer = null;
       }, 200);
     }).on("dblclick", () => {
@@ -225,10 +216,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public makeNominatimRequest(q: any): void {
-    this.removeCurrentSearchLayer();
+    this.clearSearchResults();
     this.searchAddress = q.value;
     this.nominatimService.makeNominatimRequest(this.searchAddress).subscribe(response => {
-      debugger;
       if (response.length === 0) {
         this.searchAddressNotFoundOrNotServiced();
         return null;
@@ -238,13 +228,15 @@ export class NeighborhoodExplorerComponent implements OnInit {
       let lng = +response[0].lon;
       let latlng = { 'lat': lat, 'lng': lng };
 
-      this.getNeighborhoodFromLatLong(latlng);
+      this.getNeighborhoodFromLatLong(latlng, false);
     });
     q.value = '';
   }
 
-  public getNeighborhoodFromLatLong(latlng: Object): void {
-    this.removeCurrentSearchLayer();
+  public getNeighborhoodFromLatLong(latlng: Object, mapClick: boolean): void {
+    if (mapClick) {
+      this.clearSearchResults();
+    }
     this.wfsService.geoserverNeighborhoodLookup(latlng).subscribe(response => {
       if (response.features.length === 0) {
         this.searchAddressNotFoundOrNotServiced();
@@ -269,7 +261,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
         return {
           fillColor: "#34FFCC",
           fill: true,
-          fillOpacity: 1,
+          fillOpacity: 0.5,
           stroke: false
         };
       }
@@ -289,40 +281,39 @@ export class NeighborhoodExplorerComponent implements OnInit {
       }
     }).addTo(this.map);
 
-    let icon = L.MakiMarkers.icon({
-      icon: "marker",
-      color: "#105745",
-      size: "m"
+    let icon = L.divIcon({
+      html: '<i class="fas fa-map-marker-alt fa-2x" style="color:#105745"></i>',
+      iconSize: [20,20],
+      className: "search-popup"
     });
 
-    let popupContent = "Neighborhood area for " + (this.searchAddress !== undefined && this.searchAddress !== null ? this.searchAddress : "selected location");
+    let popupContent = "Neighborhood area for " + (this.searchAddress !== undefined && this.searchAddress !== null ? this.searchAddress : "my selected neighborhood");
     let popupOptions = {
-      'className' : 'search-popup'
+      'className': 'search-popup'
     }
     this.clickMarker = L.marker({ lat: latlng["lat"], lon: latlng["lng"] }, { icon: icon });
 
     this.currentMask.bringToFront();
     this.currentSearchLayer.bringToFront();
     this.clickMarker.addTo(this.map)
-                    .bindPopup(popupContent, popupOptions)
-                    .openPopup();
+      .bindPopup(popupContent, popupOptions)
+      .openPopup();
     this.searchActive = true;
   }
 
   public displayStormshedAndBackboneDetail(neighborhoodID: number): void {
     this.neighborhoodExplorerService.getStormshed(neighborhoodID).subscribe(response => {
       let featureCollection = (response) as any as FeatureCollection;
-      if (featureCollection.features.length === 0)
-      {
+      if (featureCollection.features.length === 0) {
         return null;
       }
-      
+
       this.stormshedLayer = L.geoJson(featureCollection, {
         style: function (feature) {
           return {
             fillColor: "#C0FF6C",
             fill: true,
-            fillOpacity: 0.5,
+            fillOpacity: 0.3,
             stroke: false
           };
         }
@@ -373,13 +364,13 @@ export class NeighborhoodExplorerComponent implements OnInit {
     event.stopPropagation();
     this.clearLayer(this.traceLayer);
     this.neighborhoodExplorerService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
-      this.traceLayer = L.geoJSON(response, 
+      this.traceLayer = L.geoJSON(response,
         {
           style: function (feature) {
             return {
               color: "#FF20F9",
               weight: 3,
-              stroke:true
+              stroke: true
             }
           },
           pane: "droolToolOverlayPane"
@@ -390,34 +381,47 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public clearSearchResults(): void {
-    this.searchAddress = '';
+    this.searchAddress = null;
     this.searchActive = false;
     this.activeSearchNotFound = false;
     this.removeCurrentSearchLayer();
-    this.map.fitBounds(this.maskLayer.getBounds(), this.defaultFitBoundsOptions);
+  }
+
+  public returnToDefault(): void {
+    this.clearSearchResults();
+    this.defaultFitBounds();
   }
 
   public searchAddressNotFoundOrNotServiced(): void {
-    this.searchAddress = '';
+    this.searchAddress = null;
     this.activeSearchNotFound = true;
   }
 
   public removeCurrentSearchLayer(): void {
     [this.clickMarker,
-      this.currentSearchLayer,
-      this.currentMask,
-      this.stormshedLayer,
-      this.backboneDetailLayer,
-      this.traceLayer].forEach((x) => {
-        this.clearLayer(x);
-      });
+    this.currentSearchLayer,
+    this.currentMask,
+    this.stormshedLayer,
+    this.backboneDetailLayer,
+    this.traceLayer].forEach((x) => {
+      this.clearLayer(x);
+    });
   }
 
   public clearLayer(layer: L.Layer): void {
-    if (layer)
-    {
+    if (layer) {
       this.map.removeLayer(layer);
       layer = null;
     }
+  }
+
+  //fitBounds will use it's default zoom level over what is sent in
+  //if it determines a further appropriate zoom level. This can make the 
+  //map zoom out to inappropriate levels sometimes, and then setZoom 
+  //won't be honored because it's in the middle of a zoom. So we'll manipulate
+  //it a bit.
+  public defaultFitBounds(): void {
+    let target = this.map._getBoundsCenterZoom(this.maskLayer.getBounds(), null);
+    this.map.setView(target.center, this.defaultMapZoom, null);
   }
 }

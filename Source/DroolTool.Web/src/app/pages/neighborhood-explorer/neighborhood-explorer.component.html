@@ -9,14 +9,17 @@
                                 <h3 style="color:white">How is my neighborhood doing?</h3>
                                 <div class="input-group">
                                     <input #searchText type="text" class="form-control b4 text-left"
-                                        placeholder="Enter address or zip code">
+                                        placeholder="Enter address or zip code" (keyUp.enter)="makeNominatimRequest(searchText)">
                                     <div class="input-group-append">
-                                        <span class="input-group-btn">
+                                        <!-- <span class="input-group-btn">
                                             <a class="btn btn-drooltool search"
                                                 (click)="makeNominatimRequest(searchText)">
                                                 <i class="fas fa-search" style="color:white"></i>
                                             </a>
-                                        </span>
+                                        </span> -->
+                                        <button class="btn btn-drooltool search" type="button" (click)="makeNominatimRequest(searchText)">
+                                            <i class="fas fa-search" style="color:white"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -24,7 +27,7 @@
                     </div>
                 </div>
                 <div *ngIf="searchActive" class="col-12 align-middle text-center p-2 section-active-search">
-                    <p class="b4 d-inline">{{searchAddress || "Location on map"}} <span><a class="search-close"
+                    <p class="b4 d-inline">{{searchAddress || "My Selected Neighborhood"}} <span><a class="search-close"
                                 (click)="clearSearchResults()"><i class="fas fa-close"></i></a></span></p>
                 </div>
                 <div *ngIf="activeSearchNotFound" class="col-12 p-lg-4 flex-fill">
@@ -34,19 +37,19 @@
                                         class="fas fa-close"></i></a></span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-2">
-                            Icon here
+                    <div class="row section-search-not-found">
+                        <div class="col-2 text-center">
+                            <span><i class="fas fa-map-marker-alt fa-3x"></i></span>
                         </div>
                         <div class="col-10">
-                            <p>Sorry, the area you selected is not within the
+                            <h4>Sorry, the area you selected is not within the
                                 Urban Drool Tool service area.
-                            </p>
-                            <p>
-                                Select an area within the orange service
+                            </h4>
+                            <h4>
+                                Select an area within the highlighted service
                                 boundary or enter an address in the search
                                 bar above to view results.
-                            </p>
+                            </h4>
                         </div>
                     </div>
                 </div>
@@ -56,7 +59,7 @@
                             Learn about how your neighborhood is conserving water and protecting our streams and beaches
                         </h3>
                         <h3 class="text-center">
-                            Icon here
+                            <span><i class="fas fa-tint fa-2x"></i></span>
                         </h3>
                         <h3 class="text-justify">
                             Click the exposed areas of the map to explore different neighborhood metrics
@@ -71,20 +74,26 @@
                 </div>
                 <div class="col-12 d-none d-lg-block">
                     <div class="row">
-                        <div class="col-6 section-rebates px-5 py-3 text-center">
-                            <div class="d-inline-block align-middle">
-                                <p class="b3 d-inline-block align-middle">
-                                    View Rebates and learn more about water efficiency
-                                </p>
+                        <div class="col-6 section-rebates text-center">
+                            <div class="row h-100">
+                                <div class="col my-auto py-3">
+                                    <p class="b3 mx-auto">
+                                        View Rebates and learn more about water efficiency
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-6 p-3 section-water-bill align-middle">
-                            <p class="b3">
-                                Access my <br /> water bill
-                            </p>
-                            <p class="b4">
-                                Via <br /> Moulton Niguel Water District
-                            </p>
+                        <div class="col-6 section-water-bill">
+                            <div class="row h-100">
+                                <div class="col my-auto py-3">
+                                    <p class="b3 mx-auto">
+                                        Access my <br /> water bill
+                                    </p>
+                                    <p class="b4 mx-auto">
+                                        Via <br /> Moulton Niguel Water District
+                                    </p>
+                                </div>
+                            </div>   
                         </div>
                     </div>
                 </div>
@@ -112,20 +121,26 @@
     </div>
     <div class="col-12 d-lg-none">
         <div class="row">
-            <div class="col-6 section-rebates px-5 py-3 text-center">
-                <div class="d-inline-block align-middle">
-                    <p class="b3 d-inline-block align-middle">
-                        View Rebates and learn more about water efficiency
-                    </p>
+            <div class="col-6 section-rebates text-center">
+                <div class="row h-100">
+                    <div class="col my-auto py-3">
+                        <p class="b3 mx-auto">
+                            View Rebates and learn more about water efficiency
+                        </p>
+                    </div>
                 </div>
             </div>
-            <div class="col-6 section-water-bill px-0 py-3">
-                <p class="b3">
-                    Access my <br /> water bill
-                </p>
-                <p class="b4">
-                    Via <br /> Moulton Niguel Water District
-                </p>
+            <div class="col-6 section-water-bill">
+                <div class="row h-100">
+                    <div class="col my-auto py-3">
+                        <p class="b3 mx-auto">
+                            Access my <br /> water bill
+                        </p>
+                        <p class="b4 mx-auto">
+                            Via <br /> Moulton Niguel Water District
+                        </p>
+                    </div>
+                </div>   
             </div>
         </div>
     </div>
