@@ -9,6 +9,8 @@
     "keystoneSupportBaseUrl": [TODO],
 
     "geoserverMapServiceUrl": [TODO],
+
+    "nominatimApiKey" : [TODO],
   
     "keystoneAuthConfiguration": {
       "clientId": [TODO],

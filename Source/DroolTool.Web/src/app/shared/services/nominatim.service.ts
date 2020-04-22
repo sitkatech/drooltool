@@ -12,9 +12,7 @@ import {environment} from "src/environments/environment";
 })
 export class NominatimService {
 
-    //move to environment variable
-    private nominatimKey = "mSMCuGwTHIiqgLeT7ODwVM1udF9RaL2H";
-    private baseURL = "https://open.mapquestapi.com/nominatim/v1/search.php?key=" + this.nominatimKey;
+    private baseURL = "https://open.mapquestapi.com/nominatim/v1/search.php?key=" + environment.nominatimApiKey;
 
     constructor(
         private http: HttpClient,

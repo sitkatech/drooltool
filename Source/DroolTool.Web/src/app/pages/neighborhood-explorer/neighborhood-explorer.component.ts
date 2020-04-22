@@ -125,6 +125,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.neighborhoodsWhereItIsOkayToClickIDs = result;
     })
 
+    this.initializeMap();
+  }
+
+  public initializeMap(): void {
     this.neighborhoodExplorerService.getMask().subscribe(maskString => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
@@ -200,6 +204,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
     let dblClickTimer = null;
 
+    //to handle click for select area vs double click for zoom
     this.map.on("click", (event: L.LeafletEvent) => {
       if (dblClickTimer !== null) {
         return;
@@ -215,9 +220,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
     })
   }
 
-  public makeNominatimRequest(q: any): void {
+  public makeNominatimRequest(searchText: any): void {
     this.clearSearchResults();
-    this.searchAddress = q.value;
+    this.searchAddress = searchText.value;
     this.nominatimService.makeNominatimRequest(this.searchAddress).subscribe(response => {
       if (response.length === 0) {
         this.searchAddressNotFoundOrNotServiced();
@@ -230,7 +235,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
       this.getNeighborhoodFromLatLong(latlng, false);
     });
-    q.value = '';
+    searchText.value = '';
   }
 
   public getNeighborhoodFromLatLong(latlng: Object, mapClick: boolean): void {
@@ -361,6 +366,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public displayTrace(event: Event): void {
+    //Button lies on top of map, so we don't to be selecting a new area
     event.stopPropagation();
     this.clearLayer(this.traceLayer);
     this.neighborhoodExplorerService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
@@ -416,7 +422,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   //fitBounds will use it's default zoom level over what is sent in
-  //if it determines a further appropriate zoom level. This can make the 
+  //if it determines that its max zoom is further away. This can make the 
   //map zoom out to inappropriate levels sometimes, and then setZoom 
   //won't be honored because it's in the middle of a zoom. So we'll manipulate
   //it a bit.
