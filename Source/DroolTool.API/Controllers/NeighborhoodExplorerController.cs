@@ -80,6 +80,7 @@ namespace DroolTool.API.Controllers
             var listBackboneAccumulated = backboneAccumulated.Select(x => x.Neighborhood)
                 .ToList()
                 .Distinct()
+                .Where(x => x != null)
                 .ToList();
 
             var feature = new Feature()

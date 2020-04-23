@@ -295,7 +295,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
       className: "search-popup"
     });
 
-    let popupContent = "Neighborhood area for <span class='search-popup-address'>" + (this.searchAddress !== undefined && this.searchAddress !== null ? this.searchAddress : "my selected neighborhood") + "</span>";
+    let popupContent = "Neighborhood area for <span id='search-popup-address' class='search-popup-address'>" + (this.searchAddress !== undefined && this.searchAddress !== null ? this.searchAddress : "my selected neighborhood") + "</span>";
     let popupOptions = {
       'className': 'search-popup'
     }
@@ -364,7 +364,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.backboneDetailLayer.addTo(this.map);
       this.backboneDetailLayer.bringToFront();
 
-      this.map.fitBounds(this.stormshedLayer.getBounds());
+      this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
     });
   }
 
@@ -386,9 +386,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
         })
       this.traceLayer.addTo(this.map);
 
-      let featureGroupTemp = new L.featureGroup([this.traceLayer, this.clickMarker]);
-
-      this.map.fitBounds(featureGroupTemp.getBounds());
+      this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.traceLayer, this.clickMarker, this.stormshedLayer]));     
     })
   }
 
@@ -435,5 +433,16 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public defaultFitBounds(): void {
     let target = this.map._getBoundsCenterZoom(this.maskLayer.getBounds(), null);
     this.map.setView(target.center, this.defaultMapZoom, null);
+  }
+
+  public fitBoundsWithPaddingAndFeatureGroup(featureGroup: L.featureGroup): void {
+    let paddingHeight = 0;
+    let popupContent = $("#search-popup-address");
+    if (popupContent !== null && popupContent !== undefined && popupContent.length == 1)
+    {
+      paddingHeight = popupContent.parent().parent().innerHeight();
+    }
+
+    this.map.fitBounds(featureGroup.getBounds(), {padding: [paddingHeight, paddingHeight]});
   }
 }
