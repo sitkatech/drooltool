@@ -18,7 +18,6 @@ namespace DroolTool.EFModels.Entities
         public virtual DbSet<BackboneSegment> BackboneSegment { get; set; }
         public virtual DbSet<BackboneSegmentType> BackboneSegmentType { get; set; }
         public virtual DbSet<DatabaseMigration> DatabaseMigration { get; set; }
-        public virtual DbSet<DroolToolRole> DroolToolRole { get; set; }
         public virtual DbSet<Neighborhood> Neighborhood { get; set; }
         public virtual DbSet<RawDroolMetric> RawDroolMetric { get; set; }
         public virtual DbSet<RegionalSubbasin> RegionalSubbasin { get; set; }
@@ -78,25 +77,6 @@ namespace DroolTool.EFModels.Entities
                     .HasName("PK_DatabaseMigration_DatabaseMigrationNumber");
 
                 entity.Property(e => e.DatabaseMigrationNumber).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<DroolToolRole>(entity =>
-            {
-                entity.HasIndex(e => e.DroolToolRoleDisplayName)
-                    .HasName("AK_DroolToolRole_DroolToolRoleDisplayName")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.DroolToolRoleName)
-                    .HasName("AK_DroolToolRole_DroolToolRoleName")
-                    .IsUnique();
-
-                entity.Property(e => e.DroolToolRoleID).ValueGeneratedNever();
-
-                entity.Property(e => e.DroolToolRoleDescription).IsUnicode(false);
-
-                entity.Property(e => e.DroolToolRoleDisplayName).IsUnicode(false);
-
-                entity.Property(e => e.DroolToolRoleName).IsUnicode(false);
             });
 
             modelBuilder.Entity<Neighborhood>(entity =>
