@@ -1,16 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {FeatureCollection} from "geojson";
-import {Observable, Subject} from "rxjs";
-import {map, takeUntil} from "rxjs/operators";
+import {Observable} from "rxjs";
 import {environment} from "src/environments/environment";
 
 @Injectable({
     providedIn: 'root'
 })
 export class WfsService {
-
-    private getparcelIDsIntersectingUnsubscribe: Subject<void> = new Subject<void>();
 
     constructor(
         private http: HttpClient,

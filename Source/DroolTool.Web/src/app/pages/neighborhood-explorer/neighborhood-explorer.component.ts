@@ -1,4 +1,4 @@
-import { AfterViewInit, ApplicationRef, ChangeDetectionStrategy, Component, EventEmitter, OnInit } from '@angular/core';
+import { AfterViewInit, ApplicationRef, ChangeDetectionStrategy, Component, EventEmitter, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { environment } from "src/environments/environment";
 import * as L from 'leaflet';
 import '../../../../node_modules/leaflet.snogylop/src/leaflet.snogylop.js';
@@ -18,6 +18,7 @@ declare var $: any;
   styleUrls: ['./neighborhood-explorer.component.scss']
 })
 export class NeighborhoodExplorerComponent implements OnInit {
+  @ViewChild("mapDiv", {static:false}) mapElement: ElementRef;
 
   public defaultMapZoom = 12;
   public afterSetControl = new EventEmitter();
@@ -166,8 +167,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.maskLayer.addTo(this.map);
       this.defaultFitBounds();
 
-      let el = document.getElementById('NeighborhoodExplorerMap');
-      el.scrollIntoView();
+      this.mapElement.nativeElement.scrollIntoView();
     });
   }
 

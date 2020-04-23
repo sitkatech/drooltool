@@ -77,18 +77,18 @@ namespace DroolTool.API.Controllers
                 lookingAt = upFromHere.Union(downFromHere).ToList();
             }
 
-            var listBackboneAccumulated = backboneAccumulated.Select(x => x.Neighborhood).ToList();
-
-            var regionalSubbasinsInStormshed = _dbContext.Neighborhood.Where(x => listBackboneAccumulated.Contains(x)).ToList();
+            var listBackboneAccumulated = backboneAccumulated.Select(x => x.Neighborhood)
+                .ToList()
+                .Distinct()
+                .ToList();
 
             var feature = new Feature()
             {
-                Geometry = UnaryUnionOp.Union(regionalSubbasinsInStormshed.Select(x => x.NeighborhoodGeometry4326)),
+                Geometry = UnaryUnionOp.Union(listBackboneAccumulated.Select(x => x.NeighborhoodGeometry4326).ToList()),
                 Attributes = new AttributesTable()
             };
 
-            feature.Attributes.Add("NeighborhoodIDs",
-                regionalSubbasinsInStormshed.Select(x => x.NeighborhoodID).ToList());
+            feature.Attributes.Add("NeighborhoodIDs", listBackboneAccumulated.Select(x => x.NeighborhoodID).ToList());
 
             return Ok(buildFeatureCollectionAndWriteGeoJson(new List<Feature> { feature }));
         }
@@ -111,9 +111,7 @@ namespace DroolTool.API.Controllers
             {
                 backboneDownstream.AddRange(lookingAt);
 
-                var newEntities = backboneSegments.Where(x => lookingAt.Contains(x));
-
-                lookingAt = newEntities.Where(x => x.DownstreamBackboneSegment != null)
+                lookingAt = backboneSegments.Where(x => lookingAt.Contains(x) && x.DownstreamBackboneSegment != null)
                     .Select(x => x.DownstreamBackboneSegment)
                     .ToList()
                     .Distinct()
