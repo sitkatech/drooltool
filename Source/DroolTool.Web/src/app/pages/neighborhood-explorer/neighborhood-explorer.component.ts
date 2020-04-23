@@ -167,7 +167,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.maskLayer.addTo(this.map);
       this.defaultFitBounds();
 
-      this.mapElement.nativeElement.scrollIntoView();
+      if(window.innerWidth > 991)
+      {
+        this.mapElement.nativeElement.scrollIntoView();
+      }
     });
   }
 
@@ -292,7 +295,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
       className: "search-popup"
     });
 
-    let popupContent = "Neighborhood area for " + (this.searchAddress !== undefined && this.searchAddress !== null ? this.searchAddress : "my selected neighborhood");
+    let popupContent = "Neighborhood area for <span class='search-popup-address'>" + (this.searchAddress !== undefined && this.searchAddress !== null ? this.searchAddress : "my selected neighborhood") + "</span>";
     let popupOptions = {
       'className': 'search-popup'
     }
@@ -382,7 +385,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
           pane: "droolToolOverlayPane"
         })
       this.traceLayer.addTo(this.map);
-      this.map.fitBounds(this.traceLayer.getBounds());
+
+      let featureGroupTemp = new L.featureGroup([this.traceLayer, this.clickMarker]);
+
+      this.map.fitBounds(featureGroupTemp.getBounds());
     })
   }
 

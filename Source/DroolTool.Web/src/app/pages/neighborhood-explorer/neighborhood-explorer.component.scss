@@ -1,19 +1,24 @@
 @import '~leaflet.fullscreen/Control.FullScreen.css';
 @import '~src/scss/_variables.scss';
 
+@media only screen and (max-width: 991px) {
+    .section-search {
+        text-align:center;
+    }
+}
+
 .section-search {
     background-color: $header-nav-color;
 }
 
-.section-stats * h3 {
+.section-stats * h3,
+.section-search-not-found * h3 {
     color: #1E5668;
-    font-weight:bold;
-    line-height: 45px;
+    font-size:18px;
 }
 
-.section-search-not-found * h4 {
-    color: #1E5668;
-    font-weight:bold;
+.section-stats * h3 {
+    line-height:45px;
 }
 
 .section-active-search {
@@ -44,6 +49,16 @@
     margin-bottom:0;
 }
 
+.section-water-bill p.b3,
+.section-rebates p.b3
+{
+    font-size:18px;
+}
+
+.section-water-bill p.b4 {
+    font-size: 14px;
+}
+
 .search {
     background-color: $drool-orange;
     border-color: $drool-orange;
@@ -60,14 +75,14 @@
 
 ::ng-deep .search-popup .leaflet-popup-content-wrapper {
     font-family: "Nunito", sans-serif;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 15px;
     text-align: center;
     background-color: #D3F8FF;
-    border-style: dashed;
-    border-width: 5px;
-    border-color: $drool-orange;
-    border-radius: 7px
+}
+
+::ng-deep .search-popup .leaflet-popup-content-wrapper .search-popup-address{
+    font-weight: 800;
 }
 
 ::ng-deep .leaflet-popup-tip-container {

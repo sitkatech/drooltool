@@ -69,7 +69,7 @@ export class DynamicEnvironment {
         return window.config.leadOrganizationLogoFilename;
     }
 
-    public get mapquestUrlWithNominatimApiKey() {
-        return window.config.mapquestUrlWithNominatimApiKey;
+    public get mapquestApiUrlWithNominatimApiKey() {
+        return window.config.mapquestApiUrlWithNominatimApiKey;
     }
 }
