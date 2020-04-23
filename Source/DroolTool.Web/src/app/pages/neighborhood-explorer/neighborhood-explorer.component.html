@@ -28,12 +28,12 @@
                 </div>
                 <div *ngIf="searchActive" class="col-12 align-middle text-center p-2 section-active-search">
                     <p class="b4 d-inline">{{searchAddress || "My Selected Neighborhood"}} <span><a class="search-close"
-                                (click)="clearSearchResults()"><i class="fas fa-close"></i></a></span></p>
+                                (click)="returnToDefault()"><i class="fas fa-close"></i></a></span></p>
                 </div>
                 <div *ngIf="activeSearchNotFound" class="col-12 p-lg-4 flex-fill">
                     <div class="row">
                         <div class="col-12 text-right">
-                            <span><a class="search-close" (click)="clearSearchResults()"><i
+                            <span><a class="search-close" (click)="returnToDefault()"><i
                                         class="fas fa-close"></i></a></span>
                         </div>
                     </div>
