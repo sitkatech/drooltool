@@ -1,5 +1,5 @@
 <featureType>
-  <id>FeatureTypeInfoImpl--18fb43ea:16bb3cec639:-b348</id>
+  <id>FeatureTypeInfoImpl-7284924c:171a82c4df4:-7ff1</id>
   <name>Watersheds</name>
   <nativeName>vGeoServerWatershed</nativeName>
   <namespace>
@@ -23,15 +23,15 @@
   <nativeBoundingBox>
     <minx>-117.82471349197476</minx>
     <maxx>-117.36883651141554</maxx>
-    <miny>33.456950628238275</miny>
-    <maxy>33.716894070513284</maxy>
+    <miny>33.45695062823788</miny>
+    <maxy>33.71689407051289</maxy>
     <crs>EPSG:4326</crs>
   </nativeBoundingBox>
   <latLonBoundingBox>
     <minx>-117.82471349197476</minx>
     <maxx>-117.36883651141554</maxx>
-    <miny>33.456950628238275</miny>
-    <maxy>33.716894070513284</maxy>
+    <miny>33.45695062823788</miny>
+    <maxy>33.71689407051289</maxy>
     <crs>EPSG:4326</crs>
   </latLonBoundingBox>
   <projectionPolicy>FORCE_DECLARED</projectionPolicy>
@@ -40,7 +40,7 @@
     <entry key="cachingEnabled">false</entry>
   </metadata>
   <store class="dataStore">
-    <id>DataStoreInfoImpl--7c524755:15d7bc5e18f:-7fff</id>
+    <id>DataStoreInfoImpl-7284924c:171a82c4df4:-7ffb</id>
   </store>
   <serviceConfiguration>false</serviceConfiguration>
   <maxFeatures>0</maxFeatures>

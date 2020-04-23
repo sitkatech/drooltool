@@ -93,7 +93,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     } as L.WMSOptions);
 
     let backboneWMSOptions = ({
-      layers: "DroolTool:Backbone",
+      layers: "DroolTool:Backbones",
       transparent: true,
       format: "image/png",
       tiled: true,
@@ -347,7 +347,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
       let cql_filter = "NeighborhoodID in (" + neighborhoodIDs.join(",") + ")";
 
       let backboneWMSOptions = ({
-        layers: "DroolTool:Backbone",
+        layers: "DroolTool:Backbones",
         transparent: true,
         format: "image/png",
         tiled: true,
