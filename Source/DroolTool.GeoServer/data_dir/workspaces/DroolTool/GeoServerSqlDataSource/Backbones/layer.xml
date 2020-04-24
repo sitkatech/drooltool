@@ -1,12 +1,12 @@
 <layer>
   <name>Backbones</name>
-  <id>LayerInfoImpl-7284924c:171a82c4df4:-7ff7</id>
+  <id>LayerInfoImpl--2cccd28d:171a997b818:-7ff6</id>
   <type>VECTOR</type>
   <defaultStyle>
     <id>StyleInfoImpl--18fb43ea:16bafce6fb7:-7ffc</id>
   </defaultStyle>
   <resource class="featureType">
-    <id>FeatureTypeInfoImpl-7284924c:171a82c4df4:-7ff8</id>
+    <id>FeatureTypeInfoImpl--2cccd28d:171a997b818:-7ff7</id>
   </resource>
   <attribution>
     <logoWidth>0</logoWidth>

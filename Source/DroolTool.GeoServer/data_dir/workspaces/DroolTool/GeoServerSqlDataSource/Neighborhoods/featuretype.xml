@@ -1,5 +1,5 @@
 <featureType>
-  <id>FeatureTypeInfoImpl-7284924c:171a82c4df4:-7ff4</id>
+  <id>FeatureTypeInfoImpl--2cccd28d:171a997b818:-7ff4</id>
   <name>Neighborhoods</name>
   <nativeName>vGeoServerNeighborhood</nativeName>
   <namespace>
@@ -40,7 +40,7 @@
     <entry key="cachingEnabled">false</entry>
   </metadata>
   <store class="dataStore">
-    <id>DataStoreInfoImpl-7284924c:171a82c4df4:-7ffb</id>
+    <id>DataStoreInfoImpl--2cccd28d:171a997b818:-7ffb</id>
   </store>
   <serviceConfiguration>false</serviceConfiguration>
   <maxFeatures>0</maxFeatures>

@@ -1,5 +1,5 @@
 <dataStore>
-  <id>DataStoreInfoImpl-7284924c:171a82c4df4:-7ffb</id>
+  <id>DataStoreInfoImpl--2cccd28d:171a997b818:-7ffb</id>
   <name>GeoServerSqlDataSource</name>
   <type>Microsoft SQL Server</type>
   <enabled>true</enabled>
@@ -12,7 +12,7 @@
     <entry key="Batch insert size">1</entry>
     <entry key="database">DroolToolDB</entry>
     <entry key="host">host.docker.internal</entry>
-    <entry key="Use Native Paging">false</entry>
+    <entry key="Use Native Paging">true</entry>
     <entry key="Force spatial index usage via hints">false</entry>
     <entry key="Expose primary keys">true</entry>
     <entry key="validate connections">false</entry>
