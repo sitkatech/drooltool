@@ -13,6 +13,8 @@ import { FontAwesomeIconLinkRendererComponent } from './components/ag-grid/fonta
 import { MultiLinkRendererComponent } from './components/ag-grid/multi-link-renderer/multi-link-renderer.component';
 import { SelectDropDownModule } from 'ngx-select-dropdown';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { CustomRichTextComponent } from './components/custom-rich-text/custom-rich-text.component'
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular'
 
 @NgModule({
     declarations: [
@@ -23,6 +25,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         LinkRendererComponent,
         FontAwesomeIconLinkRendererComponent,
         MultiLinkRendererComponent,
+        CustomRichTextComponent
     ],
     imports: [
         CommonModule,
@@ -32,13 +35,15 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         NgProgressModule,
         RouterModule,
         SelectDropDownModule,
-        SlickCarouselModule
+        SlickCarouselModule,
+        CKEditorModule
     ],
     exports: [
         CommonModule,
         FormsModule,
         NotFoundComponent,
         HeaderNavComponent,
+        CustomRichTextComponent
     ],
     entryComponents:[
     ]
