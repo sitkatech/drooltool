@@ -35,6 +35,7 @@ import { AboutComponent } from './pages/about/about.component';
 import { AppInitService } from './app.init';
 import { NeighborhoodExplorerComponent } from './pages/neighborhood-explorer/neighborhood-explorer.component';
 import { TakeActionComponent } from './pages/take-action/take-action.component';
+import { WatershedExplorerComponent } from './pages/watershed-explorer/watershed-explorer.component';
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -55,6 +56,7 @@ export function init_app(appLoadService: AppInitService) {
     AboutComponent,
     NeighborhoodExplorerComponent,
     TakeActionComponent,
+    WatershedExplorerComponent,
   ],
   imports: [
     AppRoutingModule,

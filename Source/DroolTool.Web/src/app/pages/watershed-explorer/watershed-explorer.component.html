@@ -1,0 +1,87 @@
+<div class="row ml-0 mr-0">
+    <div class="col-lg-3 pl-0 pr-0">
+        <div class="container-lg d-inline d-lg-flex flex-column min-vh-100">
+            <div class="row ml-0 mr-0 flex-fill flex-column">
+                <div class="col-12 p-4 section-search">
+                    <div class="container p-0">
+                        <div class="row">
+                            <div class="col-12 mx-auto mx-lg-0">
+                                <h3 style="color:white">Choose from one of the metrics below <span class="d-lg-none"><a class="search-close" (click)="showInstructions = true"><i
+                                    class="far fa-question-circle"></i></a></span></h3>
+                                <select [(ngModel)]="selectedMetric" class="input-group mx-auto mx-lg-0" style="max-width:353px">
+                                    <option *ngFor="let metric of metrics" [ngValue]="metric">{{metric}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="showInstructions" class="col-12 d-lg-none">
+                    <div class="row">
+                        <div class="col-12 text-right">
+                            <span><a class="search-close" (click)="showInstructions = false"><i
+                                        class="fas fa-close"></i></a></span>
+                        </div>
+                    </div>
+                    <div class="row section-stats">
+                        <div class="col-12 text-center mb-3">
+                            <h3 class="mb-0 pl-2 pr-2">
+                                Click the exposed areas of the map to explore different neighborhood metrics or
+                                enter your address in the search bar for your own detailed urban drool snapshot
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="activeSearchNotFound" class="col-12 p-lg-4 flex-fill">
+                    <div class="row">
+                        <div class="col-12 text-right">
+                            <span><a class="search-close" (click)="returnToDefault()"><i
+                                        class="fas fa-close"></i></a></span>
+                        </div>
+                    </div>
+                    <div class="row section-search-not-found">
+                        <div class="col-2 text-center">
+                            <span><i class="fas fa-exclamation fa-3x"></i></span>
+                        </div>
+                        <div class="col-10">
+                            <h3>Sorry, the area you selected is not within the
+                                Urban Drool Tool service area.
+                            </h3>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row section-search-not-found">
+                        <div class="col-2 text-center">
+                            <span><i class="fas fa-map-marker-alt fa-3x"></i></span>
+                        </div>
+                        <div class="col-10">
+                            <h3>
+                                Select an area within the highlighted service
+                                boundary to view results.
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!activeSearchNotFound" class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
+                    <div class="h-100 mt-auto mb-auto">
+                        <h3>
+                            Learn about how your neighborhood is conserving water and protecting our streams and beaches
+                        </h3>
+                        <h3 class="text-center">
+                            <span><i class="fas fa-tint fa-2x"></i></span>
+                        </h3>
+                        <h3>
+                            Click the exposed areas of the map to explore different neighborhood metrics or
+                            enter your address in the search bar for your own detailed urban drool snapshot
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9 pl-0 pr-0">
+        <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight" style="height:100%">
+            <button *ngIf="searchActive" (click)="displayTraceOrZoomToNeighborhood($event)" class="btn btn-drooltool"
+                style="position:absolute; bottom:10px; right:10px; z-index:100000">{{traceActive ? "Zoom to my Neighborhood" : "Where does my water go?"}}</button>
+        </div>
+    </div>
+</div>
