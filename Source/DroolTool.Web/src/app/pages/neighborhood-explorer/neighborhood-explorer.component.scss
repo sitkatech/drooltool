@@ -11,15 +11,19 @@
     background-color: $header-nav-color;
 }
 
+.section-search * h3 {
+    font-size: 18px;
+}
+
 .section-stats * h3,
 .section-search-not-found * h3 {
     color: #1E5668;
-    font-size:18px;
+    font-size:16px;
 }
 
-.section-stats * h3 {
-    line-height:45px;
-}
+// .section-stats * h3 {
+//     line-height:45px;
+// }
 
 .section-active-search {
     background-color: #D6F1B6;
@@ -57,6 +61,19 @@
 
 .section-water-bill p.b4 {
     font-size: 14px;
+}
+
+.section-rebates:hover,
+.section-water-bill:hover {
+    cursor:pointer;
+}
+
+.section-water-bill:hover * a{
+    color: #555555
+}
+
+.section-rebates:hover * a {
+    color:white
 }
 
 .search {
