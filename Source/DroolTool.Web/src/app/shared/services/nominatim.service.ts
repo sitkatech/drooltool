@@ -12,7 +12,7 @@ import {environment} from "src/environments/environment";
 })
 export class NominatimService {
 
-    private baseURL = environment.mapquestUrlWithNominatimApiKey;
+    private baseURL = environment.mapquestApiUrlWithNominatimApiKey;
 
     constructor(
         private http: HttpClient,

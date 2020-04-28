@@ -88,7 +88,7 @@ namespace DroolTool.Web
             LeadOrganizationHomeUrl = configuration["LeadOrganizationHomeUrl"];
             FaviconFilename = configuration["FaviconFilename"];
             LeadOrganizationLogoFilename = configuration["LeadOrganizationLogoFilename"];
-            MapquestUrlWithNominatimApiKey = configuration["MapquestUrlWithNominatimApiKey"];
+            MapquestApiUrlWithNominatimApiKey = configuration["MapquestApiUrlWithNominatimApiKey"];
         }
 
         [JsonProperty("production")]
@@ -123,8 +123,8 @@ namespace DroolTool.Web
         public string FaviconFilename {get; set;}
         [JsonProperty("leadOrganizationLogoFilename")]
         public string LeadOrganizationLogoFilename { get; set;}
-        [JsonProperty("mapquestUrlWithNominatimApiKey")]
-        public string MapquestUrlWithNominatimApiKey { get; set;}
+        [JsonProperty("mapquestApiUrlWithNominatimApiKey")]
+        public string MapquestApiUrlWithNominatimApiKey { get; set;}
     }
 
     public class KeystoneAuthConfigurationDto
