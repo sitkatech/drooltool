@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using DroolTool.EFModels.Entities;
+using DroolTool.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,7 @@ namespace DroolTool.API.Controllers
             var watersheds = _dbContext.Watershed.Select(x => x.WatershedGeometry4326);
             var geometry = UnaryUnionOp.Union(watersheds);
 
-            return Ok(buildFeatureCollectionAndWriteGeoJson(new List<Feature> { new Feature() { Geometry = geometry } }));
+            return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(new List<Feature> { new Feature() { Geometry = geometry } }));
         }
 
         [HttpGet("neighborhood-explorer/get-serviced-neighborhood-ids")]
@@ -91,7 +92,7 @@ namespace DroolTool.API.Controllers
 
             feature.Attributes.Add("NeighborhoodIDs", listBackboneAccumulated.Select(x => x.NeighborhoodID).ToList());
 
-            return Ok(buildFeatureCollectionAndWriteGeoJson(new List<Feature> { feature }));
+            return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(new List<Feature> { feature }));
         }
 
         [HttpGet("neighborhood-explorer/get-downstream-backbone-trace/{neighborhoodID}")]
@@ -127,29 +128,7 @@ namespace DroolTool.API.Controllers
                 return feature;
             }).ToList();
 
-            return Ok(buildFeatureCollectionAndWriteGeoJson(featureList));
-        }
-
-        private string buildFeatureCollectionAndWriteGeoJson(List<Feature> featureList)
-        {
-            var featureCollection = new FeatureCollection();
-
-            foreach (var feature in featureList)
-            {
-                featureCollection.Add(feature);
-            }
-
-            var gjw = new GeoJsonWriter
-            {
-                SerializerSettings =
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    FloatParseHandling = FloatParseHandling.Decimal,
-                    Formatting = Formatting.Indented
-                }
-            };
-
-            return gjw.Write(featureCollection);
+            return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(featureList));
         }
     }
 }
