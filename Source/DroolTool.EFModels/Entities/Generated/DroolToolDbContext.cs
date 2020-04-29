@@ -28,6 +28,7 @@ namespace DroolTool.EFModels.Entities
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Watershed> Watershed { get; set; }
+        public virtual DbSet<vDroolWatershedMetric> vDroolWatershedMetric { get; set; }
         public virtual DbSet<vGeoServerBackbone> vGeoServerBackbone { get; set; }
         public virtual DbSet<vGeoServerNeighborhood> vGeoServerNeighborhood { get; set; }
         public virtual DbSet<vGeoServerWatershed> vGeoServerWatershed { get; set; }
@@ -245,6 +246,13 @@ namespace DroolTool.EFModels.Entities
             modelBuilder.Entity<Watershed>(entity =>
             {
                 entity.Property(e => e.WatershedName).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<vDroolWatershedMetric>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vDroolWatershedMetric");
             });
 
             modelBuilder.Entity<vGeoServerBackbone>(entity =>

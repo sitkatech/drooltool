@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef } from '@angular/core';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
 import { NeighborhoodExplorerService } from 'src/app/services/neighborhood-explorer/neighborhood-explorer.service';
+import { WatershedExplorerService } from 'src/app/services/watershed-explorer-service/watershed-explorer-service';
 import { NominatimService } from 'src/app/shared/services/nominatim.service';
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import { environment } from 'src/environments/environment';
@@ -21,7 +22,7 @@ declare var $: any;
 })
 export class WatershedExplorerComponent implements OnInit {
 
-  @ViewChild("mapDiv", {static:false}) mapElement: ElementRef;
+  @ViewChild("mapDiv", { static: false }) mapElement: ElementRef;
 
   public defaultMapZoom = 12;
   public afterSetControl = new EventEmitter();
@@ -64,7 +65,8 @@ export class WatershedExplorerComponent implements OnInit {
     private compileService: CustomCompileService,
     private neighborhoodExplorerService: NeighborhoodExplorerService,
     private nominatimService: NominatimService,
-    private wfsService: WfsService
+    private wfsService: WfsService,
+    private watershedExplorerService: WatershedExplorerService
   ) {
   }
 
@@ -117,7 +119,7 @@ export class WatershedExplorerComponent implements OnInit {
       pane: "droolToolOverlayPane"
     } as L.WMSOptions);
 
-    let watershedOptions = Object.assign({styles:this.watershedStyle}, watershedsWMSOptions);
+    let watershedOptions = Object.assign({ styles: this.watershedStyle }, watershedsWMSOptions);
 
     this.overlayLayers = Object.assign({}, {
       "<span><img src='../../assets/neighborhood-explorer/neighborhood.png' height='12px' style='margin-bottom:3px;' /> Neighborhoods</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", neighborhoodsWMSOptions),
@@ -177,8 +179,7 @@ export class WatershedExplorerComponent implements OnInit {
       this.maskLayer.addTo(this.map);
       this.defaultFitBounds();
 
-      if(window.innerWidth > 991)
-      {
+      if (window.innerWidth > 991) {
         this.mapElement.nativeElement.scrollIntoView();
       }
     });
@@ -242,10 +243,10 @@ export class WatershedExplorerComponent implements OnInit {
         this.searchAddressNotFoundOrNotServiced();
         return null;
       }
-
+      console.log(response);
       this.selectedNeighborhoodID = response.features[0].properties.NeighborhoodID;
       if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
-        this.displaySearchResults(response, latlng);
+        this.displaySearchResults(response.features[0].properties.OCSurveyNeighborhoodID, latlng);
         this.displayStormshedAndBackboneDetail(this.selectedNeighborhoodID);
       }
       else {
@@ -254,27 +255,28 @@ export class WatershedExplorerComponent implements OnInit {
     });
   }
 
-  public displaySearchResults(response: FeatureCollection, latlng: Object): void {
+  public displaySearchResults(OCSurveyNeighborhoodID: number, latlng: Object): void {
+    this.watershedExplorerService.getMetrics(OCSurveyNeighborhoodID).subscribe(response => {
+      let icon = L.divIcon({
+        html: '<i class="fas fa-map-marker-alt fa-2x" style="color:#105745"></i>',
+        iconSize: [20, 20],
+        className: "search-popup"
+      });
 
-    let icon = L.divIcon({
-      html: '<i class="fas fa-map-marker-alt fa-2x" style="color:#105745"></i>',
-      iconSize: [20,20],
-      className: "search-popup"
+      let popupContent = "<span>" + this.selectedMetric + "</span>";
+      let popupOptions = {
+        'className': 'search-popup'
+      }
+      this.clickMarker = L.marker({ lat: latlng["lat"], lon: latlng["lng"] }, { icon: icon });
+
+      this.clickMarker.addTo(this.map)
+        .bindPopup(popupContent, popupOptions)
+        .openPopup();
+
+      setTimeout(() => { this.clickMarker.closePopup(); }, 5000);
+
+      this.searchActive = true;
     });
-
-    let popupContent = "<span>" + this.selectedMetric + "</span>";
-    let popupOptions = {
-      'className': 'search-popup'
-    }
-    this.clickMarker = L.marker({ lat: latlng["lat"], lon: latlng["lng"] }, { icon: icon });
-
-    this.clickMarker.addTo(this.map)
-      .bindPopup(popupContent, popupOptions)
-      .openPopup();
-
-    setTimeout(() => {this.clickMarker.closePopup();}, 5000);
-
-    this.searchActive = true;
   }
 
   public displayStormshedAndBackboneDetail(neighborhoodID: number): void {
@@ -339,8 +341,7 @@ export class WatershedExplorerComponent implements OnInit {
   public displayTraceOrZoomToNeighborhood(event: Event): void {
     //Button lies on top of map, so we don't to be selecting a new area
     event.stopPropagation();
-    if (!this.traceActive)
-    {
+    if (!this.traceActive) {
       this.clearLayer(this.traceLayer);
       this.neighborhoodExplorerService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
         this.traceLayer = L.geoJSON(response,
@@ -357,7 +358,7 @@ export class WatershedExplorerComponent implements OnInit {
         this.traceLayer.addTo(this.map);
 
         this.traceActive = true;
-        this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.traceLayer, this.clickMarker, this.stormshedLayer]));     
+        this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.traceLayer, this.clickMarker, this.stormshedLayer]));
       })
     }
     else {
@@ -416,11 +417,10 @@ export class WatershedExplorerComponent implements OnInit {
   public fitBoundsWithPaddingAndFeatureGroup(featureGroup: L.featureGroup): void {
     let paddingHeight = 0;
     let popupContent = $("#search-popup-address");
-    if (popupContent !== null && popupContent !== undefined && popupContent.length == 1)
-    {
+    if (popupContent !== null && popupContent !== undefined && popupContent.length == 1) {
       paddingHeight = popupContent.parent().parent().innerHeight();
     }
 
-    this.map.fitBounds(featureGroup.getBounds(), {padding: [paddingHeight, paddingHeight]});
+    this.map.fitBounds(featureGroup.getBounds(), { padding: [paddingHeight, paddingHeight] });
   }
 }
