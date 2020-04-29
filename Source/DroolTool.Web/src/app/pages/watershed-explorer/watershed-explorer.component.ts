@@ -12,6 +12,7 @@ import '../../../../node_modules/leaflet.fullscreen/Control.FullScreen.js';
 import * as esri from 'esri-leaflet'
 import { FeatureCollection } from 'geojson';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { DroolWatershedMetricDto } from 'src/app/shared/models/drool-watershed-metric-dto.js';
 
 declare var $: any;
 
@@ -29,8 +30,10 @@ export class WatershedExplorerComponent implements OnInit {
   public afterLoadMap = new EventEmitter();
   public onMapMoveEnd = new EventEmitter();
 
-  public metrics = ["Total Monthly Drool"];
-  public selectedMetric = "Total Monthly Drool";
+  public metrics = ["Select a metric", "Total Monthly Drool"];
+  public selectedMetric = "Select a metric";
+  public metricsForCurrentSelection: DroolWatershedMetricDto;
+  public metricOverlayLayer: L.Layers;
 
   public component: any;
 
@@ -47,15 +50,12 @@ export class WatershedExplorerComponent implements OnInit {
 
   public wmsParams: any;
   public stormshedLayer: L.Layers;
-  public backboneDetailLayer: L.Layers;
-  public traceLayer: L.Layers;
-  public currentSearchLayer: L.Layers;
-  public currentMask: L.Layers;
+  public downstreamTraceLayer: L.Layers;
+  public upstreamTraceLayer: L.Layers;
   public clickMarker: L.Marker;
   public traceActive: boolean = false;
   public showInstructions: boolean = true;
   public searchActive: boolean = false;
-  public searchAddress: string;
   public activeSearchNotFound: boolean = false;
 
   public selectedNeighborhoodID: number;
@@ -125,7 +125,7 @@ export class WatershedExplorerComponent implements OnInit {
       "<span><img src='../../assets/neighborhood-explorer/neighborhood.png' height='12px' style='margin-bottom:3px;' /> Neighborhoods</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", neighborhoodsWMSOptions),
       "<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions),
       "<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedOptions),
-      "<span>Stormwater Network <br/> <img src='../../assets/neighborhood-explorer/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({ url: "https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/" })
+      "<span>Stormwater Network <br/> <img src='../../assets/neighborhood-explorer/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({ url: "https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/" }),
     })
 
     this.compileService.configure(this.appRef);
@@ -182,6 +182,8 @@ export class WatershedExplorerComponent implements OnInit {
       if (window.innerWidth > 991) {
         this.mapElement.nativeElement.scrollIntoView();
       }
+
+      this.applyMetricOverlay();
     });
   }
 
@@ -196,15 +198,6 @@ export class WatershedExplorerComponent implements OnInit {
     this.layerControl = new L.Control.Layers(this.tileLayers, this.overlayLayers)
       .addTo(this.map);
     this.map.zoomControl.setPosition('topright');
-    // L.control.fullscreen({
-    //   position: 'topright',
-    //   title: 'View Fullscreen', // change the title of the button, default Full Screen
-    //   titleCancel: 'Exit fullscreen mode', // change the title of the button when fullscreen is on, default Exit Full Screen
-    //   content: null, // change the content of the button, can be HTML, default null
-    //   forceSeparateButton: true, // force seperate button to detach from zoom buttons, default false
-    //   forcePseudoFullscreen: true, // force use of pseudo full screen even if full screen API is available, default false
-    //   fullscreenElement: false // Dom element to render in full screen, false by default, fallback to map._container
-    // }).addTo(this.map);
     this.afterSetControl.emit(this.layerControl);
   }
 
@@ -224,7 +217,7 @@ export class WatershedExplorerComponent implements OnInit {
         return;
       }
       dblClickTimer = setTimeout(() => {
-        this.getNeighborhoodFromLatLong(event.latlng, true);
+        this.getNeighborhoodFromLatLong(event.latlng);
         dblClickTimer = null;
       }, 200);
     }).on("dblclick", () => {
@@ -234,20 +227,17 @@ export class WatershedExplorerComponent implements OnInit {
     })
   }
 
-  public getNeighborhoodFromLatLong(latlng: Object, mapClick: boolean): void {
-    if (mapClick) {
-      this.clearSearchResults();
-    }
+  public getNeighborhoodFromLatLong(latlng: Object): void {
+    this.clearSearchResults();
     this.wfsService.geoserverNeighborhoodLookup(latlng).subscribe(response => {
       if (response.features.length === 0) {
         this.searchAddressNotFoundOrNotServiced();
         return null;
       }
-      console.log(response);
+
       this.selectedNeighborhoodID = response.features[0].properties.NeighborhoodID;
       if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
         this.displaySearchResults(response.features[0].properties.OCSurveyNeighborhoodID, latlng);
-        this.displayStormshedAndBackboneDetail(this.selectedNeighborhoodID);
       }
       else {
         this.searchAddressNotFoundOrNotServiced();
@@ -257,13 +247,15 @@ export class WatershedExplorerComponent implements OnInit {
 
   public displaySearchResults(OCSurveyNeighborhoodID: number, latlng: Object): void {
     this.watershedExplorerService.getMetrics(OCSurveyNeighborhoodID).subscribe(response => {
+      this.metricsForCurrentSelection = response;
+
       let icon = L.divIcon({
         html: '<i class="fas fa-map-marker-alt fa-2x" style="color:#105745"></i>',
         iconSize: [20, 20],
         className: "search-popup"
       });
 
-      let popupContent = "<span>" + this.selectedMetric + "</span>";
+      let popupContent = "<span>" + this.selectedMetric + " : " + this.displayAppropriateMetric() + "</span>";
       let popupOptions = {
         'className': 'search-popup'
       }
@@ -273,78 +265,23 @@ export class WatershedExplorerComponent implements OnInit {
         .bindPopup(popupContent, popupOptions)
         .openPopup();
 
-      setTimeout(() => { this.clickMarker.closePopup(); }, 5000);
-
       this.searchActive = true;
+      // var currentZoom = this.map.getZoom();
+      // this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker]));
+      // this.map.setZoom(currentZoom);
     });
   }
 
-  public displayStormshedAndBackboneDetail(neighborhoodID: number): void {
-    this.neighborhoodExplorerService.getStormshed(neighborhoodID).subscribe(response => {
-      let featureCollection = (response) as any as FeatureCollection;
-      if (featureCollection.features.length === 0) {
-        return null;
-      }
-
-      this.stormshedLayer = L.geoJson(featureCollection, {
-        style: function (feature) {
-          return {
-            fillColor: "#C0FF6C",
-            fill: true,
-            fillOpacity: 0.3,
-            stroke: false
-          };
-        }
-      })
-
-      this.stormshedLayer.addTo(this.map);
-      this.stormshedLayer.bringToBack();
-
-      //if we get a stormshed, move the mask out
-      this.clearLayer(this.currentMask);
-      this.currentMask = L.geoJSON(featureCollection, {
-        invert: true,
-        style: function (feature) {
-          return {
-            fillColor: "#323232",
-            fill: true,
-            fillOpacity: 0.4,
-            color: "#EA842C",
-            weight: 5,
-            stroke: true
-          };
-        }
-      }).addTo(this.map);
-
-      let neighborhoodIDs = featureCollection.features[0].properties["NeighborhoodIDs"];
-      let cql_filter = "NeighborhoodID in (" + neighborhoodIDs.join(",") + ")";
-
-      let backboneWMSOptions = ({
-        layers: "DroolTool:Backbones",
-        transparent: true,
-        format: "image/png",
-        tiled: true,
-        styles: "backbone_narrow",
-        wmsParameterThatDoesNotExist: new Date(),
-        pane: "droolToolOverlayPane",
-        cql_filter: cql_filter
-      } as L.WMSOptions);
-
-      this.backboneDetailLayer = L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions);
-      this.backboneDetailLayer.addTo(this.map);
-      this.backboneDetailLayer.bringToFront();
-
-      this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
-    });
-  }
-
-  public displayTraceOrZoomToNeighborhood(event: Event): void {
+  public displayTrace(event: Event, upstream: boolean): void {
     //Button lies on top of map, so we don't to be selecting a new area
     event.stopPropagation();
-    if (!this.traceActive) {
-      this.clearLayer(this.traceLayer);
+    this.clearLayer(this.downstreamTraceLayer);
+    this.clearLayer(this.upstreamTraceLayer);
+    this.clearLayer(this.stormshedLayer);
+    if (!upstream) {
+      this.clearLayer(this.downstreamTraceLayer);
       this.neighborhoodExplorerService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
-        this.traceLayer = L.geoJSON(response,
+        this.downstreamTraceLayer = L.geoJSON(response,
           {
             style: function (feature) {
               return {
@@ -355,21 +292,58 @@ export class WatershedExplorerComponent implements OnInit {
             },
             pane: "droolToolOverlayPane"
           })
-        this.traceLayer.addTo(this.map);
+        this.downstreamTraceLayer.addTo(this.map);
 
         this.traceActive = true;
-        this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.traceLayer, this.clickMarker, this.stormshedLayer]));
+        this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.downstreamTraceLayer, this.clickMarker]));
       })
     }
     else {
-      this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
-      this.map.removeLayer(this.traceLayer);
-      this.traceActive = false;
+      this.clearLayer(this.upstreamTraceLayer);
+      this.clearLayer(this.stormshedLayer);
+      this.watershedExplorerService.getUpstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
+        let featureCollection = (response) as any as FeatureCollection;
+        if (featureCollection.features.length === 0) {
+          return null;
+        }
+
+        let backboneTraces = featureCollection.features.slice(0, featureCollection.features.length - 2);
+        let stormshed = featureCollection.features[featureCollection.features.length - 1];
+        this.upstreamTraceLayer = L.geoJSON(backboneTraces,
+          {
+            style: function (feature) {
+              return {
+                color: "#FF20F9",
+                weight: 3,
+                stroke: true
+              }
+            },
+            pane: "droolToolOverlayPane"
+          })
+        this.upstreamTraceLayer.addTo(this.map);
+
+        this.stormshedLayer = L.geoJson(stormshed, {
+          style: function (feature) {
+            return {
+              fillColor: "#C0FF6C",
+              fill: true,
+              fillOpacity: 0.3,
+              color: "#EA842C",
+              weight: 5,
+              stroke: true
+            };
+          }
+        })
+  
+        this.stormshedLayer.addTo(this.map);
+        this.stormshedLayer.bringToBack();
+        this.traceActive = true;
+        this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.upstreamTraceLayer, this.clickMarker, this.stormshedLayer]));
+      });
     }
   }
 
   public clearSearchResults(): void {
-    this.searchAddress = null;
     this.searchActive = false;
     this.activeSearchNotFound = false;
     this.traceActive = false;
@@ -382,17 +356,14 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public searchAddressNotFoundOrNotServiced(): void {
-    this.searchAddress = null;
     this.activeSearchNotFound = true;
   }
 
   public removeCurrentSearchLayer(): void {
     [this.clickMarker,
-    this.currentSearchLayer,
-    this.currentMask,
     this.stormshedLayer,
-    this.backboneDetailLayer,
-    this.traceLayer].forEach((x) => {
+    this.upstreamTraceLayer,
+    this.downstreamTraceLayer].forEach((x) => {
       this.clearLayer(x);
     });
   }
@@ -422,5 +393,43 @@ export class WatershedExplorerComponent implements OnInit {
     }
 
     this.map.fitBounds(featureGroup.getBounds(), { padding: [paddingHeight, paddingHeight] });
+  }
+
+  public applyMetricOverlay(): void {
+    if (this.selectedMetric == "Select a metric")
+    {
+      return null;
+    }
+
+    let cql_filter = "MetricDate = '2019-04-01 00:00:00.000'";
+    let style="";
+    if (this.selectedMetric == "Total Monthly Drool")
+    {
+      style="watershed_explorer_map_metric_total_monthly_drool"
+    }
+
+    let watershedExplorerMapMetricsWMSOptions = ({
+      layers: "DroolTool:WatershedExplorerMapMetrics",
+      transparent: true,
+      format: "image/png",
+      tiled: true,
+      styles: style,
+      pane: "droolToolOverlayPane",
+      cql_filter: cql_filter
+    } as L.WMSOptions);
+
+    this.metricOverlayLayer = L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedExplorerMapMetricsWMSOptions);
+    this.metricOverlayLayer.addTo(this.map);
+    this.metricOverlayLayer.bringToFront();
+  }
+
+  public displayAppropriateMetric(): string {
+    if (!this.metricsForCurrentSelection) {
+      return null;
+    }
+
+    if (this.selectedMetric == "Total Monthly Drool") {
+      return this.metricsForCurrentSelection.TotalMonthlyDrool;
+    }
   }
 }

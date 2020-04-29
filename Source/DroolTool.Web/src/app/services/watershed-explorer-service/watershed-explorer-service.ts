@@ -14,4 +14,9 @@ export class WatershedExplorerService {
         let route = `/watershed-explorer/get-metrics/${OCSurveyNeighborhoodID}`;
         return this.apiService.getFromApi(route);
     }
+
+    getUpstreamBackboneTrace(neighborhoodID:number): Observable<string> {
+        let route = `/watershed-explorer/get-upstream-backbone-trace/${neighborhoodID}`;
+        return this.apiService.getFromApi(route);
+    }
 }
