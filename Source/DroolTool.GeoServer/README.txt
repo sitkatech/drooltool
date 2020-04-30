@@ -9,7 +9,7 @@ To start local docker container:
 1. Make sure Docker Desktop is running	
 2. Navigate to "C:\git\sitkatech\drooltool\Source\DroolTool.GeoServer" via CMD
 3. Run "docker-compose -f docker-compose.yml up -d" (-d runs in detached mode)
-4. Navigate to geoserver: http://127.0.0.180/geoserver/
+4. Navigate to geoserver: http://127.0.0.1:7780/geoserver/
 
 Notes:
 * Before starting up your local docker container, it is a good idea to svn clean the data_dir directory
