@@ -149,9 +149,7 @@ export class WatershedExplorerComponent implements OnInit {
             fillColor: "#323232",
             fill: true,
             fillOpacity: 0.4,
-            color: "#3388ff",
-            weight: 5,
-            stroke: true
+            stroke:false
           };
         }
       });
@@ -230,7 +228,6 @@ export class WatershedExplorerComponent implements OnInit {
   public getNeighborhoodFromLatLong(latlng: Object): void {
     this.clearSearchResults();
     this.wfsService.geoserverNeighborhoodLookup(latlng).subscribe(response => {
-      debugger;
       if (response.features.length === 0) {
         this.searchAddressNotFoundOrNotServiced();
         return null;
@@ -256,7 +253,7 @@ export class WatershedExplorerComponent implements OnInit {
         className: "search-popup"
       });
 
-      let popupContent = "<span>" + this.selectedMetric + " : " + this.displayAppropriateMetric() + "</span>";
+      let popupContent = this.getMetricPopupContent();
       let popupOptions = {
         'className': 'search-popup'
       }
@@ -332,10 +329,11 @@ export class WatershedExplorerComponent implements OnInit {
               color: "#EA842C",
               weight: 5,
               stroke: true
-            };
-          }
+            }
+          },
+          pane: "droolToolOverlayPane"
         })
-  
+
         this.stormshedLayer.addTo(this.map);
         this.stormshedLayer.bringToBack();
         this.traceActive = true;
@@ -397,22 +395,19 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public applyMetricOverlay(): void {
-    if (this.metricOverlayLayer)
-    {
+    if (this.metricOverlayLayer) {
       this.map.removeLayer(this.metricOverlayLayer);
       this.metricOverlayLayer = null;
     }
 
-    if (this.selectedMetric == "Select a metric")
-    {
+    if (this.selectedMetric == "Select a metric") {
       return null;
     }
 
     let cql_filter = "MetricDate = '2019-04-01 00:00:00.000'";
-    let style="";
-    if (this.selectedMetric == "Total Monthly Drool")
-    {
-      style="watershed_explorer_map_metric_total_monthly_drool"
+    let style = "";
+    if (this.selectedMetric == "Total Monthly Drool") {
+      style = "watershed_explorer_map_metric_total_monthly_drool"
     }
 
     let watershedExplorerMapMetricsWMSOptions = ({
@@ -430,17 +425,28 @@ export class WatershedExplorerComponent implements OnInit {
     this.metricOverlayLayer.bringToFront();
   }
 
-  public displayAppropriateMetric(): string {
+  public getMetricPopupContent(): string {
+    let metricContent = "";
     if (!this.metricsForCurrentSelection) {
-      return null;
+      metricContent = "No metrics found for this location";
+    }
+    else if (this.selectedMetric == "Total Monthly Drool") {
+      metricContent = this.selectedMetric + " : " + this.metricsForCurrentSelection.TotalMonthlyDrool;
+    }
+    else {
+      metricContent = "Select a metric from the dropdown to get started!";
     }
 
-    if (this.selectedMetric == "Total Monthly Drool") {
-      return this.metricsForCurrentSelection.TotalMonthlyDrool;
-    }
+    return "<span>" + metricContent + "</span>"
   }
 
   public displayNewMetric(): void {
     this.applyMetricOverlay();
+
+    if (!this.clickMarker) {
+      return null;
+    }
+    let content = this.getMetricPopupContent();
+    this.clickMarker.setPopupContent(content);
   }
 }

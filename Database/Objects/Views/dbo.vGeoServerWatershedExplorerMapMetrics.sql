@@ -13,4 +13,8 @@ Select
 
 from dbo.Neighborhood d
 join dbo.RawDroolMetric rm on d.OCSurveyNeighborhoodID = rm.MetricCatchIDN
+where d.NeighborhoodID in (select distinct n.neighborhoodID
+						   from dbo.Neighborhood n
+						   join dbo.BackboneSegment b
+						   on n.NeighborhoodID = b.NeighborhoodID)
 GO
