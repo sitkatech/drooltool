@@ -230,6 +230,7 @@ export class WatershedExplorerComponent implements OnInit {
   public getNeighborhoodFromLatLong(latlng: Object): void {
     this.clearSearchResults();
     this.wfsService.geoserverNeighborhoodLookup(latlng).subscribe(response => {
+      debugger;
       if (response.features.length === 0) {
         this.searchAddressNotFoundOrNotServiced();
         return null;
@@ -396,6 +397,12 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public applyMetricOverlay(): void {
+    if (this.metricOverlayLayer)
+    {
+      this.map.removeLayer(this.metricOverlayLayer);
+      this.metricOverlayLayer = null;
+    }
+
     if (this.selectedMetric == "Select a metric")
     {
       return null;
@@ -431,5 +438,9 @@ export class WatershedExplorerComponent implements OnInit {
     if (this.selectedMetric == "Total Monthly Drool") {
       return this.metricsForCurrentSelection.TotalMonthlyDrool;
     }
+  }
+
+  public displayNewMetric(): void {
+    this.applyMetricOverlay();
   }
 }
