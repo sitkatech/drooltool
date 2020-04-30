@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { NotFoundComponent } from './pages';
 import { HeaderNavComponent } from './components';
 import { UnauthenticatedComponent } from './pages/unauthenticated/unauthenticated.component';
@@ -13,6 +13,8 @@ import { FontAwesomeIconLinkRendererComponent } from './components/ag-grid/fonta
 import { MultiLinkRendererComponent } from './components/ag-grid/multi-link-renderer/multi-link-renderer.component';
 import { SelectDropDownModule } from 'ngx-select-dropdown';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { CustomRichTextComponent } from './components/custom-rich-text/custom-rich-text.component'
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular'
 
 @NgModule({
     declarations: [
@@ -23,37 +25,41 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         LinkRendererComponent,
         FontAwesomeIconLinkRendererComponent,
         MultiLinkRendererComponent,
+        CustomRichTextComponent
     ],
     imports: [
         CommonModule,
         FormsModule,
         HttpClientModule,
+        HttpClientJsonpModule,
         NgProgressModule,
         RouterModule,
         SelectDropDownModule,
-        SlickCarouselModule
+        SlickCarouselModule,
+        CKEditorModule
     ],
     exports: [
         CommonModule,
         FormsModule,
         NotFoundComponent,
         HeaderNavComponent,
+        CustomRichTextComponent
     ],
     entryComponents:[
     ]
 })
 export class SharedModule {
-    static forRoot() {
-        return {
-            ngModule: SharedModule,
-            providers: []
-        };
-    }
+    static forRoot(): ModuleWithProviders<SharedModule> {
+    return {
+        ngModule: SharedModule,
+        providers: []
+    };
+}
 
-    static forChild() {
-        return {
-            ngModule: SharedModule,
-            providers: []
-        };
-    }
+    static forChild(): ModuleWithProviders<SharedModule> {
+    return {
+        ngModule: SharedModule,
+        providers: []
+    };
+}
 }

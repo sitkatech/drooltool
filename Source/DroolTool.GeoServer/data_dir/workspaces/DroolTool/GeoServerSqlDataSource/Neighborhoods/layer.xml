@@ -1,6 +1,6 @@
 <layer>
   <name>Neighborhoods</name>
-  <id>LayerInfoImpl--63f6f29:16e5c952716:-8ffe</id>
+  <id>LayerInfoImpl--2cccd28d:171a997b818:-7ff3</id>
   <type>VECTOR</type>
   <defaultStyle>
     <id>StyleInfoImpl--b785c50:16aeb140d5a:737c</id>
@@ -11,7 +11,7 @@
     </style>
   </styles>
   <resource class="featureType">
-    <id>FeatureTypeInfoImpl--63f6f29:16e5c952716:-8fff</id>
+    <id>FeatureTypeInfoImpl--2cccd28d:171a997b818:-7ff4</id>
   </resource>
   <attribution>
     <logoWidth>0</logoWidth>

@@ -1,0 +1,15 @@
+<layer>
+  <name>Backbones</name>
+  <id>LayerInfoImpl--2cccd28d:171a997b818:-7ff6</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--18fb43ea:16bafce6fb7:-7ffc</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--2cccd28d:171a997b818:-7ff7</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+</layer>
