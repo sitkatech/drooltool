@@ -6,16 +6,18 @@
                     <div class="container p-0">
                         <div class="row">
                             <div class="col-12 mx-auto mx-lg-0">
-                                <h3 style="color:white">Choose from one of the metrics below <span class="d-lg-none"><a class="search-close" (click)="showInstructions = true"><i
-                                    class="far fa-question-circle"></i></a></span></h3>
-                                <select [(ngModel)]="selectedMetric" class="input-group mx-auto mx-lg-0" style="max-width:353px" (change)="displayNewMetric()">
+                                <h3 style="color:white">Choose from one of the metrics below <span class="d-lg-none"><a
+                                            class="search-close" (click)="showInstructions = true"><i
+                                                class="far fa-question-circle"></i></a></span></h3>
+                                <select [(ngModel)]="selectedMetric" class="input-group mx-auto mx-lg-0"
+                                    style="max-width:353px" (change)="displayNewMetric()">
                                     <option *ngFor="let metric of metrics" [ngValue]="metric">{{metric}}</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div *ngIf="showInstructions" class="col-12 d-lg-none">
+                <div *ngIf="showInstructions && !activeSearchNotFound" class="col-12 d-lg-none">
                     <div class="row">
                         <div class="col-12 text-right">
                             <span><a class="search-close" (click)="showInstructions = false"><i
@@ -38,29 +40,30 @@
                         </div>
                     </div>
                     <div class="row section-search-not-found">
-                        <div class="col-2 text-center">
+                        <div class="col-2 m-auto p-0 text-center">
                             <span><i class="fas fa-exclamation fa-3x"></i></span>
                         </div>
-                        <div class="col-10">
-                            <h3>Sorry, the area you selected is not within the
+                        <div class="col-10 my-auto">
+                            <h3 class="mb-0">Sorry, the area you selected is not within the
                                 Urban Drool Tool service area.
                             </h3>
                         </div>
                     </div>
                     <br />
-                    <div class="row section-search-not-found">
-                        <div class="col-2 text-center">
+                    <div class="row section-search-not-found mb-1">
+                        <div class="col-2 text-center m-auto p-0 text-center">
                             <span><i class="fas fa-map-marker-alt fa-3x"></i></span>
                         </div>
-                        <div class="col-10">
-                            <h3>
+                        <div class="col-10 my-auto">
+                            <h3 class="mb-0">
                                 Select an area within the highlighted service
                                 boundary to view results.
                             </h3>
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!activeSearchNotFound && selectedMetric == 'Select a metric'" class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
+                <div *ngIf="!activeSearchNotFound && selectedMetric == 'No Metric, Map Only'"
+                    class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
                     <div class="h-100 mt-auto mb-auto">
                         <h3>
                             Learn about how your watershed is conserving water and protecting our streams and beaches
@@ -73,52 +76,65 @@
                         </h3>
                     </div>
                 </div>
-                <div *ngIf="!activeSearchNotFound && selectedMetric == 'Total Monthly Drool'" class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
+                <div *ngIf="!activeSearchNotFound && selectedMetric == 'Total Monthly Drool'"
+                    class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
                     <div class="h-100 w-100 m-auto">
                         <div class="row">
-                            <div class="col-2" style="background-color:#FBD177">
+                            <div class="col-2" style="background-color:#FBD177;opacity:0.75">
                             </div>
                             <div class="col-10">
                                 <p class="b3 mt-auto mb-auto">
-                                    0 - 3000000 gallons
+                                    0 - 1000 gallons
                                 </p>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2" style="background-color:#F7BE64">
+                            <div class="col-2" style="background-color:#F7BE64;opacity:0.75">
                             </div>
                             <div class="col-10">
                                 <p class="b3 mt-auto mb-auto">
-                                    3000000 - 600000 gallons
+                                    1000 - 10000 gallons
                                 </p>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2" style="background-color:#F0A148">
+                            <div class="col-2" style="background-color:#F0A148;opacity:0.75">
                             </div>
                             <div class="col-10">
                                 <p class="b3 mt-auto mb-auto">
-                                    6000000 - 9000000 gallons
+                                    10000 - 500000 gallons
                                 </p>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2" style="background-color:#EE973F">
+                            <div class="col-2" style="background-color:#EE973F;opacity:0.75">
                             </div>
                             <div class="col-10">
                                 <p class="b3 mt-auto mb-auto">
-                                    9000000 - 12000000 gallons
+                                    500000 - 100000 gallons
                                 </p>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2" style="background-color:#EA842C">
+                            <div class="col-2" style="background-color:#EA842C;opacity:0.75">
                             </div>
                             <div class="col-10">
                                 <p class="b3 mt-auto mb-auto">
-                                    Greater than 12000000 gallons
+                                    Greater than 100000 gallons
                                 </p>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="searchActive" class="col-12 d-none d-lg-flex p-lg-4">
+                    <div class="row w-100">
+                        <div class="col-12 mb-1 text-center">
+                            <button (click)="displayTrace($event, true)" class="btn btn-drooltool"
+                                style="width:161px">Trace Upstream</button>
+                        </div>
+                        <div class="col-12 text-center">
+                            <button (click)="displayTrace($event, false)" class="btn btn-drooltool"
+                                style="width:161px">Trace Downstream</button>
                         </div>
                     </div>
                 </div>
@@ -127,10 +143,64 @@
     </div>
     <div class="col-lg-9 pl-0 pr-0">
         <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight" style="height:100%">
-            <button *ngIf="searchActive" (click)="displayTrace($event, true)" class="btn btn-drooltool"
-                style="position:absolute; bottom:55px; right:10px; z-index:100000">Trace Upstream</button>
-            <button *ngIf="searchActive" (click)="displayTrace($event, false)" class="btn btn-drooltool"
-            style="position:absolute; bottom:10px; right:10px; z-index:100000">Trace Downstream</button>
+        </div>
+    </div>
+    <div *ngIf="searchActive" class="d-lg-none w-100">
+            <div class="col-12 mb-1 p-0 text-center">
+                <button (click)="displayTrace($event, true)" class="btn btn-drooltool w-100">Trace Upstream</button>
+            </div>
+            <div class="col-12 mb-1 p-0 text-center">
+                <button (click)="displayTrace($event, false)" class="btn btn-drooltool w-100">Trace Downstream</button>
+            </div>
+        </div>
+    <div *ngIf="!activeSearchNotFound && selectedMetric == 'Total Monthly Drool'"
+        class="col-12 section-stats d-lg-none">
+        <div class="h-100 w-100">
+            <div class="row">
+                <div class="col-2" style="background-color:#FBD177;opacity:0.75">
+                </div>
+                <div class="col-10">
+                    <p class="b3 mt-auto mb-auto">
+                        0 - 1000 gallons
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2" style="background-color:#F7BE64;opacity:0.75">
+                </div>
+                <div class="col-10">
+                    <p class="b3 mt-auto mb-auto">
+                        1000 - 10000 gallons
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2" style="background-color:#F0A148;opacity:0.75">
+                </div>
+                <div class="col-10">
+                    <p class="b3 mt-auto mb-auto">
+                        10000 - 500000 gallons
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2" style="background-color:#EE973F;opacity:0.75">
+                </div>
+                <div class="col-10">
+                    <p class="b3 mt-auto mb-auto">
+                        500000 - 100000 gallons
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2" style="background-color:#EA842C;opacity:0.75">
+                </div>
+                <div class="col-10">
+                    <p class="b3 mt-auto mb-auto">
+                        Greater than 100000 gallons
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

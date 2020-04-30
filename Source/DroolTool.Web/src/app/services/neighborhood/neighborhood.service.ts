@@ -6,26 +6,26 @@ import { FeatureCollection } from 'geojson';
 @Injectable({
     providedIn: 'root'
 })
-export class NeighborhoodExplorerService {
+export class NeighborhoodService {
     constructor(private apiService: ApiService) { }
 
-    getMask(): Observable<string> {
-        let route = `/neighborhood-explorer/get-mask`;
+    getServicedNeighborhoodIds(): Observable<number[]> {
+        let route = `/neighborhood/get-serviced-neighborhood-ids`;
         return this.apiService.getFromApi(route);
     }
 
     getStormshed(neighborhoodID:number): Observable<string> {
-        let route = `/neighborhood-explorer/get-stormshed/${neighborhoodID}`;
+        let route = `/neighborhood/${neighborhoodID}/get-stormshed/`;
         return this.apiService.getFromApi(route);
     }
 
     getDownstreamBackboneTrace(neighborhoodID:number): Observable<string> {
-        let route = `/neighborhood-explorer/get-downstream-backbone-trace/${neighborhoodID}`;
+        let route = `/neighborhood/${neighborhoodID}/get-downstream-backbone-trace/`;
         return this.apiService.getFromApi(route);
     }
 
-    getServicedNeighborhoodIds(): Observable<number[]> {
-        let route = `/neighborhood-explorer/get-serviced-neighborhood-ids`;
+    getUpstreamBackboneTrace(neighborhoodID:number): Observable<string> {
+        let route = `/neighborhood/${neighborhoodID}/get-upstream-backbone-trace/`;
         return this.apiService.getFromApi(route);
     }
     

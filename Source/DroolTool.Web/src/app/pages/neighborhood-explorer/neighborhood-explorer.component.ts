@@ -6,7 +6,8 @@ import '../../../../node_modules/leaflet.snogylop/src/leaflet.snogylop.js';
 import '../../../../node_modules/leaflet.fullscreen/Control.FullScreen.js';
 import * as esri from 'esri-leaflet'
 import { CustomCompileService } from '../../shared/services/custom-compile.service';
-import { NeighborhoodExplorerService } from 'src/app/services/neighborhood-explorer/neighborhood-explorer.service';
+import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
+import { WatershedService } from 'src/app/services/watershed/watershed.service';
 import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
@@ -56,7 +57,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
   constructor(
     private appRef: ApplicationRef,
     private compileService: CustomCompileService,
-    private neighborhoodExplorerService: NeighborhoodExplorerService,
+    private neighborhoodService: NeighborhoodService,
+    private watershedService: WatershedService,
     private nominatimService: NominatimService,
     private wfsService: WfsService
   ) {
@@ -125,7 +127,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
   public ngAfterViewInit(): void {
 
-    this.neighborhoodExplorerService.getServicedNeighborhoodIds().subscribe(result => {
+    this.neighborhoodService.getServicedNeighborhoodIds().subscribe(result => {
       this.neighborhoodsWhereItIsOkayToClickIDs = result;
     })
 
@@ -133,7 +135,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public initializeMap(): void {
-    this.neighborhoodExplorerService.getMask().subscribe(maskString => {
+    this.watershedService.getMask().subscribe(maskString => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
         style: function (feature) {
@@ -317,7 +319,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public displayStormshedAndBackboneDetail(neighborhoodID: number): void {
-    this.neighborhoodExplorerService.getStormshed(neighborhoodID).subscribe(response => {
+    this.neighborhoodService.getStormshed(neighborhoodID).subscribe(response => {
       let featureCollection = (response) as any as FeatureCollection;
       if (featureCollection.features.length === 0) {
         return null;
@@ -381,7 +383,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     if (!this.traceActive)
     {
       this.clearLayer(this.traceLayer);
-      this.neighborhoodExplorerService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
+      this.neighborhoodService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
         this.traceLayer = L.geoJSON(response,
           {
             style: function (feature) {

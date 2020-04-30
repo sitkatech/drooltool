@@ -31,6 +31,7 @@
                 <Font>
                     <CssParameter name="font-family">Arial</CssParameter>
                     <CssParameter name="font-size">11</CssParameter>
+                    <CssParameter name="font-weight">bold</CssParameter>
                 </Font>
                 <LabelPlacement>
                     <PointPlacement>
@@ -41,7 +42,7 @@
                     </PointPlacement>
                 </LabelPlacement>
                 <Fill>
-                  	<CssParameter name="fill">#357ac0</CssParameter>
+                  	<CssParameter name="fill">#8B74FF</CssParameter>
                 </Fill>
                 <VendorOption name="autoWrap">60</VendorOption>
                 <VendorOption name="maxDisplacement">150</VendorOption>

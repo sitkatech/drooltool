@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef } from '@angular/core';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
-import { NeighborhoodExplorerService } from 'src/app/services/neighborhood-explorer/neighborhood-explorer.service';
-import { WatershedExplorerService } from 'src/app/services/watershed-explorer-service/watershed-explorer-service';
+import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
+import { WatershedService } from 'src/app/services/watershed/watershed.service';
 import { NominatimService } from 'src/app/shared/services/nominatim.service';
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import { environment } from 'src/environments/environment';
@@ -30,8 +30,8 @@ export class WatershedExplorerComponent implements OnInit {
   public afterLoadMap = new EventEmitter();
   public onMapMoveEnd = new EventEmitter();
 
-  public metrics = ["Select a metric", "Total Monthly Drool"];
-  public selectedMetric = "Select a metric";
+  public metrics = ["Total Monthly Drool", "No Metric, Map Only"];
+  public selectedMetric = "Total Monthly Drool";
   public metricsForCurrentSelection: DroolWatershedMetricDto;
   public metricOverlayLayer: L.Layers;
 
@@ -63,10 +63,9 @@ export class WatershedExplorerComponent implements OnInit {
   constructor(
     private appRef: ApplicationRef,
     private compileService: CustomCompileService,
-    private neighborhoodExplorerService: NeighborhoodExplorerService,
-    private nominatimService: NominatimService,
+    private neighborhoodService: NeighborhoodService,
     private wfsService: WfsService,
-    private watershedExplorerService: WatershedExplorerService
+    private watershedService: WatershedService
   ) {
   }
 
@@ -133,7 +132,7 @@ export class WatershedExplorerComponent implements OnInit {
 
   public ngAfterViewInit(): void {
 
-    this.neighborhoodExplorerService.getServicedNeighborhoodIds().subscribe(result => {
+    this.neighborhoodService.getServicedNeighborhoodIds().subscribe(result => {
       this.neighborhoodsWhereItIsOkayToClickIDs = result;
     })
 
@@ -141,7 +140,7 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public initializeMap(): void {
-    this.neighborhoodExplorerService.getMask().subscribe(maskString => {
+    this.watershedService.getMask().subscribe(maskString => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
         style: function (feature) {
@@ -244,7 +243,7 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public displaySearchResults(OCSurveyNeighborhoodID: number, latlng: Object): void {
-    this.watershedExplorerService.getMetrics(OCSurveyNeighborhoodID).subscribe(response => {
+    this.watershedService.getMetrics(OCSurveyNeighborhoodID).subscribe(response => {
       this.metricsForCurrentSelection = response;
 
       let icon = L.divIcon({
@@ -278,7 +277,7 @@ export class WatershedExplorerComponent implements OnInit {
     this.clearLayer(this.stormshedLayer);
     if (!upstream) {
       this.clearLayer(this.downstreamTraceLayer);
-      this.neighborhoodExplorerService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
+      this.neighborhoodService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
         this.downstreamTraceLayer = L.geoJSON(response,
           {
             style: function (feature) {
@@ -299,7 +298,7 @@ export class WatershedExplorerComponent implements OnInit {
     else {
       this.clearLayer(this.upstreamTraceLayer);
       this.clearLayer(this.stormshedLayer);
-      this.watershedExplorerService.getUpstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
+      this.neighborhoodService.getUpstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
         let featureCollection = (response) as any as FeatureCollection;
         if (featureCollection.features.length === 0) {
           return null;
@@ -311,7 +310,7 @@ export class WatershedExplorerComponent implements OnInit {
           {
             style: function (feature) {
               return {
-                color: "#FF20F9",
+                color: "#000000",
                 weight: 3,
                 stroke: true
               }
@@ -323,10 +322,8 @@ export class WatershedExplorerComponent implements OnInit {
         this.stormshedLayer = L.geoJson(stormshed, {
           style: function (feature) {
             return {
-              fillColor: "#C0FF6C",
-              fill: true,
-              fillOpacity: 0.3,
-              color: "#EA842C",
+              fill: false,
+              color: "#89BF40",
               weight: 5,
               stroke: true
             }
@@ -400,7 +397,7 @@ export class WatershedExplorerComponent implements OnInit {
       this.metricOverlayLayer = null;
     }
 
-    if (this.selectedMetric == "Select a metric") {
+    if (this.selectedMetric == "No Metric, Map Only") {
       return null;
     }
 

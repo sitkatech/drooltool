@@ -7,16 +7,16 @@ import { DroolWatershedMetricDto } from 'src/app/shared/models/drool-watershed-m
 @Injectable({
     providedIn: 'root'
 })
-export class WatershedExplorerService {
+export class WatershedService {
     constructor(private apiService: ApiService) { }
 
-    getMetrics(OCSurveyNeighborhoodID:number): Observable<DroolWatershedMetricDto> {
-        let route = `/watershed-explorer/get-metrics/${OCSurveyNeighborhoodID}`;
+    getMask(): Observable<string> {
+        let route = `/watershed/get-mask`;
         return this.apiService.getFromApi(route);
     }
 
-    getUpstreamBackboneTrace(neighborhoodID:number): Observable<string> {
-        let route = `/watershed-explorer/get-upstream-backbone-trace/${neighborhoodID}`;
+    getMetrics(OCSurveyNeighborhoodID:number): Observable<DroolWatershedMetricDto> {
+        let route = `/watershed/${OCSurveyNeighborhoodID}/get-metrics/`;
         return this.apiService.getFromApi(route);
     }
 }
