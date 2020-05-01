@@ -41,11 +41,7 @@ namespace DroolTool.API.Controllers
                 .Include(x => x.InverseDownstreamBackboneSegment)
                 .ToList();
 
-            var startingPoint = _dbContext.Neighborhood
-                .Include(x => x.BackboneSegment)
-                .Single(x => x.NeighborhoodID == neighborhoodID).BackboneSegment.ToList();
-
-            var lookingAt = backboneSegments.Where(x => startingPoint.Contains(x) && x.BackboneSegmentTypeID != (int)BackboneSegmentTypeEnum.Channel).ToList();
+            var lookingAt = backboneSegments.Where(x => x.NeighborhoodID == neighborhoodID && x.BackboneSegmentTypeID != (int)BackboneSegmentTypeEnum.Channel).ToList();
 
             while (lookingAt.Any())
             {
@@ -91,14 +87,11 @@ namespace DroolTool.API.Controllers
         {
             var backboneDownstream = new List<BackboneSegment>();
 
-            var neighborhoods = _dbContext.Neighborhood
-                .Include(x => x.BackboneSegment);
-
             var backboneSegments = _dbContext.BackboneSegment
                 .Include(x => x.DownstreamBackboneSegment)
                 .ToList();
 
-            var lookingAt = neighborhoods.Single(x => x.NeighborhoodID == neighborhoodID).BackboneSegment;
+            var lookingAt = backboneSegments.Where(x => x.NeighborhoodID == neighborhoodID).ToList();
 
             while (lookingAt.Any())
             {
@@ -126,15 +119,12 @@ namespace DroolTool.API.Controllers
         {
             var backboneUpstream = new List<BackboneSegment>();
 
-            var neighborhoods = _dbContext.Neighborhood
-                .Include(x => x.BackboneSegment);
-
             var backboneSegments = _dbContext.BackboneSegment
                 .Include(x => x.InverseDownstreamBackboneSegment)
                 .Include(x => x.Neighborhood)
                 .ToList();
 
-            var lookingAt = neighborhoods.Single(x => x.NeighborhoodID == neighborhoodID).BackboneSegment;
+            var lookingAt = backboneSegments.Where(x => x.NeighborhoodID == neighborhoodID).ToList();
 
             while (lookingAt.Any())
             {

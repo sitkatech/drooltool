@@ -34,13 +34,13 @@ namespace DroolTool.API.Controllers
         [HttpGet("watershed/{OCSurveyNeighborhoodID}/get-metrics/")]
         public ActionResult<DroolWatershedMetricDto> GetWatershedExplorerMetrics([FromRoute] int OCSurveyNeighborhoodID)
         {
-            var DroolWatershedMetric = _dbContext.vDroolWatershedMetric
+            var droolWatershedMetric = _dbContext.vDroolWatershedMetric
                 .Where(x => x.OCSurveyCatchmentID == OCSurveyNeighborhoodID)
                 .OrderByDescending(x => x.MetricDate)
                 .FirstOrDefault()
                 .AsDto();
 
-            return Ok(DroolWatershedMetric);
+            return Ok(droolWatershedMetric);
         }
     }
 }
