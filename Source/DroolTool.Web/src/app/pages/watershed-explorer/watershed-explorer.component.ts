@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef 
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
 import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
 import { WatershedService } from 'src/app/services/watershed/watershed.service';
-import { NominatimService } from 'src/app/shared/services/nominatim.service';
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import { environment } from 'src/environments/environment';
 import * as L from 'leaflet';
@@ -323,7 +322,7 @@ export class WatershedExplorerComponent implements OnInit {
           style: function (feature) {
             return {
               fill: false,
-              color: "#89BF40",
+              color: "#00728d",
               weight: 5,
               stroke: true
             }
