@@ -95,7 +95,7 @@
           </ogc:Filter>
           <PolygonSymbolizer>
             <Fill>
-              <CssParameter name="fill">#F0A148</CssParameter>
+              <CssParameter name="fill">#F2A948</CssParameter>
               <CssParameter name="fill-opacity">0.75</CssParameter>
             </Fill>
             <Stroke>
@@ -113,13 +113,13 @@
                 <ogc:Literal>25000</ogc:Literal>
               </ogc:LowerBoundary>
               <ogc:UpperBoundary>
-                <ogc:Literal>49000</ogc:Literal>
+                <ogc:Literal>49999</ogc:Literal>
               </ogc:UpperBoundary>
             </ogc:PropertyIsBetween>
           </ogc:Filter>
           <PolygonSymbolizer>
             <Fill>
-              <CssParameter name="fill">#EE973F</CssParameter>
+              <CssParameter name="fill">#F0A148</CssParameter>
               <CssParameter name="fill-opacity">0.75</CssParameter>
             </Fill>
             <Stroke>
@@ -143,7 +143,7 @@
           </ogc:Filter>
           <PolygonSymbolizer>
             <Fill>
-              <CssParameter name="fill">#EA842C</CssParameter>
+              <CssParameter name="fill">#EE973F</CssParameter>
               <CssParameter name="fill-opacity">0.75</CssParameter>
             </Fill>
             <Stroke>
@@ -186,7 +186,7 @@
           </ogc:Filter>
           <PolygonSymbolizer>
             <Fill>
-              <CssParameter name="fill">#F0A148</CssParameter>
+              <CssParameter name="fill">#EA842C</CssParameter>
               <CssParameter name="fill-opacity">0.75</CssParameter>
             </Fill>
             <Stroke>

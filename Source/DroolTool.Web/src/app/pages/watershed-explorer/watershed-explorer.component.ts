@@ -322,7 +322,7 @@ export class WatershedExplorerComponent implements OnInit {
           style: function (feature) {
             return {
               fill: false,
-              color: "#00728d",
+              color: "#89bf40",
               weight: 5,
               stroke: true
             }
