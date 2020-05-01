@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using DroolTool.EFModels.Entities;
+using DroolTool.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -14,31 +15,22 @@ using Newtonsoft.Json;
 
 namespace DroolTool.API.Controllers
 {
-    public class NeighborhoodExplorerController : ControllerBase
+    public class NeighborhoodController : ControllerBase
     {
         private readonly DroolToolDbContext _dbContext;
 
-        public NeighborhoodExplorerController(DroolToolDbContext dbContext)
+        public NeighborhoodController(DroolToolDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        [HttpGet("neighborhood-explorer/get-mask")]
-        public ActionResult<string> GetNeighborhoodExplorerMask()
-        {
-            var watersheds = _dbContext.Watershed.Select(x => x.WatershedGeometry4326);
-            var geometry = UnaryUnionOp.Union(watersheds);
-
-            return Ok(buildFeatureCollectionAndWriteGeoJson(new List<Feature> { new Feature() { Geometry = geometry } }));
-        }
-
-        [HttpGet("neighborhood-explorer/get-serviced-neighborhood-ids")]
+        [HttpGet("neighborhood/get-serviced-neighborhood-ids")]
         public ActionResult<List<int>> GetServicedNeighborhoodIds()
         {
             return Ok(_dbContext.Neighborhood.Where(x => x.BackboneSegment.Any()).Select(x => x.NeighborhoodID).ToList());
         }
 
-        [HttpGet("neighborhood-explorer/get-stormshed/{neighborhoodID}")]
+        [HttpGet("neighborhood/{neighborhoodID}/get-stormshed")]
         public ActionResult<string> GetStormshed([FromRoute]int neighborhoodID)
         {
             var backboneAccumulated = new List<BackboneSegment>();
@@ -49,11 +41,7 @@ namespace DroolTool.API.Controllers
                 .Include(x => x.InverseDownstreamBackboneSegment)
                 .ToList();
 
-            var startingPoint = _dbContext.Neighborhood
-                .Include(x => x.BackboneSegment)
-                .Single(x => x.NeighborhoodID == neighborhoodID).BackboneSegment.ToList();
-
-            var lookingAt = backboneSegments.Where(x => startingPoint.Contains(x) && x.BackboneSegmentTypeID != (int)BackboneSegmentTypeEnum.Channel).ToList();
+            var lookingAt = backboneSegments.Where(x => x.NeighborhoodID == neighborhoodID && x.BackboneSegmentTypeID != (int)BackboneSegmentTypeEnum.Channel).ToList();
 
             while (lookingAt.Any())
             {
@@ -91,22 +79,19 @@ namespace DroolTool.API.Controllers
 
             feature.Attributes.Add("NeighborhoodIDs", listBackboneAccumulated.Select(x => x.NeighborhoodID).ToList());
 
-            return Ok(buildFeatureCollectionAndWriteGeoJson(new List<Feature> { feature }));
+            return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(new List<Feature> { feature }));
         }
 
-        [HttpGet("neighborhood-explorer/get-downstream-backbone-trace/{neighborhoodID}")]
+        [HttpGet("neighborhood/{neighborhoodID}/get-downstream-backbone-trace")]
         public ActionResult<string> GetDownstreamBackboneTrace([FromRoute] int neighborhoodID)
         {
             var backboneDownstream = new List<BackboneSegment>();
-
-            var neighborhoods = _dbContext.Neighborhood
-                .Include(x => x.BackboneSegment);
 
             var backboneSegments = _dbContext.BackboneSegment
                 .Include(x => x.DownstreamBackboneSegment)
                 .ToList();
 
-            var lookingAt = neighborhoods.Single(x => x.NeighborhoodID == neighborhoodID).BackboneSegment;
+            var lookingAt = backboneSegments.Where(x => x.NeighborhoodID == neighborhoodID).ToList();
 
             while (lookingAt.Any())
             {
@@ -122,34 +107,57 @@ namespace DroolTool.API.Controllers
             var featureList = backboneDownstream.Select(x =>
             {
                 var geometry = UnaryUnionOp.Union(x.BackboneSegmentGeometry4326);
-                var feature = new Feature() { Geometry = geometry, Attributes = new AttributesTable() };
-                feature.Attributes.Add("dummy", "dummy");
+                var feature = new Feature() { Geometry = geometry };
                 return feature;
             }).ToList();
 
-            return Ok(buildFeatureCollectionAndWriteGeoJson(featureList));
+            return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(featureList));
         }
 
-        private string buildFeatureCollectionAndWriteGeoJson(List<Feature> featureList)
+        [HttpGet("neighborhood/{neighborhoodID}/get-upstream-backbone-trace")]
+        public ActionResult<string> GetUpstreamBackboneTrace([FromRoute] int neighborhoodID)
         {
-            var featureCollection = new FeatureCollection();
+            var backboneUpstream = new List<BackboneSegment>();
 
-            foreach (var feature in featureList)
+            var backboneSegments = _dbContext.BackboneSegment
+                .Include(x => x.InverseDownstreamBackboneSegment)
+                .Include(x => x.Neighborhood)
+                .ToList();
+
+            var lookingAt = backboneSegments.Where(x => x.NeighborhoodID == neighborhoodID).ToList();
+
+            while (lookingAt.Any())
             {
-                featureCollection.Add(feature);
+                backboneUpstream.AddRange(lookingAt);
+
+                lookingAt = backboneSegments.Where(x => lookingAt.Contains(x) && x.InverseDownstreamBackboneSegment != null)
+                    .SelectMany(x => x.InverseDownstreamBackboneSegment)
+                    .ToList()
+                    .Distinct()
+                    .ToList();
             }
 
-            var gjw = new GeoJsonWriter
+            var featureList = backboneUpstream.Select(x =>
             {
-                SerializerSettings =
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    FloatParseHandling = FloatParseHandling.Decimal,
-                    Formatting = Formatting.Indented
-                }
+                var geometry = UnaryUnionOp.Union(x.BackboneSegmentGeometry4326);
+                var feature = new Feature() { Geometry = geometry };
+                return feature;
+            }).ToList();
+
+            var stormshed = backboneUpstream.Select(x => x.Neighborhood)
+                .ToList()
+                .Distinct()
+                .Where(x => x != null)
+                .ToList();
+
+            var feature = new Feature()
+            {
+                Geometry = UnaryUnionOp.Union(stormshed.Select(x => x.NeighborhoodGeometry4326).ToList())
             };
 
-            return gjw.Write(featureCollection);
+            featureList.Add(feature);
+
+            return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(featureList));
         }
     }
 }

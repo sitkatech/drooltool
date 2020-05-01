@@ -28,9 +28,11 @@ namespace DroolTool.EFModels.Entities
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Watershed> Watershed { get; set; }
+        public virtual DbSet<vDroolWatershedMetric> vDroolWatershedMetric { get; set; }
         public virtual DbSet<vGeoServerBackbone> vGeoServerBackbone { get; set; }
         public virtual DbSet<vGeoServerNeighborhood> vGeoServerNeighborhood { get; set; }
         public virtual DbSet<vGeoServerWatershed> vGeoServerWatershed { get; set; }
+        public virtual DbSet<vGeoServerWatershedExplorerMapMetrics> vGeoServerWatershedExplorerMapMetrics { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -247,6 +249,13 @@ namespace DroolTool.EFModels.Entities
                 entity.Property(e => e.WatershedName).IsUnicode(false);
             });
 
+            modelBuilder.Entity<vDroolWatershedMetric>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vDroolWatershedMetric");
+            });
+
             modelBuilder.Entity<vGeoServerBackbone>(entity =>
             {
                 entity.HasNoKey();
@@ -280,6 +289,13 @@ namespace DroolTool.EFModels.Entities
                 entity.Property(e => e.WatershedID).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.WatershedName).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<vGeoServerWatershedExplorerMapMetrics>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vGeoServerWatershedExplorerMapMetrics");
             });
 
             OnModelCreatingPartial(modelBuilder);
