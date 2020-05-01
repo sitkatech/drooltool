@@ -15,7 +15,10 @@ namespace DroolTool.EFModels.Entities
                 MetricMonth = metric?.MetricMonth,
                 TotalMonthlyDrool = metric?.TotalMonthlyDrool == null
                     ? "Not Available"
-                    : metric.TotalMonthlyDrool.Value + " gal/month"
+                    : metric.TotalMonthlyDrool.Value + " gal/month",
+                OverallParticipation =  metric?.OverallParticipation == null 
+                    ? "Not Available" 
+                    : metric.OverallParticipation.Value + " active meters"
             };
         }
     }

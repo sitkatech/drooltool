@@ -11,7 +11,8 @@ Select
 	[MetricYear] as MetricYear,
 	[MetricMonth] as MetricMonth,
 	MetricDate as MetricDate,
-	round([overall_daily_est_outdoor_budget_overage_sum] * 748.052 * 30,0) as TotalMonthlyDrool
+	round([overall_daily_est_outdoor_budget_overage_sum] * 748.052 * 30,0) as TotalMonthlyDrool,
+	[overall_is_in_rebate_program_sum] as OverallParticipation
 from dbo.RawDroolMetric
 
 
