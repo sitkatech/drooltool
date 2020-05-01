@@ -90,6 +90,12 @@
     cursor: pointer;
 }
 
+.metric-color-swatch {
+    width:30px;
+    height:30px;
+    opacity:0.75;
+}
+
 ::ng-deep .search-popup .leaflet-popup-content-wrapper {
     font-family: "Nunito", sans-serif;
     font-weight: 600;
