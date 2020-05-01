@@ -62,7 +62,7 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!activeSearchNotFound && selectedMetric == 'No Metric, Map Only'"
+                <div *ngIf="!activeSearchNotFound && selectedMetric == WatershedExplorerMetric.NoMetric"
                     class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
                     <div class="h-100 mt-auto mb-auto">
                         <h3>
@@ -76,90 +76,90 @@
                         </h3>
                     </div>
                 </div>
-                <div *ngIf="!activeSearchNotFound && selectedMetric == 'Total Monthly Drool'"
+                <div *ngIf="!activeSearchNotFound && selectedMetric != WatershedExplorerMetric.NoMetric"
                     class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
                     <div class="h-100 w-100 m-auto">
                         <div class="row mb-1">
                             <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" style="background-color:#FDDA81;"></div>
+                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[0]"></div>
                             </div>
                             <div class="col-10">
-                                <p class="b3 mt-auto mb-auto">
-                                    0 - 1000
+                                <p class="b3 mt-auto mb-auto text-left">
+                                    {{selectedMetricLegendValues[0]}}
                                 </p>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" style="background-color:#FBD177;"></div>
+                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[1]"></div>
                             </div>
                             <div class="col-10">
-                                <p class="b3 mt-auto mb-auto">
-                                    1000 - 5000
+                                <p class="b3 mt-auto mb-auto text-left">
+                                    {{selectedMetricLegendValues[1]}}
                                 </p>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" style="background-color:#F7BE64;"></div>
+                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[2]"></div>
                             </div>
                             <div class="col-10">
-                                <p class="b3 mt-auto mb-auto">
-                                    5000 - 10000
+                                <p class="b3 mt-auto mb-auto text-left">
+                                    {{selectedMetricLegendValues[2]}}
                                 </p>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" style="background-color:#F2A948;"></div>
+                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[3]"></div>
                             </div>
                             <div class="col-10">
-                                <p class="b3 mt-auto mb-auto">
-                                    10000 - 25000
+                                <p class="b3 mt-auto mb-auto text-left">
+                                    {{selectedMetricLegendValues[3]}}
                                 </p>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" style="background-color:#F0A148;"></div>
+                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[4]"></div>
                             </div>
                             <div class="col-10">
-                                <p class="b3 mt-auto mb-auto">
-                                    25000 - 50000
+                                <p class="b3 mt-auto mb-auto text-left">
+                                    {{selectedMetricLegendValues[4]}}
                                 </p>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" style="background-color:#EE973F;"></div>
+                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[5]"></div>
                             </div>
                             <div class="col-10">
-                                <p class="b3 mt-auto mb-auto">
-                                    50000 - 75000
+                                <p class="b3 mt-auto mb-auto text-left">
+                                    {{selectedMetricLegendValues[5]}}
                                 </p>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" style="background-color:#EC8E35;"></div>
+                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[6]"></div>
                             </div>
                             <div class="col-10">
-                                <p class="b3 mt-auto mb-auto">
-                                    75000 - 100000
+                                <p class="b3 mt-auto mb-auto text-left">
+                                    {{selectedMetricLegendValues[6]}}
                                 </p>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" style="background-color:#EA842C;"></div>
+                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[7]"></div>
                             </div>
                             <div class="col-10">
-                                <p class="b3 mt-auto mb-auto">
-                                    Greater than 100000
+                                <p class="b3 mt-auto mb-auto text-left">
+                                    {{selectedMetricLegendValues[7]}}
                                 </p>
                             </div>
                         </div>
-                        <p class="b3">*Measured in Gallons</p>
+                        <p class="b3">*Measured in {{selectedMetricUnits}}</p>
                     </div>
                 </div>
                 <div *ngIf="searchActive" class="col-12 d-none d-lg-flex p-lg-4">
@@ -189,90 +189,90 @@
                 <button (click)="displayTrace($event, false)" class="btn btn-drooltool w-100">Trace Downstream</button>
             </div>
         </div>
-    <div *ngIf="!activeSearchNotFound && selectedMetric == 'Total Monthly Drool'"
+    <div *ngIf="!activeSearchNotFound && selectedMetric != WatershedExplorerMetric.NoMetric"
         class="col-12 section-stats d-lg-none mt-1">
         <div class="h-100 w-100 m-auto">
             <div class="row mb-1">
                 <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" style="background-color:#FDDA81;"></div>
+                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[0]"></div>
                 </div>
                 <div class="col-7">
                     <p class="b3 mt-auto mb-auto text-left">
-                        0 - 1000
+                        {{selectedMetricLegendValues[0]}}
                     </p>
                 </div>
             </div>
             <div class="row mb-1">
                 <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" style="background-color:#FBD177;"></div>
+                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[1]"></div>
                 </div>
                 <div class="col-7">
                     <p class="b3 mt-auto mb-auto text-left">
-                        1000 - 5000
+                        {{selectedMetricLegendValues[1]}}
                     </p>
                 </div>
             </div>
             <div class="row mb-1">
                 <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" style="background-color:#F7BE64;"></div>
+                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[2]"></div>
                 </div>
                 <div class="col-7">
                     <p class="b3 mt-auto mb-auto text-left">
-                        5000 - 10000
+                        {{selectedMetricLegendValues[2]}}
                     </p>
                 </div>
             </div>
             <div class="row mb-1">
                 <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" style="background-color:#F2A948;"></div>
+                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[3]"></div>
                 </div>
                 <div class="col-7">
                     <p class="b3 mt-auto mb-auto text-left">
-                        10000 - 25000
+                        {{selectedMetricLegendValues[3]}}
                     </p>
                 </div>
             </div>
             <div class="row mb-1">
                 <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" style="background-color:#F0A148;"></div>
+                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[4]"></div>
                 </div>
                 <div class="col-7">
                     <p class="b3 mt-auto mb-auto text-left">
-                        25000 - 50000
+                        {{selectedMetricLegendValues[4]}}
                     </p>
                 </div>
             </div>
             <div class="row mb-1">
                 <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" style="background-color:#EE973F;"></div>
+                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[5]"></div>
                 </div>
                 <div class="col-7">
                     <p class="b3 mt-auto mb-auto text-left">
-                        50000 - 75000
+                        {{selectedMetricLegendValues[5]}}
                     </p>
                 </div>
             </div>
             <div class="row mb-1">
                 <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" style="background-color:#EC8E35;"></div>
+                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[6]"></div>
                 </div>
                 <div class="col-7">
                     <p class="b3 mt-auto mb-auto text-left">
-                        75000 - 100000
+                        {{selectedMetricLegendValues[6]}}
                     </p>
                 </div>
             </div>
             <div class="row mb-1">
                 <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" style="background-color:#EA842C;"></div>
+                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[7]"></div>
                 </div>
                 <div class="col-7">
                     <p class="b3 mt-auto mb-auto text-left">
-                        Greater than 100000
+                        {{selectedMetricLegendValues[7]}}
                     </p>
                 </div>
             </div>
-            <p class="b3">*Measured in Gallons</p>
+            <p class="b3">*Measured in {{selectedMetricUnits}}</p>
         </div>
     </div>
 </div>

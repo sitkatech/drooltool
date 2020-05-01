@@ -9,5 +9,6 @@ namespace DroolTool.Models.DataTransferObjects
         public int? MetricYear { get; set; }
         public int? MetricMonth { get; set; }
         public string TotalMonthlyDrool { get; set; }
+        public string OverallParticipation { get; set; }
     }
 }

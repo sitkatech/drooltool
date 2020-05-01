@@ -12,6 +12,7 @@ import * as esri from 'esri-leaflet'
 import { FeatureCollection } from 'geojson';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { DroolWatershedMetricDto } from 'src/app/shared/models/drool-watershed-metric-dto.js';
+import { WatershedExplorerMetric } from 'src/app/shared/models/watershed-explorer-metric.js';
 
 declare var $: any;
 
@@ -29,8 +30,14 @@ export class WatershedExplorerComponent implements OnInit {
   public afterLoadMap = new EventEmitter();
   public onMapMoveEnd = new EventEmitter();
 
-  public metrics = ["Total Monthly Drool", "No Metric, Map Only"];
-  public selectedMetric = "Total Monthly Drool";
+  //this is needed to allow binding to the static class
+  public WatershedExplorerMetric = WatershedExplorerMetric;
+  
+  public metrics = Object.values(WatershedExplorerMetric);
+  public selectedMetric = WatershedExplorerMetric.TotalMonthlyDrool;
+  public selectedMetricColorPallette = this.selectedMetric.legendColors;
+  public selectedMetricLegendValues = this.selectedMetric.legendValues;
+  public selectedMetricUnits = this.selectedMetric.metricUnits;
   public metricsForCurrentSelection: DroolWatershedMetricDto;
   public metricOverlayLayer: L.Layers;
 
@@ -396,22 +403,18 @@ export class WatershedExplorerComponent implements OnInit {
       this.metricOverlayLayer = null;
     }
 
-    if (this.selectedMetric == "No Metric, Map Only") {
+    if (this.selectedMetric == WatershedExplorerMetric.NoMetric) {
       return null;
     }
 
     let cql_filter = "MetricDate = '2019-04-01 00:00:00.000'";
-    let style = "";
-    if (this.selectedMetric == "Total Monthly Drool") {
-      style = "watershed_explorer_map_metric_total_monthly_drool"
-    }
 
     let watershedExplorerMapMetricsWMSOptions = ({
       layers: "DroolTool:WatershedExplorerMapMetrics",
       transparent: true,
       format: "image/png",
       tiled: true,
-      styles: style,
+      styles: this.selectedMetric.geoserverStyle,
       pane: "droolToolOverlayPane",
       cql_filter: cql_filter
     } as L.WMSOptions);
@@ -426,8 +429,11 @@ export class WatershedExplorerComponent implements OnInit {
     if (!this.metricsForCurrentSelection) {
       metricContent = "No metrics found for this location";
     }
-    else if (this.selectedMetric == "Total Monthly Drool") {
+    else if (this.selectedMetric == WatershedExplorerMetric.TotalMonthlyDrool) {
       metricContent = this.selectedMetric + " : " + this.metricsForCurrentSelection.TotalMonthlyDrool;
+    }
+    else if (this.selectedMetric == WatershedExplorerMetric.OverallParticipation) {
+      metricContent = this.selectedMetric + " : " + this.metricsForCurrentSelection.OverallParticipation;
     }
     else {
       metricContent = "Select a metric from the dropdown to get started!";
@@ -436,9 +442,15 @@ export class WatershedExplorerComponent implements OnInit {
     return "<span>" + metricContent + "</span>"
   }
 
+  public getMetricLegend(): void {
+    this.selectedMetricColorPallette = this.selectedMetric.legendColors;
+    this.selectedMetricLegendValues = this.selectedMetric.legendValues;
+    this.selectedMetricUnits = this.selectedMetric.metricUnits;
+  }
+
   public displayNewMetric(): void {
     this.applyMetricOverlay();
-
+    this.getMetricLegend();
     if (!this.clickMarker) {
       return null;
     }
