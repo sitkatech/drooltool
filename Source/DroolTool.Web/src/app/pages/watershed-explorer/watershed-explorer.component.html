@@ -79,87 +79,19 @@
                 <div *ngIf="!activeSearchNotFound && selectedMetric != WatershedExplorerMetric.NoMetric"
                     class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
                     <div class="h-100 w-100 m-auto">
-                        <div class="row mb-1">
-                            <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[0]"></div>
+                        <ng-container *ngFor="let legendColor of selectedMetric.legendColors; index as i">
+                            <div class="row mb-1">
+                                <div class="col-2 mt-auto mb-auto">
+                                    <div class="metric-color-swatch" [style.background]="legendColor"></div>
+                                </div>
+                                <div class="col-10">
+                                    <p class="b3 mt-auto mb-auto text-left">
+                                        {{selectedMetric.legendValues[i]}}
+                                    </p>
+                                </div>
                             </div>
-                            <div class="col-10">
-                                <p class="b3 mt-auto mb-auto text-left">
-                                    {{selectedMetricLegendValues[0]}}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[1]"></div>
-                            </div>
-                            <div class="col-10">
-                                <p class="b3 mt-auto mb-auto text-left">
-                                    {{selectedMetricLegendValues[1]}}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[2]"></div>
-                            </div>
-                            <div class="col-10">
-                                <p class="b3 mt-auto mb-auto text-left">
-                                    {{selectedMetricLegendValues[2]}}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[3]"></div>
-                            </div>
-                            <div class="col-10">
-                                <p class="b3 mt-auto mb-auto text-left">
-                                    {{selectedMetricLegendValues[3]}}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[4]"></div>
-                            </div>
-                            <div class="col-10">
-                                <p class="b3 mt-auto mb-auto text-left">
-                                    {{selectedMetricLegendValues[4]}}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[5]"></div>
-                            </div>
-                            <div class="col-10">
-                                <p class="b3 mt-auto mb-auto text-left">
-                                    {{selectedMetricLegendValues[5]}}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[6]"></div>
-                            </div>
-                            <div class="col-10">
-                                <p class="b3 mt-auto mb-auto text-left">
-                                    {{selectedMetricLegendValues[6]}}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col-2 mt-auto mb-auto">
-                                <div class="metric-color-swatch" [style.background]="selectedMetricColorPallette[7]"></div>
-                            </div>
-                            <div class="col-10">
-                                <p class="b3 mt-auto mb-auto text-left">
-                                    {{selectedMetricLegendValues[7]}}
-                                </p>
-                            </div>
-                        </div>
-                        <p class="b3">*Measured in {{selectedMetricUnits}}</p>
+                        </ng-container>
+                        <p class="b3">*Measured in {{selectedMetric.metricUnits}}</p>
                     </div>
                 </div>
                 <div *ngIf="searchActive" class="col-12 d-none d-lg-flex p-lg-4">
@@ -192,87 +124,19 @@
     <div *ngIf="!activeSearchNotFound && selectedMetric != WatershedExplorerMetric.NoMetric"
         class="col-12 section-stats d-lg-none mt-1">
         <div class="h-100 w-100 m-auto">
-            <div class="row mb-1">
-                <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[0]"></div>
+            <ng-container *ngFor="let legendColor of selectedMetric.legendColors; index as i">
+                <div class="row mb-1">
+                    <div class="col-5 mt-auto mb-auto">
+                        <div class="metric-color-swatch ml-auto" [style.background]="legendColor"></div>
+                    </div>
+                    <div class="col-7">
+                        <p class="b3 mt-auto mb-auto text-left">
+                            {{selectedMetric.legendValues[i]}}
+                        </p>
+                    </div>
                 </div>
-                <div class="col-7">
-                    <p class="b3 mt-auto mb-auto text-left">
-                        {{selectedMetricLegendValues[0]}}
-                    </p>
-                </div>
-            </div>
-            <div class="row mb-1">
-                <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[1]"></div>
-                </div>
-                <div class="col-7">
-                    <p class="b3 mt-auto mb-auto text-left">
-                        {{selectedMetricLegendValues[1]}}
-                    </p>
-                </div>
-            </div>
-            <div class="row mb-1">
-                <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[2]"></div>
-                </div>
-                <div class="col-7">
-                    <p class="b3 mt-auto mb-auto text-left">
-                        {{selectedMetricLegendValues[2]}}
-                    </p>
-                </div>
-            </div>
-            <div class="row mb-1">
-                <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[3]"></div>
-                </div>
-                <div class="col-7">
-                    <p class="b3 mt-auto mb-auto text-left">
-                        {{selectedMetricLegendValues[3]}}
-                    </p>
-                </div>
-            </div>
-            <div class="row mb-1">
-                <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[4]"></div>
-                </div>
-                <div class="col-7">
-                    <p class="b3 mt-auto mb-auto text-left">
-                        {{selectedMetricLegendValues[4]}}
-                    </p>
-                </div>
-            </div>
-            <div class="row mb-1">
-                <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[5]"></div>
-                </div>
-                <div class="col-7">
-                    <p class="b3 mt-auto mb-auto text-left">
-                        {{selectedMetricLegendValues[5]}}
-                    </p>
-                </div>
-            </div>
-            <div class="row mb-1">
-                <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[6]"></div>
-                </div>
-                <div class="col-7">
-                    <p class="b3 mt-auto mb-auto text-left">
-                        {{selectedMetricLegendValues[6]}}
-                    </p>
-                </div>
-            </div>
-            <div class="row mb-1">
-                <div class="col-5 mt-auto mb-auto">
-                    <div class="metric-color-swatch ml-auto" [style.background]="selectedMetricColorPallette[7]"></div>
-                </div>
-                <div class="col-7">
-                    <p class="b3 mt-auto mb-auto text-left">
-                        {{selectedMetricLegendValues[7]}}
-                    </p>
-                </div>
-            </div>
-            <p class="b3">*Measured in {{selectedMetricUnits}}</p>
+            </ng-container>
+            <p class="b3">*Measured in {{selectedMetric.metricUnits}}</p>
         </div>
     </div>
 </div>

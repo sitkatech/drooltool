@@ -35,9 +35,6 @@ export class WatershedExplorerComponent implements OnInit {
   
   public metrics = Object.values(WatershedExplorerMetric);
   public selectedMetric = WatershedExplorerMetric.TotalMonthlyDrool;
-  public selectedMetricColorPallette = this.selectedMetric.legendColors;
-  public selectedMetricLegendValues = this.selectedMetric.legendValues;
-  public selectedMetricUnits = this.selectedMetric.metricUnits;
   public metricsForCurrentSelection: DroolWatershedMetricDto;
   public metricOverlayLayer: L.Layers;
 
@@ -442,15 +439,8 @@ export class WatershedExplorerComponent implements OnInit {
     return "<span>" + metricContent + "</span>"
   }
 
-  public getMetricLegend(): void {
-    this.selectedMetricColorPallette = this.selectedMetric.legendColors;
-    this.selectedMetricLegendValues = this.selectedMetric.legendValues;
-    this.selectedMetricUnits = this.selectedMetric.metricUnits;
-  }
-
   public displayNewMetric(): void {
     this.applyMetricOverlay();
-    this.getMetricLegend();
     if (!this.clickMarker) {
       return null;
     }
