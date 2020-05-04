@@ -16,5 +16,6 @@ namespace DroolTool.EFModels.Entities
         public DateTime MetricDate { get; set; }
         public double? TotalMonthlyDrool { get; set; }
         public double? OverallParticipation { get; set; }
+        public double? PercentParticipation { get; set; }
     }
 }

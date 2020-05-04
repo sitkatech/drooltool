@@ -10,7 +10,8 @@ Select
 	dwm.MetricYear,
 	dwm.MetricMonth,
 	dwm.TotalMonthlyDrool,
-	dwm.OverallParticipation
+	dwm.OverallParticipation,
+	dwm.PercentParticipation
 
 from dbo.Neighborhood d
 join dbo.vDroolWatershedMetric dwm on d.OCSurveyNeighborhoodID = dwm.OCSurveyCatchmentID

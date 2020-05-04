@@ -19,4 +19,9 @@ export class WatershedService {
         let route = `/watershed/${OCSurveyNeighborhoodID}/get-metrics/`;
         return this.apiService.getFromApi(route);
     }
+
+    getMostRecentMetric(): Observable<DroolWatershedMetricDto> {
+        let route = `/watershed/get-most-recent-metric/`;
+        return this.apiService.getFromApi(route);
+    }
 }
