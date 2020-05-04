@@ -5,7 +5,7 @@ export class WatershedExplorerMetric {
     static readonly TotalMonthlyDrool = new WatershedExplorerMetric(
         "Total Monthly Drool",
         WatershedExplorerMetric.getColorPallette("orange"),
-        ["0 - 1000", "1000 - 5000", "5000 - 10000", "10000 - 25000", "25000 - 50000",  "50000 - 75000", "75000 - 100000", "Greater than 100000"],
+        ["0 - 1,000", "1,000 - 5,000", "5,000 - 10,000", "10,000 - 25,000", "25,000 - 50,000",  "50,000 - 75,000", "75,000 - 100,000", "Greater than 100,000"],
         "gallons",
         "watershed_explorer_map_metric_total_monthly_drool"
     )
@@ -16,6 +16,14 @@ export class WatershedExplorerMetric {
         ["0 - 5", "5 - 15", "15  - 30", "30 - 45", "45 - 60", "60 - 75", "75 - 90", "Greater than 90"],
         "number of active meters enrolled in a rebate program",
         "watershed_explorer_map_metric_overall_participation"
+    )
+
+    static readonly PercentParticipation = new WatershedExplorerMetric(
+        "Percent Participation",
+        WatershedExplorerMetric.getColorPallette("teal"),
+        ["0 - 1", "1 - 5", "5 - 10", "10 - 25", "25 - 50",  "50 - 75", "75 - 99", "100"],
+        "% of meters enrolled in a rebate program of any type",
+        "watershed_explorer_map_metric_percent_participation"
     )
 
     static readonly NoMetric = new WatershedExplorerMetric(

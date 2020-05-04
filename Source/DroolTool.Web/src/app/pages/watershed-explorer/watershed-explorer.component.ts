@@ -63,6 +63,21 @@ export class WatershedExplorerComponent implements OnInit {
 
   public selectedNeighborhoodID: number;
 
+  public months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ]
+
   constructor(
     private appRef: ApplicationRef,
     private compileService: CustomCompileService,
@@ -131,6 +146,10 @@ export class WatershedExplorerComponent implements OnInit {
     })
 
     this.compileService.configure(this.appRef);
+
+    this.watershedService.getMostRecentMetric().subscribe(result => {
+      this.metricsForCurrentSelection = result;
+    })
   }
 
   public ngAfterViewInit(): void {
@@ -404,7 +423,7 @@ export class WatershedExplorerComponent implements OnInit {
       return null;
     }
 
-    let cql_filter = "MetricDate = '2019-04-01 00:00:00.000'";
+    let cql_filter = "MetricYear = " + this.metricsForCurrentSelection.MetricYear + " and MetricMonth = " + this.metricsForCurrentSelection.MetricMonth;
 
     let watershedExplorerMapMetricsWMSOptions = ({
       layers: "DroolTool:WatershedExplorerMapMetrics",
@@ -431,6 +450,9 @@ export class WatershedExplorerComponent implements OnInit {
     }
     else if (this.selectedMetric == WatershedExplorerMetric.OverallParticipation) {
       metricContent = this.selectedMetric + " : " + this.metricsForCurrentSelection.OverallParticipation;
+    }
+    else if (this.selectedMetric == WatershedExplorerMetric.PercentParticipation) {
+      metricContent = this.selectedMetric + " : " + this.metricsForCurrentSelection.PercentParticipation;
     }
     else {
       metricContent = "Select a metric from the dropdown to get started!";

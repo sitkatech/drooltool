@@ -42,5 +42,14 @@ namespace DroolTool.API.Controllers
 
             return Ok(droolWatershedMetric);
         }
+
+        [HttpGet("watershed/get-most-recent-metric/")]
+        public ActionResult<DroolWatershedMetricDto> GetMostRecentMetric()
+        {
+            return _dbContext.vDroolWatershedMetric
+                .OrderByDescending(x => x.MetricDate)
+                .FirstOrDefault()
+                .AsDto();
+        }
     }
 }
