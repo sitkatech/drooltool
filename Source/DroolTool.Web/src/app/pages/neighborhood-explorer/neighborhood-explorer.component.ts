@@ -160,7 +160,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public initializeMap(): void {
-    this.watershedService.getMask().subscribe(maskString => {
+    this.watershedService.getWatershedMask("All Watersheds").subscribe(maskString => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
         style: function (feature) {

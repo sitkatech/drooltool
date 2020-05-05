@@ -8,6 +8,7 @@ using DroolTool.EFModels.Entities;
 using DroolTool.Models.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization.Internal;
 using NetTopologySuite.Features;
 using NetTopologySuite.Operation.Union;
 
@@ -22,10 +23,19 @@ namespace DroolTool.API.Controllers
             _dbContext = dbContext;
         }
 
-        [HttpGet("watershed/get-mask")]
-        public ActionResult<string> GetExplorerMask()
+        [HttpGet("watershed/get-watershed-names")]
+        public ActionResult<List<string>> GetWatershedNames()
         {
-            var watersheds = _dbContext.Watershed.Select(x => x.WatershedGeometry4326);
+            return Ok(_dbContext.Watershed.Select(x => x.WatershedName).ToList());
+        }
+
+        [HttpGet("watershed/{watershedName}/get-watershed-mask")]
+        public ActionResult<string> GetWatershedMask([FromRoute] string watershedName)
+        {
+            var watersheds = watershedName == "All Watersheds"
+                ? _dbContext.Watershed.Select(x => x.WatershedGeometry4326)
+                : _dbContext.Watershed.Where(x => x.WatershedName == watershedName)
+                    .Select(x => x.WatershedGeometry4326);
             var geometry = UnaryUnionOp.Union(watersheds);
 
             return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(new List<Feature> { new Feature() { Geometry = geometry } }));

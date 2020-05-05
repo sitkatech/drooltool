@@ -29,6 +29,9 @@ export class WatershedExplorerComponent implements OnInit {
   public afterLoadMap = new EventEmitter();
   public onMapMoveEnd = new EventEmitter();
 
+  public watershedNames: Array<string> = ["All Watersheds"];
+  public selectedWatershed: string = "All Watersheds";
+
   //this is needed to allow binding to the static class
   public WatershedExplorerMetric = WatershedExplorerMetric;
 
@@ -153,6 +156,10 @@ export class WatershedExplorerComponent implements OnInit {
       this.metricsForCurrentSelection = result;
       this.selectedMetricMonth = result.MetricMonth;
       this.selectedMetricYear = result.MetricYear;
+    })
+
+    this.watershedService.getWatershedNames().subscribe(result => {
+      this.watershedNames = this.watershedNames.concat(result);
     })
   }
 
@@ -432,7 +439,12 @@ export class WatershedExplorerComponent implements OnInit {
       return null;
     }
 
-    let cql_filter = "MetricYear = " + this.metricsForCurrentSelection.MetricYear + " and MetricMonth = " + this.metricsForCurrentSelection.MetricMonth;
+    let cql_filter = "MetricYear = " + this.metricsForCurrentSelection.MetricYear 
+    + " and MetricMonth = " + this.metricsForCurrentSelection.MetricMonth;
+
+    console.log(this.maskLayer.toGeoJSON())
+    console.log(cql_filter);
+    console.log(this.maskLayer.getBounds())
 
     let watershedExplorerMapMetricsWMSOptions = ({
       layers: "DroolTool:WatershedExplorerMapMetrics",
@@ -500,5 +512,33 @@ export class WatershedExplorerComponent implements OnInit {
     }
     let content = this.getMetricPopupContent();
     this.clickMarker.setPopupContent(content);
+  }
+
+  public getMaskGeoJsonLayer(maskString: string): L.geoJSON {
+    return L.geoJSON(maskString, {
+            invert: true,
+            style: function (feature) {
+              return {
+                fillColor: "#323232",
+                fill: true,
+                fillOpacity: 0.4,
+                stroke:false
+              };
+            }
+          });
+  }
+
+  public getNewWatershedMask(chosenWatershed: string) {
+    this.clearSearchResults();
+    this.selectedWatershed = chosenWatershed;
+
+    this.map.removeLayer(this.maskLayer);
+    this.maskLayer = null;
+
+    this.watershedService.getWatershedMask(this.selectedWatershed).subscribe(result => {
+      this.maskLayer = this.getMaskGeoJsonLayer(result);
+      this.maskLayer.addTo(this.map);
+      this.defaultFitBounds();
+    })
   }
 }
