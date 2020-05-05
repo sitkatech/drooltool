@@ -9,10 +9,13 @@
                                 <h3 style="color:white">Choose from one of the metrics below <span class="d-lg-none"><a
                                             class="search-close" (click)="showInstructions = true"><i
                                                 class="far fa-question-circle"></i></a></span></h3>
-                                <select [(ngModel)]="selectedMetric" class="input-group mx-auto mx-lg-0"
+                                <select [(ngModel)]="selectedMetric" class="input-group mx-auto mx-lg-0 mb-1"
                                     style="max-width:353px" (change)="displayNewMetric()">
                                     <option *ngFor="let metric of metrics" [ngValue]="metric">{{metric}}</option>
                                 </select>
+                                <ng-container *ngFor="let watershedOption of watershedNames">
+                                    <button class="btn btn-drooltool mr-1 mb-1" (click)="getNewWatershedMask(watershedOption)">{{watershedOption}}</button>
+                                </ng-container>
                             </div>
                         </div>
                     </div>
