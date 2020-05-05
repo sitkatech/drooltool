@@ -11,6 +11,7 @@ import { WatershedService } from 'src/app/services/watershed/watershed.service';
 import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
+import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
 
 declare var $: any;
 
@@ -52,7 +53,27 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public searchAddress: string;
   public activeSearchNotFound: boolean = false;
 
+  public selectedNeighborhoodProperties: any;
+  public selectedNeighborhoodMetrics: NeighborhoodMetricDto;
   public selectedNeighborhoodID: number;
+  public selectedNeighborhoodWatershed: string;
+
+  public areMetricsCollapsed: boolean = true;
+
+  public months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ]
 
   constructor(
     private appRef: ApplicationRef,
@@ -191,15 +212,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.layerControl = new L.Control.Layers(this.tileLayers, this.overlayLayers)
       .addTo(this.map);
     this.map.zoomControl.setPosition('topright');
-    // L.control.fullscreen({
-    //   position: 'topright',
-    //   title: 'View Fullscreen', // change the title of the button, default Full Screen
-    //   titleCancel: 'Exit fullscreen mode', // change the title of the button when fullscreen is on, default Exit Full Screen
-    //   content: null, // change the content of the button, can be HTML, default null
-    //   forceSeparateButton: true, // force seperate button to detach from zoom buttons, default false
-    //   forcePseudoFullscreen: true, // force use of pseudo full screen even if full screen API is available, default false
-    //   fullscreenElement: false // Dom element to render in full screen, false by default, fallback to map._container
-    // }).addTo(this.map);
     this.afterSetControl.emit(this.layerControl);
   }
 
@@ -257,10 +269,14 @@ export class NeighborhoodExplorerComponent implements OnInit {
         return null;
       }
 
-      this.selectedNeighborhoodID = response.features[0].properties.NeighborhoodID;
+      this.selectedNeighborhoodProperties = response.features[0].properties;
+      this.selectedNeighborhoodID = this.selectedNeighborhoodProperties.NeighborhoodID;
       if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
-        this.displaySearchResults(response, latlng);
-        this.displayStormshedAndBackboneDetail(this.selectedNeighborhoodID);
+        this.neighborhoodService.getMetrics(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID).subscribe(result => {        
+          this.selectedNeighborhoodMetrics = result;
+          this.displaySearchResults(response, latlng);
+          this.displayStormshedAndBackboneDetail(this.selectedNeighborhoodID);
+        })
       }
       else {
         this.searchAddressNotFoundOrNotServiced();
@@ -314,7 +330,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
       .openPopup();
 
     setTimeout(() => {this.clickMarker.closePopup();}, 5000);
-
+    console.log(response);
+    this.selectedNeighborhoodWatershed = this.selectedNeighborhoodProperties.Watershed;
     this.searchActive = true;
   }
 
@@ -463,5 +480,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
     }
 
     this.map.fitBounds(featureGroup.getBounds(), {padding: [paddingHeight, paddingHeight]});
+  }
+
+  public showMetrics(event: Event) {
+    event.stopPropagation();
+    this.areMetricsCollapsed = !this.areMetricsCollapsed;
   }
 }

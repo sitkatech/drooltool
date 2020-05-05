@@ -6,15 +6,15 @@ Select
 	d.OCSurveyNeighborhoodID as PrimaryKey,
 	d.NeighborhoodGeometry4326 as NeighborhoodGeometry,
 	d.NeighborhoodGeometry.STArea() * 2471054 as Area,
-	dwm.MetricDate,
-	dwm.MetricYear,
-	dwm.MetricMonth,
-	dwm.TotalMonthlyDrool,
-	dwm.OverallParticipation,
-	dwm.PercentParticipation
+	nm.MetricDate,
+	nm.MetricYear,
+	nm.MetricMonth,
+	nm.TotalMonthlyDrool,
+	nm.OverallParticipation,
+	nm.PercentParticipation
 
 from dbo.Neighborhood d
-join dbo.vDroolWatershedMetric dwm on d.OCSurveyNeighborhoodID = dwm.OCSurveyCatchmentID
+join dbo.vNeighborhoodMetric nm on d.OCSurveyNeighborhoodID = nm.OCSurveyCatchmentID
 where d.NeighborhoodID in (select distinct n.neighborhoodID
 						   from dbo.Neighborhood n
 						   join dbo.BackboneSegment b

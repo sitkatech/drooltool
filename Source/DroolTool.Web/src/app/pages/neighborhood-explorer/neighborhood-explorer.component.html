@@ -6,8 +6,9 @@
                     <div class="container p-0">
                         <div class="row">
                             <div class="col-12 mx-auto mx-lg-0">
-                                <h3 style="color:white">How is my neighborhood doing? <span class="d-lg-none"><a class="search-close" (click)="showInstructions = true"><i
-                                    class="far fa-question-circle"></i></a></span></h3>
+                                <h3 style="color:white">How is my neighborhood doing? <span class="d-lg-none"><a
+                                            class="search-close" (click)="showInstructions = true"><i
+                                                class="far fa-question-circle"></i></a></span></h3>
                                 <div class="input-group mx-auto mx-lg-0" style="max-width:353px">
                                     <input #searchText type="text" class="form-control b4 text-left"
                                         placeholder="Enter address or zip code"
@@ -75,7 +76,8 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!activeSearchNotFound" class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
+                <div *ngIf="!activeSearchNotFound && !searchActive"
+                    class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
                     <div class="h-100 mt-auto mb-auto">
                         <h3>
                             Learn about how your neighborhood is conserving water and protecting our streams and beaches
@@ -87,6 +89,36 @@
                             Click the exposed areas of the map to explore different neighborhood metrics or
                             enter your address in the search bar for your own detailed urban drool snapshot
                         </h3>
+                    </div>
+                </div>
+                <div *ngIf="!activeSearchNotFound && searchActive"
+                    class="col-12 section-stats d-none d-lg-flex p-lg-0 flex-fill">
+                    <div class="h-100">
+                        <div class="text-center p-lg-4">
+                            <button class="btn btn-drooltool text-center">View All The Facts!</button>
+                            <p class="b3 watershed-intro mt-2 mb-0">This neighborhood drains to <span
+                                    class="watershed-text">{{selectedNeighborhoodWatershed}}</span></p>
+                        </div>
+                        <div class="p-lg-4" style="background-color:#F2FBFD">
+                            <h2 class="metric-heading">Does your neighborhood drool?</h2>
+                            <p class="b3"><span
+                                    class="metric-value">{{selectedNeighborhoodMetrics.TotalMonthlyDrool}}</span><span
+                                    class="metric-units"> gallons</span> of urban drool were created in
+                                {{months[selectedNeighborhoodMetrics.MetricMonth - 1]}}</p>
+                            <p class="b4">This is enough urban drool to fill
+                                {{selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000}} swimming pools!</p>
+                        </div>
+                        <div class="p-lg-4">
+                            <h2 class="metric-heading">Does your neighborhood take action?</h2>
+                            <p class="b3"><span
+                                    class="metric-value">{{selectedNeighborhoodMetrics.OverallParticipation === 0 ? "None" : selectedNeighborhoodMetrics.OverallParticipation}}</span><span
+                                    class="metric-units"> of your neighbors</span> participate in Moulton Niguel's
+                                rebate
+                                programs.</p>
+                            <p class="b4">Participation in rebate programs, like weather based smart sprinkler timers or
+                                rotating
+                                sprinkler nozzles, helps mitigate your home's creation of urban drool</p>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 d-none d-lg-block">
@@ -123,8 +155,42 @@
     </div>
     <div class="col-lg-9 pl-0 pr-0">
         <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight" style="height:100%">
-            <button *ngIf="searchActive" (click)="displayTraceOrZoomToNeighborhood($event)" class="btn btn-drooltool"
-                style="position:absolute; bottom:10px; right:10px; z-index:100000">{{traceActive ? "Zoom to my Neighborhood" : "Where does my water go?"}}</button>
+            <button *ngIf="searchActive && areMetricsCollapsed" class="btn btn-drooltool d-lg-none metrics-button-panel-collapsed" [attr.aria-expanded]="!areMetricsCollapsed"
+                aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
+                 (click)="showMetrics($event)"><span><a
+                        class="search-close"><i class="fas fa-info-circle"></i></a></span></button>
+            <div *ngIf="searchActive" id="collapsePanel" class="section-stats mt-2 collapse mobile-stats metrics-collapse d-lg-none"
+                [ngbCollapse]="areMetricsCollapsed" (click)="$event.stopPropagation();">
+                <div class="text-center p-2 p-md-4 metrics-panel-transparency">
+                    <button class="btn btn-drooltool text-center">View All The Facts!</button>
+                    <p class="b3 watershed-intro mt-2 mb-0">This neighborhood drains to <span
+                            class="watershed-text">{{selectedNeighborhoodWatershed}}</span></p>
+                </div>
+                <div class="p-2 p-md-4 metrics-panel-transparency-special">
+                    <h2 class="metric-heading">Does your neighborhood drool?</h2>
+                    <p class="b3"><span
+                            class="metric-value">{{selectedNeighborhoodMetrics.TotalMonthlyDrool | number:'1.0':'en-US'}}</span><span
+                            class="metric-units"> gallons</span> of urban drool were created in
+                        {{months[selectedNeighborhoodMetrics.MetricMonth - 1]}}</p>
+                    <p *ngIf="selectedNeighborhoodMetrics.TotalMonthlyDrool > 20000" class="b4">This is enough urban drool to fill
+                        {{selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000 | number:'1.0':'en-US'}} swimming pools!</p>
+                </div>
+                <div class="p-2 p-md-4 metrics-panel-transparency">
+                    <h2 class="metric-heading">Does your neighborhood take action?</h2>
+                    <p class="b3"><span
+                            class="metric-value">{{selectedNeighborhoodMetrics.OverallParticipation === 0 ? "None" : selectedNeighborhoodMetrics.OverallParticipation}}</span><span
+                            class="metric-units"> of your neighbors</span> participate in Moulton Niguel's rebate
+                        programs.</p>
+                    <p class="b4">Participation in rebate programs, like weather based smart sprinkler timers or
+                        rotating
+                        sprinkler nozzles, helps mitigate your home's creation of urban drool</p>
+                </div>
+                <button *ngIf="searchActive" class="btn btn-drooltool metrics-button-panel-expanded" [attr.aria-expanded]="!areMetricsCollapsed"
+                aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
+                (click)="showMetrics($event)"><span><a
+                        class="search-close"><i class="fas fa-info-circle"></i></a></span></button>
+            </div>
+            <button *ngIf="searchActive" (click)="displayTraceOrZoomToNeighborhood($event)" class="btn btn-drooltool trace-button">{{traceActive ? "Zoom to my Neighborhood" : "Where does my water go?"}}</button>
         </div>
     </div>
     <div class="col-12 d-lg-none">
@@ -156,5 +222,4 @@
             </div>
         </div>
     </div>
-
 </div>

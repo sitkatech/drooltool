@@ -30,26 +30,5 @@ namespace DroolTool.API.Controllers
 
             return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(new List<Feature> { new Feature() { Geometry = geometry } }));
         }
-
-        [HttpGet("watershed/{OCSurveyNeighborhoodID}/get-metrics/")]
-        public ActionResult<DroolWatershedMetricDto> GetWatershedExplorerMetrics([FromRoute] int OCSurveyNeighborhoodID)
-        {
-            var droolWatershedMetric = _dbContext.vDroolWatershedMetric
-                .Where(x => x.OCSurveyCatchmentID == OCSurveyNeighborhoodID)
-                .OrderByDescending(x => x.MetricDate)
-                .FirstOrDefault()
-                .AsDto();
-
-            return Ok(droolWatershedMetric);
-        }
-
-        [HttpGet("watershed/get-most-recent-metric/")]
-        public ActionResult<DroolWatershedMetricDto> GetMostRecentMetric()
-        {
-            return _dbContext.vDroolWatershedMetric
-                .OrderByDescending(x => x.MetricDate)
-                .FirstOrDefault()
-                .AsDto();
-        }
     }
 }

@@ -1,8 +1,8 @@
-if exists (select * from dbo.sysobjects where id = object_id('dbo.vDroolWatershedMetric'))
-	drop view dbo.vDroolWatershedMetric
+if exists (select * from dbo.sysobjects where id = object_id('dbo.vNeighborhoodMetric'))
+	drop view dbo.vNeighborhoodMetric
 go
 
-Create view [dbo].[vDroolWatershedMetric]
+Create view [dbo].[vNeighborhoodMetric]
 as
 Select 
 	[RawDroolMetricID] as PrimaryKey,

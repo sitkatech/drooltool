@@ -2,12 +2,23 @@ import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/shared/services';
 import { Observable } from 'rxjs';
 import { FeatureCollection } from 'geojson';
+import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NeighborhoodService {
-    constructor(private apiService: ApiService) { }
+    constructor(private apiService: ApiService) { } 
+
+    getMetrics(OCSurveyNeighborhoodID:number): Observable<NeighborhoodMetricDto> {
+        let route = `/neighborhood/${OCSurveyNeighborhoodID}/get-metrics/`;
+        return this.apiService.getFromApi(route);
+    }
+
+    getMostRecentMetric(): Observable<NeighborhoodMetricDto> {
+        let route = `/neighborhood/get-most-recent-metric/`;
+        return this.apiService.getFromApi(route);
+    }
 
     getServicedNeighborhoodIds(): Observable<number[]> {
         let route = `/neighborhood/get-serviced-neighborhood-ids`;

@@ -7,6 +7,15 @@
     }
 }
 
+.section-stats * p.b3 {
+    color: #1E5668
+}
+
+.section-stats * p.b4 {
+    color: #1e5668;
+    font-size:14px;
+}
+
 .section-search {
     background-color: $header-nav-color;
 }
@@ -16,14 +25,17 @@
 }
 
 .section-stats * h3,
-.section-search-not-found * h3 {
+.section-search-not-found * h3,
+.section-stats * p.b3 {
     color: #1E5668;
     font-size:16px;
 }
 
-// .section-stats * h3 {
-//     line-height:45px;
-// }
+.section-stats * h2 {
+    color: #1e5668;
+    font-size: 18px;
+    text-align:center;
+}
 
 .section-active-search {
     background-color: #D6F1B6;
@@ -90,6 +102,80 @@
     cursor: pointer;
 }
 
+.trace-button {
+    position:absolute; 
+    bottom:10px; 
+    right:10px; 
+    z-index:100000
+}
+
+.mobile-stats {
+    position:absolute; 
+    z-index:100001; 
+    max-width:463px
+}
+
+.metrics-button-panel-collapsed {
+    position:absolute;
+    top:10px; 
+    left:10px; 
+    z-index:100000
+}
+
+.metrics-button-panel-expanded {
+    position:absolute; 
+    top:2px; 
+    right:10px
+}
+
+.metrics-panel-transparency {
+    background-color:rgba(255,255,255,0.75)
+}
+
+.metrics-panel-transparency-special {
+    background-color: rgba(242,251,253,0.75)
+}
+
+.metric-value {
+    color: $drool-orange;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.metric-units {
+    color: $drool-orange;
+}
+
+.watershed-intro {
+    font-size:20px !important;
+}
+
+span.watershed-text {
+    color: $drool-orange;
+    display: inline-block;
+    font-family: "Poppins", sans-serif
+}
+
+//Allows the metrics to collapse
+.metrics-collapse {
+    position: absolute;
+    right: 100%;
+    transition: all 0.3s ease;
+    display: block;
+}
+.metrics-collapse.collapsing {
+    height: auto !important;
+    margin-right: 50%;
+    transition: all 0.3s ease;
+    display: block;
+}
+.metrics-collapse.show {
+    left:0;
+    right:0
+}
+//End of metrics collapse
+
+//Leaflet styles
 ::ng-deep .search-popup .leaflet-popup-content-wrapper {
     font-family: "Nunito", sans-serif;
     font-weight: 600;
@@ -105,3 +191,4 @@
 ::ng-deep .leaflet-popup-tip-container {
     display:none;
 }
+//End of leaflet styles
