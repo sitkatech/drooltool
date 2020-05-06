@@ -10,8 +10,7 @@ import '../../../../node_modules/leaflet.snogylop/src/leaflet.snogylop.js';
 import '../../../../node_modules/leaflet.fullscreen/Control.FullScreen.js';
 import * as esri from 'esri-leaflet'
 import { FeatureCollection } from 'geojson';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { DroolWatershedMetricDto } from 'src/app/shared/models/drool-watershed-metric-dto.js';
+import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
 import { WatershedExplorerMetric } from 'src/app/shared/models/watershed-explorer-metric.js';
 
 declare var $: any;
@@ -35,7 +34,7 @@ export class WatershedExplorerComponent implements OnInit {
   
   public metrics = Object.values(WatershedExplorerMetric);
   public selectedMetric = WatershedExplorerMetric.TotalMonthlyDrool;
-  public metricsForCurrentSelection: DroolWatershedMetricDto;
+  public metricsForCurrentSelection: NeighborhoodMetricDto;
   public metricOverlayLayer: L.Layers;
 
   public component: any;
@@ -147,7 +146,7 @@ export class WatershedExplorerComponent implements OnInit {
 
     this.compileService.configure(this.appRef);
 
-    this.watershedService.getMostRecentMetric().subscribe(result => {
+    this.neighborhoodService.getMostRecentMetric().subscribe(result => {
       this.metricsForCurrentSelection = result;
     })
   }
@@ -265,7 +264,7 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public displaySearchResults(OCSurveyNeighborhoodID: number, latlng: Object): void {
-    this.watershedService.getMetrics(OCSurveyNeighborhoodID).subscribe(response => {
+    this.neighborhoodService.getMetrics(OCSurveyNeighborhoodID).subscribe(response => {
       this.metricsForCurrentSelection = response;
 
       let icon = L.divIcon({
@@ -445,17 +444,32 @@ export class WatershedExplorerComponent implements OnInit {
     if (!this.metricsForCurrentSelection) {
       metricContent = "No metrics found for this location";
     }
-    else if (this.selectedMetric == WatershedExplorerMetric.TotalMonthlyDrool) {
-      metricContent = this.selectedMetric + " : " + this.metricsForCurrentSelection.TotalMonthlyDrool;
-    }
-    else if (this.selectedMetric == WatershedExplorerMetric.OverallParticipation) {
-      metricContent = this.selectedMetric + " : " + this.metricsForCurrentSelection.OverallParticipation;
-    }
-    else if (this.selectedMetric == WatershedExplorerMetric.PercentParticipation) {
-      metricContent = this.selectedMetric + " : " + this.metricsForCurrentSelection.PercentParticipation;
-    }
-    else {
-      metricContent = "Select a metric from the dropdown to get started!";
+
+    switch(this.selectedMetric) {
+      case WatershedExplorerMetric.TotalMonthlyDrool: {
+        metricContent = this.selectedMetric + " : " + 
+        (this.metricsForCurrentSelection.TotalMonthlyDrool == null 
+        ? "Not available" 
+        : this.metricsForCurrentSelection.TotalMonthlyDrool.toLocaleString() + " gal/month");
+        break;
+      }
+      case WatershedExplorerMetric.OverallParticipation: {
+        metricContent = this.selectedMetric + " : " + 
+        (this.metricsForCurrentSelection.OverallParticipation == null
+        ? "Not available"
+        : this.metricsForCurrentSelection.OverallParticipation.toLocaleString() + " active meters");
+        break;
+      }
+      case WatershedExplorerMetric.PercentParticipation: {
+        metricContent = this.selectedMetric + " : " + 
+        (this.metricsForCurrentSelection.PercentParticipation == null
+        ? "Not available"
+        : this.metricsForCurrentSelection.PercentParticipation.toPrecision(2).toString() + "%");
+        break;
+      }
+      default: {
+        metricContent = "Select a metric from the dropdown to get started!";
+      }
     }
 
     return "<span>" + metricContent + "</span>"

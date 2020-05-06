@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DroolTool.EFModels.Entities
 {
-    public partial class vDroolWatershedMetric
+    public partial class vNeighborhoodMetric
     {
         public int PrimaryKey { get; set; }
         public int RawDroolMetricID { get; set; }

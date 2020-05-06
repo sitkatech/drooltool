@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using DroolTool.EFModels.Entities;
 using DroolTool.API.Services;
+using DroolTool.Models.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -141,6 +142,27 @@ namespace DroolTool.API.Controllers
             featureList.Add(feature);
 
             return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(featureList));
+        }
+
+        [HttpGet("neighborhood/{OCSurveyNeighborhoodID}/get-metrics/")]
+        public ActionResult<NeighborhoodMetricDto> GetWatershedExplorerMetrics([FromRoute] int OCSurveyNeighborhoodID)
+        {
+            var neighborhoodMetric = _dbContext.vNeighborhoodMetric
+                .Where(x => x.OCSurveyCatchmentID == OCSurveyNeighborhoodID)
+                .OrderByDescending(x => x.MetricDate)
+                .FirstOrDefault()
+                .AsDto();
+
+            return Ok(neighborhoodMetric);
+        }
+
+        [HttpGet("neighborhood/get-most-recent-metric/")]
+        public ActionResult<NeighborhoodMetricDto> GetMostRecentMetric()
+        {
+            return _dbContext.vNeighborhoodMetric
+                .OrderByDescending(x => x.MetricDate)
+                .FirstOrDefault()
+                .AsDto();
         }
 
         private List<BackboneSegment> GetDownstreamBackboneSegmentsBasedOnCriteria(List<BackboneSegment> allBackboneSegments,
