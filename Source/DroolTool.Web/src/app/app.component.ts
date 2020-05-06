@@ -84,4 +84,8 @@ export class AppComponent {
 
         return subject.asObservable();
     }
+
+    public login(): void {
+        this.authenticationService.login();
+    }
 }

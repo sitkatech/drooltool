@@ -16,12 +16,19 @@ h1 {
     padding:20px;
 }
 
+#waterPlantsImage {
+    max-width:300px;
+    width:100%;
+}
+
 #resourceImage {
     max-width: 500px;
     width:100%;
     background-color: lightgrey;
     padding-top:100%;
-    margin:auto
+    margin:auto;
+    background-size:cover;
+    background-image:url(../../../../assets/home/resource-spotlight.jpg);
 }
 
 #takeActionImage {
@@ -29,6 +36,8 @@ h1 {
     background-color:lightgrey;
     padding-top:100%;
     margin: 0 auto;
+    background-image:url(../../../../assets/home/take-action.jpg);
+    background-size:cover;
 }
 
 .row {
@@ -54,10 +63,6 @@ h1 {
 
     .watershed-button {
         text-align:center;
-    }
-
-    #bottomImage {
-        margin-bottom:-38px;
     }
 
     #takeActionImage, #resourceImage {

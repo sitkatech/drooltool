@@ -17,11 +17,13 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
     public slides = [
         {
             date: "Wednesday, March 2, 2020",
-            title: "Join Fix A Leak Week Through March"
+            title: "Join Fix A Leak Week Through March",
+            image: "../../../../assets/home/news-and-updates-1.jpg"
         },
         {
             date: "Friday, March 19, 2020",
-            title: "Landscape Workshop"
+            title: "Landscape Workshop",
+            image: "../../../../assets/home/news-and-updates-2.jpg"
         }
     ];
     public slideConfig = {
@@ -101,10 +103,6 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
 
     public isUserALandowner() {
         return this.authenticationService.isUserALandOwner(this.currentUser);
-    }
-
-    public login(): void {
-        this.authenticationService.login();
     }
 
     public createAccount(): void {
