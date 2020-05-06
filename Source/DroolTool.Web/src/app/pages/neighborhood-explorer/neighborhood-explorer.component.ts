@@ -330,7 +330,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
       .openPopup();
 
     setTimeout(() => {this.clickMarker.closePopup();}, 5000);
-    console.log(response);
     this.selectedNeighborhoodWatershed = this.selectedNeighborhoodProperties.Watershed;
     this.searchActive = true;
   }

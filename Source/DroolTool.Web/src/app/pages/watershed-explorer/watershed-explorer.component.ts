@@ -10,7 +10,6 @@ import '../../../../node_modules/leaflet.snogylop/src/leaflet.snogylop.js';
 import '../../../../node_modules/leaflet.fullscreen/Control.FullScreen.js';
 import * as esri from 'esri-leaflet'
 import { FeatureCollection } from 'geojson';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
 import { WatershedExplorerMetric } from 'src/app/shared/models/watershed-explorer-metric.js';
 
@@ -445,26 +444,32 @@ export class WatershedExplorerComponent implements OnInit {
     if (!this.metricsForCurrentSelection) {
       metricContent = "No metrics found for this location";
     }
-    else if (this.selectedMetric == WatershedExplorerMetric.TotalMonthlyDrool) {
-      metricContent = this.selectedMetric + " : " + 
+
+    switch(this.selectedMetric) {
+      case WatershedExplorerMetric.TotalMonthlyDrool: {
+        metricContent = this.selectedMetric + " : " + 
         (this.metricsForCurrentSelection.TotalMonthlyDrool == null 
         ? "Not available" 
         : this.metricsForCurrentSelection.TotalMonthlyDrool.toLocaleString() + " gal/month");
-    }
-    else if (this.selectedMetric == WatershedExplorerMetric.OverallParticipation) {
-      metricContent = this.selectedMetric + " : " + 
+        break;
+      }
+      case WatershedExplorerMetric.OverallParticipation: {
+        metricContent = this.selectedMetric + " : " + 
         (this.metricsForCurrentSelection.OverallParticipation == null
         ? "Not available"
         : this.metricsForCurrentSelection.OverallParticipation.toLocaleString() + " active meters");
-    }
-    else if (this.selectedMetric == WatershedExplorerMetric.PercentParticipation) {
-      metricContent = this.selectedMetric + " : " + 
+        break;
+      }
+      case WatershedExplorerMetric.PercentParticipation: {
+        metricContent = this.selectedMetric + " : " + 
         (this.metricsForCurrentSelection.PercentParticipation == null
         ? "Not available"
         : this.metricsForCurrentSelection.PercentParticipation.toPrecision(2).toString() + "%");
-    }
-    else {
-      metricContent = "Select a metric from the dropdown to get started!";
+        break;
+      }
+      default: {
+        metricContent = "Select a metric from the dropdown to get started!";
+      }
     }
 
     return "<span>" + metricContent + "</span>"

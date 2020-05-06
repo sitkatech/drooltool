@@ -147,13 +147,13 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood/{OCSurveyNeighborhoodID}/get-metrics/")]
         public ActionResult<NeighborhoodMetricDto> GetWatershedExplorerMetrics([FromRoute] int OCSurveyNeighborhoodID)
         {
-            var droolWatershedMetric = _dbContext.vNeighborhoodMetric
+            var neighborhoodMetric = _dbContext.vNeighborhoodMetric
                 .Where(x => x.OCSurveyCatchmentID == OCSurveyNeighborhoodID)
                 .OrderByDescending(x => x.MetricDate)
                 .FirstOrDefault()
                 .AsDto();
 
-            return Ok(droolWatershedMetric);
+            return Ok(neighborhoodMetric);
         }
 
         [HttpGet("neighborhood/get-most-recent-metric/")]
