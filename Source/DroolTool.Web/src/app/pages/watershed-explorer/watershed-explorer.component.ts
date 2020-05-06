@@ -31,7 +31,7 @@ export class WatershedExplorerComponent implements OnInit {
 
   //this is needed to allow binding to the static class
   public WatershedExplorerMetric = WatershedExplorerMetric;
-  
+
   public metrics = Object.values(WatershedExplorerMetric);
   public selectedMetric = WatershedExplorerMetric.TotalMonthlyDrool;
   public metricsForCurrentSelection: NeighborhoodMetricDto;
@@ -59,6 +59,7 @@ export class WatershedExplorerComponent implements OnInit {
   public showInstructions: boolean = true;
   public searchActive: boolean = false;
   public activeSearchNotFound: boolean = false;
+  public currentlySearching: boolean = false;
 
   public selectedNeighborhoodID: number;
 
@@ -169,7 +170,7 @@ export class WatershedExplorerComponent implements OnInit {
             fillColor: "#323232",
             fill: true,
             fillOpacity: 0.4,
-            stroke:false
+            stroke: false
           };
         }
       });
@@ -246,21 +247,24 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public getNeighborhoodFromLatLong(latlng: Object): void {
-    this.clearSearchResults();
-    this.wfsService.geoserverNeighborhoodLookup(latlng).subscribe(response => {
-      if (response.features.length === 0) {
-        this.searchAddressNotFoundOrNotServiced();
-        return null;
-      }
+    if (!this.currentlySearching) {
+      this.currentlySearching = true;
+      this.clearSearchResults();
+      this.wfsService.geoserverNeighborhoodLookup(latlng).subscribe(response => {
+        if (response.features.length === 0) {
+          this.searchAddressNotFoundOrNotServiced();
+          return null;
+        }
 
-      this.selectedNeighborhoodID = response.features[0].properties.NeighborhoodID;
-      if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
-        this.displaySearchResults(response.features[0].properties.OCSurveyNeighborhoodID, latlng);
-      }
-      else {
-        this.searchAddressNotFoundOrNotServiced();
-      }
-    });
+        this.selectedNeighborhoodID = response.features[0].properties.NeighborhoodID;
+        if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
+          this.displaySearchResults(response.features[0].properties.OCSurveyNeighborhoodID, latlng);
+        }
+        else {
+          this.searchAddressNotFoundOrNotServiced();
+        }
+      });
+    }
   }
 
   public displaySearchResults(OCSurveyNeighborhoodID: number, latlng: Object): void {
@@ -284,6 +288,7 @@ export class WatershedExplorerComponent implements OnInit {
         .openPopup();
 
       this.searchActive = true;
+      this.currentlySearching = false;
       // var currentZoom = this.map.getZoom();
       // this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker]));
       // this.map.setZoom(currentZoom);
@@ -374,6 +379,7 @@ export class WatershedExplorerComponent implements OnInit {
 
   public searchAddressNotFoundOrNotServiced(): void {
     this.activeSearchNotFound = true;
+    this.currentlySearching = false;
   }
 
   public removeCurrentSearchLayer(): void {
@@ -445,26 +451,26 @@ export class WatershedExplorerComponent implements OnInit {
       metricContent = "No metrics found for this location";
     }
 
-    switch(this.selectedMetric) {
+    switch (this.selectedMetric) {
       case WatershedExplorerMetric.TotalMonthlyDrool: {
-        metricContent = this.selectedMetric + " : " + 
-        (this.metricsForCurrentSelection.TotalMonthlyDrool == null 
-        ? "Not available" 
-        : this.metricsForCurrentSelection.TotalMonthlyDrool.toLocaleString() + " gal/month");
+        metricContent = this.selectedMetric + " : " +
+          (this.metricsForCurrentSelection.TotalMonthlyDrool == null
+            ? "Not available"
+            : this.metricsForCurrentSelection.TotalMonthlyDrool.toLocaleString() + " gal/month");
         break;
       }
       case WatershedExplorerMetric.OverallParticipation: {
-        metricContent = this.selectedMetric + " : " + 
-        (this.metricsForCurrentSelection.OverallParticipation == null
-        ? "Not available"
-        : this.metricsForCurrentSelection.OverallParticipation.toLocaleString() + " active meters");
+        metricContent = this.selectedMetric + " : " +
+          (this.metricsForCurrentSelection.OverallParticipation == null
+            ? "Not available"
+            : this.metricsForCurrentSelection.OverallParticipation.toLocaleString() + " active meters");
         break;
       }
       case WatershedExplorerMetric.PercentParticipation: {
-        metricContent = this.selectedMetric + " : " + 
-        (this.metricsForCurrentSelection.PercentParticipation == null
-        ? "Not available"
-        : this.metricsForCurrentSelection.PercentParticipation.toPrecision(2).toString() + "%");
+        metricContent = this.selectedMetric + " : " +
+          (this.metricsForCurrentSelection.PercentParticipation == null
+            ? "Not available"
+            : Math.round(this.metricsForCurrentSelection.PercentParticipation).toString() + "%");
         break;
       }
       default: {

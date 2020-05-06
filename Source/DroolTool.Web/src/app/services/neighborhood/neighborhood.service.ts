@@ -10,6 +10,11 @@ import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric
 export class NeighborhoodService {
     constructor(private apiService: ApiService) { } 
 
+    getNeighborhoodsWithMetricsIds(): Observable<number[]> {
+        let route = `/neighborhood/get-neighborhoods-with-metrics-ids`;
+        return this.apiService.getFromApi(route);
+    }
+
     getMetrics(OCSurveyNeighborhoodID:number): Observable<NeighborhoodMetricDto> {
         let route = `/neighborhood/${OCSurveyNeighborhoodID}/get-metrics/`;
         return this.apiService.getFromApi(route);

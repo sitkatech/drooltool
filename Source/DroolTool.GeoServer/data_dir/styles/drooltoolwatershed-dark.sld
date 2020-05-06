@@ -41,6 +41,12 @@
                         </AnchorPoint>
                     </PointPlacement>
                 </LabelPlacement>
+              	<Halo>
+              		<Radius>3</Radius>
+              		<Fill>
+                		<CssParameter name="fill">#FFFFFF</CssParameter>
+              		</Fill>
+            	</Halo>
                 <Fill>
                   	<CssParameter name="fill">#8B74FF</CssParameter>
                 </Fill>

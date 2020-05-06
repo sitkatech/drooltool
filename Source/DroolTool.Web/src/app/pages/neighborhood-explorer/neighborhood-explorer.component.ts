@@ -39,6 +39,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public overlayLayers: { [key: string]: any } = {};
   public maskLayer: any;
   public neighborhoodsWhereItIsOkayToClickIDs: number[];
+  public neighborhoodsThatHaveMetrics: number[];
 
   public wmsParams: any;
   public stormshedLayer: L.Layers;
@@ -52,6 +53,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public searchActive: boolean = false;
   public searchAddress: string;
   public activeSearchNotFound: boolean = false;
+  public currentlySearching: boolean = false;
 
   public selectedNeighborhoodProperties: any;
   public selectedNeighborhoodMetrics: NeighborhoodMetricDto;
@@ -152,6 +154,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.neighborhoodsWhereItIsOkayToClickIDs = result;
     })
 
+    this.neighborhoodService.getNeighborhoodsWithMetricsIds().subscribe(result => {
+      this.neighborhoodsThatHaveMetrics = result;
+    })
     this.initializeMap();
   }
 
@@ -194,8 +199,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.maskLayer.addTo(this.map);
       this.defaultFitBounds();
 
-      if(window.innerWidth > 991)
-      {
+      if (window.innerWidth > 991) {
         this.mapElement.nativeElement.scrollIntoView();
       }
     });
@@ -242,46 +246,55 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public makeNominatimRequest(searchText: any): void {
-    this.clearSearchResults();
-    this.searchAddress = searchText.value;
-    this.nominatimService.makeNominatimRequest(this.searchAddress).subscribe(response => {
-      if (response.length === 0) {
-        this.searchAddressNotFoundOrNotServiced();
-        return null;
-      }
+    if (!this.currentlySearching) {
+      this.currentlySearching = true;
+      this.clearSearchResults();
+      this.searchAddress = searchText.value;
+      this.nominatimService.makeNominatimRequest(this.searchAddress).subscribe(response => {
+        if (response.length === 0) {
+          this.searchAddressNotFoundOrNotServiced();
+          return null;
+        }
 
-      let lat = +response[0].lat;
-      let lng = +response[0].lon;
-      let latlng = { 'lat': lat, 'lng': lng };
+        let lat = +response[0].lat;
+        let lng = +response[0].lon;
+        let latlng = { 'lat': lat, 'lng': lng };
 
-      this.getNeighborhoodFromLatLong(latlng, false);
-    });
-    searchText.value = '';
+        this.getNeighborhoodFromLatLong(latlng, false);
+      });
+      searchText.value = '';
+    }
   }
 
   public getNeighborhoodFromLatLong(latlng: Object, mapClick: boolean): void {
-    if (mapClick) {
-      this.clearSearchResults();
-    }
-    this.wfsService.geoserverNeighborhoodLookup(latlng).subscribe(response => {
-      if (response.features.length === 0) {
-        this.searchAddressNotFoundOrNotServiced();
-        return null;
+    if (mapClick || !this.currentlySearching) {
+      if (mapClick) {
+        this.currentlySearching = true;
+        this.clearSearchResults();
       }
+      this.wfsService.geoserverNeighborhoodLookup(latlng).subscribe(response => {
+        if (response.features.length === 0) {
+          this.searchAddressNotFoundOrNotServiced();
+          return null;
+        }
 
-      this.selectedNeighborhoodProperties = response.features[0].properties;
-      this.selectedNeighborhoodID = this.selectedNeighborhoodProperties.NeighborhoodID;
-      if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
-        this.neighborhoodService.getMetrics(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID).subscribe(result => {        
-          this.selectedNeighborhoodMetrics = result;
+        this.selectedNeighborhoodProperties = response.features[0].properties;
+        this.selectedNeighborhoodID = this.selectedNeighborhoodProperties.NeighborhoodID;
+        if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
+          if (this.neighborhoodsThatHaveMetrics.includes(this.selectedNeighborhoodID)) {
+            this.neighborhoodService.getMetrics(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID).subscribe(result => {
+              this.selectedNeighborhoodMetrics = result;
+            });
+          }
           this.displaySearchResults(response, latlng);
           this.displayStormshedAndBackboneDetail(this.selectedNeighborhoodID);
-        })
-      }
-      else {
-        this.searchAddressNotFoundOrNotServiced();
-      }
-    });
+          this.currentlySearching = false;
+        }
+        else {
+          this.searchAddressNotFoundOrNotServiced();
+        }
+      });
+    }
   }
 
   public displaySearchResults(response: FeatureCollection, latlng: Object): void {
@@ -313,7 +326,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
     let icon = L.divIcon({
       html: '<i class="fas fa-map-marker-alt fa-2x" style="color:#105745"></i>',
-      iconSize: [20,20],
+      iconSize: [20, 20],
       className: "search-popup"
     });
 
@@ -329,7 +342,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
       .bindPopup(popupContent, popupOptions)
       .openPopup();
 
-    setTimeout(() => {this.clickMarker.closePopup();}, 5000);
+    setTimeout(() => { this.clickMarker.closePopup(); }, 5000);
     this.selectedNeighborhoodWatershed = this.selectedNeighborhoodProperties.Watershed;
     this.searchActive = true;
   }
@@ -396,8 +409,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public displayTraceOrZoomToNeighborhood(event: Event): void {
     //Button lies on top of map, so we don't to be selecting a new area
     event.stopPropagation();
-    if (!this.traceActive)
-    {
+    if (!this.traceActive) {
       this.clearLayer(this.traceLayer);
       this.neighborhoodService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
         this.traceLayer = L.geoJSON(response,
@@ -414,7 +426,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
         this.traceLayer.addTo(this.map);
 
         this.traceActive = true;
-        this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.traceLayer, this.clickMarker, this.stormshedLayer]));     
+        this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.traceLayer, this.clickMarker, this.stormshedLayer]));
       })
     }
     else {
@@ -429,6 +441,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.searchActive = false;
     this.activeSearchNotFound = false;
     this.traceActive = false;
+    this.selectedNeighborhoodMetrics = null;
     this.removeCurrentSearchLayer();
   }
 
@@ -440,6 +453,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public searchAddressNotFoundOrNotServiced(): void {
     this.searchAddress = null;
     this.activeSearchNotFound = true;
+    this.currentlySearching = false;
   }
 
   public removeCurrentSearchLayer(): void {
@@ -473,12 +487,11 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public fitBoundsWithPaddingAndFeatureGroup(featureGroup: L.featureGroup): void {
     let paddingHeight = 0;
     let popupContent = $("#search-popup-address");
-    if (popupContent !== null && popupContent !== undefined && popupContent.length == 1)
-    {
+    if (popupContent !== null && popupContent !== undefined && popupContent.length == 1) {
       paddingHeight = popupContent.parent().parent().innerHeight();
     }
 
-    this.map.fitBounds(featureGroup.getBounds(), {padding: [paddingHeight, paddingHeight]});
+    this.map.fitBounds(featureGroup.getBounds(), { padding: [paddingHeight, paddingHeight] });
   }
 
   public showMetrics(event: Event) {

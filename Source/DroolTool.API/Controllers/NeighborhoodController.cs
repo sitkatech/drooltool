@@ -31,6 +31,14 @@ namespace DroolTool.API.Controllers
             return Ok(_dbContext.Neighborhood.Where(x => x.BackboneSegment.Any()).Select(x => x.NeighborhoodID).ToList());
         }
 
+        [HttpGet("neighborhood/get-neighborhoods-with-metrics-ids")]
+        public ActionResult<List<int>> GetNeighborhoodsWithMetricsIds()
+        {
+            var OCSurveyNeighborhoodIds = _dbContext.vNeighborhoodMetric.Select(x => x.OCSurveyCatchmentID).Distinct();
+
+            return Ok(_dbContext.Neighborhood.Where(x => OCSurveyNeighborhoodIds.Contains(x.OCSurveyNeighborhoodID)).Select(x => x.NeighborhoodID).ToList());
+        }
+
         [HttpGet("neighborhood/{neighborhoodID}/get-stormshed")]
         public ActionResult<string> GetStormshed([FromRoute]int neighborhoodID)
         {
