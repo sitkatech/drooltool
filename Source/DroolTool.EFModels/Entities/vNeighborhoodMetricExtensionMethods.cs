@@ -11,11 +11,11 @@ namespace DroolTool.EFModels.Entities
         {
             return new NeighborhoodMetricDto()
             {
-                MetricYear = metric?.MetricYear,
-                MetricMonth = metric?.MetricMonth,
-                TotalMonthlyDrool = metric?.TotalMonthlyDrool,
-                OverallParticipation = metric?.OverallParticipation,
-                PercentParticipation = metric?.PercentParticipation
+                MetricYear = metric.MetricYear,
+                MetricMonth = metric.MetricMonth,
+                TotalMonthlyDrool = metric.TotalMonthlyDrool,
+                OverallParticipation = metric.OverallParticipation,
+                PercentParticipation = metric.PercentParticipation
             };
         }
     }
