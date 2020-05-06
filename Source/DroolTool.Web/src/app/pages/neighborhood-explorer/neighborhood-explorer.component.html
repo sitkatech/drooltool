@@ -188,9 +188,13 @@
                 <button *ngIf="searchActive" class="btn btn-drooltool metrics-button-panel-expanded" [attr.aria-expanded]="!areMetricsCollapsed"
                 aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
                 (click)="showMetrics($event)"><span><a
-                        class="search-close"><i class="fas fa-info-circle"></i></a></span></button>
+                        class="search-close"><i class="fas fa-close"></i></a></span></button>
+                
             </div>
             <button *ngIf="searchActive" (click)="displayTraceOrZoomToNeighborhood($event)" class="btn btn-drooltool trace-button">{{traceActive ? "Zoom to my Neighborhood" : "Where does my water go?"}}</button>
+            <div class="p-1 map-bottom-legend">
+                <div class="mr-1 map-bottom-legend-value-color" style="background-color:#FF20F9"></div><span class="b3 align-baseline" style="font-size:15px">Path to the Ocean</span>
+            </div>
         </div>
     </div>
     <div class="col-12 d-lg-none">
