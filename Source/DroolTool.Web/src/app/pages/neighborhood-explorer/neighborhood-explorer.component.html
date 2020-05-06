@@ -102,11 +102,11 @@
                         <div class="p-lg-4" style="background-color:#F2FBFD">
                             <h2 class="metric-heading">Does your neighborhood drool?</h2>
                             <p class="b3"><span
-                                    class="metric-value">{{selectedNeighborhoodMetrics.TotalMonthlyDrool}}</span><span
+                                    class="metric-value">{{selectedNeighborhoodMetrics.TotalMonthlyDrool | number:'1.0-0':'en-US'}}</span><span
                                     class="metric-units"> gallons</span> of urban drool were created in
                                 {{months[selectedNeighborhoodMetrics.MetricMonth - 1]}}</p>
-                            <p class="b4">This is enough urban drool to fill
-                                {{selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000}} swimming pools!</p>
+                            <p *ngIf="selectedNeighborhoodMetrics.TotalMonthlyDrool > 20000" class="b4">This is enough urban drool to fill
+                                {{selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000 | number:'1.0-0':'en-US'}} swimming pools!</p>
                         </div>
                         <div class="p-lg-4">
                             <h2 class="metric-heading">Does your neighborhood take action?</h2>
@@ -172,12 +172,12 @@
                     <div class="p-2 p-md-4 metrics-panel-transparency-special">
                         <h2 class="metric-heading">Does your neighborhood drool?</h2>
                         <p class="b3"><span
-                                class="metric-value">{{selectedNeighborhoodMetrics.TotalMonthlyDrool | number:'1.0':'en-US'}}</span><span
+                                class="metric-value">{{selectedNeighborhoodMetrics.TotalMonthlyDrool | number:'1.0-0':'en-US'}}</span><span
                                 class="metric-units"> gallons</span> of urban drool were created in
                             {{months[selectedNeighborhoodMetrics.MetricMonth - 1]}}</p>
                         <p *ngIf="selectedNeighborhoodMetrics.TotalMonthlyDrool > 20000" class="b4">This is enough urban
                             drool to fill
-                            {{selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000 | number:'1.0':'en-US'}} swimming
+                            {{(selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000) | number:'1.0-0':'en-US'}} swimming
                             pools!</p>
                     </div>
                     <div class="p-2 p-md-4 metrics-panel-transparency">
