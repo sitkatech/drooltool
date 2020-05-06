@@ -123,10 +123,20 @@
     z-index:100000
 }
 
+//These need to be the same so the metrics slide doesn't jump around the width of the map
+.mobile-stats,
+.mobile-stats-containing-div {
+    max-width:463px;
+}
+
 .mobile-stats {
     position:absolute; 
     z-index:100001; 
-    max-width:463px
+}
+
+.mobile-stats-containing-div {
+    width:100%;
+    position:relative
 }
 
 .metrics-button-panel-collapsed {
@@ -139,7 +149,7 @@
 .metrics-button-panel-expanded {
     position:absolute; 
     top:2px; 
-    right:10px
+    right:2px
 }
 
 .metrics-panel-transparency {
@@ -179,7 +189,6 @@ span.watershed-text {
 }
 .metrics-collapse.collapsing {
     height: auto !important;
-    margin-right: 50%;
     transition: all 0.3s ease;
     display: block;
 }

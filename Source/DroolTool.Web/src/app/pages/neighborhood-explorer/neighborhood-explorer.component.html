@@ -155,45 +155,53 @@
     </div>
     <div class="col-lg-9 pl-0 pr-0">
         <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight" style="height:100%">
-            <button *ngIf="searchActive && areMetricsCollapsed" class="btn btn-drooltool d-lg-none metrics-button-panel-collapsed" [attr.aria-expanded]="!areMetricsCollapsed"
-                aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
-                 (click)="showMetrics($event)"><span><a
-                        class="search-close"><i class="fas fa-info-circle"></i></a></span></button>
-            <div *ngIf="searchActive" id="collapsePanel" class="section-stats mt-2 collapse mobile-stats metrics-collapse d-lg-none"
-                [ngbCollapse]="areMetricsCollapsed" (click)="$event.stopPropagation();">
-                <div class="text-center p-2 p-md-4 metrics-panel-transparency">
-                    <button class="btn btn-drooltool text-center">View All The Facts!</button>
-                    <p class="b3 watershed-intro mt-2 mb-0">This neighborhood drains to <span
-                            class="watershed-text">{{selectedNeighborhoodWatershed}}</span></p>
+            <button *ngIf="searchActive && areMetricsCollapsed"
+                class="btn btn-drooltool d-lg-none metrics-button-panel-collapsed"
+                [attr.aria-expanded]="!areMetricsCollapsed" aria-expanded="false" aria-controls="collapsePanel"
+                aria-label="Toggle navigation" (click)="showMetrics($event)"><span><a class="search-close"><i
+                            class="fas fa-info-circle"></i></a></span></button>
+            <div class="mobile-stats-containing-div">
+                <div *ngIf="searchActive" id="collapsePanel"
+                    class="section-stats mt-2 collapse mobile-stats metrics-collapse d-lg-none"
+                    [ngbCollapse]="areMetricsCollapsed" (click)="$event.stopPropagation();">
+                    <div class="text-center p-2 p-md-4 metrics-panel-transparency">
+                        <button class="btn btn-drooltool text-center">View All The Facts!</button>
+                        <p class="b3 watershed-intro mt-2 mb-0">This neighborhood drains to <span
+                                class="watershed-text">{{selectedNeighborhoodWatershed}}</span></p>
+                    </div>
+                    <div class="p-2 p-md-4 metrics-panel-transparency-special">
+                        <h2 class="metric-heading">Does your neighborhood drool?</h2>
+                        <p class="b3"><span
+                                class="metric-value">{{selectedNeighborhoodMetrics.TotalMonthlyDrool | number:'1.0':'en-US'}}</span><span
+                                class="metric-units"> gallons</span> of urban drool were created in
+                            {{months[selectedNeighborhoodMetrics.MetricMonth - 1]}}</p>
+                        <p *ngIf="selectedNeighborhoodMetrics.TotalMonthlyDrool > 20000" class="b4">This is enough urban
+                            drool to fill
+                            {{selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000 | number:'1.0':'en-US'}} swimming
+                            pools!</p>
+                    </div>
+                    <div class="p-2 p-md-4 metrics-panel-transparency">
+                        <h2 class="metric-heading">Does your neighborhood take action?</h2>
+                        <p class="b3"><span
+                                class="metric-value">{{selectedNeighborhoodMetrics.OverallParticipation === 0 ? "None" : selectedNeighborhoodMetrics.OverallParticipation}}</span><span
+                                class="metric-units"> of your neighbors</span> participate in Moulton Niguel's rebate
+                            programs.</p>
+                        <p class="b4">Participation in rebate programs, like weather based smart sprinkler timers or
+                            rotating
+                            sprinkler nozzles, helps mitigate your home's creation of urban drool</p>
+                    </div>
+                    <button *ngIf="searchActive" class="btn btn-drooltool metrics-button-panel-expanded"
+                        [attr.aria-expanded]="!areMetricsCollapsed" aria-expanded="false" aria-controls="collapsePanel"
+                        aria-label="Toggle navigation" (click)="showMetrics($event)"><span><a class="search-close"><i
+                                    class="fas fa-close"></i></a></span></button>
+
                 </div>
-                <div class="p-2 p-md-4 metrics-panel-transparency-special">
-                    <h2 class="metric-heading">Does your neighborhood drool?</h2>
-                    <p class="b3"><span
-                            class="metric-value">{{selectedNeighborhoodMetrics.TotalMonthlyDrool | number:'1.0':'en-US'}}</span><span
-                            class="metric-units"> gallons</span> of urban drool were created in
-                        {{months[selectedNeighborhoodMetrics.MetricMonth - 1]}}</p>
-                    <p *ngIf="selectedNeighborhoodMetrics.TotalMonthlyDrool > 20000" class="b4">This is enough urban drool to fill
-                        {{selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000 | number:'1.0':'en-US'}} swimming pools!</p>
-                </div>
-                <div class="p-2 p-md-4 metrics-panel-transparency">
-                    <h2 class="metric-heading">Does your neighborhood take action?</h2>
-                    <p class="b3"><span
-                            class="metric-value">{{selectedNeighborhoodMetrics.OverallParticipation === 0 ? "None" : selectedNeighborhoodMetrics.OverallParticipation}}</span><span
-                            class="metric-units"> of your neighbors</span> participate in Moulton Niguel's rebate
-                        programs.</p>
-                    <p class="b4">Participation in rebate programs, like weather based smart sprinkler timers or
-                        rotating
-                        sprinkler nozzles, helps mitigate your home's creation of urban drool</p>
-                </div>
-                <button *ngIf="searchActive" class="btn btn-drooltool metrics-button-panel-expanded" [attr.aria-expanded]="!areMetricsCollapsed"
-                aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
-                (click)="showMetrics($event)"><span><a
-                        class="search-close"><i class="fas fa-close"></i></a></span></button>
-                
             </div>
-            <button *ngIf="searchActive" (click)="displayTraceOrZoomToNeighborhood($event)" class="btn btn-drooltool trace-button">{{traceActive ? "Zoom to my Neighborhood" : "Where does my water go?"}}</button>
+            <button *ngIf="searchActive" (click)="displayTraceOrZoomToNeighborhood($event)"
+                class="btn btn-drooltool trace-button">{{traceActive ? "Zoom to my Neighborhood" : "Where does my water go?"}}</button>
             <div class="p-1 map-bottom-legend">
-                <div class="mr-1 map-bottom-legend-value-color" style="background-color:#FF20F9"></div><span class="b3 align-baseline" style="font-size:15px">Path to the Ocean</span>
+                <div class="mr-1 map-bottom-legend-value-color" style="background-color:#FF20F9"></div><span
+                    class="b3 align-baseline" style="font-size:15px">Path to the Ocean</span>
             </div>
         </div>
     </div>
