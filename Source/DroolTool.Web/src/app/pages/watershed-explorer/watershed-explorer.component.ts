@@ -262,7 +262,7 @@ export class WatershedExplorerComponent implements OnInit {
 
         this.selectedNeighborhoodID = response.features[0].properties.NeighborhoodID;
         if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
-          this.displaySearchResults(response.features[0].properties.OCSurveyNeighborhoodID, latlng);   
+          this.displaySearchResults(response.features[0].properties.OCSurveyNeighborhoodID, latlng);
         }
         else {
           this.searchAddressNotFoundOrNotServiced();
@@ -449,41 +449,43 @@ export class WatershedExplorerComponent implements OnInit {
 
   public getMetricPopupContent(): string {
     let metricContent = "";
+    debugger;
     if (!this.metricsForCurrentSelection) {
       metricContent = "No metrics found for this location";
     }
-
-    switch (this.selectedMetric) {
-      case WatershedExplorerMetric.TotalMonthlyDrool: {
-        metricContent = this.selectedMetric + " : " +
-          (this.metricsForCurrentSelection.TotalMonthlyDrool == null
-            ? "Not available"
-            : this.metricsForCurrentSelection.TotalMonthlyDrool.toLocaleString() + " gal/month");
-        break;
-      }
-      case WatershedExplorerMetric.OverallParticipation: {
-        metricContent = this.selectedMetric + " : " +
-          (this.metricsForCurrentSelection.OverallParticipation == null
-            ? "Not available"
-            : this.metricsForCurrentSelection.OverallParticipation.toLocaleString() + " active meters");
-        break;
-      }
-      case WatershedExplorerMetric.PercentParticipation: {
-        metricContent = this.selectedMetric + " : " +
-          (this.metricsForCurrentSelection.PercentParticipation == null
-            ? "Not available"
-            : Math.round(this.metricsForCurrentSelection.PercentParticipation).toString() + "%");
-        break;
-      }
-      case WatershedExplorerMetric.MonthlyDroolPerLandscapedAcre: {
-        metricContent = this.selectedMetric + " : " +
-          (this.metricsForCurrentSelection.MonthlyDroolPerLandscapedAcre == null
-            ? "Not available"
-            : this.metricsForCurrentSelection.MonthlyDroolPerLandscapedAcre.toLocaleString() + " gal/landscaped acre");
-        break;
-      }
-      default: {
-        metricContent = "Select a metric from the dropdown to get started!";
+    else {
+      switch (this.selectedMetric) {
+        case WatershedExplorerMetric.TotalMonthlyDrool: {
+          metricContent = this.selectedMetric + " : " +
+            (this.metricsForCurrentSelection.TotalMonthlyDrool == null
+              ? "Not available"
+              : this.metricsForCurrentSelection.TotalMonthlyDrool.toLocaleString() + " gal/month");
+          break;
+        }
+        case WatershedExplorerMetric.OverallParticipation: {
+          metricContent = this.selectedMetric + " : " +
+            (this.metricsForCurrentSelection.OverallParticipation == null
+              ? "Not available"
+              : this.metricsForCurrentSelection.OverallParticipation.toLocaleString() + " active meters");
+          break;
+        }
+        case WatershedExplorerMetric.PercentParticipation: {
+          metricContent = this.selectedMetric + " : " +
+            (this.metricsForCurrentSelection.PercentParticipation == null
+              ? "Not available"
+              : Math.round(this.metricsForCurrentSelection.PercentParticipation).toString() + "%");
+          break;
+        }
+        case WatershedExplorerMetric.MonthlyDroolPerLandscapedAcre: {
+          metricContent = this.selectedMetric + " : " +
+            (this.metricsForCurrentSelection.MonthlyDroolPerLandscapedAcre == null
+              ? "Not available"
+              : this.metricsForCurrentSelection.MonthlyDroolPerLandscapedAcre.toLocaleString() + " gal/landscaped acre");
+          break;
+        }
+        default: {
+          metricContent = "Select a metric from the dropdown to get started!";
+        }
       }
     }
 
