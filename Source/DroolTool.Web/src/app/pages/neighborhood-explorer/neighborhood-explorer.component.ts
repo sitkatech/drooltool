@@ -267,7 +267,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public getNeighborhoodFromLatLong(latlng: Object, mapClick: boolean): void {
-    if (!this.currentlySearching) {
+    if (!this.currentlySearching || !mapClick) {
       if (mapClick) {
         this.currentlySearching = true;
         this.clearSearchResults();
