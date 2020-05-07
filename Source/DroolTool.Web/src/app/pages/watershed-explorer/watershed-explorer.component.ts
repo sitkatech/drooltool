@@ -79,7 +79,6 @@ export class WatershedExplorerComponent implements OnInit {
     "November",
     "December"
   ]
-  maskString: string;
 
   constructor(
     private appRef: ApplicationRef,
@@ -168,7 +167,6 @@ export class WatershedExplorerComponent implements OnInit {
 
   public initializeMap(): void {
     this.watershedService.getMask().subscribe(maskString => {
-      this.maskString = maskString;
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
         style: function (feature) {
