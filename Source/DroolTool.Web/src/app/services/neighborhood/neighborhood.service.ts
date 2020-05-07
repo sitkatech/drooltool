@@ -46,7 +46,7 @@ export class NeighborhoodService {
     }
 
     getDefaultMetricDate(): Date {
-        return new Date(2019, 3, 1);
+        return new Date(2019, 4, 1);
     }
     
 }
