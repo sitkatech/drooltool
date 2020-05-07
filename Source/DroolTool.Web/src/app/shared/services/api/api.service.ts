@@ -44,7 +44,6 @@ export class ApiService {
     }
 
     getFromApi(relativeRoute: string): Observable<any> {
-
         this.busyService.setBusy(true);
 
         if (relativeRoute.startsWith('/')) {

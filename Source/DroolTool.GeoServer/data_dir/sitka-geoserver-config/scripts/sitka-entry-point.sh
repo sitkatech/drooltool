@@ -35,6 +35,15 @@ fi;
 cp -R "${GEOSERVER_DATA_DIR}/sitka-geoserver-config/tomcat/webapps/." /usr/local/tomcat/webapps
 ##### END SETTING UP TOMCAT WEBAPPS FOLDER #####
 
+##### BEGIN ENABLE CORS
+ENABLE_CORS=$(cat "${GEOSERVER_DATA_DIR}/sitka-geoserver-config/tomcat/enable_cors.txt")
+perl -i -pe "s|<param-value>If-Modified-Since,Range,Origin</param-value>|${ENABLE_CORS}|g" /usr/local/tomcat/conf/web.xml
+##### END ENABLE CORS
+
+##### BEGIN INCREASE MAXHTTPHEADERSIZE
+perl -i -pe 's|port="8080"|port="8080" maxHttpHeaderSize="65536"|g' /usr/local/tomcat/conf/server.xml
+##### END INCREASE MAXHTTPHEADERSIZE
+
 
 ##### BEGIN SETTING TOMCAT HTTP TO HTTPS REDIRECT #####
 if [[ ${SSL} =~ [Tt][Rr][Uu][Ee] ]]; then

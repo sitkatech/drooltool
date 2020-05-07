@@ -13,6 +13,7 @@ import { UserInviteComponent } from './pages/user-invite/user-invite.component';
 import { NeighborhoodExplorerComponent } from './pages/neighborhood-explorer/neighborhood-explorer.component';
 import { AboutComponent } from './pages/about/about.component';
 import { TakeActionComponent } from './pages/take-action/take-action.component';
+import { WatershedExplorerComponent } from './pages/watershed-explorer/watershed-explorer.component';
 
 const routes: Routes = [
   { path: "users", component: UserListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard]},
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: "users/:id/edit", component: UserEditComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard] },
   { path: "invite-user", component: UserInviteComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard] },
   { path: "neighborhood-explorer", component: NeighborhoodExplorerComponent},
+  { path: "watershed-explorer", component: WatershedExplorerComponent},
   { path: "take-action", component: TakeActionComponent},
   { path: "about", component: AboutComponent},
   { path: "", component: HomeIndexComponent},
