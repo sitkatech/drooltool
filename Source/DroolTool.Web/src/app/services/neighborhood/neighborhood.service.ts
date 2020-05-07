@@ -15,8 +15,8 @@ export class NeighborhoodService {
         return this.apiService.getFromApi(route);
     }
 
-    getMetrics(OCSurveyNeighborhoodID:number): Observable<NeighborhoodMetricDto> {
-        let route = `/neighborhood/${OCSurveyNeighborhoodID}/get-metrics/`;
+    getMetricsForYearAndMonth(OCSurveyNeighborhoodID:number, metricYear:number, metricMonth:number): Observable<NeighborhoodMetricDto> {
+        let route = `/neighborhood/${OCSurveyNeighborhoodID}/${metricYear}/${metricMonth}/get-metrics/`;
         return this.apiService.getFromApi(route);
     }
 

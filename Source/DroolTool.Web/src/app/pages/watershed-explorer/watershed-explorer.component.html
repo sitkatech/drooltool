@@ -79,7 +79,7 @@
                 <div *ngIf="!activeSearchNotFound && selectedMetric != WatershedExplorerMetric.NoMetric"
                     class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
                     <div class="h-100 w-100 m-auto">
-                        <p class="b3 text-left">{{metricsForCurrentSelection == undefined ? "Loading metrics data..." : "Displaying data for " + months[metricsForCurrentSelection.MetricMonth - 1] + " " + metricsForCurrentSelection.MetricYear}}</p>
+                        <p class="b3 text-left">Displaying data for {{months[selectedMetricMonth - 1]}} {{selectedMetricYear}}</p>
                         <ng-container *ngFor="let legendColor of selectedMetric.legendColors; index as i">
                             <div class="row mb-1">
                                 <div class="col-2 mt-auto mb-auto">
@@ -125,7 +125,7 @@
     <div *ngIf="!activeSearchNotFound && selectedMetric != WatershedExplorerMetric.NoMetric"
         class="col-12 section-stats d-lg-none mt-1">
         <div class="h-100 w-100 m-auto">
-            <p class="b3">{{metricsForCurrentSelection == undefined ? "Loading metrics data..." : "Displaying data for " + months[metricsForCurrentSelection.MetricMonth - 1] + " " + metricsForCurrentSelection.MetricYear}}</p>
+            <p class="b3">Displaying data for {{months[selectedMetricMonth - 1]}} {{selectedMetricYear}}</p>
             <ng-container *ngFor="let legendColor of selectedMetric.legendColors; index as i">
                 <div class="row mb-1">
                     <div class="col-5 mt-auto mb-auto">
