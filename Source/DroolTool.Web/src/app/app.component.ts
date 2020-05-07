@@ -85,7 +85,8 @@ export class AppComponent {
         return subject.asObservable();
     }
 
-    public login(): void {
+    public login(event: Event): void {
+        event.preventDefault();
         this.authenticationService.login();
     }
 }
