@@ -152,14 +152,14 @@ namespace DroolTool.API.Controllers
             return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(featureList));
         }
 
-        [HttpGet("neighborhood/{OCSurveyNeighborhoodID}/get-metrics/")]
-        public ActionResult<NeighborhoodMetricDto> GetWatershedExplorerMetrics([FromRoute] int OCSurveyNeighborhoodID)
+        [HttpGet("neighborhood/{OCSurveyNeighborhoodID}/{metricYear}/{metricMonth}/get-metrics/")]
+        public ActionResult<NeighborhoodMetricDto> GetMetricsForYearAndMonth([FromRoute] int OCSurveyNeighborhoodID, [FromRoute] int metricYear, [FromRoute] int metricMonth)
         {
             var neighborhoodMetric = _dbContext.vNeighborhoodMetric
-                .Where(x => x.OCSurveyCatchmentID == OCSurveyNeighborhoodID)
-                .OrderByDescending(x => x.MetricDate)
-                .FirstOrDefault()
-                .AsDto();
+                .SingleOrDefault(x =>
+                    x.OCSurveyCatchmentID == OCSurveyNeighborhoodID && x.MetricYear == metricYear &&
+                    x.MetricMonth == metricMonth)
+                ?.AsDto();
 
             return Ok(neighborhoodMetric);
         }

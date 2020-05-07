@@ -11,5 +11,6 @@ namespace DroolTool.Models.DataTransferObjects
         public double? TotalMonthlyDrool { get; set; }
         public double? OverallParticipation { get; set; }
         public double? PercentParticipation { get; set; }
+        public double? MonthlyDroolPerLandscapedAcre { get; set; }
     }
 }

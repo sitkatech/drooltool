@@ -33,7 +33,7 @@ export class WatershedExplorerComponent implements OnInit {
   public WatershedExplorerMetric = WatershedExplorerMetric;
 
   public metrics = Object.values(WatershedExplorerMetric);
-  public selectedMetric = WatershedExplorerMetric.TotalMonthlyDrool;
+  public selectedMetric = WatershedExplorerMetric.MonthlyDroolPerLandscapedAcre;
   public metricsForCurrentSelection: NeighborhoodMetricDto;
   public metricOverlayLayer: L.Layers;
 
@@ -62,6 +62,8 @@ export class WatershedExplorerComponent implements OnInit {
   public currentlySearching: boolean = false;
 
   public selectedNeighborhoodID: number;
+  public selectedMetricMonth: number;
+  public selectedMetricYear: number;
 
   public months = [
     "January",
@@ -149,6 +151,8 @@ export class WatershedExplorerComponent implements OnInit {
 
     this.neighborhoodService.getMostRecentMetric().subscribe(result => {
       this.metricsForCurrentSelection = result;
+      this.selectedMetricMonth = result.MetricMonth;
+      this.selectedMetricYear = result.MetricYear;
     })
   }
 
@@ -156,7 +160,7 @@ export class WatershedExplorerComponent implements OnInit {
 
     this.neighborhoodService.getServicedNeighborhoodIds().subscribe(result => {
       this.neighborhoodsWhereItIsOkayToClickIDs = result;
-    })
+    });
 
     this.initializeMap();
   }
@@ -258,7 +262,7 @@ export class WatershedExplorerComponent implements OnInit {
 
         this.selectedNeighborhoodID = response.features[0].properties.NeighborhoodID;
         if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
-          this.displaySearchResults(response.features[0].properties.OCSurveyNeighborhoodID, latlng);
+          this.displaySearchResults(response.features[0].properties.OCSurveyNeighborhoodID, latlng);   
         }
         else {
           this.searchAddressNotFoundOrNotServiced();
@@ -268,7 +272,7 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public displaySearchResults(OCSurveyNeighborhoodID: number, latlng: Object): void {
-    this.neighborhoodService.getMetrics(OCSurveyNeighborhoodID).subscribe(response => {
+    this.neighborhoodService.getMetricsForYearAndMonth(OCSurveyNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(response => {
       this.metricsForCurrentSelection = response;
 
       let icon = L.divIcon({
@@ -289,9 +293,6 @@ export class WatershedExplorerComponent implements OnInit {
 
       this.searchActive = true;
       this.currentlySearching = false;
-      // var currentZoom = this.map.getZoom();
-      // this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker]));
-      // this.map.setZoom(currentZoom);
     });
   }
 
@@ -375,6 +376,7 @@ export class WatershedExplorerComponent implements OnInit {
   public returnToDefault(): void {
     this.clearSearchResults();
     this.defaultFitBounds();
+    this.map.invalidateSize();
   }
 
   public searchAddressNotFoundOrNotServiced(): void {
@@ -471,6 +473,13 @@ export class WatershedExplorerComponent implements OnInit {
           (this.metricsForCurrentSelection.PercentParticipation == null
             ? "Not available"
             : Math.round(this.metricsForCurrentSelection.PercentParticipation).toString() + "%");
+        break;
+      }
+      case WatershedExplorerMetric.MonthlyDroolPerLandscapedAcre: {
+        metricContent = this.selectedMetric + " : " +
+          (this.metricsForCurrentSelection.MonthlyDroolPerLandscapedAcre == null
+            ? "Not available"
+            : this.metricsForCurrentSelection.MonthlyDroolPerLandscapedAcre.toLocaleString() + " gal/landscaped acre");
         break;
       }
       default: {

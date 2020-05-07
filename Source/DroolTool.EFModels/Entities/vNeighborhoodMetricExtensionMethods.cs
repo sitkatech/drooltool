@@ -15,7 +15,8 @@ namespace DroolTool.EFModels.Entities
                 MetricMonth = metric.MetricMonth,
                 TotalMonthlyDrool = metric.TotalMonthlyDrool,
                 OverallParticipation = metric.OverallParticipation,
-                PercentParticipation = metric.PercentParticipation
+                PercentParticipation = metric.PercentParticipation,
+                MonthlyDroolPerLandscapedAcre = metric.MonthlyDroolPerLandscapedAcre
             };
         }
     }

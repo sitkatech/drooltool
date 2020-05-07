@@ -17,5 +17,6 @@ namespace DroolTool.EFModels.Entities
         public double? TotalMonthlyDrool { get; set; }
         public double? OverallParticipation { get; set; }
         public double? PercentParticipation { get; set; }
+        public double? MonthlyDroolPerLandscapedAcre { get; set; }
     }
 }

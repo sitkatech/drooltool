@@ -15,8 +15,8 @@ export class NeighborhoodService {
         return this.apiService.getFromApi(route);
     }
 
-    getMetrics(OCSurveyNeighborhoodID:number): Observable<NeighborhoodMetricDto> {
-        let route = `/neighborhood/${OCSurveyNeighborhoodID}/get-metrics/`;
+    getMetricsForYearAndMonth(OCSurveyNeighborhoodID:number, metricYear:number, metricMonth:number): Observable<NeighborhoodMetricDto> {
+        let route = `/neighborhood/${OCSurveyNeighborhoodID}/${metricYear}/${metricMonth}/get-metrics/`;
         return this.apiService.getFromApi(route);
     }
 
@@ -43,6 +43,10 @@ export class NeighborhoodService {
     getUpstreamBackboneTrace(neighborhoodID:number): Observable<string> {
         let route = `/neighborhood/${neighborhoodID}/get-upstream-backbone-trace/`;
         return this.apiService.getFromApi(route);
+    }
+
+    getDefaultMetricDate(): Date {
+        return new Date(2019, 3, 1);
     }
     
 }

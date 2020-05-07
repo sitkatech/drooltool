@@ -26,6 +26,14 @@ export class WatershedExplorerMetric {
         "watershed_explorer_map_metric_percent_participation"
     )
 
+    static readonly MonthlyDroolPerLandscapedAcre = new WatershedExplorerMetric(
+        "Monthly Drool Per Landscaped Acre",
+        WatershedExplorerMetric.getColorPallette("orange"),
+        ["0 - 100", "100 - 500", "500 - 1,000", "1,000 - 5,000", "5,000 - 10,000", "10,000 - 20,000", "20,000 - 40,000", "Greater than 40,000"],
+        "gallons per landscaped acre",
+        "watershed_explorer_map_metric_monthly_drool_per_landscaped_acre"
+    )
+
     static readonly NoMetric = new WatershedExplorerMetric(
         "No Metric, Map Only",
         null,
