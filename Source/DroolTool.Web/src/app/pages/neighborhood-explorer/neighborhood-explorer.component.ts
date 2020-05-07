@@ -267,7 +267,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public getNeighborhoodFromLatLong(latlng: Object, mapClick: boolean): void {
-    if (mapClick || !this.currentlySearching) {
+    if (!this.currentlySearching) {
       if (mapClick) {
         this.currentlySearching = true;
         this.clearSearchResults();
@@ -284,6 +284,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
           if (this.neighborhoodsThatHaveMetrics.includes(this.selectedNeighborhoodID)) {
             this.neighborhoodService.getMetrics(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID).subscribe(result => {
               this.selectedNeighborhoodMetrics = result;
+              this.map.invalidateSize();
             });
           }
           this.displaySearchResults(response, latlng);
@@ -448,6 +449,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public returnToDefault(): void {
     this.clearSearchResults();
     this.defaultFitBounds();
+    this.map.invalidateSize();
   }
 
   public searchAddressNotFoundOrNotServiced(): void {
