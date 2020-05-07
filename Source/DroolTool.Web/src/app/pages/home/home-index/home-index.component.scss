@@ -102,4 +102,17 @@ h1 {
         position: relative;
         z-index: 1;
     }
+
+    #topImage {
+        width:125%;
+        margin-left: -77px;
+    }
+}
+
+@media only screen and (min-width:1200px) {
+    #topImage {
+        width:105%;
+        margin-top:-16px;
+        margin-left: -40px;
+    }
 }
