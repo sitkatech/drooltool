@@ -272,7 +272,7 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public displaySearchResults(OCSurveyNeighborhoodID: number, latlng: Object): void {
-    this.neighborhoodService.getMetricsForYearAndMonth(OCSurveyNeighborhoodID, 2019, 4).subscribe(response => {
+    this.neighborhoodService.getMetricsForYearAndMonth(OCSurveyNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(response => {
       this.metricsForCurrentSelection = response;
 
       let icon = L.divIcon({

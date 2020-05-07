@@ -156,7 +156,7 @@ namespace DroolTool.API.Controllers
         public ActionResult<NeighborhoodMetricDto> GetMetricsForYearAndMonth([FromRoute] int OCSurveyNeighborhoodID, [FromRoute] int metricYear, [FromRoute] int metricMonth)
         {
             var neighborhoodMetric = _dbContext.vNeighborhoodMetric
-                .FirstOrDefault(x =>
+                .SingleOrDefault(x =>
                     x.OCSurveyCatchmentID == OCSurveyNeighborhoodID && x.MetricYear == metricYear &&
                     x.MetricMonth == metricMonth)
                 ?.AsDto();

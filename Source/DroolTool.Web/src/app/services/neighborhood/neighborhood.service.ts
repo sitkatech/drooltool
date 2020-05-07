@@ -44,5 +44,9 @@ export class NeighborhoodService {
         let route = `/neighborhood/${neighborhoodID}/get-upstream-backbone-trace/`;
         return this.apiService.getFromApi(route);
     }
+
+    getDefaultMetricDate(): Date {
+        return new Date(2019, 3, 1);
+    }
     
 }
