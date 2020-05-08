@@ -213,6 +213,8 @@ export class WatershedExplorerComponent implements OnInit {
   public initializePanes(): void {
     let droolToolOverlayPane = this.map.createPane("droolToolOverlayPane");
     droolToolOverlayPane.style.zIndex = 10000;
+    let droolToolChoroplethPane = this.map.createPane("droolToolChoroplethPane");
+    droolToolChoroplethPane.style.zIndex = 9999;
     this.map.getPane("markerPane").style.zIndex = 10001;
     this.map.getPane("popupPane").style.zIndex = 10002;
   }
@@ -438,7 +440,7 @@ export class WatershedExplorerComponent implements OnInit {
       format: "image/png",
       tiled: true,
       styles: this.selectedMetric.geoserverStyle,
-      pane: "droolToolOverlayPane",
+      pane: "droolToolChoroplethPane",
       cql_filter: cql_filter
     } as L.WMSOptions);
 
@@ -449,7 +451,6 @@ export class WatershedExplorerComponent implements OnInit {
 
   public getMetricPopupContent(): string {
     let metricContent = "";
-    debugger;
     if (!this.metricsForCurrentSelection) {
       metricContent = "No metrics found for this location";
     }
