@@ -7,7 +7,7 @@ import '../../../../node_modules/leaflet.fullscreen/Control.FullScreen.js';
 import * as esri from 'esri-leaflet'
 import { CustomCompileService } from '../../shared/services/custom-compile.service';
 import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
-import { WatershedService } from 'src/app/services/watershed/watershed.service';
+import { WatershedMaskService } from 'src/app/services/watershed-mask/watershed-mask.service';
 import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
@@ -81,7 +81,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     private appRef: ApplicationRef,
     private compileService: CustomCompileService,
     private neighborhoodService: NeighborhoodService,
-    private watershedService: WatershedService,
+    private watershedMaskService: WatershedMaskService,
     private nominatimService: NominatimService,
     private wfsService: WfsService
   ) {
@@ -160,7 +160,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public initializeMap(): void {
-    this.watershedService.getWatershedMask("All Watersheds").subscribe(maskString => {
+    this.watershedMaskService.getMask().subscribe(maskString => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
         style: function (feature) {

@@ -2,13 +2,13 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Watershed](
-	[WatershedID] [int] IDENTITY(1,1) NOT NULL,
-	[WatershedGeometry] [geometry] NULL,
-	[WatershedName] [varchar](50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	[WatershedGeometry4326] [geometry] NULL,
+CREATE TABLE [dbo].[WatershedMask](
+	[WatershedMaskID] [int] IDENTITY(1,1) NOT NULL,
+	[WatershedMaskGeometry] [geometry] NULL,
+	[WatershedMaskName] [varchar](50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[WatershedMaskGeometry4326] [geometry] NULL,
  CONSTRAINT [PK_Watershed_WatershedID] PRIMARY KEY CLUSTERED 
 (
-	[WatershedID] ASC
+	[WatershedMaskID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]

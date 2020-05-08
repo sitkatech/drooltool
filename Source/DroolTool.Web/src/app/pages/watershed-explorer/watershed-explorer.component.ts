@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef } from '@angular/core';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
 import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
-import { WatershedService } from 'src/app/services/watershed/watershed.service';
+import { WatershedMaskService } from 'src/app/services/watershed-mask/watershed-mask.service';
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import { environment } from 'src/environments/environment';
 import * as L from 'leaflet';
@@ -88,7 +88,7 @@ export class WatershedExplorerComponent implements OnInit {
     private compileService: CustomCompileService,
     private neighborhoodService: NeighborhoodService,
     private wfsService: WfsService,
-    private watershedService: WatershedService
+    private watershedMaskService: WatershedMaskService
   ) {
   }
 
@@ -157,14 +157,6 @@ export class WatershedExplorerComponent implements OnInit {
       this.selectedMetricMonth = result.MetricMonth;
       this.selectedMetricYear = result.MetricYear;
     })
-
-    this.watershedService.getWatershedNames().subscribe(result => {
-      this.watershedNames = this.watershedNames.concat(result);
-    })
-
-    this.watershedService.getWatershedNames().subscribe(result => {
-      this.watershedNames = this.watershedNames.concat(result);
-    })
   }
 
   public ngAfterViewInit(): void {
@@ -177,7 +169,7 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public initializeMap(): void {
-    this.watershedService.getMask().subscribe(maskString => {
+    this.watershedMaskService.getMask().subscribe(maskString => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
         style: function (feature) {
@@ -538,11 +530,5 @@ export class WatershedExplorerComponent implements OnInit {
 
     this.map.removeLayer(this.maskLayer);
     this.maskLayer = null;
-
-    this.watershedService.getWatershedMask(this.selectedWatershed).subscribe(result => {
-      this.maskLayer = this.getMaskGeoJsonLayer(result);
-      this.maskLayer.addTo(this.map);
-      this.defaultFitBounds();
-    })
   }
 }

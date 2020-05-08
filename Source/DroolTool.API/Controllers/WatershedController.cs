@@ -14,28 +14,19 @@ using NetTopologySuite.Operation.Union;
 
 namespace DroolTool.API.Controllers
 {
-    public class WatershedController : ControllerBase
+    public class WatershedMaskController : ControllerBase
     {
         private readonly DroolToolDbContext _dbContext;
 
-        public WatershedController(DroolToolDbContext dbContext)
+        public WatershedMaskController(DroolToolDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        [HttpGet("watershed/get-watershed-names")]
-        public ActionResult<List<string>> GetWatershedNames()
-        {
-            return Ok(_dbContext.Watershed.Select(x => x.WatershedName).ToList());
-        }
-
-        [HttpGet("watershed/{watershedName}/get-watershed-mask")]
+        [HttpGet("watershed-mask/get-watershed-mask")]
         public ActionResult<string> GetWatershedMask([FromRoute] string watershedName)
         {
-            var watersheds = watershedName == "All Watersheds"
-                ? _dbContext.Watershed.Select(x => x.WatershedGeometry4326)
-                : _dbContext.Watershed.Where(x => x.WatershedName == watershedName)
-                    .Select(x => x.WatershedGeometry4326);
+            var watersheds = _dbContext.WatershedMask.Select(x => x.WatershedMaskGeometry4326);
             var geometry = UnaryUnionOp.Union(watersheds);
 
             return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(new List<Feature> { new Feature() { Geometry = geometry } }));
