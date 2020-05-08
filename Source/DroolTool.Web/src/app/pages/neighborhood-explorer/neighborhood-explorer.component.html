@@ -101,36 +101,43 @@
                         </div>
                         <div class="p-lg-4" style="background-color:#F2FBFD">
                             <h2 class="metric-heading">Does your neighborhood drool?</h2>
-                            <ng-container *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.TotalMonthlyDrool">
-                            <p class="b3"><span
-                                    class="metric-value">{{selectedNeighborhoodMetrics.TotalMonthlyDrool | number:'1.0-0':'en-US'}}</span><span
-                                    class="metric-units"> gallons</span> of urban drool were created in
-                                {{months[selectedNeighborhoodMetrics.MetricMonth - 1]}}</p>
-                            <p *ngIf="selectedNeighborhoodMetrics.TotalMonthlyDrool > 20000" class="b4">This is enough
-                                urban drool to fill
-                                {{selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000 | number:'1.0-0':'en-US'}}
-                                swimming pools!</p>
-                                </ng-container>
-                                <ng-container *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.TotalMonthlyDrool">
-                                    <p class="b3">Hmm, looks like we can't find anything for this metric at this time. Try selecting another neighborhood!</p>
-                                </ng-container>
+                            <ng-container
+                                *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.TotalMonthlyDrool">
+                                <p class="b3"><span
+                                        class="metric-value">{{selectedNeighborhoodMetrics.TotalMonthlyDrool | number:'1.0-0':'en-US'}}</span><span
+                                        class="metric-units"> gallons</span> of urban drool were created in
+                                    {{months[selectedNeighborhoodMetrics.MetricMonth - 1]}}</p>
+                                <p *ngIf="selectedNeighborhoodMetrics.TotalMonthlyDrool > 20000" class="b4">This is
+                                    enough
+                                    urban drool to fill
+                                    {{selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000 | number:'1.0-0':'en-US'}}
+                                    swimming {{((selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000) | number:'1.0-0') == 1 ? "pool" : "pools"}}!</p>
+                            </ng-container>
+                            <ng-container
+                                *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.TotalMonthlyDrool">
+                                <p class="b3">Hmm, looks like we can't find anything for this metric at this time. Try
+                                    selecting another neighborhood!</p>
+                            </ng-container>
                         </div>
                         <div class="p-lg-4">
                             <h2 class="metric-heading">Does your neighborhood take action?</h2>
-                            <ng-container *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.OverallParticipation">
-                            <p class="b3"><span
-                                    class="metric-value">{{selectedNeighborhoodMetrics.OverallParticipation === 0 ? "None" : selectedNeighborhoodMetrics.OverallParticipation}}</span><span
-                                    class="metric-units"> of your neighbors</span> participate in Moulton Niguel's
-                                rebate
-                                programs.</p>
-                                </ng-container>
-                                <ng-container *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.OverallParticipation">
-                                    <p class="b3">Hmm, looks like we can't find anything for this metric at this time. Try selecting another neighborhood!</p>
-                                </ng-container>
+                            <ng-container
+                                *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.OverallParticipation">
+                                <p class="b3"><span
+                                        class="metric-value">{{selectedNeighborhoodMetrics.OverallParticipation === 0 ? "None" : selectedNeighborhoodMetrics.OverallParticipation}}</span><span
+                                        class="metric-units"> of your neighbors</span> participate in Moulton Niguel's
+                                    rebate
+                                    programs.</p>
+                            </ng-container>
+                            <ng-container
+                                *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.OverallParticipation">
+                                <p class="b3">Hmm, looks like we can't find anything for this metric at this time. Try
+                                    selecting another neighborhood!</p>
+                            </ng-container>
                             <p class="b4">Participation in rebate programs, like weather based smart sprinkler timers or
                                 rotating
                                 sprinkler nozzles, helps mitigate your home's creation of urban drool</p>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -168,11 +175,15 @@
     </div>
     <div class="col-lg-9 pl-0 pr-0">
         <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight" style="height:100%">
-            <button *ngIf="searchActive && areMetricsCollapsed"
-                class="btn btn-drooltool d-lg-none metrics-button-panel-collapsed"
-                [attr.aria-expanded]="!areMetricsCollapsed" aria-expanded="false" aria-controls="collapsePanel"
-                aria-label="Toggle navigation" (click)="showMetrics($event)"><span><a class="search-close"><i
-                            class="fas fa-info-circle"></i></a></span></button>
+            <div *ngIf="searchActive && areMetricsCollapsed"
+                style="position:absolute; z-index:10000; top:10px; left:10px">
+                <button class="btn btn-drooltool d-lg-none mb-1 w-100" [attr.aria-expanded]="!areMetricsCollapsed"
+                    aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
+                    (click)="showMetrics($event)"><span>Drool Stats</span></button>
+                <br class="d-lg-none"/>
+                <button (click)="displayTraceOrZoomToNeighborhood($event)"
+                    class="btn btn-drooltool">{{traceActive ? "Zoom to my Neighborhood" : "Where does my water go?"}}</button>
+            </div>
             <div class="mobile-stats-containing-div">
                 <div *ngIf="searchActive" id="collapsePanel"
                     class="section-stats mt-2 collapse mobile-stats metrics-collapse d-lg-none"
@@ -195,7 +206,7 @@
                                 drool to fill
                                 {{(selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000) | number:'1.0-0':'en-US'}}
                                 swimming
-                                pools!</p>
+                                {{((selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000) | number:'1.0-0') == 1 ? "pool" : "pools"}}!</p>
                         </ng-container>
                         <ng-container
                             *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.TotalMonthlyDrool">
@@ -205,14 +216,18 @@
                     </div>
                     <div class="p-2 p-md-4 metrics-panel-transparency">
                         <h2 class="metric-heading">Does your neighborhood take action?</h2>
-                        <ng-container *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.OverallParticipation">
-                        <p class="b3"><span
-                                class="metric-value">{{selectedNeighborhoodMetrics.OverallParticipation === 0 ? "None" : selectedNeighborhoodMetrics.OverallParticipation}}</span><span
-                                class="metric-units"> of your neighbors</span> participate in Moulton Niguel's rebate
-                            programs.</p>
+                        <ng-container
+                            *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.OverallParticipation">
+                            <p class="b3"><span
+                                    class="metric-value">{{selectedNeighborhoodMetrics.OverallParticipation === 0 ? "None" : selectedNeighborhoodMetrics.OverallParticipation}}</span><span
+                                    class="metric-units"> of your neighbors</span> participate in Moulton Niguel's
+                                rebate
+                                programs.</p>
                         </ng-container>
-                        <ng-container *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.OverallParticipation">
-                            <p class="b3">Hmm, looks like we can't find anything for this metric at this time. Try selecting another neighborhood!</p>
+                        <ng-container
+                            *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.OverallParticipation">
+                            <p class="b3">Hmm, looks like we can't find anything for this metric at this time. Try
+                                selecting another neighborhood!</p>
                         </ng-container>
                         <p class="b4">Participation in rebate programs, like weather based smart sprinkler timers or
                             rotating
@@ -225,8 +240,6 @@
 
                 </div>
             </div>
-            <button *ngIf="searchActive" (click)="displayTraceOrZoomToNeighborhood($event)"
-                class="btn btn-drooltool trace-button">{{traceActive ? "Zoom to my Neighborhood" : "Where does my water go?"}}</button>
             <div class="p-1 map-bottom-legend">
                 <div class="mr-1 map-bottom-legend-value-color" style="background-color:#FF20F9"></div><span
                     class="b3 align-baseline" style="font-size:15px">Path to the Ocean</span>

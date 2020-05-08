@@ -280,13 +280,16 @@ export class NeighborhoodExplorerComponent implements OnInit {
         this.selectedNeighborhoodProperties = response.features[0].properties;
         this.selectedNeighborhoodID = this.selectedNeighborhoodProperties.NeighborhoodID;
         if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
-            this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID, this.defaultSelectedMetricDate.getUTCFullYear(), this.defaultSelectedMetricDate.getUTCMonth()).subscribe(result => {
-              this.selectedNeighborhoodMetrics = result;
-              this.map.invalidateSize();
-            });
+          this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID, this.defaultSelectedMetricDate.getUTCFullYear(), this.defaultSelectedMetricDate.getUTCMonth()).subscribe(result => {
+            this.selectedNeighborhoodMetrics = result;
+            this.map.invalidateSize();
+          });
           this.displaySearchResults(response, latlng);
-          this.displayStormshedAndBackboneDetail(this.selectedNeighborhoodID);
-          this.currentlySearching = false;
+          this.neighborhoodService.getStormshed(this.selectedNeighborhoodID).subscribe(
+            response => this.displayStormshedAndBackboneDetail(response),
+            null,
+            () => this.currentlySearching = false
+          );
         }
         else {
           this.searchAddressNotFoundOrNotServiced();
@@ -345,63 +348,61 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.searchActive = true;
   }
 
-  public displayStormshedAndBackboneDetail(neighborhoodID: number): void {
-    this.neighborhoodService.getStormshed(neighborhoodID).subscribe(response => {
-      let featureCollection = (response) as any as FeatureCollection;
-      if (featureCollection.features.length === 0) {
-        return null;
+  public displayStormshedAndBackboneDetail(response: string): void {
+    let featureCollection = (response) as any as FeatureCollection;
+    if (featureCollection.features.length === 0) {
+      return null;
+    }
+
+    this.stormshedLayer = L.geoJson(featureCollection, {
+      style: function (feature) {
+        return {
+          fillColor: "#C0FF6C",
+          fill: true,
+          fillOpacity: 0.3,
+          stroke: false
+        };
       }
+    })
 
-      this.stormshedLayer = L.geoJson(featureCollection, {
-        style: function (feature) {
-          return {
-            fillColor: "#C0FF6C",
-            fill: true,
-            fillOpacity: 0.3,
-            stroke: false
-          };
-        }
-      })
+    this.stormshedLayer.addTo(this.map);
+    this.stormshedLayer.bringToBack();
 
-      this.stormshedLayer.addTo(this.map);
-      this.stormshedLayer.bringToBack();
+    //if we get a stormshed, move the mask out
+    this.clearLayer(this.currentMask);
+    this.currentMask = L.geoJSON(featureCollection, {
+      invert: true,
+      style: function (feature) {
+        return {
+          fillColor: "#323232",
+          fill: true,
+          fillOpacity: 0.4,
+          color: "#EA842C",
+          weight: 5,
+          stroke: true
+        };
+      }
+    }).addTo(this.map);
 
-      //if we get a stormshed, move the mask out
-      this.clearLayer(this.currentMask);
-      this.currentMask = L.geoJSON(featureCollection, {
-        invert: true,
-        style: function (feature) {
-          return {
-            fillColor: "#323232",
-            fill: true,
-            fillOpacity: 0.4,
-            color: "#EA842C",
-            weight: 5,
-            stroke: true
-          };
-        }
-      }).addTo(this.map);
+    let neighborhoodIDs = featureCollection.features[0].properties["NeighborhoodIDs"];
+    let cql_filter = "NeighborhoodID in (" + neighborhoodIDs.join(",") + ")";
 
-      let neighborhoodIDs = featureCollection.features[0].properties["NeighborhoodIDs"];
-      let cql_filter = "NeighborhoodID in (" + neighborhoodIDs.join(",") + ")";
+    let backboneWMSOptions = ({
+      layers: "DroolTool:Backbones",
+      transparent: true,
+      format: "image/png",
+      tiled: true,
+      styles: "backbone_narrow",
+      wmsParameterThatDoesNotExist: new Date(),
+      pane: "droolToolOverlayPane",
+      cql_filter: cql_filter
+    } as L.WMSOptions);
 
-      let backboneWMSOptions = ({
-        layers: "DroolTool:Backbones",
-        transparent: true,
-        format: "image/png",
-        tiled: true,
-        styles: "backbone_narrow",
-        wmsParameterThatDoesNotExist: new Date(),
-        pane: "droolToolOverlayPane",
-        cql_filter: cql_filter
-      } as L.WMSOptions);
+    this.backboneDetailLayer = L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions);
+    this.backboneDetailLayer.addTo(this.map);
+    this.backboneDetailLayer.bringToFront();
 
-      this.backboneDetailLayer = L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions);
-      this.backboneDetailLayer.addTo(this.map);
-      this.backboneDetailLayer.bringToFront();
-
-      this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
-    });
+    this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
   }
 
   public displayTraceOrZoomToNeighborhood(event: Event): void {
