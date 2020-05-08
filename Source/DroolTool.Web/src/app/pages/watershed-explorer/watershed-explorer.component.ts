@@ -161,6 +161,10 @@ export class WatershedExplorerComponent implements OnInit {
     this.watershedService.getWatershedNames().subscribe(result => {
       this.watershedNames = this.watershedNames.concat(result);
     })
+
+    this.watershedService.getWatershedNames().subscribe(result => {
+      this.watershedNames = this.watershedNames.concat(result);
+    })
   }
 
   public ngAfterViewInit(): void {
