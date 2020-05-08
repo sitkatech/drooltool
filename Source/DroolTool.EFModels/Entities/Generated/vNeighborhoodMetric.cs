@@ -14,9 +14,9 @@ namespace DroolTool.EFModels.Entities
         public int MetricMonth { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime MetricDate { get; set; }
-        public double? TotalMonthlyDrool { get; set; }
+        public double? TotalDrool { get; set; }
         public double? OverallParticipation { get; set; }
         public double? PercentParticipation { get; set; }
-        public double? MonthlyDroolPerLandscapedAcre { get; set; }
+        public double? DroolPerLandscapedAcre { get; set; }
     }
 }

@@ -33,7 +33,7 @@ export class WatershedExplorerComponent implements OnInit {
   public WatershedExplorerMetric = WatershedExplorerMetric;
 
   public metrics = Object.values(WatershedExplorerMetric);
-  public selectedMetric = WatershedExplorerMetric.MonthlyDroolPerLandscapedAcre;
+  public selectedMetric = WatershedExplorerMetric.DroolPerLandscapedAcre;
   public metricsForCurrentSelection: NeighborhoodMetricDto;
   public metricOverlayLayer: L.Layers;
 
@@ -456,11 +456,11 @@ export class WatershedExplorerComponent implements OnInit {
     }
     else {
       switch (this.selectedMetric) {
-        case WatershedExplorerMetric.TotalMonthlyDrool: {
+        case WatershedExplorerMetric.TotalDrool: {
           metricContent = this.selectedMetric + " : " +
-            (this.metricsForCurrentSelection.TotalMonthlyDrool == null
+            (this.metricsForCurrentSelection.TotalDrool == null
               ? "Not available"
-              : this.metricsForCurrentSelection.TotalMonthlyDrool.toLocaleString() + " gal/month");
+              : this.metricsForCurrentSelection.TotalDrool.toLocaleString() + " gal/month");
           break;
         }
         case WatershedExplorerMetric.OverallParticipation: {
@@ -477,11 +477,11 @@ export class WatershedExplorerComponent implements OnInit {
               : Math.round(this.metricsForCurrentSelection.PercentParticipation).toString() + "%");
           break;
         }
-        case WatershedExplorerMetric.MonthlyDroolPerLandscapedAcre: {
+        case WatershedExplorerMetric.DroolPerLandscapedAcre: {
           metricContent = this.selectedMetric + " : " +
-            (this.metricsForCurrentSelection.MonthlyDroolPerLandscapedAcre == null
+            (this.metricsForCurrentSelection.DroolPerLandscapedAcre == null
               ? "Not available"
-              : this.metricsForCurrentSelection.MonthlyDroolPerLandscapedAcre.toLocaleString() + " gal/landscaped acre");
+              : "<br/>" + this.metricsForCurrentSelection.DroolPerLandscapedAcre.toLocaleString() + " gal/acre");
           break;
         }
         default: {

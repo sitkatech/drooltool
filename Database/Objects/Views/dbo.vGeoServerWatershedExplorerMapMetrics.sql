@@ -9,10 +9,10 @@ Select
 	nm.MetricDate,
 	nm.MetricYear,
 	nm.MetricMonth,
-	nm.TotalMonthlyDrool,
+	nm.TotalDrool,
 	nm.OverallParticipation,
 	nm.PercentParticipation,
-	nm.MonthlyDroolPerLandscapedAcre
+	nm.DroolPerLandscapedAcre
 
 from dbo.Neighborhood d
 join dbo.vNeighborhoodMetric nm on d.OCSurveyNeighborhoodID = nm.OCSurveyCatchmentID
