@@ -247,17 +247,17 @@ namespace DroolTool.EFModels.Entities
 
             modelBuilder.Entity<WatershedAlias>(entity =>
             {
-                entity.HasIndex(e => e.Watershed)
-                    .HasName("AK_WatershedAlias_Watershed")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.WatershedAlias1)
+                entity.HasIndex(e => e.WatershedAliasName)
                     .HasName("AK_WatershedAlias_WatershedAlias")
                     .IsUnique();
 
-                entity.Property(e => e.Watershed).IsUnicode(false);
+                entity.HasIndex(e => e.WatershedName)
+                    .HasName("AK_WatershedAlias_Watershed")
+                    .IsUnique();
 
-                entity.Property(e => e.WatershedAlias1).IsUnicode(false);
+                entity.Property(e => e.WatershedAliasName).IsUnicode(false);
+
+                entity.Property(e => e.WatershedName).IsUnicode(false);
             });
 
             modelBuilder.Entity<WatershedMask>(entity =>
@@ -294,6 +294,8 @@ namespace DroolTool.EFModels.Entities
                 entity.HasNoKey();
 
                 entity.ToView("vGeoServerWatershedExplorerMapMetrics");
+
+                entity.Property(e => e.WatershedAliasName).IsUnicode(false);
             });
 
             modelBuilder.Entity<vGeoServerWatershedMask>(entity =>

@@ -100,6 +100,10 @@
     opacity:0.75;
 }
 
+.selected-watershed {
+    box-shadow: 0 0 0 0.2rem rgba(234,132,44,0.5);
+}
+
 ::ng-deep .search-popup .leaflet-popup-content-wrapper {
     font-family: "Nunito", sans-serif;
     font-weight: 600;

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using DroolTool.API.Services;
 using DroolTool.EFModels.Entities;
-using DroolTool.Models.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization.Internal;
 using NetTopologySuite.Features;
 using NetTopologySuite.Operation.Union;
 

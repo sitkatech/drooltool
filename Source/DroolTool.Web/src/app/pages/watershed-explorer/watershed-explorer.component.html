@@ -14,7 +14,7 @@
                                     <option *ngFor="let metric of metrics" [ngValue]="metric">{{metric}}</option>
                                 </select>
                                 <ng-container *ngFor="let watershedOption of watershedNames">
-                                    <button class="btn btn-drooltool mr-1 mb-1" (click)="getNewWatershedMask(watershedOption)">{{watershedOption}}</button>
+                                    <button class="btn btn-drooltool mr-1 mb-1" [ngClass]="{'selected-watershed': selectedWatershed == watershedOption }" (click)="getNewWatershedMask(watershedOption)">{{watershedOption}}</button>
                                 </ng-container>
                             </div>
                         </div>

@@ -11,10 +11,9 @@ namespace DroolTool.EFModels.Entities
         public int WatershedAliasID { get; set; }
         [Required]
         [StringLength(100)]
-        public string Watershed { get; set; }
+        public string WatershedName { get; set; }
         [Required]
-        [Column("WatershedAlias")]
         [StringLength(100)]
-        public string WatershedAlias1 { get; set; }
+        public string WatershedAliasName { get; set; }
     }
 }

@@ -12,6 +12,9 @@ namespace DroolTool.EFModels.Entities
         [Column(TypeName = "geometry")]
         public Geometry NeighborhoodGeometry { get; set; }
         public double? Area { get; set; }
+        [Required]
+        [StringLength(100)]
+        public string WatershedAliasName { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime MetricDate { get; set; }
         public int MetricYear { get; set; }

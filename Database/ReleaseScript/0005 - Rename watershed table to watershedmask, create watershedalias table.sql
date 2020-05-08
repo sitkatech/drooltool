@@ -9,13 +9,13 @@ Drop View If Exists dbo.vGeoServerWatershed
 create table
 dbo.WatershedAlias (
 	WatershedAliasID int identity(1,1) not null constraint PK_WatershedAlias_WatershedAliasID primary key,
-	Watershed varchar(100) not null,
-	WatershedAlias varchar(100) not null,
-	constraint AK_WatershedAlias_Watershed unique (Watershed),
-	constraint AK_WatershedAlias_WatershedAlias unique (WatershedAlias)
+	WatershedName varchar(100) not null,
+	WatershedAliasName varchar(100) not null,
+	constraint AK_WatershedAlias_WatershedName unique (WatershedName),
+	constraint AK_WatershedAlias_WatershedAliasName unique (WatershedAliasName)
 )
 
-insert into dbo.WatershedAlias (Watershed, WatershedAlias)
+insert into dbo.WatershedAlias (WatershedName, WatershedAliasName)
 values ('San Mateo','San Mateo Creek'),
 ('Dana Point','Salt Creek to Salt Creek Beach Park'),
 ('Laguna Coast','Laguna Canyon to Main Beach (Laguna)'),

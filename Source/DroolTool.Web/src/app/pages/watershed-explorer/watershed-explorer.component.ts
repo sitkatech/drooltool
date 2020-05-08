@@ -157,6 +157,10 @@ export class WatershedExplorerComponent implements OnInit {
       this.selectedMetricMonth = result.MetricMonth;
       this.selectedMetricYear = result.MetricYear;
     })
+
+    this.neighborhoodService.getServicedNeighborhoodsWatershedNames().subscribe(result => {
+      this.watershedNames = this.watershedNames.concat(result);
+    })
   }
 
   public ngAfterViewInit(): void {
@@ -169,7 +173,7 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public initializeMap(): void {
-    this.watershedMaskService.getMask().subscribe(maskString => {
+    this.watershedMaskService.getWatershedMask().subscribe(maskString => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
         style: function (feature) {
@@ -438,6 +442,10 @@ export class WatershedExplorerComponent implements OnInit {
     let cql_filter = "MetricYear = " + this.metricsForCurrentSelection.MetricYear 
     + " and MetricMonth = " + this.metricsForCurrentSelection.MetricMonth;
 
+    if (this.selectedWatershed != "All Watersheds") {
+      cql_filter += " and WatershedAliasName = '" + this.selectedWatershed + "'";
+    }
+
     console.log(this.maskLayer.toGeoJSON())
     console.log(cql_filter);
     console.log(this.maskLayer.getBounds())
@@ -527,8 +535,6 @@ export class WatershedExplorerComponent implements OnInit {
   public getNewWatershedMask(chosenWatershed: string) {
     this.clearSearchResults();
     this.selectedWatershed = chosenWatershed;
-
-    this.map.removeLayer(this.maskLayer);
-    this.maskLayer = null;
+    this.displayNewMetric();
   }
 }
