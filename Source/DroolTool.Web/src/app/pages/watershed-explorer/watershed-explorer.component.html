@@ -1,5 +1,5 @@
 <div class="row ml-0 mr-0">
-    <div class="col-lg-3 pl-0 pr-0">
+    <div #largePanel class="col-lg-3 pl-0 pr-0">
         <div class="container-lg d-inline d-lg-flex flex-column min-vh-100 p-0">
             <div class="row ml-0 mr-0 flex-fill flex-column">
                 <div class="col-12 p-4 section-search">
@@ -9,9 +9,14 @@
                                 <h3 style="color:white">Choose from one of the metrics below <span class="d-lg-none"><a
                                             class="search-close" (click)="showInstructions = true"><i
                                                 class="far fa-question-circle"></i></a></span></h3>
-                                <select [(ngModel)]="selectedMetric" class="input-group mx-auto mx-lg-0"
+                                <select [(ngModel)]="selectedMetric" class="input-group mx-auto mx-lg-0 mb-1"
                                     style="max-width:353px" (change)="displayNewMetric()">
                                     <option *ngFor="let metric of metrics" [ngValue]="metric">{{metric}}</option>
+                                </select>
+                                <h3 style="color:white">Choose a watershed</h3>
+                                <select [(ngModel)]="selectedWatershed" class="input-group mx-auto mx-lg-0 mb-1"
+                                    style="max-width:353px" (change)="getNewWatershedMask()">
+                                    <option *ngFor="let watershedName of watershedNames" [ngValue]="watershedName">{{watershedName}}</option>
                                 </select>
                             </div>
                         </div>
@@ -79,7 +84,8 @@
                 <div *ngIf="!activeSearchNotFound && selectedMetric != WatershedExplorerMetric.NoMetric"
                     class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
                     <div class="h-100 w-100 m-auto">
-                        <p class="b3 text-left">Displaying data for {{months[selectedMetricMonth - 1]}} {{selectedMetricYear}}</p>
+                        <p class="b3 text-left">Displaying data for {{months[selectedMetricMonth - 1]}}
+                            {{selectedMetricYear}}</p>
                         <ng-container *ngFor="let legendColor of selectedMetric.legendColors; index as i">
                             <div class="row mb-1">
                                 <div class="col-2 mt-auto mb-auto">
@@ -115,13 +121,13 @@
         </div>
     </div>
     <div *ngIf="searchActive" class="d-lg-none w-100">
-            <div class="col-12 mb-1 p-0 text-center">
-                <button (click)="displayTrace($event, true)" class="btn btn-drooltool w-100">Trace Upstream</button>
-            </div>
-            <div class="col-12 mb-1 p-0 text-center">
-                <button (click)="displayTrace($event, false)" class="btn btn-drooltool w-100">Trace Downstream</button>
-            </div>
+        <div class="col-12 mb-1 p-0 text-center">
+            <button (click)="displayTrace($event, true)" class="btn btn-drooltool w-100">Trace Upstream</button>
         </div>
+        <div class="col-12 mb-1 p-0 text-center">
+            <button (click)="displayTrace($event, false)" class="btn btn-drooltool w-100">Trace Downstream</button>
+        </div>
+    </div>
     <div *ngIf="!activeSearchNotFound && selectedMetric != WatershedExplorerMetric.NoMetric"
         class="col-12 section-stats d-lg-none mt-1">
         <div class="h-100 w-100 m-auto">

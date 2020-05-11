@@ -173,6 +173,24 @@ namespace DroolTool.API.Controllers
                 .AsDto();
         }
 
+        [HttpGet("neighborhood/get-serviced-neighborhoods-watershed-names")]
+        public ActionResult<List<string>> GetServicedNeighborhoodWatershedNames()
+        {
+            return _dbContext.Neighborhood
+                .Join(_dbContext.WatershedAlias,
+                    x => x.Watershed,
+                    y => y.WatershedName,
+                    (x, y) => new
+                        {OCSurveyNeighborhoodID = x.OCSurveyNeighborhoodID, WatershedAlias = y.WatershedAliasName})
+                .Join(_dbContext.RawDroolMetric,
+                    x => x.OCSurveyNeighborhoodID,
+                    y => y.MetricCatchIDN,
+                    (x, y) => new {WatershedAlias = x.WatershedAlias})
+                .Select(x => x.WatershedAlias)
+                .Distinct()
+                .ToList();
+        }
+
         private List<BackboneSegment> GetDownstreamBackboneSegmentsBasedOnCriteria(List<BackboneSegment> allBackboneSegments,
             List<BackboneSegment> accumulatedBackboneSegments)
         {

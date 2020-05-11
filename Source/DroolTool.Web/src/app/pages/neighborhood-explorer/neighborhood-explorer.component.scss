@@ -116,13 +116,6 @@
     height:12px;
 }
 
-.trace-button {
-    position:absolute; 
-    bottom:36px; 
-    right:10px; 
-    z-index:100000
-}
-
 //These need to be the same so the metrics slide doesn't jump around the width of the map
 .mobile-stats,
 .mobile-stats-containing-div {
@@ -143,6 +136,13 @@
     position:absolute;
     top:10px; 
     left:10px; 
+    z-index:100000
+}
+
+.trace-button {
+    position:absolute; 
+    bottom:36px; 
+    right:10px; 
     z-index:100000
 }
 

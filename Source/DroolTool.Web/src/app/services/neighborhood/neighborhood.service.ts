@@ -40,6 +40,11 @@ export class NeighborhoodService {
         return this.apiService.getFromApi(route);
     }
 
+    getServicedNeighborhoodsWatershedNames(): Observable<string[]> {
+        let route = `/neighborhood/get-serviced-neighborhoods-watershed-names/`;
+        return this.apiService.getFromApi(route);
+    }
+
     getUpstreamBackboneTrace(neighborhoodID:number): Observable<string> {
         let route = `/neighborhood/${neighborhoodID}/get-upstream-backbone-trace/`;
         return this.apiService.getFromApi(route);

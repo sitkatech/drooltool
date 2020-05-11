@@ -26,7 +26,7 @@
           <MaxScaleDenominator>500000</MaxScaleDenominator>
             <TextSymbolizer>
                 <Label>
-                    <ogc:PropertyName>WatershedName</ogc:PropertyName>
+                    <ogc:PropertyName>WatershedMaskName</ogc:PropertyName>
                 </Label>
                 <Font>
                     <CssParameter name="font-family">Arial</CssParameter>

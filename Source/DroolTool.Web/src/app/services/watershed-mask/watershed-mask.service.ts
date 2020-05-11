@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
-export class WatershedService {
+export class WatershedMaskService {
     constructor(private apiService: ApiService) { }
 
-    getMask(): Observable<string> {
-        let route = `/watershed/get-mask`;
+    getWatershedMask(watershedName = "All Watersheds"): Observable<string> {
+        let route = `/watershed-mask/${watershedName}/get-watershed-mask`;
         return this.apiService.getFromApi(route);
     }
 }
