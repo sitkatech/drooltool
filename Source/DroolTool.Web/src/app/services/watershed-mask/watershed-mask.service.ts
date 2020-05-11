@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
 export class WatershedMaskService {
     constructor(private apiService: ApiService) { }
 
-    getWatershedMask(): Observable<string> {
-        let route = `/watershed-mask/get-watershed-mask`;
+    getWatershedMask(watershedName = "All Watersheds"): Observable<string> {
+        let route = `/watershed-mask/${watershedName}/get-watershed-mask`;
         return this.apiService.getFromApi(route);
     }
 }

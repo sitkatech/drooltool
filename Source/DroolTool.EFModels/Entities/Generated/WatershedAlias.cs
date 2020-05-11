@@ -15,5 +15,10 @@ namespace DroolTool.EFModels.Entities
         [Required]
         [StringLength(100)]
         public string WatershedAliasName { get; set; }
+        public int? WatershedMaskID { get; set; }
+
+        [ForeignKey(nameof(WatershedMaskID))]
+        [InverseProperty("WatershedAlias")]
+        public virtual WatershedMask WatershedMask { get; set; }
     }
 }

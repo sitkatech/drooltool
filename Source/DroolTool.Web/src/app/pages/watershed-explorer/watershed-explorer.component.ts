@@ -23,8 +23,7 @@ declare var $: any;
 export class WatershedExplorerComponent implements OnInit {
 
   @ViewChild("mapDiv", { static: false }) mapElement: ElementRef;
-  @ViewChild("largePanel", {static: false }) largeDisplayMetricsPanel: ElementRef;
-  @ViewChildren("watershedButtonList") watershedButtonList: QueryList<any>;
+  @ViewChild("largePanel", { static: false }) largeDisplayMetricsPanel: ElementRef;
 
   public defaultMapZoom = 12;
   public afterSetControl = new EventEmitter();
@@ -172,25 +171,12 @@ export class WatershedExplorerComponent implements OnInit {
       this.neighborhoodsWhereItIsOkayToClickIDs = result;
     });
 
-    this.watershedButtonList.changes.subscribe(() => this.checkLargePanelHeight());
-
     this.initializeMap();
   }
 
   public initializeMap(): void {
     this.watershedMaskService.getWatershedMask().subscribe(maskString => {
-      this.maskLayer = L.geoJSON(maskString, {
-        invert: true,
-        style: function (feature) {
-          return {
-            fillColor: "#323232",
-            fill: true,
-            fillOpacity: 0.4,
-            stroke: false
-          };
-        }
-      });
-
+      this.maskLayer = this.getMaskGeoJsonLayer(maskString);
       L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
       const mapOptions: L.MapOptions = {
@@ -384,7 +370,12 @@ export class WatershedExplorerComponent implements OnInit {
     this.searchActive = false;
     this.activeSearchNotFound = false;
     this.traceActive = false;
-    this.removeCurrentSearchLayer();
+    [this.clickMarker,
+      this.stormshedLayer,
+      this.upstreamTraceLayer,
+      this.downstreamTraceLayer].forEach((x) => {
+        this.clearLayer(x);
+      });
   }
 
   public returnToDefault(): void {
@@ -396,15 +387,6 @@ export class WatershedExplorerComponent implements OnInit {
   public searchAddressNotFoundOrNotServiced(): void {
     this.activeSearchNotFound = true;
     this.currentlySearching = false;
-  }
-
-  public removeCurrentSearchLayer(): void {
-    [this.clickMarker,
-    this.stormshedLayer,
-    this.upstreamTraceLayer,
-    this.downstreamTraceLayer].forEach((x) => {
-      this.clearLayer(x);
-    });
   }
 
   public clearLayer(layer: L.Layer): void {
@@ -448,8 +430,8 @@ export class WatershedExplorerComponent implements OnInit {
       return null;
     }
 
-    let cql_filter = "MetricYear = " + this.metricsForCurrentSelection.MetricYear 
-    + " and MetricMonth = " + this.metricsForCurrentSelection.MetricMonth;
+    let cql_filter = "MetricYear = " + this.metricsForCurrentSelection.MetricYear
+      + " and MetricMonth = " + this.metricsForCurrentSelection.MetricMonth;
 
     if (this.selectedWatershed != "All Watersheds") {
       cql_filter += " and WatershedAliasName = '" + this.selectedWatershed + "'";
@@ -526,28 +508,27 @@ export class WatershedExplorerComponent implements OnInit {
 
   public getMaskGeoJsonLayer(maskString: string): L.geoJSON {
     return L.geoJSON(maskString, {
-            invert: true,
-            style: function (feature) {
-              return {
-                fillColor: "#323232",
-                fill: true,
-                fillOpacity: 0.4,
-                stroke:false
-              };
-            }
-          });
+      invert: true,
+      style: function (feature) {
+        return {
+          fillColor: "#323232",
+          fill: true,
+          fillOpacity: 0.4,
+          stroke: false
+        };
+      }
+    });
   }
 
-  public getNewWatershedMask(chosenWatershed: string) {
+  public getNewWatershedMask() {
     this.clearSearchResults();
-    this.selectedWatershed = chosenWatershed;
+    this.map.removeLayer(this.maskLayer);
+    this.maskLayer = null;
+    this.watershedMaskService.getWatershedMask(this.selectedWatershed).subscribe(maskString => {
+      this.maskLayer = this.getMaskGeoJsonLayer(maskString);
+      this.maskLayer.addTo(this.map);
+      this.defaultFitBounds();
+    });
     this.displayNewMetric();
-  }
-
-  public checkLargePanelHeight() {
-    if (this.largeDisplayMetricsPanel.nativeElement.offsetHeight > window.innerHeight)
-    {
-      this.map.invalidateSize();
-    }
   }
 }

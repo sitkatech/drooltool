@@ -248,11 +248,11 @@ namespace DroolTool.EFModels.Entities
             modelBuilder.Entity<WatershedAlias>(entity =>
             {
                 entity.HasIndex(e => e.WatershedAliasName)
-                    .HasName("AK_WatershedAlias_WatershedAlias")
+                    .HasName("AK_WatershedAlias_WatershedAliasName")
                     .IsUnique();
 
                 entity.HasIndex(e => e.WatershedName)
-                    .HasName("AK_WatershedAlias_Watershed")
+                    .HasName("AK_WatershedAlias_WatershedName")
                     .IsUnique();
 
                 entity.Property(e => e.WatershedAliasName).IsUnicode(false);
