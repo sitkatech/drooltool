@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ViewChildren, QueryList } from '@angular/core';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
 import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
 import { WatershedMaskService } from 'src/app/services/watershed-mask/watershed-mask.service';
@@ -23,6 +23,8 @@ declare var $: any;
 export class WatershedExplorerComponent implements OnInit {
 
   @ViewChild("mapDiv", { static: false }) mapElement: ElementRef;
+  @ViewChild("largePanel", {static: false }) largeDisplayMetricsPanel: ElementRef;
+  @ViewChildren("watershedButtonList") watershedButtonList: QueryList<any>;
 
   public defaultMapZoom = 12;
   public afterSetControl = new EventEmitter();
@@ -156,6 +158,7 @@ export class WatershedExplorerComponent implements OnInit {
       this.metricsForCurrentSelection = result;
       this.selectedMetricMonth = result.MetricMonth;
       this.selectedMetricYear = result.MetricYear;
+      this.applyMetricOverlay();
     })
 
     this.neighborhoodService.getServicedNeighborhoodsWatershedNames().subscribe(result => {
@@ -168,6 +171,8 @@ export class WatershedExplorerComponent implements OnInit {
     this.neighborhoodService.getServicedNeighborhoodIds().subscribe(result => {
       this.neighborhoodsWhereItIsOkayToClickIDs = result;
     });
+
+    this.watershedButtonList.changes.subscribe(() => this.checkLargePanelHeight());
 
     this.initializeMap();
   }
@@ -430,6 +435,10 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public applyMetricOverlay(): void {
+    if (!this.metricsForCurrentSelection || !this.map) {
+      return null;
+    }
+
     if (this.metricOverlayLayer) {
       this.map.removeLayer(this.metricOverlayLayer);
       this.metricOverlayLayer = null;
@@ -445,10 +454,6 @@ export class WatershedExplorerComponent implements OnInit {
     if (this.selectedWatershed != "All Watersheds") {
       cql_filter += " and WatershedAliasName = '" + this.selectedWatershed + "'";
     }
-
-    console.log(this.maskLayer.toGeoJSON())
-    console.log(cql_filter);
-    console.log(this.maskLayer.getBounds())
 
     let watershedExplorerMapMetricsWMSOptions = ({
       layers: "DroolTool:WatershedExplorerMapMetrics",
@@ -511,6 +516,7 @@ export class WatershedExplorerComponent implements OnInit {
 
   public displayNewMetric(): void {
     this.applyMetricOverlay();
+    this.map.invalidateSize();
     if (!this.clickMarker) {
       return null;
     }
@@ -536,5 +542,12 @@ export class WatershedExplorerComponent implements OnInit {
     this.clearSearchResults();
     this.selectedWatershed = chosenWatershed;
     this.displayNewMetric();
+  }
+
+  public checkLargePanelHeight() {
+    if (this.largeDisplayMetricsPanel.nativeElement.offsetHeight > window.innerHeight)
+    {
+      this.map.invalidateSize();
+    }
   }
 }

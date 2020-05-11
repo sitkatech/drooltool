@@ -1,5 +1,5 @@
 <div class="row ml-0 mr-0">
-    <div class="col-lg-3 pl-0 pr-0">
+    <div #largePanel class="col-lg-3 pl-0 pr-0">
         <div class="container-lg d-inline d-lg-flex flex-column min-vh-100 p-0">
             <div class="row ml-0 mr-0 flex-fill flex-column">
                 <div class="col-12 p-4 section-search">
@@ -13,9 +13,7 @@
                                     style="max-width:353px" (change)="displayNewMetric()">
                                     <option *ngFor="let metric of metrics" [ngValue]="metric">{{metric}}</option>
                                 </select>
-                                <ng-container *ngFor="let watershedOption of watershedNames">
-                                    <button class="btn btn-drooltool mr-1 mb-1" [ngClass]="{'selected-watershed': selectedWatershed == watershedOption }" (click)="getNewWatershedMask(watershedOption)">{{watershedOption}}</button>
-                                </ng-container>
+                                <button #watershedButtonList *ngFor="let watershedOption of watershedNames" class="btn btn-drooltool mr-1 mb-1" [ngClass]="{'selected-watershed': selectedWatershed == watershedOption }" (click)="getNewWatershedMask(watershedOption)">{{watershedOption}}</button>
                             </div>
                         </div>
                     </div>
