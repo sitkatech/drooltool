@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using NetTopologySuite.Geometries;
 
 namespace DroolTool.EFModels.Entities
 {
@@ -15,10 +16,8 @@ namespace DroolTool.EFModels.Entities
         [Required]
         [StringLength(100)]
         public string WatershedAliasName { get; set; }
-        public int? WatershedMaskID { get; set; }
-
-        [ForeignKey(nameof(WatershedMaskID))]
-        [InverseProperty("WatershedAlias")]
-        public virtual WatershedMask WatershedMask { get; set; }
+        [Required]
+        [Column(TypeName = "geometry")]
+        public Geometry WatershedAliasGeometry4326 { get; set; }
     }
 }

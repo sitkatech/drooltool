@@ -8,11 +8,6 @@ namespace DroolTool.EFModels.Entities
 {
     public partial class WatershedMask
     {
-        public WatershedMask()
-        {
-            WatershedAlias = new HashSet<WatershedAlias>();
-        }
-
         [Key]
         public int WatershedMaskID { get; set; }
         [Column(TypeName = "geometry")]
@@ -21,8 +16,5 @@ namespace DroolTool.EFModels.Entities
         public string WatershedMaskName { get; set; }
         [Column(TypeName = "geometry")]
         public Geometry WatershedMaskGeometry4326 { get; set; }
-
-        [InverseProperty("WatershedMask")]
-        public virtual ICollection<WatershedAlias> WatershedAlias { get; set; }
     }
 }

@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 import * as L from 'leaflet';
 import { GestureHandling } from "leaflet-gesture-handling";
 import '../../../../node_modules/leaflet.snogylop/src/leaflet.snogylop.js';
-import '../../../../node_modules/leaflet.fullscreen/Control.FullScreen.js';
+import '../../../../node_modules/leaflet-loading/src/Control.Loading.js';
 import * as esri from 'esri-leaflet'
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
@@ -187,8 +187,8 @@ export class WatershedExplorerComponent implements OnInit {
           this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
           this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
         ],
-        gestureHandling: true
-
+        gestureHandling: true,
+        loadingControl:true
       } as L.MapOptions;
 
       this.map = L.map(this.mapID, mapOptions);
@@ -221,6 +221,10 @@ export class WatershedExplorerComponent implements OnInit {
     this.layerControl = new L.Control.Layers(this.tileLayers, this.overlayLayers)
       .addTo(this.map);
     this.map.zoomControl.setPosition('topright');
+    var loadingControl = L.Control.loading({
+      separate: true
+    });
+    this.map.addControl(loadingControl);
     this.afterSetControl.emit(this.layerControl);
   }
 
@@ -524,11 +528,13 @@ export class WatershedExplorerComponent implements OnInit {
     this.clearSearchResults();
     this.map.removeLayer(this.maskLayer);
     this.maskLayer = null;
+    this.map.fireEvent('dataloading');
     this.watershedMaskService.getWatershedMask(this.selectedWatershed).subscribe(maskString => {
       this.maskLayer = this.getMaskGeoJsonLayer(maskString);
       this.maskLayer.addTo(this.map);
-      this.defaultFitBounds();
+      this.defaultFitBounds();     
+      this.displayNewMetric();
+      this.map.fireEvent('dataload');
     });
-    this.displayNewMetric();
   }
 }

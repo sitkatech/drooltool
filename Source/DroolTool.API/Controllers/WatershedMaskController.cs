@@ -19,14 +19,13 @@ namespace DroolTool.API.Controllers
             _dbContext = dbContext;
         }
 
-        [HttpGet("watershed-mask/{watershedName}/get-watershed-mask")]
-        public ActionResult<string> GetWatershedMask([FromRoute] string watershedName)
+        [HttpGet("watershed-mask/{watershedAliasName}/get-watershed-mask")]
+        public ActionResult<string> GetWatershedMask([FromRoute] string watershedAliasName)
         {
-            var geometry = watershedName != "All Watersheds" 
+            var geometry = watershedAliasName != "All Watersheds" 
                 ? _dbContext.WatershedAlias
-                    .Include(x => x.WatershedMask)
-                    .Single(x => x.WatershedAliasName == watershedName)
-                    .WatershedMask?.WatershedMaskGeometry4326
+                    .SingleOrDefault(x => x.WatershedAliasName == watershedAliasName)
+                    ?.WatershedAliasGeometry4326
                 : UnaryUnionOp.Union(_dbContext.WatershedMask.Select(x => x.WatershedMaskGeometry4326));
 
             return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(new List<Feature> { new Feature() { Geometry = geometry } }));
