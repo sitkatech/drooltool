@@ -102,19 +102,19 @@
                         <div class="p-lg-4" style="background-color:#F2FBFD">
                             <h2 class="metric-heading">Does your neighborhood drool?</h2>
                             <ng-container
-                                *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.TotalMonthlyDrool">
+                                *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.TotalDrool">
                                 <p class="b3"><span
-                                        class="metric-value">{{selectedNeighborhoodMetrics.TotalMonthlyDrool | number:'1.0-0':'en-US'}}</span><span
+                                        class="metric-value">{{selectedNeighborhoodMetrics.TotalDrool | number:'1.0-0':'en-US'}}</span><span
                                         class="metric-units"> gallons</span> of urban drool were created in
                                     {{months[selectedNeighborhoodMetrics.MetricMonth - 1]}}</p>
-                                <p *ngIf="selectedNeighborhoodMetrics.TotalMonthlyDrool > 20000" class="b4">This is
+                                <p *ngIf="selectedNeighborhoodMetrics.TotalDrool > 20000" class="b4">This is
                                     enough
                                     urban drool to fill
-                                    {{selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000 | number:'1.0-0':'en-US'}}
-                                    swimming {{((selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000) | number:'1.0-0') == 1 ? "pool" : "pools"}}!</p>
+                                    {{selectedNeighborhoodMetrics.TotalDrool / 20000 | number:'1.0-0':'en-US'}}
+                                    swimming {{((selectedNeighborhoodMetrics.TotalDrool / 20000) | number:'1.0-0') == 1 ? "pool" : "pools"}}!</p>
                             </ng-container>
                             <ng-container
-                                *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.TotalMonthlyDrool">
+                                *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.TotalDrool">
                                 <p class="b3">Hmm, looks like we can't find anything for this metric at this time. Try
                                     selecting another neighborhood!</p>
                             </ng-container>
@@ -195,20 +195,20 @@
                     <div class="p-2 p-md-4 metrics-panel-transparency-special">
                         <h2 class="metric-heading">Does your neighborhood drool?</h2>
                         <ng-container
-                            *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.TotalMonthlyDrool">
+                            *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.TotalDrool">
                             <p class="b3"><span
-                                    class="metric-value">{{selectedNeighborhoodMetrics.TotalMonthlyDrool | number:'1.0-0':'en-US'}}</span><span
+                                    class="metric-value">{{selectedNeighborhoodMetrics.TotalDrool | number:'1.0-0':'en-US'}}</span><span
                                     class="metric-units"> gallons</span> of urban drool were created in
                                 {{months[selectedNeighborhoodMetrics.MetricMonth - 1]}}</p>
-                            <p *ngIf="selectedNeighborhoodMetrics.TotalMonthlyDrool > 20000" class="b4">This is enough
+                            <p *ngIf="selectedNeighborhoodMetrics.TotalDrool > 20000" class="b4">This is enough
                                 urban
                                 drool to fill
-                                {{(selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000) | number:'1.0-0':'en-US'}}
+                                {{(selectedNeighborhoodMetrics.TotalDrool / 20000) | number:'1.0-0':'en-US'}}
                                 swimming
-                                {{((selectedNeighborhoodMetrics.TotalMonthlyDrool / 20000) | number:'1.0-0') == 1 ? "pool" : "pools"}}!</p>
+                                {{((selectedNeighborhoodMetrics.TotalDrool / 20000) | number:'1.0-0') == 1 ? "pool" : "pools"}}!</p>
                         </ng-container>
                         <ng-container
-                            *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.TotalMonthlyDrool">
+                            *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.TotalDrool">
                             <p class="b3">Hmm, looks like we can't find anything for this metric at this time. Try
                                 selecting another neighborhood!</p>
                         </ng-container>
