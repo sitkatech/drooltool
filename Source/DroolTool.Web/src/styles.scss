@@ -181,11 +181,12 @@ $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
 
   body {
     font-family: 'Nunito', sans-serif;
-    color: #555555;   
+    color: #555555;  
+    line-height:1.25; 
   }
 
   .b1, .b2, .b3, .b4 {
-    font-weight: 600; //semibold
+    font-weight: 400; 
     text-align: center;
     font-family: 'Nunito', sans-serif;
     color: #555555;

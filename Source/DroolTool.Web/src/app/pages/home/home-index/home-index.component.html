@@ -25,9 +25,10 @@
             <h1>Only rain down the drain</h1>
             <div>
                 <p class="b1">
-                    Urban drool contributes to more than 1 million gallons of polluted discharge to 
+                    Urban drool contributes to more than 1&nbsp;million gallons of polluted discharge to 
                     Aliso Creek each day.
-                    <br>
+                </p>
+                <p class="b1">
                     It starts in a gutter near you...
                 </p>
                 <p class="b1">
@@ -43,7 +44,7 @@
         </div>
     </div>
 </div>
-    <div class="row homeSection h-100 pt-0" style="background-image:url('../../assets/main/Map_Background.png'); background-size:auto; margin-top:80px">
+    <div id="mapImage" class="row homeSection h-100 pt-0">
         <div class="col-12 text-center my-auto">
             <h1 style="margin-bottom:30px">Do you add to urban drool?
             </h1>
@@ -109,7 +110,7 @@
                             <div class="slide-container" >
                                 <div class="slide-background" style="background-image:url({{slide.image}})">
                                     <div class="slide-module-accent">
-                                        <p class="b3" style="color:#FFF">{{slide.date}}</p>
+                                        <p class="b3" style="color:#FFF" [innerHTML]="slide.date"></p>
                                     </div>
                                 </div>
                                 <p class="b3 slide-link-text"><a href="/">{{slide.title}}</a></p>

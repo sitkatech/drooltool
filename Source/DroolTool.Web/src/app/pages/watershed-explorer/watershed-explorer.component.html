@@ -122,10 +122,10 @@
     </div>
     <div *ngIf="searchActive" class="d-lg-none w-100">
         <div class="col-12 mb-1 p-0 text-center">
-            <button (click)="displayTrace($event, true)" class="btn btn-drooltool w-100">Trace Upstream</button>
+            <button (click)="displayTrace($event, true)" class="btn btn-drooltool w-100">What drains to here?</button>
         </div>
         <div class="col-12 mb-1 p-0 text-center">
-            <button (click)="displayTrace($event, false)" class="btn btn-drooltool w-100">Trace Downstream</button>
+            <button (click)="displayTrace($event, false)" class="btn btn-drooltool w-100">Where does water flow?</button>
         </div>
     </div>
     <div *ngIf="!activeSearchNotFound && selectedMetric != WatershedExplorerMetric.NoMetric"
