@@ -4,6 +4,7 @@ import * as L from 'leaflet';
 import { GestureHandling } from "leaflet-gesture-handling";
 import '../../../../node_modules/leaflet.snogylop/src/leaflet.snogylop.js';
 import '../../../../node_modules/leaflet.fullscreen/Control.FullScreen.js';
+import '../../../../node_modules/leaflet-loading/src/Control.Loading.js';
 import * as esri from 'esri-leaflet'
 import { CustomCompileService } from '../../shared/services/custom-compile.service';
 import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
@@ -27,6 +28,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public afterSetControl = new EventEmitter();
   public afterLoadMap = new EventEmitter();
   public onMapMoveEnd = new EventEmitter();
+  public layerControlOpen: boolean = false;
 
   public component: any;
 
@@ -185,15 +187,16 @@ export class NeighborhoodExplorerComponent implements OnInit {
           this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
           this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
         ],
-        gestureHandling: true
+        gestureHandling: true,
+        loadingControl:true
 
       } as L.MapOptions;
 
       this.map = L.map(this.mapID, mapOptions);
 
       this.initializePanes();
-      this.initializeMapEvents();
       this.setControl();
+      this.initializeMapEvents();
 
       this.maskLayer.addTo(this.map);
       this.defaultFitBounds();
@@ -212,9 +215,21 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public setControl(): void {
+    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function (map) {
+      var div = L.DomUtil.create('div', 'legend');
+      div.innerHTML = "<img src='../../../assets/neighborhood-explorer/MapKey.png' style='height:100px; border-radius:25px'>"
+      return div;
+    }
+    legend.addTo(this.map);
+    var loadingControl = L.Control.loading({
+      separate: true
+    });
+    this.map.addControl(loadingControl);
     this.layerControl = new L.Control.Layers(this.tileLayers, this.overlayLayers)
       .addTo(this.map);
     this.map.zoomControl.setPosition('topright');
+
     this.afterSetControl.emit(this.layerControl);
   }
 
@@ -230,6 +245,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
     //to handle click for select area vs double click for zoom
     this.map.on("click", (event: L.LeafletEvent) => {
+      this.layerControlOpen = false;
       if (dblClickTimer !== null) {
         return;
       }
@@ -242,11 +258,15 @@ export class NeighborhoodExplorerComponent implements OnInit {
       dblClickTimer = null;
       this.map.zoomIn();
     })
+
+    $(".leaflet-control-layers-toggle").on("click", () => {
+       this.layerControlOpen = true;
+    })
   }
 
   public makeNominatimRequest(searchText: any): void {
     if (!this.currentlySearching) {
-      this.currentlySearching = true;
+      this.setSearchingAndLoadScreen(true);
       this.clearSearchResults();
       this.searchAddress = searchText.value;
       this.nominatimService.makeNominatimRequest(this.searchAddress).subscribe(response => {
@@ -268,7 +288,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public getNeighborhoodFromLatLong(latlng: Object, mapClick: boolean): void {
     if (!this.currentlySearching || !mapClick) {
       if (mapClick) {
-        this.currentlySearching = true;
+        this.setSearchingAndLoadScreen(true);
         this.clearSearchResults();
       }
       this.wfsService.geoserverNeighborhoodLookup(latlng).subscribe(response => {
@@ -288,7 +308,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
           this.neighborhoodService.getStormshed(this.selectedNeighborhoodID).subscribe(
             response => this.displayStormshedAndBackboneDetail(response),
             null,
-            () => this.currentlySearching = false
+            () => this.setSearchingAndLoadScreen(false)
           );
         }
         else {
@@ -453,7 +473,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public searchAddressNotFoundOrNotServiced(): void {
     this.searchAddress = null;
     this.activeSearchNotFound = true;
-    this.currentlySearching = false;
+    this.setSearchingAndLoadScreen(false);
   }
 
   public removeCurrentSearchLayer(): void {
@@ -497,5 +517,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public showMetrics(event: Event) {
     event.stopPropagation();
     this.areMetricsCollapsed = !this.areMetricsCollapsed;
+  }
+
+  public setSearchingAndLoadScreen(searching: boolean) {
+    this.currentlySearching = searching;
+    this.map.fireEvent(this.currentlySearching ? 'dataloading' : 'dataload');
   }
 }

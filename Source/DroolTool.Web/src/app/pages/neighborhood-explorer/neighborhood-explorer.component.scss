@@ -5,6 +5,30 @@
     .section-search {
         text-align:center;
     }
+
+    #buttonDiv {
+        left:10px
+    }
+}
+
+@media only screen and (min-width:992px) {
+    #buttonDiv {      
+        right:65px;
+    }
+
+    #traceButton {
+        height:45px;
+    }
+
+    .shifted {
+        right:165px !important;
+    }
+}
+
+#buttonDiv {
+    position:absolute; 
+    z-index:10000; 
+    top:11px; 
 }
 
 .section-stats * p.b3 {
@@ -213,5 +237,14 @@ span.watershed-text {
 
 ::ng-deep .leaflet-popup-tip-container {
     display:none;
+}
+
+//This is hijacking the top left control and using it
+//for the loading icon that will sit in the middle of
+//the screen
+::ng-deep .leaflet-top.leaflet-left {
+    left:50%;
+    top: 51%;
+    transform: translate(-75%, 0%);
 }
 //End of leaflet styles
