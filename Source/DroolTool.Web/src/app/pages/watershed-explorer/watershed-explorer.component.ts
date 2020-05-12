@@ -331,6 +331,7 @@ export class WatershedExplorerComponent implements OnInit {
       this.clearLayer(this.stormshedLayer);
       this.neighborhoodService.getUpstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
         let featureCollection = (response) as any as FeatureCollection;
+        console.log(featureCollection);
         if (featureCollection.features.length === 0) {
           return null;
         }
@@ -464,28 +465,28 @@ export class WatershedExplorerComponent implements OnInit {
     else {
       switch (this.selectedMetric) {
         case WatershedExplorerMetric.TotalDrool: {
-          metricContent = this.selectedMetric + " : " +
+          metricContent = this.selectedMetric + ": " +
             (this.metricsForCurrentSelection.TotalDrool == null
               ? "Not available"
               : this.metricsForCurrentSelection.TotalDrool.toLocaleString() + " gal/month");
           break;
         }
         case WatershedExplorerMetric.OverallParticipation: {
-          metricContent = this.selectedMetric + " : " +
+          metricContent = this.selectedMetric + ": " +
             (this.metricsForCurrentSelection.OverallParticipation == null
               ? "Not available"
               : this.metricsForCurrentSelection.OverallParticipation.toLocaleString() + " active meters");
           break;
         }
         case WatershedExplorerMetric.PercentParticipation: {
-          metricContent = this.selectedMetric + " : " +
+          metricContent = this.selectedMetric + ": " +
             (this.metricsForCurrentSelection.PercentParticipation == null
               ? "Not available"
               : Math.round(this.metricsForCurrentSelection.PercentParticipation).toString() + "%");
           break;
         }
         case WatershedExplorerMetric.DroolPerLandscapedAcre: {
-          metricContent = this.selectedMetric + " : " +
+          metricContent = this.selectedMetric + ": " +
             (this.metricsForCurrentSelection.DroolPerLandscapedAcre == null
               ? "Not available"
               : "<br/>" + this.metricsForCurrentSelection.DroolPerLandscapedAcre.toLocaleString() + " gal/acre");
