@@ -505,10 +505,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public fitBoundsWithPaddingAndFeatureGroup(featureGroup: L.featureGroup): void {
-    let paddingHeight = 0;
-    let popupContent = $("#search-popup-address");
+    let paddingHeight = $("#buttonDiv").innerHeight();
+    let popupContent = $(".search-popup");
     if (popupContent !== null && popupContent !== undefined && popupContent.length == 1) {
-      paddingHeight = popupContent.parent().parent().innerHeight();
+      paddingHeight += popupContent.innerHeight();
     }
 
     this.map.fitBounds(featureGroup.getBounds(), { padding: [paddingHeight, paddingHeight] });

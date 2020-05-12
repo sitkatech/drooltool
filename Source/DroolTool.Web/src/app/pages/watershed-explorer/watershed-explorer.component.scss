@@ -7,6 +7,13 @@
     }
 }
 
+#buttonDiv {
+    position:absolute; 
+    z-index:10000; 
+    top:11px; 
+    left:10px;
+}
+
 .input-group {
     color:#333
 }
@@ -39,6 +46,61 @@
 .selected-watershed {
     box-shadow: 0 0 0 0.2rem rgba(234,132,44,0.5);
 }
+
+//These need to be the same so the metrics slide doesn't jump around the width of the map
+.mobile-stats,
+.mobile-stats-containing-div {
+    max-width:233px;
+}
+
+.mobile-stats {
+    position:absolute; 
+    z-index:100001; 
+}
+
+.mobile-stats-containing-div {
+    width:100%;
+    position:relative
+}
+
+.metrics-button-panel-collapsed {
+    position:absolute;
+    top:10px; 
+    left:10px; 
+    z-index:100000
+}
+
+.metrics-button-panel-expanded {
+    position:absolute; 
+    top:7px; 
+    right:2px
+}
+
+.metrics-panel-transparency {
+    background-color:rgba(255,255,255,0.75)
+}
+
+.metrics-panel-transparency-special {
+    background-color: rgba(242,251,253,0.75)
+}
+
+//Allows the metrics to collapse
+.metrics-collapse {
+    position: absolute;
+    right: 100%;
+    transition: all 0.3s ease;
+    display: block;
+}
+.metrics-collapse.collapsing {
+    height: auto !important;
+    transition: all 0.3s ease;
+    display: block;
+}
+.metrics-collapse.show {
+    left:0;
+    right:0
+}
+//End of metrics collapse
 
 ::ng-deep .search-popup .leaflet-popup-content-wrapper {
     font-family: "Nunito", sans-serif;

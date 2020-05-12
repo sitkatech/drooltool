@@ -69,6 +69,8 @@ export class WatershedExplorerComponent implements OnInit {
   public selectedMetricMonth: number;
   public selectedMetricYear: number;
 
+  public areMetricsCollapsed: boolean = true;
+
   public months = [
     "January",
     "February",
@@ -323,7 +325,9 @@ export class WatershedExplorerComponent implements OnInit {
         this.downstreamTraceLayer.addTo(this.map);
 
         this.traceActive = true;
+        console.log(this.map.getZoom());
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.downstreamTraceLayer, this.clickMarker]));
+        console.log(this.map.getZoom());
       })
     }
     else {
@@ -367,6 +371,7 @@ export class WatershedExplorerComponent implements OnInit {
         this.stormshedLayer.bringToBack();
         this.traceActive = true;
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.upstreamTraceLayer, this.clickMarker, this.stormshedLayer]));
+        console.log(this.map.getZoom());
       });
     }
   }
@@ -412,10 +417,10 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public fitBoundsWithPaddingAndFeatureGroup(featureGroup: L.featureGroup): void {
-    let paddingHeight = 0;
-    let popupContent = $("#search-popup-address");
+    let paddingHeight = $("#buttonDiv").innerHeight();
+    let popupContent = $(".search-popup");
     if (popupContent !== null && popupContent !== undefined && popupContent.length == 1) {
-      paddingHeight = popupContent.parent().parent().innerHeight();
+      paddingHeight += popupContent.innerHeight();
     }
 
     this.map.fitBounds(featureGroup.getBounds(), { padding: [paddingHeight, paddingHeight] });
@@ -537,5 +542,10 @@ export class WatershedExplorerComponent implements OnInit {
       this.displayNewMetric();
       this.map.fireEvent('dataload');
     });
+  }
+
+  public showMetrics(event: Event) {
+    event.stopPropagation();
+    this.areMetricsCollapsed = !this.areMetricsCollapsed;
   }
 }
