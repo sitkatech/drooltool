@@ -1,5 +1,5 @@
 <div class="row ml-0 mr-0">
-    <div class="col-lg-3 pl-0 pr-0">
+    <div #largePanel class="col-lg-3 pl-0 pr-0">
         <div class="container-lg d-inline d-lg-flex flex-column min-vh-100 p-0">
             <div class="row ml-0 mr-0 flex-fill flex-column">
                 <div class="col-12 p-4 section-search">
@@ -9,9 +9,15 @@
                                 <h3 style="color:white">Choose from one of the metrics below <span class="d-lg-none"><a
                                             class="search-close" (click)="showInstructions = true"><i
                                                 class="far fa-question-circle"></i></a></span></h3>
-                                <select [(ngModel)]="selectedMetric" class="input-group mx-auto mx-lg-0"
+                                <select [(ngModel)]="selectedMetric" class="input-group mx-auto mx-lg-0 mb-1"
                                     style="max-width:353px" (change)="displayNewMetric()">
                                     <option *ngFor="let metric of metrics" [ngValue]="metric">{{metric}}</option>
+                                </select>
+                                <h3 style="color:white">Choose a watershed</h3>
+                                <select [(ngModel)]="selectedWatershed" class="input-group mx-auto mx-lg-0 mb-1"
+                                    style="max-width:353px" (change)="getNewWatershedMask()">
+                                    <option *ngFor="let watershedName of watershedNames" [ngValue]="watershedName">
+                                        {{watershedName}}</option>
                                 </select>
                             </div>
                         </div>
@@ -79,7 +85,8 @@
                 <div *ngIf="!activeSearchNotFound && selectedMetric != WatershedExplorerMetric.NoMetric"
                     class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
                     <div class="h-100 w-100 m-auto">
-                        <p class="b3 text-left">Displaying data for {{months[selectedMetricMonth - 1]}} {{selectedMetricYear}}</p>
+                        <p class="b3 text-left">Displaying data for {{months[selectedMetricMonth - 1]}}
+                            {{selectedMetricYear}}</p>
                         <ng-container *ngFor="let legendColor of selectedMetric.legendColors; index as i">
                             <div class="row mb-1">
                                 <div class="col-2 mt-auto mb-auto">
@@ -99,11 +106,11 @@
                     <div class="row w-100">
                         <div class="col-12 mb-1 text-center">
                             <button (click)="displayTrace($event, true)" class="btn btn-drooltool"
-                                style="width:161px">Trace Upstream</button>
+                                style="width:202px">What drains to here?</button>
                         </div>
                         <div class="col-12 text-center">
                             <button (click)="displayTrace($event, false)" class="btn btn-drooltool"
-                                style="width:161px">Trace Downstream</button>
+                                style="width:202px">Where does water flow?</button>
                         </div>
                     </div>
                 </div>
@@ -112,33 +119,44 @@
     </div>
     <div class="col-lg-9 pl-0 pr-0">
         <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight" style="height:100%">
-        </div>
-    </div>
-    <div *ngIf="searchActive" class="d-lg-none w-100">
-            <div class="col-12 mb-1 p-0 text-center">
-                <button (click)="displayTrace($event, true)" class="btn btn-drooltool w-100">Trace Upstream</button>
+            <div id="buttonDiv" *ngIf="areMetricsCollapsed" class="d-lg-none">
+                <button class="btn btn-drooltool d-lg-none mb-1 w-100" [attr.aria-expanded]="!areMetricsCollapsed"
+                    aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
+                    (click)="showMetrics($event)"><span>Metric Info</span></button>
+                    <br class="d-lg-none" />
+                <button *ngIf="searchActive" (click)="displayTrace($event, true)" class="btn btn-drooltool mb-1 w-100"><span>What drains to here?</span></button>
+                <br class="d-lg-none" />
+                <button *ngIf="searchActive"  (click)="displayTrace($event, false)" class="btn btn-drooltool mb-1 w-100"><span>Where does water flow?</span></button>
             </div>
-            <div class="col-12 mb-1 p-0 text-center">
-                <button (click)="displayTrace($event, false)" class="btn btn-drooltool w-100">Trace Downstream</button>
-            </div>
-        </div>
-    <div *ngIf="!activeSearchNotFound && selectedMetric != WatershedExplorerMetric.NoMetric"
-        class="col-12 section-stats d-lg-none mt-1">
-        <div class="h-100 w-100 m-auto">
-            <p class="b3">Displaying data for {{months[selectedMetricMonth - 1]}} {{selectedMetricYear}}</p>
-            <ng-container *ngFor="let legendColor of selectedMetric.legendColors; index as i">
-                <div class="row mb-1">
-                    <div class="col-5 mt-auto mb-auto">
-                        <div class="metric-color-swatch ml-auto" [style.background]="legendColor"></div>
+            <div class="mobile-stats-containing-div">
+                <div *ngIf="selectedMetric != WatershedExplorerMetric.NoMetric" id="collapsePanel"
+                    class="section-stats mt-2 collapse mobile-stats metrics-collapse d-lg-none"
+                    [ngbCollapse]="areMetricsCollapsed" (click)="$event.stopPropagation();">
+                    <div *ngIf="!activeSearchNotFound"
+                        class="col-12 section-stats d-lg-none mt-1 metrics-panel-transparency">
+                        <div class="h-100 w-100 m-auto">
+                            <p class="b3">Displaying data for <br/> {{months[selectedMetricMonth - 1]}} {{selectedMetricYear}}
+                            </p>
+                            <ng-container *ngFor="let legendColor of selectedMetric.legendColors; index as i">
+                                <div class="row mb-1">
+                                    <div class="col-12 mt-auto mb-auto">
+                                        <div class="metric-color-swatch ml-auto d-inline-block align-middle" [style.background]="legendColor"></div>
+                                        <span class="b3 ml-1 text-left" style="position:absolute; top:3px">
+                                            {{selectedMetric.legendValues[i]}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <p class="b3">*Measured in <br/>{{selectedMetric.metricUnits}}</p>
+                        </div>
                     </div>
-                    <div class="col-7">
-                        <p class="b3 mt-auto mb-auto text-left">
-                            {{selectedMetric.legendValues[i]}}
-                        </p>
-                    </div>
+                    <button class="btn btn-drooltool metrics-button-panel-expanded"
+                        [attr.aria-expanded]="!areMetricsCollapsed" aria-expanded="false" aria-controls="collapsePanel"
+                        aria-label="Toggle navigation" (click)="showMetrics($event)"><span><a class="search-close"><i
+                                    class="fas fa-close"></i></a></span></button>
+
                 </div>
-            </ng-container>
-            <p class="b3">*Measured in {{selectedMetric.metricUnits}}</p>
+            </div>
         </div>
     </div>
 </div>

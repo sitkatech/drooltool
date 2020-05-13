@@ -3,11 +3,8 @@ Hotfixes
 
 Source/DroolTool.Web/src/assets/config.json
 /Source/DroolTool.GeoServer/data_dir/geoserver-environment.properties
-/Source/DroolTool.GeoServer/data_dir/gwc-layers/*
-/Source/DroolTool.GeoServer/data_dir/layergroups/*
 /Source/DroolTool.GeoServer/data_dir/temp/*
 /Source/DroolTool.GeoServer/data_dir/tmp/*
 /Source/DroolTool.GeoServer/data_dir/.updatepassword.lock
 /Source/DroolTool.GeoServer/data_dir/security/*
-/Source/DroolTool.GeoServer/data_dir/wps.xml
 /Source/DroolTool.GeoServer/data_dir/logs/geoserver.log

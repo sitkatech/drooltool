@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ViewChildren, QueryList } from '@angular/core';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
 import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
-import { WatershedService } from 'src/app/services/watershed/watershed.service';
+import { WatershedMaskService } from 'src/app/services/watershed-mask/watershed-mask.service';
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import { environment } from 'src/environments/environment';
 import * as L from 'leaflet';
 import { GestureHandling } from "leaflet-gesture-handling";
 import '../../../../node_modules/leaflet.snogylop/src/leaflet.snogylop.js';
-import '../../../../node_modules/leaflet.fullscreen/Control.FullScreen.js';
+import '../../../../node_modules/leaflet-loading/src/Control.Loading.js';
 import * as esri from 'esri-leaflet'
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
@@ -23,17 +23,21 @@ declare var $: any;
 export class WatershedExplorerComponent implements OnInit {
 
   @ViewChild("mapDiv", { static: false }) mapElement: ElementRef;
+  @ViewChild("largePanel", { static: false }) largeDisplayMetricsPanel: ElementRef;
 
   public defaultMapZoom = 12;
   public afterSetControl = new EventEmitter();
   public afterLoadMap = new EventEmitter();
   public onMapMoveEnd = new EventEmitter();
 
+  public watershedNames: Array<string> = ["All Watersheds"];
+  public selectedWatershed: string = "All Watersheds";
+
   //this is needed to allow binding to the static class
   public WatershedExplorerMetric = WatershedExplorerMetric;
 
   public metrics = Object.values(WatershedExplorerMetric);
-  public selectedMetric = WatershedExplorerMetric.MonthlyDroolPerLandscapedAcre;
+  public selectedMetric = WatershedExplorerMetric.DroolPerLandscapedAcre;
   public metricsForCurrentSelection: NeighborhoodMetricDto;
   public metricOverlayLayer: L.Layers;
 
@@ -65,6 +69,8 @@ export class WatershedExplorerComponent implements OnInit {
   public selectedMetricMonth: number;
   public selectedMetricYear: number;
 
+  public areMetricsCollapsed: boolean = true;
+
   public months = [
     "January",
     "February",
@@ -85,7 +91,7 @@ export class WatershedExplorerComponent implements OnInit {
     private compileService: CustomCompileService,
     private neighborhoodService: NeighborhoodService,
     private wfsService: WfsService,
-    private watershedService: WatershedService
+    private watershedMaskService: WatershedMaskService
   ) {
   }
 
@@ -153,6 +159,11 @@ export class WatershedExplorerComponent implements OnInit {
       this.metricsForCurrentSelection = result;
       this.selectedMetricMonth = result.MetricMonth;
       this.selectedMetricYear = result.MetricYear;
+      this.applyMetricOverlay();
+    })
+
+    this.neighborhoodService.getServicedNeighborhoodsWatershedNames().subscribe(result => {
+      this.watershedNames = this.watershedNames.concat(result);
     })
   }
 
@@ -166,19 +177,8 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public initializeMap(): void {
-    this.watershedService.getMask().subscribe(maskString => {
-      this.maskLayer = L.geoJSON(maskString, {
-        invert: true,
-        style: function (feature) {
-          return {
-            fillColor: "#323232",
-            fill: true,
-            fillOpacity: 0.4,
-            stroke: false
-          };
-        }
-      });
-
+    this.watershedMaskService.getWatershedMask().subscribe(maskString => {
+      this.maskLayer = this.getMaskGeoJsonLayer(maskString);
       L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
       const mapOptions: L.MapOptions = {
@@ -189,8 +189,8 @@ export class WatershedExplorerComponent implements OnInit {
           this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
           this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
         ],
-        gestureHandling: true
-
+        gestureHandling: true,
+        loadingControl:true
       } as L.MapOptions;
 
       this.map = L.map(this.mapID, mapOptions);
@@ -213,6 +213,8 @@ export class WatershedExplorerComponent implements OnInit {
   public initializePanes(): void {
     let droolToolOverlayPane = this.map.createPane("droolToolOverlayPane");
     droolToolOverlayPane.style.zIndex = 10000;
+    let droolToolChoroplethPane = this.map.createPane("droolToolChoroplethPane");
+    droolToolChoroplethPane.style.zIndex = 9999;
     this.map.getPane("markerPane").style.zIndex = 10001;
     this.map.getPane("popupPane").style.zIndex = 10002;
   }
@@ -221,6 +223,10 @@ export class WatershedExplorerComponent implements OnInit {
     this.layerControl = new L.Control.Layers(this.tileLayers, this.overlayLayers)
       .addTo(this.map);
     this.map.zoomControl.setPosition('topright');
+    var loadingControl = L.Control.loading({
+      separate: true
+    });
+    this.map.addControl(loadingControl);
     this.afterSetControl.emit(this.layerControl);
   }
 
@@ -262,7 +268,7 @@ export class WatershedExplorerComponent implements OnInit {
 
         this.selectedNeighborhoodID = response.features[0].properties.NeighborhoodID;
         if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
-          this.displaySearchResults(response.features[0].properties.OCSurveyNeighborhoodID, latlng);   
+          this.displaySearchResults(response.features[0].properties.OCSurveyNeighborhoodID, latlng);
         }
         else {
           this.searchAddressNotFoundOrNotServiced();
@@ -319,7 +325,9 @@ export class WatershedExplorerComponent implements OnInit {
         this.downstreamTraceLayer.addTo(this.map);
 
         this.traceActive = true;
+        console.log(this.map.getZoom());
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.downstreamTraceLayer, this.clickMarker]));
+        console.log(this.map.getZoom());
       })
     }
     else {
@@ -327,6 +335,7 @@ export class WatershedExplorerComponent implements OnInit {
       this.clearLayer(this.stormshedLayer);
       this.neighborhoodService.getUpstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
         let featureCollection = (response) as any as FeatureCollection;
+        console.log(featureCollection);
         if (featureCollection.features.length === 0) {
           return null;
         }
@@ -362,6 +371,7 @@ export class WatershedExplorerComponent implements OnInit {
         this.stormshedLayer.bringToBack();
         this.traceActive = true;
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.upstreamTraceLayer, this.clickMarker, this.stormshedLayer]));
+        console.log(this.map.getZoom());
       });
     }
   }
@@ -370,7 +380,12 @@ export class WatershedExplorerComponent implements OnInit {
     this.searchActive = false;
     this.activeSearchNotFound = false;
     this.traceActive = false;
-    this.removeCurrentSearchLayer();
+    [this.clickMarker,
+      this.stormshedLayer,
+      this.upstreamTraceLayer,
+      this.downstreamTraceLayer].forEach((x) => {
+        this.clearLayer(x);
+      });
   }
 
   public returnToDefault(): void {
@@ -382,15 +397,6 @@ export class WatershedExplorerComponent implements OnInit {
   public searchAddressNotFoundOrNotServiced(): void {
     this.activeSearchNotFound = true;
     this.currentlySearching = false;
-  }
-
-  public removeCurrentSearchLayer(): void {
-    [this.clickMarker,
-    this.stormshedLayer,
-    this.upstreamTraceLayer,
-    this.downstreamTraceLayer].forEach((x) => {
-      this.clearLayer(x);
-    });
   }
 
   public clearLayer(layer: L.Layer): void {
@@ -411,16 +417,20 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public fitBoundsWithPaddingAndFeatureGroup(featureGroup: L.featureGroup): void {
-    let paddingHeight = 0;
-    let popupContent = $("#search-popup-address");
+    let paddingHeight = $("#buttonDiv").innerHeight();
+    let popupContent = $(".search-popup");
     if (popupContent !== null && popupContent !== undefined && popupContent.length == 1) {
-      paddingHeight = popupContent.parent().parent().innerHeight();
+      paddingHeight += popupContent.innerHeight();
     }
 
     this.map.fitBounds(featureGroup.getBounds(), { padding: [paddingHeight, paddingHeight] });
   }
 
   public applyMetricOverlay(): void {
+    if (!this.metricsForCurrentSelection || !this.map) {
+      return null;
+    }
+
     if (this.metricOverlayLayer) {
       this.map.removeLayer(this.metricOverlayLayer);
       this.metricOverlayLayer = null;
@@ -430,7 +440,12 @@ export class WatershedExplorerComponent implements OnInit {
       return null;
     }
 
-    let cql_filter = "MetricYear = " + this.metricsForCurrentSelection.MetricYear + " and MetricMonth = " + this.metricsForCurrentSelection.MetricMonth;
+    let cql_filter = "MetricYear = " + this.metricsForCurrentSelection.MetricYear
+      + " and MetricMonth = " + this.metricsForCurrentSelection.MetricMonth;
+
+    if (this.selectedWatershed != "All Watersheds") {
+      cql_filter += " and WatershedAliasName = '" + this.selectedWatershed + "'";
+    }
 
     let watershedExplorerMapMetricsWMSOptions = ({
       layers: "DroolTool:WatershedExplorerMapMetrics",
@@ -438,7 +453,7 @@ export class WatershedExplorerComponent implements OnInit {
       format: "image/png",
       tiled: true,
       styles: this.selectedMetric.geoserverStyle,
-      pane: "droolToolOverlayPane",
+      pane: "droolToolChoroplethPane",
       cql_filter: cql_filter
     } as L.WMSOptions);
 
@@ -452,38 +467,39 @@ export class WatershedExplorerComponent implements OnInit {
     if (!this.metricsForCurrentSelection) {
       metricContent = "No metrics found for this location";
     }
-
-    switch (this.selectedMetric) {
-      case WatershedExplorerMetric.TotalMonthlyDrool: {
-        metricContent = this.selectedMetric + " : " +
-          (this.metricsForCurrentSelection.TotalMonthlyDrool == null
-            ? "Not available"
-            : this.metricsForCurrentSelection.TotalMonthlyDrool.toLocaleString() + " gal/month");
-        break;
-      }
-      case WatershedExplorerMetric.OverallParticipation: {
-        metricContent = this.selectedMetric + " : " +
-          (this.metricsForCurrentSelection.OverallParticipation == null
-            ? "Not available"
-            : this.metricsForCurrentSelection.OverallParticipation.toLocaleString() + " active meters");
-        break;
-      }
-      case WatershedExplorerMetric.PercentParticipation: {
-        metricContent = this.selectedMetric + " : " +
-          (this.metricsForCurrentSelection.PercentParticipation == null
-            ? "Not available"
-            : Math.round(this.metricsForCurrentSelection.PercentParticipation).toString() + "%");
-        break;
-      }
-      case WatershedExplorerMetric.MonthlyDroolPerLandscapedAcre: {
-        metricContent = this.selectedMetric + " : " +
-          (this.metricsForCurrentSelection.MonthlyDroolPerLandscapedAcre == null
-            ? "Not available"
-            : this.metricsForCurrentSelection.MonthlyDroolPerLandscapedAcre.toLocaleString() + " gal/landscaped acre");
-        break;
-      }
-      default: {
-        metricContent = "Select a metric from the dropdown to get started!";
+    else {
+      switch (this.selectedMetric) {
+        case WatershedExplorerMetric.TotalDrool: {
+          metricContent = this.selectedMetric + ": " +
+            (this.metricsForCurrentSelection.TotalDrool == null
+              ? "Not available"
+              : this.metricsForCurrentSelection.TotalDrool.toLocaleString() + " gal/month");
+          break;
+        }
+        case WatershedExplorerMetric.OverallParticipation: {
+          metricContent = this.selectedMetric + ": " +
+            (this.metricsForCurrentSelection.OverallParticipation == null
+              ? "Not available"
+              : this.metricsForCurrentSelection.OverallParticipation.toLocaleString() + " active meters");
+          break;
+        }
+        case WatershedExplorerMetric.PercentParticipation: {
+          metricContent = this.selectedMetric + ": " +
+            (this.metricsForCurrentSelection.PercentParticipation == null
+              ? "Not available"
+              : Math.round(this.metricsForCurrentSelection.PercentParticipation).toString() + "%");
+          break;
+        }
+        case WatershedExplorerMetric.DroolPerLandscapedAcre: {
+          metricContent = this.selectedMetric + ": " +
+            (this.metricsForCurrentSelection.DroolPerLandscapedAcre == null
+              ? "Not available"
+              : "<br/>" + this.metricsForCurrentSelection.DroolPerLandscapedAcre.toLocaleString() + " gal/acre");
+          break;
+        }
+        default: {
+          metricContent = "Select a metric from the dropdown to get started!";
+        }
       }
     }
 
@@ -492,10 +508,44 @@ export class WatershedExplorerComponent implements OnInit {
 
   public displayNewMetric(): void {
     this.applyMetricOverlay();
+    this.map.invalidateSize();
     if (!this.clickMarker) {
       return null;
     }
     let content = this.getMetricPopupContent();
     this.clickMarker.setPopupContent(content);
+  }
+
+  public getMaskGeoJsonLayer(maskString: string): L.geoJSON {
+    return L.geoJSON(maskString, {
+      invert: true,
+      style: function (feature) {
+        return {
+          fillColor: "#323232",
+          fill: true,
+          fillOpacity: 0.4,
+          stroke: false
+        };
+      }
+    });
+  }
+
+  public getNewWatershedMask() {
+    this.clearSearchResults();
+    this.map.removeLayer(this.maskLayer);
+    this.maskLayer = null;
+    this.map.fireEvent('dataloading');
+    this.watershedMaskService.getWatershedMask(this.selectedWatershed).subscribe(maskString => {
+      this.maskLayer = this.getMaskGeoJsonLayer(maskString);
+      this.maskLayer.addTo(this.map);
+      this.defaultFitBounds();     
+      this.displayNewMetric();
+      this.map.fireEvent('dataload');
+    });
+  }
+
+  public showMetrics(event: Event) {
+    event.stopPropagation();
+    this.areMetricsCollapsed = !this.areMetricsCollapsed;
   }
 }

@@ -12,13 +12,16 @@ namespace DroolTool.EFModels.Entities
         [Column(TypeName = "geometry")]
         public Geometry NeighborhoodGeometry { get; set; }
         public double? Area { get; set; }
+        [Required]
+        [StringLength(100)]
+        public string WatershedAliasName { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime MetricDate { get; set; }
         public int MetricYear { get; set; }
         public int MetricMonth { get; set; }
-        public double? TotalMonthlyDrool { get; set; }
+        public double? TotalDrool { get; set; }
         public double? OverallParticipation { get; set; }
         public double? PercentParticipation { get; set; }
-        public double? MonthlyDroolPerLandscapedAcre { get; set; }
+        public double? DroolPerLandscapedAcre { get; set; }
     }
 }

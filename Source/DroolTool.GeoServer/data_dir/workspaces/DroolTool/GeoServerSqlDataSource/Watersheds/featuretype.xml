@@ -1,14 +1,14 @@
 <featureType>
-  <id>FeatureTypeInfoImpl--2cccd28d:171a997b818:-7ff1</id>
+  <id>FeatureTypeInfoImpl--32abc8ac:171f5113c02:5d6</id>
   <name>Watersheds</name>
-  <nativeName>vGeoServerWatershed</nativeName>
+  <nativeName>vGeoServerWatershedMask</nativeName>
   <namespace>
     <id>NamespaceInfoImpl--4c8be7a1:15d76abd162:-7ffe</id>
   </namespace>
-  <title>vGeoServerWatershed</title>
+  <title>vGeoServerWatershedMask</title>
   <keywords>
     <string>features</string>
-    <string>vGeoServerWatershed</string>
+    <string>vGeoServerWatershedMask</string>
   </keywords>
   <nativeCRS>GEOGCS[&quot;WGS 84&quot;, 
   DATUM[&quot;World Geodetic System 1984&quot;, 

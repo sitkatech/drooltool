@@ -3,16 +3,16 @@
                        xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                        xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
-    <Name>Total Monthly Drool Watershed Explorer Map Metric</Name>
+    <Name>Total Drool Watershed Explorer Map Metric</Name>
     <UserStyle>
-      <Title>Chloropleth style fill for varying magnitudes of total monthly drool (gallons)</Title>
-      <Abstract>Chloropleth for total monthly drool</Abstract>
+      <Title>Chloropleth style fill for varying magnitudes of total drool (gallons)</Title>
+      <Abstract>Chloropleth for total drool</Abstract>
       <FeatureTypeStyle>
         <Rule>
           <Title>0 - 1000 gallons</Title>
           <ogc:Filter>
             <ogc:PropertyIsBetween>
-              <ogc:PropertyName>TotalMonthlyDrool</ogc:PropertyName>
+              <ogc:PropertyName>TotalDrool</ogc:PropertyName>
               <ogc:LowerBoundary>
                 <ogc:Literal>0</ogc:Literal>
               </ogc:LowerBoundary>
@@ -36,7 +36,7 @@
           <Title>1000 - 5000 gallons</Title>
           <ogc:Filter>
             <ogc:PropertyIsBetween>
-              <ogc:PropertyName>TotalMonthlyDrool</ogc:PropertyName>
+              <ogc:PropertyName>TotalDrool</ogc:PropertyName>
               <ogc:LowerBoundary>
                 <ogc:Literal>1000</ogc:Literal>
               </ogc:LowerBoundary>
@@ -60,7 +60,7 @@
           <Title>5000 - 10000 gallons</Title>
           <ogc:Filter>
             <ogc:PropertyIsBetween>
-              <ogc:PropertyName>TotalMonthlyDrool</ogc:PropertyName>
+              <ogc:PropertyName>TotalDrool</ogc:PropertyName>
               <ogc:LowerBoundary>
                 <ogc:Literal>5000</ogc:Literal>
               </ogc:LowerBoundary>
@@ -84,7 +84,7 @@
           <Title>10000 - 25000 gallons</Title>
           <ogc:Filter>
             <ogc:PropertyIsBetween>
-              <ogc:PropertyName>TotalMonthlyDrool</ogc:PropertyName>
+              <ogc:PropertyName>TotalDrool</ogc:PropertyName>
               <ogc:LowerBoundary>
                 <ogc:Literal>10000</ogc:Literal>
               </ogc:LowerBoundary>
@@ -108,7 +108,7 @@
           <Title>25000 - 50000 gallons</Title>
           <ogc:Filter>
             <ogc:PropertyIsBetween>
-              <ogc:PropertyName>TotalMonthlyDrool</ogc:PropertyName>
+              <ogc:PropertyName>TotalDrool</ogc:PropertyName>
               <ogc:LowerBoundary>
                 <ogc:Literal>25000</ogc:Literal>
               </ogc:LowerBoundary>
@@ -132,7 +132,7 @@
           <Title>50000 - 75000 gallons</Title>
           <ogc:Filter>
             <ogc:PropertyIsBetween>
-              <ogc:PropertyName>TotalMonthlyDrool</ogc:PropertyName>
+              <ogc:PropertyName>TotalDrool</ogc:PropertyName>
               <ogc:LowerBoundary>
                 <ogc:Literal>50000</ogc:Literal>
               </ogc:LowerBoundary>
@@ -156,7 +156,7 @@
           <Title>75000 - 100000 gallons</Title>
           <ogc:Filter>
             <ogc:PropertyIsBetween>
-              <ogc:PropertyName>TotalMonthlyDrool</ogc:PropertyName>
+              <ogc:PropertyName>TotalDrool</ogc:PropertyName>
               <ogc:LowerBoundary>
                 <ogc:Literal>75000</ogc:Literal>
               </ogc:LowerBoundary>
@@ -180,7 +180,7 @@
           <Title>Greater than 100000 gallons</Title>
           <ogc:Filter>
             <ogc:PropertyIsGreaterThan>
-              <ogc:PropertyName>TotalMonthlyDrool</ogc:PropertyName>
+              <ogc:PropertyName>TotalDrool</ogc:PropertyName>
               <ogc:Literal>100000</ogc:Literal>           
             </ogc:PropertyIsGreaterThan>
           </ogc:Filter>

@@ -5,6 +5,30 @@
     .section-search {
         text-align:center;
     }
+
+    #buttonDiv {
+        left:10px
+    }
+}
+
+@media only screen and (min-width:992px) {
+    #buttonDiv {      
+        right:65px;
+    }
+
+    #traceButton {
+        height:45px;
+    }
+
+    .shifted {
+        right:165px !important;
+    }
+}
+
+#buttonDiv {
+    position:absolute; 
+    z-index:10000; 
+    top:11px; 
 }
 
 .section-stats * p.b3 {
@@ -102,27 +126,6 @@
     cursor: pointer;
 }
 
-.map-bottom-legend {
-    position:absolute; 
-    right:0px; 
-    bottom:0px; 
-    z-index:100000; 
-    background-color:#FFFFFF
-}
-
-.map-bottom-legend-value-color {
-    display:inline-block; 
-    width:12px; 
-    height:12px;
-}
-
-.trace-button {
-    position:absolute; 
-    bottom:36px; 
-    right:10px; 
-    z-index:100000
-}
-
 //These need to be the same so the metrics slide doesn't jump around the width of the map
 .mobile-stats,
 .mobile-stats-containing-div {
@@ -213,5 +216,14 @@ span.watershed-text {
 
 ::ng-deep .leaflet-popup-tip-container {
     display:none;
+}
+
+//This is hijacking the top left control and using it
+//for the loading icon that will sit in the middle of
+//the screen
+::ng-deep .leaflet-top.leaflet-left {
+    left:50%;
+    top: 51%;
+    transform: translate(-75%, 0%);
 }
 //End of leaflet styles

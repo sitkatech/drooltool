@@ -7,6 +7,17 @@
     }
 }
 
+#buttonDiv {
+    position:absolute; 
+    z-index:10000; 
+    top:11px; 
+    left:10px;
+}
+
+.input-group {
+    color:#333
+}
+
 .section-search {
     background-color: $header-nav-color;
 }
@@ -23,75 +34,7 @@
 
 .section-stats * .b3 {
     font-size:16px;
-}
-
-// .section-stats * h3 {
-//     line-height:45px;
-// }
-
-.section-active-search {
-    background-color: #D6F1B6;
-}
-
-.section-active-search p,
-.section-active-search span {
-    color: $header-nav-color;
-}
-
-.section-rebates {
-    background-color: #1E5668
-}
-
-.section-rebates p {
-    color: white;
-    margin-bottom:0;
-    max-width: 167px;
-}
-
-.section-water-bill {
-    background-color: #4DC3D9;
-}
-
-.section-water-bill p {
-    color: #555555;
-    margin-bottom:0;
-}
-
-.section-water-bill p.b3,
-.section-rebates p.b3
-{
-    font-size:18px;
-}
-
-.section-water-bill p.b4 {
-    font-size: 14px;
-}
-
-.section-rebates:hover,
-.section-water-bill:hover {
-    cursor:pointer;
-}
-
-.section-water-bill:hover * a{
-    color: #555555
-}
-
-.section-rebates:hover * a {
-    color:white
-}
-
-.search {
-    background-color: $drool-orange;
-    border-color: $drool-orange;
-}
-
-.search:focus {
-    outline: none;
-    box-shadow: none;
-}
-
-.search-close {
-    cursor: pointer;
+    color: #1E5668;
 }
 
 .metric-color-swatch {
@@ -99,6 +42,65 @@
     height:30px;
     opacity:0.75;
 }
+
+.selected-watershed {
+    box-shadow: 0 0 0 0.2rem rgba(234,132,44,0.5);
+}
+
+//These need to be the same so the metrics slide doesn't jump around the width of the map
+.mobile-stats,
+.mobile-stats-containing-div {
+    max-width:233px;
+}
+
+.mobile-stats {
+    position:absolute; 
+    z-index:100001; 
+}
+
+.mobile-stats-containing-div {
+    width:100%;
+    position:relative
+}
+
+.metrics-button-panel-collapsed {
+    position:absolute;
+    top:10px; 
+    left:10px; 
+    z-index:100000
+}
+
+.metrics-button-panel-expanded {
+    position:absolute; 
+    top:7px; 
+    right:2px
+}
+
+.metrics-panel-transparency {
+    background-color:rgba(255,255,255,0.75)
+}
+
+.metrics-panel-transparency-special {
+    background-color: rgba(242,251,253,0.75)
+}
+
+//Allows the metrics to collapse
+.metrics-collapse {
+    position: absolute;
+    right: 100%;
+    transition: all 0.3s ease;
+    display: block;
+}
+.metrics-collapse.collapsing {
+    height: auto !important;
+    transition: all 0.3s ease;
+    display: block;
+}
+.metrics-collapse.show {
+    left:0;
+    right:0
+}
+//End of metrics collapse
 
 ::ng-deep .search-popup .leaflet-popup-content-wrapper {
     font-family: "Nunito", sans-serif;
@@ -114,4 +116,13 @@
 
 ::ng-deep .leaflet-popup-tip-container {
     display:none;
+}
+
+//This is hijacking the top left control and using it
+//for the loading icon that will sit in the middle of
+//the screen
+::ng-deep .leaflet-top.leaflet-left {
+    left:50%;
+    top: 51%;
+    transform: translate(-75%, 0%);
 }
