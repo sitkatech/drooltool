@@ -47,17 +47,16 @@ namespace DroolTool.API.Controllers
                 return BadRequest("Role ID is required.");
             }
 
-            const string applicationName = "Rosedale-DroolTool Bravo Water Accounting Platform";
-            const string drooltoolBravoWaterStorageDistrict = "Rosedale-DroolTool Bravo Water Storage District";
+            const string applicationName = "Urban Drool Tool";
             var inviteModel = new KeystoneService.KeystoneInviteModel
             {
                 FirstName = inviteDto.FirstName,
                 LastName = inviteDto.LastName,
                 Email = inviteDto.Email,
                 Subject = $"Invitation to the {applicationName}",
-                WelcomeText = $"You are receiving this notification because an administrator of the {applicationName}, an online service of {drooltoolBravoWaterStorageDistrict}, has invited you to create an account.",
+                WelcomeText = $"You have been invited by an administrator to create an account in the <a href='{_drooltoolConfiguration.DROOLTOOL_WEB_URL}' target='_blank'>{applicationName}</a>. The Urban Drool Tool application is a collaborative effort of Moulton Niguel Water District, Orange County Public Works, and other organizations.",
                 SiteName = applicationName,
-                SignatureBlock = $"{drooltoolBravoWaterStorageDistrict}<br /><a href='mailto:admin@rrbwsd.com'>admin@rrbwsd.com</a><br />(661) 589-6045<br /><a href='https://www.rrbwsd.com'>https://www.rrbwsd.com</a>",
+                SignatureBlock = "The Urban Drool Tool team",
                 RedirectURL = _drooltoolConfiguration.KEYSTONE_REDIRECT_URL
             };
 
@@ -201,14 +200,14 @@ namespace DroolTool.API.Controllers
 
         private static MailMessage GenerateUserCreatedEmail(string drooltoolUrl, UserDto user, DroolToolDbContext dbContext)
         {
-            var messageBody = $@"A new user has signed up to the Rosedale-DroolTool Bravo Water Accounting Platform: <br/><br/>
+            var messageBody = $@"A new user has signed up to the Urban Drool Tool: <br/><br/>
  {user.FullName} ({user.Email}) <br/><br/>
-As an administrator of the Water Accounting Platform, you can assign them a role and associate them with a Billing Account by following <a href='{drooltoolUrl}/users/{user.UserID}'>this link</a>. <br/><br/>
+As an administrator of the Urban Drool Tool, you can assign them a role by following <a href='{drooltoolUrl}/users/{user.UserID}'>this link</a>. <br/><br/>
 {SitkaSmtpClientService.GetSupportNotificationEmailSignature()}";
 
             var mailMessage = new MailMessage
             {
-                Subject = $"New User in Rosedale-DroolTool Bravo Water Accounting Platform",
+                Subject = $"New User in Urban Drool Tool",
                 Body = $"Hello,<br /><br />{messageBody}",
             };
 
