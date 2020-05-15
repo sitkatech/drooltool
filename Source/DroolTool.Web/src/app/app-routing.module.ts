@@ -14,6 +14,7 @@ import { NeighborhoodExplorerComponent } from './pages/neighborhood-explorer/nei
 import { AboutComponent } from './pages/about/about.component';
 import { TakeActionComponent } from './pages/take-action/take-action.component';
 import { WatershedExplorerComponent } from './pages/watershed-explorer/watershed-explorer.component';
+import { HelpComponent } from './pages/help/help.component';
 
 const routes: Routes = [
   { path: "users", component: UserListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard]},
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: "watershed-explorer", component: WatershedExplorerComponent},
   { path: "take-action", component: TakeActionComponent},
   { path: "about", component: AboutComponent},
+  { path: "help", component: HelpComponent},
   { path: "", component: HomeIndexComponent},
   { path: "login-callback", component: LoginCallbackComponent },
   { path: "create-user-callback", component: CreateUserCallbackComponent },
