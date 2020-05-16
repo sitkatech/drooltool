@@ -3,17 +3,25 @@ import { ApiService } from 'src/app/shared/services';
 import { Observable } from 'rxjs';
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto';
+import { NeighborhoodMetricAvailableDatesDto } from 'src/app/shared/models/neighborhood-metric-available-dates-dto';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NeighborhoodService {
+    
+    
     constructor(private apiService: ApiService) { } 
 
     getNeighborhoodsWithMetricsIds(): Observable<number[]> {
         let route = `/neighborhood/get-neighborhoods-with-metrics-ids`;
         return this.apiService.getFromApi(route);
     }
+
+    getMetricTimeline(): Observable<NeighborhoodMetricAvailableDatesDto[]> {
+        let route = `/neighborhood/get-metric-timeline`;
+        return this.apiService.getFromApi(route);
+      }
 
     getMetricsForYearAndMonth(OCSurveyNeighborhoodID:number, metricYear:number, metricMonth:number): Observable<NeighborhoodMetricDto> {
         let route = `/neighborhood/${OCSurveyNeighborhoodID}/${metricYear}/${metricMonth}/get-metrics/`;

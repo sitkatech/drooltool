@@ -19,6 +19,13 @@
                                     <option *ngFor="let watershedName of watershedNames" [ngValue]="watershedName">
                                         {{watershedName}}</option>
                                 </select>
+                                <h3 style="color:white">Choose a year</h3>
+                                <select [(ngModel)]="selectedMetricYear" class="input-group mx-auto mx-lg-0 mb-1"
+                                    style="max-width:353px" (change)="getSelectedMetricYearAvailableMonthsThenDisplayMetric()">
+                                    <option *ngFor="let year of allYearsWithAvailableMetricMonths" [ngValue]="year.MetricYear">
+                                        {{year.MetricYear}}</option>
+                                </select>
+                                <ng5-slider [(value)]="selectedMetricMonth" [options]="ng5SliderOptions" (valueChange)="getSelectedMetricYearAvailableMonthsThenDisplayMetric()"></ng5-slider>
                             </div>
                         </div>
                     </div>

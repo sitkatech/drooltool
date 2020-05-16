@@ -12,6 +12,9 @@ import * as esri from 'esri-leaflet'
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
 import { WatershedExplorerMetric } from 'src/app/shared/models/watershed-explorer-metric.js';
+import { forkJoin } from 'rxjs';
+import { NeighborhoodMetricAvailableDatesDto } from 'src/app/shared/models/neighborhood-metric-available-dates-dto.js';
+import { Options } from 'ng5-slider'
 
 declare var $: any;
 
@@ -21,7 +24,6 @@ declare var $: any;
   styleUrls: ['./watershed-explorer.component.scss']
 })
 export class WatershedExplorerComponent implements OnInit {
-
   @ViewChild("mapDiv", { static: false }) mapElement: ElementRef;
   @ViewChild("largePanel", { static: false }) largeDisplayMetricsPanel: ElementRef;
 
@@ -68,6 +70,7 @@ export class WatershedExplorerComponent implements OnInit {
   public selectedNeighborhoodID: number;
   public selectedMetricMonth: number;
   public selectedMetricYear: number;
+  public allYearsWithAvailableMetricMonths: NeighborhoodMetricAvailableDatesDto[];
 
   public areMetricsCollapsed: boolean = true;
 
@@ -85,6 +88,20 @@ export class WatershedExplorerComponent implements OnInit {
     "November",
     "December"
   ]
+
+  public ng5SliderOptions: Options = {
+    floor:1,
+    ceil:12,
+    //Can't find an option to turn values off entirely while keeping ticks,
+    //so we'll just make the values nothing
+    translate: (value: number): string => {
+      return '';
+    },
+    showTicks: true,
+    getLegend: (value: number): string => {
+      return this.months[value-1];
+    }
+  }
 
   constructor(
     private appRef: ApplicationRef,
@@ -155,12 +172,19 @@ export class WatershedExplorerComponent implements OnInit {
 
     this.compileService.configure(this.appRef);
 
-    this.neighborhoodService.getMostRecentMetric().subscribe(result => {
-      this.metricsForCurrentSelection = result;
-      this.selectedMetricMonth = result.MetricMonth;
-      this.selectedMetricYear = result.MetricYear;
+    forkJoin(
+      this.neighborhoodService.getMetricTimeline(),
+      this.neighborhoodService.getMostRecentMetric()
+    ).subscribe(([metricTimeline, mostRecentMetric]) => {
+      this.allYearsWithAvailableMetricMonths = metricTimeline;
+
+      this.metricsForCurrentSelection = mostRecentMetric;
+      this.selectedMetricMonth = mostRecentMetric.MetricMonth;
+      this.selectedMetricYear = mostRecentMetric.MetricYear;
+
+      this.changeSliderOptions();
       this.applyMetricOverlay();
-    })
+    });
 
     this.neighborhoodService.getServicedNeighborhoodsWatershedNames().subscribe(result => {
       this.watershedNames = this.watershedNames.concat(result);
@@ -427,7 +451,7 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public applyMetricOverlay(): void {
-    if (!this.metricsForCurrentSelection || !this.map) {
+    if (!this.map) {
       return null;
     }
 
@@ -440,8 +464,8 @@ export class WatershedExplorerComponent implements OnInit {
       return null;
     }
 
-    let cql_filter = "MetricYear = " + this.metricsForCurrentSelection.MetricYear
-      + " and MetricMonth = " + this.metricsForCurrentSelection.MetricMonth;
+    let cql_filter = "MetricYear = " + this.selectedMetricYear
+      + " and MetricMonth = " + this.selectedMetricMonth;
 
     if (this.selectedWatershed != "All Watersheds") {
       cql_filter += " and WatershedAliasName = '" + this.selectedWatershed + "'";
@@ -547,5 +571,32 @@ export class WatershedExplorerComponent implements OnInit {
   public showMetrics(event: Event) {
     event.stopPropagation();
     this.areMetricsCollapsed = !this.areMetricsCollapsed;
+  }
+
+  public getSelectedMetricYearAvailableMonthsThenDisplayMetric() {
+    if (!this.map)
+    {
+      return null;
+    }
+    this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(result => {
+      this.metricsForCurrentSelection = result;
+      this.displayNewMetric();
+    });
+  }
+
+  public changeSliderOptions() {
+    let newOptions = Object.assign({}, this.ng5SliderOptions);
+
+    newOptions.minLimit = this.allYearsWithAvailableMetricMonths
+      .filter(x => x.MetricYear == this.selectedMetricYear)[0]
+      .AvailableMonths
+      .reduce((lowest, x) => Math.min(lowest, x), Number.MAX_VALUE);
+
+    newOptions.maxLimit = this.allYearsWithAvailableMetricMonths
+    .filter(x => x.MetricYear == this.selectedMetricYear)[0]
+    .AvailableMonths
+    .reduce((highest, x) => Math.max(highest, x), 0);
+
+    this.ng5SliderOptions = newOptions;
   }
 }
