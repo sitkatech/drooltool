@@ -57,7 +57,8 @@ namespace DroolTool.API.Controllers
                 WelcomeText = $"You have been invited by an administrator to create an account in the <a href='{_drooltoolConfiguration.DROOLTOOL_WEB_URL}' target='_blank'>{applicationName}</a>. The Urban Drool Tool application is a collaborative effort of Moulton Niguel Water District, Orange County Public Works, and other organizations.",
                 SiteName = applicationName,
                 SignatureBlock = "The Urban Drool Tool team",
-                RedirectURL = _drooltoolConfiguration.KEYSTONE_REDIRECT_URL
+                RedirectURL = _drooltoolConfiguration.KEYSTONE_REDIRECT_URL,
+                SupportBlock = "If you have any questions please drop us a line at support@sitkatech.com."
             };
 
             var response = _keystoneService.Invite(inviteModel);
