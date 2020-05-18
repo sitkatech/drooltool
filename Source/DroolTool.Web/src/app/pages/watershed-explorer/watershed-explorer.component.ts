@@ -64,12 +64,25 @@ export class WatershedExplorerComponent implements OnInit {
   public traceActive: boolean = false;
   public showInstructions: boolean = true;
   public searchActive: boolean = false;
-  public activeSearchNotFound: boolean = false;
   public currentlySearching: boolean = false;
 
+  public errorActive: boolean = false;
+  public errorMessage: string = "";
+  public errorSpecificIcon: string = "";
+  public errorCallToAction: string = "";
+
+  public searchOutsideServiceAreaErrorMessage = "Sorry, the area you selected is not within the Urban Drool Tool service area.";
+  public searchOutsideServiceAreaErrorCallToAction = "Select an area within the highlighted service boundary to view results."
+  public searchOutsideServiceAreaErrorSpecificIcon = "<span><i class='fas fa-map-marker-alt fa-3x'></i></span>"
+  public noDataForTimeSelectedErrorMessage = "Sorry, it appears we don't have Urban Drool data for ";
+  public noDataForTimeSelectedErrorCallToAction = "Select a different month, or select a different year and view months in that range."
+  public noDataForTimeSelectedErrorSpecificIcon = "<span><i class='far fa-calendar-alt fa-3x'></i></span>";
+  
   public selectedNeighborhoodID: number;
   public selectedMetricMonth: number;
   public selectedMetricYear: number;
+  public selectedYearMinMonth: number;
+  public selectedYearMaxMonth: number;
   public allYearsWithAvailableMetricMonths: NeighborhoodMetricAvailableDatesDto[];
 
   public areMetricsCollapsed: boolean = true;
@@ -102,6 +115,7 @@ export class WatershedExplorerComponent implements OnInit {
       return this.months[value-1];
     }
   }
+  
 
   constructor(
     private appRef: ApplicationRef,
@@ -182,8 +196,8 @@ export class WatershedExplorerComponent implements OnInit {
       this.selectedMetricMonth = mostRecentMetric.MetricMonth;
       this.selectedMetricYear = mostRecentMetric.MetricYear;
 
-      this.changeSliderOptions();
-      this.applyMetricOverlay();
+      this.addDisabledToAppropriateSliderMonths();
+      this.applyMetricOverlay(false);
     });
 
     this.neighborhoodService.getServicedNeighborhoodsWatershedNames().subscribe(result => {
@@ -230,7 +244,7 @@ export class WatershedExplorerComponent implements OnInit {
         this.mapElement.nativeElement.scrollIntoView();
       }
 
-      this.applyMetricOverlay();
+      this.applyMetricOverlay(false);
     });
   }
 
@@ -402,7 +416,6 @@ export class WatershedExplorerComponent implements OnInit {
 
   public clearSearchResults(): void {
     this.searchActive = false;
-    this.activeSearchNotFound = false;
     this.traceActive = false;
     [this.clickMarker,
       this.stormshedLayer,
@@ -412,14 +425,32 @@ export class WatershedExplorerComponent implements OnInit {
       });
   }
 
+  public clearErrors() {
+    this.errorActive = false;
+    this.errorMessage = "";
+    this.errorSpecificIcon = "";
+    this.errorCallToAction = "";
+  }
+
   public returnToDefault(): void {
-    this.clearSearchResults();
+    this.clearErrors();
     this.defaultFitBounds();
     this.map.invalidateSize();
+    
+    if (this.metricOverlayLayer == null) {
+      this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(result => {
+        this.metricsForCurrentSelection = result;
+        this.displayNewMetric(false);
+        this.addDisabledToAppropriateSliderMonths();
+      });
+    }
   }
 
   public searchAddressNotFoundOrNotServiced(): void {
-    this.activeSearchNotFound = true;
+    this.errorActive = true;
+    this.errorMessage = this.searchOutsideServiceAreaErrorMessage;
+    this.errorSpecificIcon = this.searchOutsideServiceAreaErrorSpecificIcon;
+    this.errorCallToAction = this.searchOutsideServiceAreaErrorCallToAction;
     this.currentlySearching = false;
   }
 
@@ -450,7 +481,7 @@ export class WatershedExplorerComponent implements OnInit {
     this.map.fitBounds(featureGroup.getBounds(), { padding: [paddingHeight, paddingHeight] });
   }
 
-  public applyMetricOverlay(): void {
+  public applyMetricOverlay(clearAsResultOfError: boolean): void {
     if (!this.map) {
       return null;
     }
@@ -460,7 +491,7 @@ export class WatershedExplorerComponent implements OnInit {
       this.metricOverlayLayer = null;
     }
 
-    if (this.selectedMetric == WatershedExplorerMetric.NoMetric) {
+    if (this.selectedMetric == WatershedExplorerMetric.NoMetric || clearAsResultOfError) {
       return null;
     }
 
@@ -489,7 +520,7 @@ export class WatershedExplorerComponent implements OnInit {
   public getMetricPopupContent(): string {
     let metricContent = "";
     if (!this.metricsForCurrentSelection) {
-      metricContent = "No metrics found for this location";
+      metricContent = "No metrics found for " + this.months[this.selectedMetricMonth - 1] + " " + this.selectedMetricYear + " at this location";
     }
     else {
       switch (this.selectedMetric) {
@@ -530,8 +561,8 @@ export class WatershedExplorerComponent implements OnInit {
     return "<span>" + metricContent + "</span>"
   }
 
-  public displayNewMetric(): void {
-    this.applyMetricOverlay();
+  public displayNewMetric(clearAsResultOfError: boolean): void {
+    this.applyMetricOverlay(clearAsResultOfError);
     this.map.invalidateSize();
     if (!this.clickMarker) {
       return null;
@@ -556,6 +587,7 @@ export class WatershedExplorerComponent implements OnInit {
 
   public getNewWatershedMask() {
     this.clearSearchResults();
+    this.clearErrors();
     this.map.removeLayer(this.maskLayer);
     this.maskLayer = null;
     this.map.fireEvent('dataloading');
@@ -563,7 +595,7 @@ export class WatershedExplorerComponent implements OnInit {
       this.maskLayer = this.getMaskGeoJsonLayer(maskString);
       this.maskLayer.addTo(this.map);
       this.defaultFitBounds();     
-      this.displayNewMetric();
+      this.displayNewMetric(false);
       this.map.fireEvent('dataload');
     });
   }
@@ -573,30 +605,81 @@ export class WatershedExplorerComponent implements OnInit {
     this.areMetricsCollapsed = !this.areMetricsCollapsed;
   }
 
+  public clearErrorsAndDisplayNewMetric() {
+    this.clearErrors();
+    this.displayNewMetric(false);
+  }
+
+  public experiment() {
+    if (!this.map) {
+      return null;
+    }
+
+    this.errorActive = true;
+    this.errorMessage = this.noDataForTimeSelectedErrorMessage + this.months[this.selectedMetricMonth - 1] + " " + this.selectedMetricYear;
+    this.errorSpecificIcon = this.noDataForTimeSelectedErrorSpecificIcon;
+    this.errorCallToAction = this.noDataForTimeSelectedErrorCallToAction;
+    this.metricsForCurrentSelection = null;
+    this.displayNewMetric(true);
+
+    if (this.selectedYearMinMonth > this.selectedMetricMonth) {
+      this.selectedMetricMonth = this.selectedYearMinMonth;
+    }
+    else if (this.selectedYearMaxMonth < this.selectedMetricMonth) {
+      this.selectedMetricMonth = this.selectedYearMaxMonth;
+    }
+
+    let sliderImage = $(".ng5-slider .ng5-slider-pointer");
+    sliderImage.addClass("shake");
+    setTimeout(() => {
+      sliderImage.removeClass("shake");
+    }, 1000);
+    
+  }
+
   public getSelectedMetricYearAvailableMonthsThenDisplayMetric() {
+    this.addDisabledToAppropriateSliderMonths();
+    this.getAppropriateMetricsForDateChange();
+  }
+
+  public getAppropriateMetricsForDateChange() {
     if (!this.map)
     {
       return null;
     }
-    this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(result => {
-      this.metricsForCurrentSelection = result;
-      this.displayNewMetric();
-    });
+
+    this.clearErrors();
+
+    if (this.selectedMetricMonth < this.selectedYearMinMonth || this.selectedMetricMonth > this.selectedYearMaxMonth) {
+      setTimeout(() => {this.experiment()}, 300);
+    }
+    else {
+      this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(result => {
+        this.metricsForCurrentSelection = result;
+        this.displayNewMetric(false);
+        this.addDisabledToAppropriateSliderMonths();
+      });
+    }
   }
 
-  public changeSliderOptions() {
-    let newOptions = Object.assign({}, this.ng5SliderOptions);
-
-    newOptions.minLimit = this.allYearsWithAvailableMetricMonths
+  public addDisabledToAppropriateSliderMonths() {
+    this.selectedYearMinMonth = this.allYearsWithAvailableMetricMonths
       .filter(x => x.MetricYear == this.selectedMetricYear)[0]
       .AvailableMonths
       .reduce((lowest, x) => Math.min(lowest, x), Number.MAX_VALUE);
 
-    newOptions.maxLimit = this.allYearsWithAvailableMetricMonths
+    this.selectedYearMaxMonth = this.allYearsWithAvailableMetricMonths
     .filter(x => x.MetricYear == this.selectedMetricYear)[0]
     .AvailableMonths
     .reduce((highest, x) => Math.max(highest, x), 0);
 
-    this.ng5SliderOptions = newOptions;
+    var sliderLegendValues = $(".ng5-slider-tick-legend");
+    sliderLegendValues.removeClass("ng5-slider-disabled-legend");
+
+    let x = 1;
+    while (x < 13) {
+      $(sliderLegendValues[x-1]).addClass(x < this.selectedYearMinMonth || x > this.selectedYearMaxMonth ? "ng5-slider-disabled-legend" : "");
+      x = x + 1;
+    }
   }
 }
