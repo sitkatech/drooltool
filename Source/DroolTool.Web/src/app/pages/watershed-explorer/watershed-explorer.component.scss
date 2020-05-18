@@ -144,7 +144,7 @@
 //ng5Slider styles
 ::ng-deep .ng5-slider {
     margin-top: 15px !important;
-    margin-bottom: 68px !important;
+    margin-bottom: 76px !important;
 }
 
 ::ng-deep .ng5-slider .ng5-slider-tick-legend {
@@ -156,7 +156,11 @@
 }
 
 ::ng-deep .ng5-slider .ng5-slider-disabled-legend {
-    color: #999
+    color: #999;
+}
+
+::ng-deep .ng5-slider .ng5-slider-disabled-tick {
+    background-color: #999 !important;
 }
 
 ::ng-deep .ng5-slider .ng5-slider-pointer:after {

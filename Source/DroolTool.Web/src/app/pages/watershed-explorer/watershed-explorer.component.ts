@@ -674,11 +674,14 @@ export class WatershedExplorerComponent implements OnInit {
     .reduce((highest, x) => Math.max(highest, x), 0);
 
     var sliderLegendValues = $(".ng5-slider-tick-legend");
+    var sliderTicks = $(".ng5-slider-tick");
+    sliderTicks.removeClass("ng5-slider-disabled-tick");
     sliderLegendValues.removeClass("ng5-slider-disabled-legend");
 
     let x = 1;
     while (x < 13) {
       $(sliderLegendValues[x-1]).addClass(x < this.selectedYearMinMonth || x > this.selectedYearMaxMonth ? "ng5-slider-disabled-legend" : "");
+      $(sliderTicks[x-1]).addClass(x < this.selectedYearMinMonth || x > this.selectedYearMaxMonth ? "ng5-slider-disabled-tick" : "");
       x = x + 1;
     }
   }

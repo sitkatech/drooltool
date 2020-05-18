@@ -125,7 +125,7 @@
     </div>
     <div class="col-lg-9 pl-0 pr-0">
         <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight" style="height:100%">
-            <div id="buttonDiv" *ngIf="areMetricsCollapsed" class="d-lg-none">
+            <div id="buttonDiv" *ngIf="areMetricsCollapsed && !errorActive" class="d-lg-none">
                 <button class="btn btn-drooltool d-lg-none mb-1 w-100" [attr.aria-expanded]="!areMetricsCollapsed"
                     aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
                     (click)="showMetrics($event)"><span>Metric Info</span></button>
@@ -134,11 +134,11 @@
                 <br class="d-lg-none" />
                 <button *ngIf="searchActive"  (click)="displayTrace($event, false)" class="btn btn-drooltool mb-1 w-100"><span>Where does water flow?</span></button>
             </div>
-            <div class="mobile-stats-containing-div">
+            <div class="mobile-stats-containing-div" *ngIf="!errorActive">
                 <div *ngIf="selectedMetric != WatershedExplorerMetric.NoMetric" id="collapsePanel"
                     class="section-stats mt-2 collapse mobile-stats metrics-collapse d-lg-none"
                     [ngbCollapse]="areMetricsCollapsed" (click)="$event.stopPropagation();">
-                    <div *ngIf="!errorActive"
+                    <div 
                         class="col-12 section-stats d-lg-none mt-1 metrics-panel-transparency">
                         <div class="h-100 w-100 m-auto">
                             <p class="b3">Displaying data for <br/> {{months[selectedMetricMonth - 1]}} {{selectedMetricYear}}
