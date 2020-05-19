@@ -173,6 +173,20 @@ namespace DroolTool.API.Controllers
                 .AsDto();
         }
 
+        [HttpGet("neighborhood/get-metric-timeline")]
+        public ActionResult<List<NeighborhoodMetricAvailableDatesDto>> GetMetricTimeline()
+        { 
+            return _dbContext.vNeighborhoodMetric
+                .ToList()
+                .GroupBy(
+                    x => x.MetricYear,
+                    x => x.MetricMonth,
+                    (year, months) => new NeighborhoodMetricAvailableDatesDto
+                        { MetricYear = year, AvailableMonths = months.ToList() })
+                .Distinct()
+                .ToList();
+        }
+
         [HttpGet("neighborhood/get-serviced-neighborhoods-watershed-names")]
         public ActionResult<List<string>> GetServicedNeighborhoodWatershedNames()
         {

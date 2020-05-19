@@ -1,6 +1,20 @@
 @import '~leaflet.fullscreen/Control.FullScreen.css';
 @import '~src/scss/_variables.scss';
 
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  }
+
 @media only screen and (max-width: 991px) {
     .section-search {
         text-align:center;
@@ -125,4 +139,46 @@
     left:50%;
     top: 51%;
     transform: translate(-75%, 0%);
+}
+
+//ng5Slider styles
+::ng-deep .ng5-slider {
+    margin-top: 15px !important;
+    margin-bottom: 76px !important;
+}
+
+::ng-deep .ng5-slider .ng5-slider-tick-legend {
+    color: #FFF;
+    top: 14px !important;
+    webkit-transform: translate(0%, 0%) rotate(65deg) !important;
+    transform: translate(0%, 0%) rotate(65deg) !important;
+    transform-origin: 0% 50%;
+}
+
+::ng-deep .ng5-slider .ng5-slider-disabled-legend {
+    color: #999;
+}
+
+::ng-deep .ng5-slider .ng5-slider-disabled-tick {
+    background-color: #999 !important;
+}
+
+::ng-deep .ng5-slider .ng5-slider-pointer:after {
+    width: 27px !important;
+    height: 27px !important;
+    top: 3px !important;
+    left: 3px !important;
+    border-radius: 13px !important;
+}
+
+::ng-deep .ng5-slider .ng5-slider-pointer.ng5-slider-active:after {
+    background-color:#fff !important;
+}
+
+::ng-deep .shake {
+    animation: shake 1s;
+}
+
+::ng-deep .ng5-slider .ng5-slider-pointer:focus {
+    outline:none
 }

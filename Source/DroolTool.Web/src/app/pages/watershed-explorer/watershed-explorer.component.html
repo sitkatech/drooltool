@@ -10,7 +10,7 @@
                                             class="search-close" (click)="showInstructions = true"><i
                                                 class="far fa-question-circle"></i></a></span></h3>
                                 <select [(ngModel)]="selectedMetric" class="input-group mx-auto mx-lg-0 mb-1"
-                                    style="max-width:353px" (change)="displayNewMetric()">
+                                    style="max-width:353px" (change)="clearErrorsAndDisplayNewMetric()">
                                     <option *ngFor="let metric of metrics" [ngValue]="metric">{{metric}}</option>
                                 </select>
                                 <h3 style="color:white">Choose a watershed</h3>
@@ -19,11 +19,18 @@
                                     <option *ngFor="let watershedName of watershedNames" [ngValue]="watershedName">
                                         {{watershedName}}</option>
                                 </select>
+                                <h3 style="color:white">Choose a year</h3>
+                                <select [(ngModel)]="selectedMetricYear" class="input-group mx-auto mx-lg-0 mb-1"
+                                    style="max-width:353px" (change)="getSelectedMetricYearAvailableMonthsThenDisplayMetric()">
+                                    <option *ngFor="let year of allYearsWithAvailableMetricMonths" [ngValue]="year.MetricYear">
+                                        {{year.MetricYear}}</option>
+                                </select>
+                                <ng5-slider style="max-width:353px" [(value)]="selectedMetricMonth" [options]="ng5SliderOptions" (userChange)="getAppropriateMetricsForDateChange()"></ng5-slider>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div *ngIf="showInstructions && !activeSearchNotFound" class="col-12 d-lg-none">
+                <div *ngIf="showInstructions && !errorActive" class="col-12 d-lg-none">
                     <div class="row">
                         <div class="col-12 text-right">
                             <span><a class="search-close" (click)="showInstructions = false"><i
@@ -38,7 +45,7 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="activeSearchNotFound" class="col-12 p-lg-4 flex-fill">
+                <div *ngIf="errorActive" class="col-12 p-lg-4 flex-fill">
                     <div class="row">
                         <div class="col-12 text-right">
                             <span><a class="search-close" (click)="returnToDefault()"><i
@@ -50,25 +57,24 @@
                             <span><i class="fas fa-exclamation fa-3x"></i></span>
                         </div>
                         <div class="col-10 my-auto">
-                            <h3 class="mb-0">Sorry, the area you selected is not within the
-                                Urban Drool Tool service area.
+                            <h3 class="mb-0">
+                                {{errorMessage}}
                             </h3>
                         </div>
                     </div>
                     <br />
                     <div class="row section-search-not-found mb-1">
-                        <div class="col-2 text-center m-auto p-0 text-center">
-                            <span><i class="fas fa-map-marker-alt fa-3x"></i></span>
+                        <div class="col-2 text-center m-auto p-0 text-center" [innerHTML]="errorSpecificIcon">
                         </div>
                         <div class="col-10 my-auto">
                             <h3 class="mb-0">
-                                Select an area within the highlighted service
-                                boundary to view results.
+                                {{errorCallToAction}}
+                                
                             </h3>
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!activeSearchNotFound && selectedMetric == WatershedExplorerMetric.NoMetric"
+                <div *ngIf="!errorActive && selectedMetric == WatershedExplorerMetric.NoMetric"
                     class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
                     <div class="h-100 mt-auto mb-auto">
                         <h3>
@@ -82,7 +88,7 @@
                         </h3>
                     </div>
                 </div>
-                <div *ngIf="!activeSearchNotFound && selectedMetric != WatershedExplorerMetric.NoMetric"
+                <div *ngIf="!errorActive && selectedMetric != WatershedExplorerMetric.NoMetric"
                     class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
                     <div class="h-100 w-100 m-auto">
                         <p class="b3 text-left">Displaying data for {{months[selectedMetricMonth - 1]}}
@@ -119,7 +125,7 @@
     </div>
     <div class="col-lg-9 pl-0 pr-0">
         <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight" style="height:100%">
-            <div id="buttonDiv" *ngIf="areMetricsCollapsed" class="d-lg-none">
+            <div id="buttonDiv" *ngIf="areMetricsCollapsed && !errorActive" class="d-lg-none">
                 <button class="btn btn-drooltool d-lg-none mb-1 w-100" [attr.aria-expanded]="!areMetricsCollapsed"
                     aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
                     (click)="showMetrics($event)"><span>Metric Info</span></button>
@@ -128,11 +134,11 @@
                 <br class="d-lg-none" />
                 <button *ngIf="searchActive"  (click)="displayTrace($event, false)" class="btn btn-drooltool mb-1 w-100"><span>Where does water flow?</span></button>
             </div>
-            <div class="mobile-stats-containing-div">
+            <div class="mobile-stats-containing-div" *ngIf="!errorActive">
                 <div *ngIf="selectedMetric != WatershedExplorerMetric.NoMetric" id="collapsePanel"
                     class="section-stats mt-2 collapse mobile-stats metrics-collapse d-lg-none"
                     [ngbCollapse]="areMetricsCollapsed" (click)="$event.stopPropagation();">
-                    <div *ngIf="!activeSearchNotFound"
+                    <div 
                         class="col-12 section-stats d-lg-none mt-1 metrics-panel-transparency">
                         <div class="h-100 w-100 m-auto">
                             <p class="b3">Displaying data for <br/> {{months[selectedMetricMonth - 1]}} {{selectedMetricYear}}

@@ -19,7 +19,7 @@ import { UserEditComponent } from './pages/user-edit/user-edit.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { DecimalPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { LinkRendererComponent } from './shared/components/ag-grid/link-renderer/link-renderer.component';
-
+import { Ng5SliderModule } from 'ng5-slider';
 
 import { FormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -72,7 +72,8 @@ export function init_app(appLoadService: AppInitService) {
     AgGridModule.withComponents([]),
     SelectDropDownModule,
     MyDatePickerModule,
-    SlickCarouselModule
+    SlickCarouselModule,
+    Ng5SliderModule
   ],  
   providers: [
     CookieService,
