@@ -25,7 +25,8 @@
             <h1>Only rain down the drain</h1>
             <div>
                 <p class="b1">
-                    Urban drool contributes to more than 1&nbsp;million gallons of polluted discharge to 
+                    Urban drool is dry weather run off that carries pollutants into our watershed and to the ocean.
+                    It contributes to more than <strong>1&nbsp;million gallons</strong> of polluted discharge to
                     Aliso Creek each day.
                 </p>
                 <p class="b1">
@@ -44,35 +45,37 @@
         </div>
     </div>
 </div>
-    <div id="mapImage" class="row homeSection h-100 pt-0">
-        <div class="col-12 text-center my-auto">
-            <h1 style="margin-bottom:30px">Do you add to urban drool?
-            </h1>
-            <div class="row" style="margin-bottom:30px">
-                <div class="col-12 col-md-6 offset-md-3">
-                    <p class="b1">
-                        Use these interactive tools to learn more about urban water usage 
-                        and its effect on our watersheds.
-                    </p>
-                </div>
+<div id="mapImage" class="row homeSection h-100 pt-0">
+    <div class="col-12 text-center my-auto">
+        <h1 style="margin-bottom:30px">Do you add to urban drool?
+        </h1>
+        <div class="row" style="margin-bottom:30px">
+            <div class="col-12 col-md-6 offset-md-3">
+                <p class="b1">
+                    Use these interactive tools to learn more about urban water usage
+                    and its effect on our watersheds.
+                </p>
             </div>
-            <div class="row">
-                <div class="col-6 col-lg-4 neighborhood-button">
-                    <a routerLink="/neighborhood-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool" style="margin-bottom:20px">Neighborhood Explorer</a>
-                    <p class="b2">
-                        Find out how your neighborhood contributes to urban drool and 
-                        what you can do.
-                    </p>
-                </div>
-                <div class="col-6 col-lg-4 watershed-button">
-                    <a routerLink="/watershed-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool" style="margin-bottom:20px">Watershed Explorer</a>
-                    <p class="b2">
-                        Learn more about your watershed and the benefits of reducing urban drool
-                    </p>
-                </div>
+        </div>
+        <div class="row">
+            <div class="col-6 col-lg-4 neighborhood-button">
+                <a routerLink="/neighborhood-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool"
+                    style="margin-bottom:20px">Neighborhood Explorer</a>
+                <p class="b2">
+                    Find out how your neighborhood contributes to urban drool and
+                    what you can do.
+                </p>
+            </div>
+            <div class="col-6 col-lg-4 watershed-button">
+                <a routerLink="/watershed-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool"
+                    style="margin-bottom:20px">Watershed Explorer</a>
+                <p class="b2">
+                    Learn more about your watershed and the benefits of reducing urban drool
+                </p>
             </div>
         </div>
     </div>
+</div>
 <div class="container">
     <div class="row homeSection">
         <div class="col-12 col-lg-8 m-lg-auto order-lg-last">
@@ -107,7 +110,7 @@
                         (init)="slickInit($event)" (breakpoint)="breakpoint($event)" (afterChange)="afterChange($event)"
                         (beforeChange)="beforeChange($event)" style="padding-top:40px">
                         <div ngxSlickItem *ngFor="let slide of slides" class="slide">
-                            <div class="slide-container" >
+                            <div class="slide-container">
                                 <div class="slide-background" style="background-image:url({{slide.image}})">
                                     <div class="slide-module-accent">
                                         <p class="b3" style="color:#FFF" [innerHTML]="slide.date"></p>
@@ -126,7 +129,8 @@
             <div class="row">
                 <div class="col-12">
                     <h1>Resource Spotlight</h1>
-                    <p class="b2" style="margin-bottom:0"><a routerLink="/take-action" routerLinkActive="true">Explore more Resources</a></p>
+                    <p class="b2" style="margin-bottom:0"><a routerLink="/take-action" routerLinkActive="true">Explore
+                            more Resources</a></p>
                 </div>
             </div>
             <div class="row">
@@ -134,7 +138,7 @@
                     <div id="resourceImage" style="margin: 30px auto"></div>
                 </div>
             </div>
-            <div class="row" >
+            <div class="row">
                 <div class="col-12 col-md-6 offset-md-3">
                     <h3 class="mt-1">New Rebate Option: <br>
                         Weather-Based Smart Sprinkler Timers
