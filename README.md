@@ -1,10 +1,4 @@
-Welcome to the Rosedale-DroolTool Bravo Water Storage District Water Trading Platform. The trading program is designed to meet these objectives:
-- Reduce water trading transaction costs and facilitate effective accounting and management of available water resources.
-- Enable the movement of water to the highest valued and best uses.
-- Help RRB (and other Kern County districts) achieve groundwater sustainability goals and minimize economic costs to the community.
-- Over the longer term, consider opportunities to generate additional benefits from fallowed land such as groundwater recharge basins and wildlife habitat.
-
-This project is a collaborative effort by the Rosedale-DroolTool Bravo Water Storage District (https://www.rrbwsd.com), Environmental Defense Fund (https://www.edf.org), Westwater Research (http://www.waterexchange.com), and Sitka Technology Group (https://sitkatech.com). 
+The Urban Drool Tool application is built by Sitka Technology Group (https://sitkatech.com) in partnership with Geosyntec Consultants (https://geosyntec.com) for Orange County Public Works and the Moulton-Niguel Water District. This program is free software; you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation.
 
 Please contact support@sitkatech.com with any questions about this project.
 
