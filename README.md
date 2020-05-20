@@ -1,4 +1,4 @@
-The Urban Drool Tool application is built by Sitka Technology Group (https://sitkatech.com) in partnership with Geosyntech Consultants (https://geosyntec.com) for Orange County Public Works and the Moulton-Niguel Water District. This program is free software; you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation.
+The Urban Drool Tool application is built by Sitka Technology Group (https://sitkatech.com) in partnership with Geosyntec Consultants (https://geosyntec.com) for Orange County Public Works and the Moulton-Niguel Water District. This program is free software; you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation.
 
 Please contact support@sitkatech.com with any questions about this project.
 
