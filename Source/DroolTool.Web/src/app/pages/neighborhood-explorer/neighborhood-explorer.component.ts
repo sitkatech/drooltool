@@ -310,6 +310,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
             null,
             () => this.setSearchingAndLoadScreen(false)
           );
+          this.neighborhoodService.updateSearchedAddress(this.searchAddress);
         }
         else {
           this.searchAddressNotFoundOrNotServiced();
@@ -461,6 +462,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.activeSearchNotFound = false;
     this.traceActive = false;
     this.selectedNeighborhoodMetrics = null;
+    this.neighborhoodService.updateSearchedAddress(null);
     this.removeCurrentSearchLayer();
   }
 

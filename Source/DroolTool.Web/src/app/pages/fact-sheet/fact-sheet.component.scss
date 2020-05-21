@@ -1,0 +1,63 @@
+@import '~src/scss/_variables.scss';
+
+@media only screen and (min-width:1200px) {
+    
+}
+
+@media only screen and (min-width:992px) {
+    .top-section p {
+        width:807px;
+    }
+
+    .drool-drain-section p {
+        width:360px;
+    }
+}
+
+@media only screen and (min-width:768px) and (max-width:991px) {
+    .top-section p {
+        width:660px;
+    }
+
+    .drool-drain-section p {
+        width:360px;
+    }
+}
+
+@media only screen and (min-width:576px) and (max-width:767px) {
+    .top-section p {
+        width:470px;
+    }
+
+    .drool-drain-section p {
+        width:308px;
+    }
+}
+
+@media only screen and (max-width:575px) {
+    .top-section p {
+        max-width:470px;
+    }
+
+    .drool-drain-section p {
+        max-width:308px;
+    }
+}
+
+h1, h2, h3, h4, p {
+    color: $header-nav-color
+}
+
+hr {
+    border-top: 10px solid rgb(42,194,223);
+    margin-top: 0rem;
+    margin-bottom: 1.5rem;
+}
+
+.drool-orange {
+    color: $drool-orange;
+}
+
+.drool-border {
+    border: 5px solid $header-nav-color;
+}

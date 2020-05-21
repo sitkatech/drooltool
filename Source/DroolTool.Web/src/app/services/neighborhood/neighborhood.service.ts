@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/shared/services';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto';
 import { NeighborhoodMetricAvailableDatesDto } from 'src/app/shared/models/neighborhood-metric-available-dates-dto';
@@ -9,9 +9,20 @@ import { NeighborhoodMetricAvailableDatesDto } from 'src/app/shared/models/neigh
     providedIn: 'root'
 })
 export class NeighborhoodService {
-    
-    
+      
     constructor(private apiService: ApiService) { } 
+
+    private searchedAddress = new Subject<string>();
+
+    getSearchedAddress(): Observable<string> {
+        return this.searchedAddress.asObservable();
+    }
+
+    updateSearchedAddress(address: string) {
+        console.log("Updating");
+        console.log(address);
+        this.searchedAddress.next(address);
+    }
 
     getNeighborhoodsWithMetricsIds(): Observable<number[]> {
         let route = `/neighborhood/get-neighborhoods-with-metrics-ids`;
