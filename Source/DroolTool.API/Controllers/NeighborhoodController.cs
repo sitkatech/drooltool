@@ -164,6 +164,19 @@ namespace DroolTool.API.Controllers
             return Ok(neighborhoodMetric);
         }
 
+        [HttpGet("neighborhood/{OCSurveyNeighborhoodID}/{metricEndYear}/{metricEndMonth}/get-metrics-for-year/")]
+        public ActionResult<List<NeighborhoodMetricDto>> GetMetricsForYear([FromRoute] int OCSurveyNeighborhoodID, [FromRoute] int metricEndYear, [FromRoute] int metricEndMonth)
+        {
+            var desiredStartDate = new DateTime(metricEndYear - 1, metricEndMonth, 1);
+            var neighborhoodMetricsForYear = _dbContext.vNeighborhoodMetric
+                .Where(x => x.OCSurveyCatchmentID == OCSurveyNeighborhoodID &&
+                            x.MetricDate >= desiredStartDate)
+                .OrderByDescending(x => x.MetricDate)
+                .Select(x => x.AsDto())
+                .ToList();
+
+            return Ok(neighborhoodMetricsForYear);
+        }
         [HttpGet("neighborhood/get-most-recent-metric/")]
         public ActionResult<NeighborhoodMetricDto> GetMostRecentMetric()
         {

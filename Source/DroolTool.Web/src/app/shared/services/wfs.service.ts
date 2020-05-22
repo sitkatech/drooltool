@@ -22,8 +22,6 @@ export class WfsService {
 
         var bbox = [x1, y1, x2, y2].join(",");
 
-        console.log(bbox);
-
         const url: string = `${environment.geoserverMapServiceUrl}/wms`;
         return this.http.get<FeatureCollection>(url, {
             params: {
@@ -39,6 +37,21 @@ export class WfsService {
                 width: '101',
                 height: '101',
                 bbox: bbox
+            }
+        })
+    }
+
+    public geoserverNeighborhoodLookupWithID(id: number): Observable<FeatureCollection> {
+        const url: string = `${environment.geoserverMapServiceUrl}/wms`;
+        return this.http.get<FeatureCollection>(url, {
+            params: {
+                service: 'WFS',
+                version: '2.0',
+                request: "GetFeature",
+                outputformat: "application/json",
+                SrsName: 'EPSG:4326',
+                typeName: 'DroolTool:Neighborhoods',
+                cql_filter: `NeighborhoodID=${id}`
             }
         })
     }
