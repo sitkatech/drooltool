@@ -17,6 +17,7 @@ export class FactSheetComponent implements AfterViewInit {
   public mapHeight = "234px"
   public mapID = "FactSheetMap";
   public map: L.Map;
+  public tileLayers: any;
   public searchedAddress:string = "My Selected Neighborhood";
   public metricsForYear:NeighborhoodMetricDto[];
   public metricEndDate:Date;
@@ -24,9 +25,14 @@ export class FactSheetComponent implements AfterViewInit {
   public metricsForMostRecentMonth:NeighborhoodMetricDto;
   public metricsForMonthPriorToMostRecentMonth:NeighborhoodMetricDto;
   public metricsFurthestFromEndDate:NeighborhoodMetricDto;
-  totalIrrigationWaterUsed: any;
-  droolChangeOverLastTwoMonthsStatement: string;
-
+  
+  public totalIrrigationWaterUsed: any;
+  public droolChangeOverLastTwoMonthsStatement: string;
+  public droolChangeOverLastYearStatement: string;
+  public neighborhoodsParticipatingChangeStatement: string;
+  public drainsToText: string;
+  public watershedImage: string;
+  
   public months = [
     "January",
     "February",
@@ -41,20 +47,14 @@ export class FactSheetComponent implements AfterViewInit {
     "November",
     "December"
   ]
-  droolChangeOverLastYearStatement: any;
-  neighborhoodsParticipatingChangeStatement: any;
-  drainsToText: any;
-  tileLayers: any;
   
-
-
   public watershedImages = {
     "Salt Creek": "../../../assets/main/watershed-images/Salt_Creek.png",
     "Laguna Canyon": "../../../assets/main/watershed-images/Laguna_Canyon.png",
     "Aliso Creek":"../../../assets/main/watershed-images/Aliso_Creek.png",
     "San Juan Creek": "../../../assets/main/watershed-images/San_Juan_Creek.png"
   }
-  watershedImage: any;
+  
 
   constructor(
     private route: ActivatedRoute,
@@ -89,6 +89,7 @@ export class FactSheetComponent implements AfterViewInit {
       })
     }
   }
+
   getMapImageAndDrainsToText(geoserverResponse: any, stormshedResponse: any) {
     this.drainsToText = geoserverResponse.features[0].properties.Watershed;
     let keyForWatershed = Object.keys(this.watershedImages).filter(x => this.drainsToText.includes(x))[0];
@@ -152,15 +153,15 @@ export class FactSheetComponent implements AfterViewInit {
 
   setupMetricsAndGetStatements(result:any) {
     this.metricsForYear = result;
-        this.metricsForMostRecentMonth = this.metricsForYear[0];
-        this.metricsForMonthPriorToMostRecentMonth = this.metricsForYear[1];
-        this.metricsFurthestFromEndDate = this.metricsForYear[this.metricsForYear.length - 1];
+    this.metricsForMostRecentMonth = this.metricsForYear[0];
+    this.metricsForMonthPriorToMostRecentMonth = this.metricsForYear[1];
+    this.metricsFurthestFromEndDate = this.metricsForYear[this.metricsForYear.length - 1];
 
-        this.droolChangeOverLastTwoMonthsStatement = this.getLastTwoMonthsStatement(this.metricsForMostRecentMonth.TotalDrool, this.metricsForMonthPriorToMostRecentMonth.TotalDrool);
-        this.droolChangeOverLastYearStatement = this.getDroolChangeOverLastYearStatement(this.metricsForMostRecentMonth.TotalDrool, this.metricsFurthestFromEndDate.TotalDrool, this.metricsForYear.length);
+    this.droolChangeOverLastTwoMonthsStatement = this.getLastTwoMonthsStatement(this.metricsForMostRecentMonth.TotalDrool, this.metricsForMonthPriorToMostRecentMonth.TotalDrool);
+    this.droolChangeOverLastYearStatement = this.getDroolChangeOverLastYearStatement(this.metricsForMostRecentMonth.TotalDrool, this.metricsFurthestFromEndDate.TotalDrool, this.metricsForYear.length);
 
-        this.neighborhoodsParticipatingChangeStatement = this.getNeighborhoodsParticipatingChangeStatement(this.metricsForMostRecentMonth.OverallParticipation, this.metricsFurthestFromEndDate.OverallParticipation, this.metricsForYear.length);
-        this.totalIrrigationWaterUsed = this.metricsForYear.reduce((tiw, m) => tiw + m.TotalWaterUsedForIrrigation, 0);
+    this.neighborhoodsParticipatingChangeStatement = this.getNeighborhoodsParticipatingChangeStatement(this.metricsForMostRecentMonth.OverallParticipation, this.metricsFurthestFromEndDate.OverallParticipation, this.metricsForYear.length);
+    this.totalIrrigationWaterUsed = this.metricsForYear.reduce((tiw, m) => tiw + m.TotalWaterUsedForIrrigation, 0);
   }
 
   getNeighborhoodsParticipatingChangeStatement(overallParticipationMostRecent: number, overallParticipationOldest: number, length: number): any {
@@ -191,8 +192,5 @@ export class FactSheetComponent implements AfterViewInit {
     else {
       return "remaining steady";
     }
-  }
-
-  ngOnDestroy() {
   }
 }

@@ -15,8 +15,7 @@
     </div>
     <div class="row">
         <div class="col text-center">
-            <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight"
-                style="position:absolute; width:234px; z-index:-1; bottom: 5px"></div>
+            <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight"></div>
             <p class="b1 drool-orange">{{searchedAddress}}</p>
         </div>
     </div>
@@ -52,7 +51,7 @@
             <p class="b2 mx-auto">Your neighborhood drains to {{drainsToText}} and the Pacific Ocean!</p>
         </div>
         <div class="col-12 col-sm-4">
-            <img src={{watershedImage}} style="width:100%; max-width:170px; height:auto">
+            <img src={{watershedImage}} class="watershed-image">
         </div>
     </div>
     <div class="row text-center mt-4">
@@ -107,5 +106,12 @@
             </p>
         </div>
     </div>
+    </ng-container>
+    <ng-container *ngIf="!metricsForYear">
+        <div class="row">
+            <div class="col text-center">
+                <h2>Getting your stats ready...</h2>
+            </div>
+        </div>
     </ng-container>
 </div>
