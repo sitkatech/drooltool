@@ -45,17 +45,12 @@ export class WfsService {
         const url: string = `${environment.geoserverMapServiceUrl}/wms`;
         return this.http.get<FeatureCollection>(url, {
             params: {
-                service: 'WMS',
-                version: '1.1.1',
-                request: "GetFeatureInfo",
-                info_format: "application/json",
-                QUERY_LAYERS: 'DroolTool:Neighborhoods',
-                layers: 'DroolTool:Neighborhoods',
-                x: '50',
-                y: '50',
-                SRS: 'EPSG:4326',
-                width: '101',
-                height: '101',
+                service: 'WFS',
+                version: '2.0',
+                request: "GetFeature",
+                outputformat: "application/json",
+                SrsName: 'EPSG:4326',
+                typeName: 'DroolTool:Neighborhoods',
                 cql_filter: `NeighborhoodID=${id}`
             }
         })

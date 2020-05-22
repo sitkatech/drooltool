@@ -8,7 +8,6 @@ import { Router, RouteConfigLoadStart, RouteConfigLoadEnd, NavigationEnd } from 
 import { BusyService } from './shared/services';
 import { AuthenticationService } from './services/authentication.service';
 import { Title } from '@angular/platform-browser';
-import { NeighborhoodService } from './services/neighborhood/neighborhood.service';
 
 declare var require: any
 
@@ -22,7 +21,7 @@ export class AppComponent {
     userClaimsUpsertStarted = false;
     ignoreSessionTerminated = false;
 
-    constructor(private router: Router, private oauthService: OAuthService, private cookieStorageService: CookieStorageService, private busyService: BusyService, private authenticationService: AuthenticationService, private titleService: Title, private neighborhoodService: NeighborhoodService) {
+    constructor(private router: Router, private oauthService: OAuthService, private cookieStorageService: CookieStorageService, private busyService: BusyService, private authenticationService: AuthenticationService, private titleService: Title) {
     }
 
     ngOnInit() {

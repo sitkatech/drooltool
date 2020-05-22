@@ -12,16 +12,14 @@ export class NeighborhoodService {
       
     constructor(private apiService: ApiService) { } 
 
-    private searchedAddress = new Subject<string>();
+    private searchedAddress;
 
-    getSearchedAddress(): Observable<string> {
-        return this.searchedAddress.asObservable();
+    getSearchedAddress(): string {
+        return this.searchedAddress;
     }
 
     updateSearchedAddress(address: string) {
-        console.log("Updating");
-        console.log(address);
-        this.searchedAddress.next(address);
+        this.searchedAddress = address;
     }
 
     getNeighborhoodsWithMetricsIds(): Observable<number[]> {
@@ -33,6 +31,11 @@ export class NeighborhoodService {
         let route = `/neighborhood/get-metric-timeline`;
         return this.apiService.getFromApi(route);
       }
+
+    getMetricsForYear(OCSurveyNeighborhoodID:number, metricEndYear: number, metricEndMonth:number): Observable<NeighborhoodMetricDto[]> {
+        let route = `/neighborhood/${OCSurveyNeighborhoodID}/${metricEndYear}/${metricEndMonth}/get-metrics-for-year/`;
+        return this.apiService.getFromApi(route);
+    }
 
     getMetricsForYearAndMonth(OCSurveyNeighborhoodID:number, metricYear:number, metricMonth:number): Observable<NeighborhoodMetricDto> {
         let route = `/neighborhood/${OCSurveyNeighborhoodID}/${metricYear}/${metricMonth}/get-metrics/`;

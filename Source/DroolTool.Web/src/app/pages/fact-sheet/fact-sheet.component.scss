@@ -61,3 +61,26 @@ hr {
 .drool-border {
     border: 5px solid $header-nav-color;
 }
+
+.list-of-actions::before {
+    
+}
+
+.list-of-actions {
+    list-style-type:none;
+    text-align:center;
+
+    li::before {
+        content: "\25E6";
+        transform: scale(2);
+        color: $drool-orange;
+        display:inline-block;
+        width:1em;
+        margin-left:-1em;
+    }
+
+    li {
+        color:$header-nav-color;
+    }
+
+}

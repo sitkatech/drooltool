@@ -284,8 +284,6 @@ namespace DroolTool.EFModels.Entities
 
                 entity.Property(e => e.DrainID).IsUnicode(false);
 
-                entity.Property(e => e.NeighborhoodID).ValueGeneratedOnAdd();
-
                 entity.Property(e => e.Watershed).IsUnicode(false);
             });
 

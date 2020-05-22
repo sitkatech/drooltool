@@ -2,38 +2,57 @@
     <div class="row mt-3">
         <div class="col text-center top-section">
             <h1 class="mx-auto">Does my neighborhood mind the gutter?</h1>
-            <p class="b2 mx-auto mt-3">Urban Drool is unnatural, unpermitted waterflow that occurs in dry seasons. It carries
-                pollutants into our
-                watershed and to the ocean</p>
-            <p class="b2 mx-auto">This review contains helpful facts about your neighborhood's urban drool impact. Share with
-                you community
-                to spread the word and take action!</p>
+            <p class="b2 mx-auto mt-3">
+                Urban Drool is unnatural, unpermitted waterflow that occurs in dry conditions. It
+                carries pollutants into our rivers, lakes, wetlands and ocean.
+                <br />
+                This review contains helpful facts about your neighborhood's urban drool impact and ways you can make a
+                difference.
+                <br />
+                Share with your community to spread the word and take action!
+            </p>
         </div>
     </div>
     <div class="row">
         <div class="col text-center">
+            <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight"
+                style="position:absolute; width:234px; z-index:-1; bottom: 5px"></div>
             <p class="b1 drool-orange">{{searchedAddress}}</p>
         </div>
     </div>
     <hr>
+    <ng-container *ngIf="metricsForYear">
     <div class="row">
-        <div class="col text-center">
-            <h2>HOW MUCH DOES MY NEIGHBORHOOD DROOL?</h2>
-            <p class="b2">Your neighborhood's drool production has been (on the rise or falling) this month.</p>
+        <div class="col-12 text-center">
+            <h2>DROOL TRENDS OVER TIME</h2>
+            <p class="b2">
+                Drool has been {{droolChangeOverLastTwoMonthsStatement}} over the last two months
+                with {{metricsForMostRecentMonth.TotalDrool | number:'1.0-0':'en-US'}} gallons of urban drool
+                produced
+                in {{months[metricsForMostRecentMonth.MetricMonth - 1]}} compared to
+                {{metricsForMonthPriorToMostRecentMonth.TotalDrool | number:'1.0-0':'en-US'}} gallons in
+                {{months[metricsForMonthPriorToMostRecentMonth.MetricMonth - 1]}}.
+            </p>
         </div>
-    </div>
-    <div class="row text-center">
-        <div class="col">
+        <div class="col-12 text-center">
             Estimated Drool Creation chart
+        </div>
+        <div class="col-12 mt-3">
+            <p class="b2" [innerHTML]="droolChangeOverLastYearStatement"></p>
+            <ul class="list-of-actions">
+                <li class="b2">Check your system for leaks</li>
+                <li class="b2">Align your sprinkler heads and fix broken ones</li>
+                <li class="b2">Adjust your watering schedule</li>
+            </ul>
         </div>
     </div>
     <div class="row text-center drool-drain-section drool-border">
-        <div class="col-8">
-            <h3 class="mt-3">BUT WHERE DOES OUR DROOL GO?</h3>
-            <p class="b3 mx-auto">Your neighborhood drains to (neighborhood) and the Pacific Ocean!</p>
+        <div class="col-12 col-sm-8">
+            <h2 class="mt-3">BUT WHERE DOES OUR DROOL GO?</h2>
+            <p class="b2 mx-auto">Your neighborhood drains to {{drainsToText}} and the Pacific Ocean!</p>
         </div>
-        <div class="col-4">
-            Image of watershed
+        <div class="col-12 col-sm-4">
+            <img src={{watershedImage}} style="width:100%; max-width:170px; height:auto">
         </div>
     </div>
     <div class="row text-center mt-4">
@@ -46,10 +65,12 @@
             Neighborhood water customers chart
         </div>
         <div class="col-6">
-            <p class="b3">There are x water accounts in your neighborhood.</p>
-            <p class="b3"><strong>y</strong> of your neighbors have participated in water conservation rebate programs.
+            <p class="b2">There are {{metricsForMostRecentMonth.TotalWaterAccounts}} water accounts in your
+                neighborhood.</p>
+            <p class="b2"><strong>{{metricsForMostRecentMonth.OverallParticipation}}</strong> of your neighbors have
+                participated in water conservation rebate programs.
             </p>
-            <p class="b3">This is (up or down) (number) from a year ago!</p>
+            <p class="b2">{{neighborhoodsParticipatingChangeStatement}}</p>
         </div>
     </div>
     <hr>
@@ -59,25 +80,32 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6 drool-border">
-            <p class="b4 mt-3">An estimated <strong>z gallons</strong> was used to irrigate a acres of landscaping last year.
+        <div class="col-6">
+            <p class="b2 mt-3">An estimated <strong>{{totalIrrigationWaterUsed | number:'1.0-0':'en-US'}}
+                    gallons</strong> was used to irrigate
+                {{metricsForMostRecentMonth.TotalIrrigatedArea | number:'1.0-0':'en-US'}} acres of landscaping last
+                year.
             </p>
-            <p class="b4">This would be enough to irrigate <strong>b acres</strong> of drought tolerant landscaping.</p>
+            <p class="b2">This would be enough to fill
+                <strong>{{totalIrrigationWaterUsed / 660000 | number:'1.0-0':'en-US'}} olympic swimming
+                    pools!</strong>
+                <br />
+                This would also be enough to irrigate (c) acres of drought tolerant landscaping.</p>
+            <p class="b2">Visualization reference</p>
         </div>
         <div class="col-6">
             Visualization
-        </div>
-        <div class="col-12">
-            Visualization reference
         </div>
     </div>
     <hr>
     <div class="row">
         <div class="col">
-            <p class="b4">Mindful, simple changes to everyday tasks can help lower the amount of urban drool your
+            <p class="b2">Mindful, simple changes to everyday tasks can help lower the amount of urban drool your
                 neighborhood produces!</p>
-            <p class="b4">Check out the many outdoor water use rebate programs available at:<br /> <a
-                    href="https://www.mwnd.com/rebates" target="_blank"><strong>www.mnwd.com/rebates</strong></a></p>
+            <p class="b2">Check out the many outdoor water use rebate programs available at:<br /> <a
+                    href="https://www.mwnd.com/rebates" target="_blank"><strong>www.mnwd.com/rebates</strong></a>
+            </p>
         </div>
     </div>
+    </ng-container>
 </div>
