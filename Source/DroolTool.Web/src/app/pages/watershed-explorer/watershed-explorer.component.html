@@ -7,7 +7,6 @@
                     <div class="container p-0">
                         <div class="row">
                             <div class="col-12 mx-auto mx-lg-0">
-                                <ng-container *ngIf="metrics && watershedNames && allYearsWithAvailableMetricMonths">
                                 <drooltool-stylized-dropdown [heading]="'Choose from one of the metrics below'" [options]="metrics"
                                     [(selectedOption)]="selectedMetric" [showInstructions]="true"
                                     (showInstructionsTriggered)="showInstructions = true"
@@ -21,7 +20,6 @@
                                 <ng5-slider style="max-width:353px" [(value)]="selectedMetricMonth"
                                     [options]="ng5SliderOptions" (userChange)="getAppropriateMetricsForDateChange()">
                                 </ng5-slider>
-                            </ng-container>
                             </div>
                         </div>
                     </div>
