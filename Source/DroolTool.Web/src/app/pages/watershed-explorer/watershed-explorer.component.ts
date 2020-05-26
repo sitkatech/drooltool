@@ -14,7 +14,8 @@ import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric
 import { WatershedExplorerMetric } from 'src/app/shared/models/watershed-explorer-metric.js';
 import { forkJoin } from 'rxjs';
 import { NeighborhoodMetricAvailableDatesDto } from 'src/app/shared/models/neighborhood-metric-available-dates-dto.js';
-import { Options } from 'ng5-slider'
+import { Options } from 'ng5-slider';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 declare var $: any;
 
@@ -122,12 +123,13 @@ export class WatershedExplorerComponent implements OnInit {
     private compileService: CustomCompileService,
     private neighborhoodService: NeighborhoodService,
     private wfsService: WfsService,
-    private watershedMaskService: WatershedMaskService
+    private watershedMaskService: WatershedMaskService,
+    private spinner: NgxSpinnerService
   ) {
   }
 
   public ngOnInit(): void {
-
+    this.spinner.show();
     this.tileLayers = Object.assign({}, {
       "Aerial": L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Aerial',
@@ -198,6 +200,7 @@ export class WatershedExplorerComponent implements OnInit {
 
       this.addDisabledToAppropriateSliderMonths();
       this.applyMetricOverlay(false);
+      this.spinner.hide();
     });
 
     this.neighborhoodService.getServicedNeighborhoodsWatershedNames().subscribe(result => {
@@ -523,45 +526,21 @@ export class WatershedExplorerComponent implements OnInit {
       metricContent = "No metrics found for " + this.months[this.selectedMetricMonth - 1] + " " + this.selectedMetricYear + " at this location";
     }
     else {
-      switch (this.selectedMetric) {
-        case WatershedExplorerMetric.TotalDrool: {
-          metricContent = this.selectedMetric + ": " +
-            (this.metricsForCurrentSelection.TotalDrool == null
-              ? "Not available"
-              : this.metricsForCurrentSelection.TotalDrool.toLocaleString() + " gal/month");
-          break;
-        }
-        case WatershedExplorerMetric.OverallParticipation: {
-          metricContent = this.selectedMetric + ": " +
-            (this.metricsForCurrentSelection.OverallParticipation == null
-              ? "Not available"
-              : this.metricsForCurrentSelection.OverallParticipation.toLocaleString() + " active meters");
-          break;
-        }
-        case WatershedExplorerMetric.PercentParticipation: {
-          metricContent = this.selectedMetric + ": " +
-            (this.metricsForCurrentSelection.PercentParticipation == null
-              ? "Not available"
-              : Math.round(this.metricsForCurrentSelection.PercentParticipation).toString() + "%");
-          break;
-        }
-        case WatershedExplorerMetric.DroolPerLandscapedAcre: {
-          metricContent = this.selectedMetric + ": " +
-            (this.metricsForCurrentSelection.DroolPerLandscapedAcre == null
-              ? "Not available"
-              : "<br/>" + this.metricsForCurrentSelection.DroolPerLandscapedAcre.toLocaleString() + " gal/acre");
-          break;
-        }
-        default: {
-          metricContent = "Select a metric from the dropdown to get started!";
-        }
+          Object.keys(WatershedExplorerMetric).filter(x => WatershedExplorerMetric[x].toString() != WatershedExplorerMetric.NoMetric.toString()).forEach((key, index) => {
+            if (index != 0) {
+              metricContent += "<br/>";
+            }
+            metricContent += WatershedExplorerMetric[key].toString() + ": " + (this.metricsForCurrentSelection[key] == null ? "Not available" : this.metricsForCurrentSelection[key].toLocaleString() + " " + WatershedExplorerMetric[key].metricUnitsShort)
+          })
       }
-    }
 
     return "<span>" + metricContent + "</span>"
   }
 
   public displayNewMetric(clearAsResultOfError: boolean): void {
+    if (!this.map) {
+      return null;
+    }
     this.applyMetricOverlay(clearAsResultOfError);
     this.map.invalidateSize();
     if (!this.clickMarker) {
@@ -586,6 +565,10 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public getNewWatershedMask() {
+    if (!this.map) {
+      return null;
+    }
+
     this.clearSearchResults();
     this.clearErrors();
     this.map.removeLayer(this.maskLayer);
@@ -663,6 +646,10 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public addDisabledToAppropriateSliderMonths() {
+    if (!this.allYearsWithAvailableMetricMonths) {
+      return null;
+    }
+
     this.selectedYearMinMonth = this.allYearsWithAvailableMetricMonths
       .filter(x => x.MetricYear == this.selectedMetricYear)[0]
       .AvailableMonths
@@ -684,5 +671,14 @@ export class WatershedExplorerComponent implements OnInit {
       $(sliderTicks[x-1]).addClass(x < this.selectedYearMinMonth || x > this.selectedYearMaxMonth ? "ng5-slider-disabled-tick" : "");
       x = x + 1;
     }
+  }
+
+  public getYears(): Array<number> {
+    if (!this.allYearsWithAvailableMetricMonths) {
+      return null;
+    }
+
+    return this.allYearsWithAvailableMetricMonths.map(x => x.MetricYear);
+
   }
 }

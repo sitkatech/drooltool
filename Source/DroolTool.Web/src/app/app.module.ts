@@ -37,6 +37,7 @@ import { NeighborhoodExplorerComponent } from './pages/neighborhood-explorer/nei
 import { TakeActionComponent } from './pages/take-action/take-action.component';
 import { WatershedExplorerComponent } from './pages/watershed-explorer/watershed-explorer.component';
 import { FactSheetComponent } from './pages/fact-sheet/fact-sheet.component';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -75,7 +76,8 @@ export function init_app(appLoadService: AppInitService) {
     SelectDropDownModule,
     MyDatePickerModule,
     SlickCarouselModule,
-    Ng5SliderModule
+    Ng5SliderModule,
+    NgxSpinnerModule
   ],  
   providers: [
     CookieService,

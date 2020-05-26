@@ -40,6 +40,11 @@
     font-size: 18px;
 }
 
+.search-close {
+    font-size:1.5rem;
+    cursor:pointer;
+}
+
 .section-stats * h3,
 .section-search-not-found * h3 {
     color: #1E5668;
@@ -163,9 +168,16 @@
     background-color: #999 !important;
 }
 
+::ng-deep .ng5-slider .ng5-slider-pointer {
+    width:25px !important;
+    height:25px !important;
+    top:-11px !important;
+    margin-left:4px !important;
+}
+
 ::ng-deep .ng5-slider .ng5-slider-pointer:after {
-    width: 27px !important;
-    height: 27px !important;
+    width: 20px !important;
+    height: 20px !important;
     top: 3px !important;
     left: 3px !important;
     border-radius: 13px !important;

@@ -81,10 +81,12 @@ export class FactSheetComponent implements AfterViewInit {
       this.metricEndDate = this.neighborhoodService.getDefaultMetricDate();
       forkJoin(
         this.wfsService.geoserverNeighborhoodLookupWithID(id),
-        this.neighborhoodService.getStormshed(id),
-        this.neighborhoodService.getMetricsForYear(id, this.metricEndDate.getUTCFullYear(), this.metricEndDate.getUTCMonth())
-        ).subscribe(([geoserverResponse, stormshedResponse, metricResult]) => {
-          this.setupMetricsAndGetStatements(metricResult);
+        this.neighborhoodService.getStormshed(id)
+        ).subscribe(([geoserverResponse, stormshedResponse]) => {
+          const OCSurveyNeighborhoodID = geoserverResponse.features[0].properties.OCSurveyNeighborhoodID;
+          this.neighborhoodService.getMetricsForYear(OCSurveyNeighborhoodID, this.metricEndDate.getUTCFullYear(), this.metricEndDate.getUTCMonth()).subscribe(metricResult => {
+            this.setupMetricsAndGetStatements(metricResult);
+          });       
           this.getMapImageAndDrainsToText(geoserverResponse, stormshedResponse);
       })
     }

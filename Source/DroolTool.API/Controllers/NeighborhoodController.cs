@@ -197,6 +197,7 @@ namespace DroolTool.API.Controllers
                     (year, months) => new NeighborhoodMetricAvailableDatesDto
                         { MetricYear = year, AvailableMonths = months.ToList() })
                 .Distinct()
+                .OrderByDescending(x => x.MetricYear)
                 .ToList();
         }
 
