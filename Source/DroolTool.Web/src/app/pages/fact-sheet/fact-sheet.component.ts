@@ -175,13 +175,13 @@ export class FactSheetComponent implements AfterViewInit {
   }
 
   getDroolChangeOverLastYearStatement(totalDroolMostRecent: number, totalDroolOldest: number, length: number): any {
-    let difference = (totalDroolMostRecent/totalDroolOldest);
-    let improvement = difference - 1 <= 0;
+    let difference = (totalDroolMostRecent/totalDroolOldest) - 1;
+    let improvement = difference <= 0;
     let briefStatement = improvement ? "improvement" : "regression";
     let lengthOfTime = length < 13 ? length  - 1 + "months ago" : "last year";
     let lineOfEncouragement = improvement ? "keep up the good work?" : "get back on track?"
 
-    return `This is a ${Math.round(difference * 100)}% ${briefStatement} from ${lengthOfTime}${improvement ? "!" : "."} <br/> What can you do right now to ${lineOfEncouragement}`; 
+    return `This is a ${Math.abs(Math.round(difference * 100))}% ${briefStatement} from ${lengthOfTime}${improvement ? "!" : "."} <br/> What can you do right now to ${lineOfEncouragement}`; 
   } 
 
   getLastTwoMonthsStatement(mostRecent:number, monthPrior:number): string {
