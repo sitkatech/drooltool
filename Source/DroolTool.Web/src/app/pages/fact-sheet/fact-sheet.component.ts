@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 import { UserDto } from 'src/app/shared/models/user/user-dto';
@@ -6,6 +6,9 @@ import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto';
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import * as L from 'leaflet';
+import { DroolPerLandscapedAcreChartDto } from 'src/app/shared/models/drool-per-landscaped-acre-chart-dto';
+
+declare var vegaEmbed: any;
 
 @Component({
   selector: 'drooltool-fact-sheet',
@@ -18,21 +21,21 @@ export class FactSheetComponent implements AfterViewInit {
   public mapID = "FactSheetMap";
   public map: L.Map;
   public tileLayers: any;
-  public searchedAddress:string = "My Selected Neighborhood";
-  public metricsForYear:NeighborhoodMetricDto[];
-  public metricEndDate:Date;
+  public searchedAddress: string = "My Selected Neighborhood";
+  public metricsForYear: NeighborhoodMetricDto[];
+  public metricEndDate: Date;
 
-  public metricsForMostRecentMonth:NeighborhoodMetricDto;
-  public metricsForMonthPriorToMostRecentMonth:NeighborhoodMetricDto;
-  public metricsFurthestFromEndDate:NeighborhoodMetricDto;
-  
+  public metricsForMostRecentMonth: NeighborhoodMetricDto;
+  public metricsForMonthPriorToMostRecentMonth: NeighborhoodMetricDto;
+  public metricsFurthestFromEndDate: NeighborhoodMetricDto;
+
   public totalIrrigationWaterUsed: any;
   public droolChangeOverLastTwoMonthsStatement: string;
   public droolChangeOverLastYearStatement: string;
   public neighborhoodsParticipatingChangeStatement: string;
   public drainsToText: string;
   public watershedImage: string;
-  
+
   public months = [
     "January",
     "February",
@@ -47,22 +50,24 @@ export class FactSheetComponent implements AfterViewInit {
     "November",
     "December"
   ]
-  
+
   public watershedImages = {
     "Salt Creek": "../../../assets/main/watershed-images/Salt_Creek.png",
     "Laguna Canyon": "../../../assets/main/watershed-images/Laguna_Canyon.png",
-    "Aliso Creek":"../../../assets/main/watershed-images/Aliso_Creek.png",
+    "Aliso Creek": "../../../assets/main/watershed-images/Aliso_Creek.png",
     "San Juan Creek": "../../../assets/main/watershed-images/San_Juan_Creek.png"
   }
-  
+  droolChartData: DroolPerLandscapedAcreChartDto[];
+
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private neighborhoodService: NeighborhoodService,
-    private wfsService: WfsService
+    private wfsService: WfsService,
+    private cdr: ChangeDetectorRef
   ) {
-   }
+  }
 
   ngOnInit() {
     this.tileLayers = Object.assign({}, {
@@ -82,14 +87,49 @@ export class FactSheetComponent implements AfterViewInit {
       forkJoin(
         this.wfsService.geoserverNeighborhoodLookupWithID(id),
         this.neighborhoodService.getStormshed(id)
-        ).subscribe(([geoserverResponse, stormshedResponse]) => {
-          const OCSurveyNeighborhoodID = geoserverResponse.features[0].properties.OCSurveyNeighborhoodID;
-          this.neighborhoodService.getMetricsForYear(OCSurveyNeighborhoodID, this.metricEndDate.getUTCFullYear(), this.metricEndDate.getUTCMonth()).subscribe(metricResult => {
-            this.setupMetricsAndGetStatements(metricResult);
-          });       
-          this.getMapImageAndDrainsToText(geoserverResponse, stormshedResponse);
+      ).subscribe(([geoserverResponse, stormshedResponse]) => {
+        const OCSurveyNeighborhoodID = geoserverResponse.features[0].properties.OCSurveyNeighborhoodID;
+        this.neighborhoodService.getMetricsForYear(OCSurveyNeighborhoodID, this.metricEndDate.getUTCFullYear(), this.metricEndDate.getUTCMonth()).subscribe(metricResult => {
+          this.setupMetricsAndGetStatements(metricResult);
+        });
+        this.getMapImageAndDrainsToText(geoserverResponse, stormshedResponse);
+        this.cdr.detectChanges();
+        debugger;
+
+
+        this.neighborhoodService.getDroolPerLandscapedAcreChart(id).subscribe(x => {
+          this.droolChartData = x;
+          vegaEmbed("#vis", this.yourVlSpec());
+
+        })
       })
     }
+  }
+
+  public yourVlSpec() {
+    const stuff=  {
+      $schema: 'https://vega.github.io/schema/vega-lite/v2.0.json',
+      description: 'A simple bar chart with embedded data.',
+      data: {
+        values: this.makeVegaData(this.droolChartData)
+      },
+      mark: 'line',
+      encoding: {
+        x: { field: 'x', type: 'ordinal' },
+        y: { field: 'y', type: 'quantitative' }
+      }
+    }
+    console.log(stuff);
+    return stuff;
+  };
+
+  makeVegaData(rawData: DroolPerLandscapedAcreChartDto[]): any {
+    return rawData.map(datum => {
+      return {
+        x: `${this.months[datum.MetricMonth]} ${datum.MetricYear}`,
+        y: datum.DroolPerLandscapedAcre
+      };
+    });
   }
 
   getMapImageAndDrainsToText(geoserverResponse: any, stormshedResponse: any) {
@@ -97,7 +137,7 @@ export class FactSheetComponent implements AfterViewInit {
     let keyForWatershed = Object.keys(this.watershedImages).filter(x => this.drainsToText.includes(x))[0];
     this.watershedImage = this.watershedImages[keyForWatershed];
     let mapOptions = {
-      zoomControl:false,
+      zoomControl: false,
       layers: [
         this.tileLayers["Street"]
       ],
@@ -153,7 +193,7 @@ export class FactSheetComponent implements AfterViewInit {
     this.map.fitBounds([neighborhoodLayer.getBounds(), stormshedLayer.getBounds()]);
   }
 
-  setupMetricsAndGetStatements(result:any) {
+  setupMetricsAndGetStatements(result: any) {
     this.metricsForYear = result;
     this.metricsForMostRecentMonth = this.metricsForYear[0];
     this.metricsForMonthPriorToMostRecentMonth = this.metricsForYear[1];
@@ -168,23 +208,23 @@ export class FactSheetComponent implements AfterViewInit {
 
   getNeighborhoodsParticipatingChangeStatement(overallParticipationMostRecent: number, overallParticipationOldest: number, length: number): any {
     let difference = overallParticipationMostRecent - overallParticipationOldest;
-    let lengthOfTime = length < 13 ? length  - 1 + "months ago" : "last year";
+    let lengthOfTime = length < 13 ? length - 1 + "months ago" : "last year";
     let differenceStatement = difference == 0 ? "the same as" : `${difference > 0 ? "up" : "down"} ${Math.abs(difference)} from`;
 
     return `This is ${differenceStatement} ${lengthOfTime}${difference > 0 ? "!" : "."}`
   }
 
   getDroolChangeOverLastYearStatement(totalDroolMostRecent: number, totalDroolOldest: number, length: number): any {
-    let difference = (totalDroolMostRecent/totalDroolOldest) - 1;
+    let difference = (totalDroolMostRecent / totalDroolOldest) - 1;
     let improvement = difference <= 0;
     let briefStatement = improvement ? "improvement" : "regression";
-    let lengthOfTime = length < 13 ? length  - 1 + "months ago" : "last year";
+    let lengthOfTime = length < 13 ? length - 1 + "months ago" : "last year";
     let lineOfEncouragement = improvement ? "keep up the good work?" : "get back on track?"
 
-    return `This is a ${Math.abs(Math.round(difference * 100))}% ${briefStatement} from ${lengthOfTime}${improvement ? "!" : "."} <br/> What can you do right now to ${lineOfEncouragement}`; 
-  } 
+    return `This is a ${Math.abs(Math.round(difference * 100))}% ${briefStatement} from ${lengthOfTime}${improvement ? "!" : "."} <br/> What can you do right now to ${lineOfEncouragement}`;
+  }
 
-  getLastTwoMonthsStatement(mostRecent:number, monthPrior:number): string {
+  getLastTwoMonthsStatement(mostRecent: number, monthPrior: number): string {
     if (mostRecent > monthPrior) {
       return "increasing";
     }

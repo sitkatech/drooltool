@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto';
 import { NeighborhoodMetricAvailableDatesDto } from 'src/app/shared/models/neighborhood-metric-available-dates-dto';
+import { DroolPerLandscapedAcreChartDto } from 'src/app/shared/models/drool-per-landscaped-acre-chart-dto';
 
 @Injectable({
     providedIn: 'root'
@@ -44,6 +45,11 @@ export class NeighborhoodService {
 
     getMostRecentMetric(): Observable<NeighborhoodMetricDto> {
         let route = `/neighborhood/get-most-recent-metric/`;
+        return this.apiService.getFromApi(route);
+    }
+
+    getDroolPerLandscapedAcreChart(neighborhoodID: number): Observable<DroolPerLandscapedAcreChartDto[]>{
+        let route = `neighborhood/get-drool-per-landscaped-acre-chart/${neighborhoodID}`;
         return this.apiService.getFromApi(route);
     }
 

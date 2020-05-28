@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
+﻿using DroolTool.API.Services;
 using DroolTool.EFModels.Entities;
-using DroolTool.API.Services;
 using DroolTool.Models.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Features;
-using NetTopologySuite.IO;
 using NetTopologySuite.Operation.Union;
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DroolTool.API.Controllers
 {
@@ -184,6 +179,25 @@ namespace DroolTool.API.Controllers
                 .OrderByDescending(x => x.MetricDate)
                 .FirstOrDefault()
                 .AsDto();
+        }
+        
+        [HttpGet("neighborhood/get-drool-per-landscaped-acre-chart/{neighborhoodID}")]
+        public ActionResult<List<DroolPerLandscapedAcreChartDto>> GetDroolPerLandscapedAcreChart([FromRoute] int neighborhoodID)
+        {
+            var neighborhood = _dbContext.Neighborhood.SingleOrDefault(x=>x.NeighborhoodID == neighborhoodID);
+            if (neighborhood == null)
+            {
+                return NotFound();
+            }
+
+            return _dbContext.vNeighborhoodMetric
+                .Where(x => x.OCSurveyCatchmentID == neighborhood.OCSurveyNeighborhoodID)
+                .OrderByDescending(x => x.MetricDate)
+                .Take(24).Select(x => new DroolPerLandscapedAcreChartDto
+                {
+                    MetricMonth = x.MetricMonth, MetricYear = x.MetricYear,
+                    DroolPerLandscapedAcre = x.DroolPerLandscapedAcre
+                }).ToList();
         }
 
         [HttpGet("neighborhood/get-metric-timeline")]
