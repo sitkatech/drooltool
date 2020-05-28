@@ -437,7 +437,6 @@ export class WatershedExplorerComponent implements OnInit {
 
   public returnToDefault(): void {
     this.clearErrors();
-    this.defaultFitBounds();
     this.map.invalidateSize();
     
     if (this.metricOverlayLayer == null) {
