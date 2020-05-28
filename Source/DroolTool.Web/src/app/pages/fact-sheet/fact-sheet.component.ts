@@ -99,7 +99,7 @@ export class FactSheetComponent implements AfterViewInit {
 
         this.neighborhoodService.getDroolPerLandscapedAcreChart(id).subscribe(x => {
           this.droolChartData = x;
-          vegaEmbed("#vis", this.yourVlSpec());
+          vegaEmbed("#vis", this.yourVlSpec(), {actions: false});
 
         })
       })
