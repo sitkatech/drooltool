@@ -79,6 +79,10 @@ export class FactSheetComponent implements AfterViewInit {
     }, this.tileLayers);
   }
 
+  ngOnDestroy() {
+    this.neighborhoodSearchedSubscription.unsubscribe();
+  }
+
   ngAfterViewInit() {
     const id = parseInt(this.route.snapshot.paramMap.get("id"));
     if (id) {
