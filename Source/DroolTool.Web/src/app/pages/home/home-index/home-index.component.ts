@@ -18,12 +18,12 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         {
             date: "Wednesday, <br/> March 2, 2020",
             title: "Join Fix A Leak Week Through March",
-            image: "../../../../assets/home/news-and-updates-1.jpg"
+            image: "./assets/home/news-and-updates-1.jpg"
         },
         {
             date: "Friday, <br/> March 19, 2020",
             title: "Landscape Workshop",
-            image: "../../../../assets/home/news-and-updates-2.jpg"
+            image: "./assets/home/news-and-updates-2.jpg"
         }
     ];
     public slideConfig = {
