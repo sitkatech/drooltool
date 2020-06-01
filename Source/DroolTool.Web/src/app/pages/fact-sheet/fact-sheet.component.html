@@ -20,11 +20,11 @@
         </div>
     </div>
     <hr>
-    <ng-container *ngIf="metricsForYear">
+    <ng-container *ngIf="metricsForYear && metricsForYear.length > 0">
     <div class="row">
         <div class="col-12 text-center">
             <h2>DROOL TRENDS OVER TIME</h2>
-            <p class="b2">
+            <p *ngIf="metricsForMostRecentMonth && metricsForMonthPriorToMostRecentMonth" class="b2">
                 Drool has been {{droolChangeOverLastTwoMonthsStatement}} over the last two months
                 with {{metricsForMostRecentMonth.TotalDrool | number:'1.0-0':'en-US'}} gallons of urban drool
                 produced
@@ -59,7 +59,7 @@
             <h2>DO MY NEIGHBORS TAKE ACTION?</h2>
         </div>
     </div>
-    <div class="row">
+    <div *ngIf="metricsForMostRecentMonth" class="row">
         <div class="col-6">
             Neighborhood water customers chart
         </div>
@@ -111,6 +111,14 @@
         <div class="row">
             <div class="col text-center">
                 <h2>Getting your stats ready...</h2>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="metricsForYear && metricsForYear.length == 0">
+        <div class="row">
+            <div class="col text-center">
+                <h2>No stats to show</h2>
+                <p class="b2">Unfortunately it looks like we have no data to show for this neighborhood at this time. Please try again or check back at a later date.</p>
             </div>
         </div>
     </ng-container>
