@@ -54,6 +54,7 @@ export class FactSheetComponent implements AfterViewInit {
     "Aliso Creek":"../../../assets/main/watershed-images/Aliso_Creek.png",
     "San Juan Creek": "../../../assets/main/watershed-images/San_Juan_Creek.png"
   }
+  neighborhoodSearchedSubscription: Subscription;
   
 
   constructor(
@@ -65,6 +66,10 @@ export class FactSheetComponent implements AfterViewInit {
    }
 
   ngOnInit() {
+    this.neighborhoodSearchedSubscription = this.neighborhoodService.getSearchedAddress().subscribe(address => {
+      this.searchedAddress = address ?? "My Selected Neighborhood";
+    })
+
     this.tileLayers = Object.assign({}, {
       "Street": L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Street',
@@ -74,8 +79,11 @@ export class FactSheetComponent implements AfterViewInit {
     }, this.tileLayers);
   }
 
+  ngOnDestroy() {
+    this.neighborhoodSearchedSubscription.unsubscribe();
+  }
+
   ngAfterViewInit() {
-    this.searchedAddress = this.neighborhoodService.getSearchedAddress() ?? "My Selected Neighborhood";
     const id = parseInt(this.route.snapshot.paramMap.get("id"));
     if (id) {
       this.metricEndDate = this.neighborhoodService.getDefaultMetricDate();
@@ -85,7 +93,10 @@ export class FactSheetComponent implements AfterViewInit {
         ).subscribe(([geoserverResponse, stormshedResponse]) => {
           const OCSurveyNeighborhoodID = geoserverResponse.features[0].properties.OCSurveyNeighborhoodID;
           this.neighborhoodService.getMetricsForYear(OCSurveyNeighborhoodID, this.metricEndDate.getUTCFullYear(), this.metricEndDate.getUTCMonth()).subscribe(metricResult => {
-            this.setupMetricsAndGetStatements(metricResult);
+            this.metricsForYear = metricResult;
+            if (this.metricsForYear.length > 0) {
+              this.setupMetricsAndGetStatements();
+            }
           });       
           this.getMapImageAndDrainsToText(geoserverResponse, stormshedResponse);
       })
@@ -153,8 +164,7 @@ export class FactSheetComponent implements AfterViewInit {
     this.map.fitBounds([neighborhoodLayer.getBounds(), stormshedLayer.getBounds()]);
   }
 
-  setupMetricsAndGetStatements(result:any) {
-    this.metricsForYear = result;
+  setupMetricsAndGetStatements() {
     this.metricsForMostRecentMonth = this.metricsForYear[0];
     this.metricsForMonthPriorToMostRecentMonth = this.metricsForYear[1];
     this.metricsFurthestFromEndDate = this.metricsForYear[this.metricsForYear.length - 1];
@@ -162,7 +172,7 @@ export class FactSheetComponent implements AfterViewInit {
     this.droolChangeOverLastTwoMonthsStatement = this.getLastTwoMonthsStatement(this.metricsForMostRecentMonth.TotalDrool, this.metricsForMonthPriorToMostRecentMonth.TotalDrool);
     this.droolChangeOverLastYearStatement = this.getDroolChangeOverLastYearStatement(this.metricsForMostRecentMonth.TotalDrool, this.metricsFurthestFromEndDate.TotalDrool, this.metricsForYear.length);
 
-    this.neighborhoodsParticipatingChangeStatement = this.getNeighborhoodsParticipatingChangeStatement(this.metricsForMostRecentMonth.OverallParticipation, this.metricsFurthestFromEndDate.OverallParticipation, this.metricsForYear.length);
+    this.neighborhoodsParticipatingChangeStatement = this.getNeighborhoodsParticipatingChangeStatement(this.metricsForMostRecentMonth?.OverallParticipation, this.metricsFurthestFromEndDate?.OverallParticipation, this.metricsForYear.length);
     this.totalIrrigationWaterUsed = this.metricsForYear.reduce((tiw, m) => tiw + m.TotalWaterUsedForIrrigation, 0);
   }
 
@@ -178,7 +188,7 @@ export class FactSheetComponent implements AfterViewInit {
     let difference = (totalDroolMostRecent/totalDroolOldest) - 1;
     let improvement = difference <= 0;
     let briefStatement = improvement ? "improvement" : "regression";
-    let lengthOfTime = length < 13 ? length  - 1 + "months ago" : "last year";
+    let lengthOfTime = length < 13 ? length  - 1 + " months ago" : "last year";
     let lineOfEncouragement = improvement ? "keep up the good work?" : "get back on track?"
 
     return `This is a ${Math.abs(Math.round(difference * 100))}% ${briefStatement} from ${lengthOfTime}${improvement ? "!" : "."} <br/> What can you do right now to ${lineOfEncouragement}`; 
