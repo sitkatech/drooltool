@@ -38,6 +38,7 @@ import { TakeActionComponent } from './pages/take-action/take-action.component';
 import { WatershedExplorerComponent } from './pages/watershed-explorer/watershed-explorer.component';
 import { FactSheetComponent } from './pages/fact-sheet/fact-sheet.component';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { DroolPerLandscapedAcreChartComponent } from './components/drool-per-landscaped-acre-chart/drool-per-landscaped-acre-chart.component';
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -60,6 +61,7 @@ export function init_app(appLoadService: AppInitService) {
     TakeActionComponent,
     WatershedExplorerComponent,
     FactSheetComponent,
+    DroolPerLandscapedAcreChartComponent,
   ],
   imports: [
     AppRoutingModule,

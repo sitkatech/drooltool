@@ -8,7 +8,6 @@ import { WfsService } from 'src/app/shared/services/wfs.service';
 import * as L from 'leaflet';
 import { DroolPerLandscapedAcreChartDto } from 'src/app/shared/models/drool-per-landscaped-acre-chart-dto';
 
-declare var vegaEmbed: any;
 
 @Component({
   selector: 'drooltool-fact-sheet',
@@ -54,15 +53,11 @@ export class FactSheetComponent implements AfterViewInit {
   public watershedImages = {
     "Salt Creek": "./assets/main/watershed-images/Salt_Creek.png",
     "Laguna Canyon": "./assets/main/watershed-images/Laguna_Canyon.png",
-    "Aliso Creek":"./assets/main/watershed-images/Aliso_Creek.png",
+    "Aliso Creek": "./assets/main/watershed-images/Aliso_Creek.png",
     "San Juan Creek": "./assets/main/watershed-images/San_Juan_Creek.png"
-    "Salt Creek": "../../../assets/main/watershed-images/Salt_Creek.png",
-    "Laguna Canyon": "../../../assets/main/watershed-images/Laguna_Canyon.png",
-    "Aliso Creek": "../../../assets/main/watershed-images/Aliso_Creek.png",
-    "San Juan Creek": "../../../assets/main/watershed-images/San_Juan_Creek.png"
   }
   neighborhoodSearchedSubscription: Subscription;
-  
+
   droolChartData: DroolPerLandscapedAcreChartDto[];
 
 
@@ -83,7 +78,7 @@ export class FactSheetComponent implements AfterViewInit {
     this.tileLayers = Object.assign({}, {
       "Street": L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Street',
-        maxNativeZoom: 16,
+        maxNativeZoom: 14,
         maxZoom: 22
       })
     }, this.tileLayers);
@@ -99,59 +94,23 @@ export class FactSheetComponent implements AfterViewInit {
       this.metricEndDate = this.neighborhoodService.getDefaultMetricDate();
       forkJoin(
         this.wfsService.geoserverNeighborhoodLookupWithID(id),
-        this.neighborhoodService.getStormshed(id)
-        ).subscribe(([geoserverResponse, stormshedResponse]) => {
-          const OCSurveyNeighborhoodID = geoserverResponse.features[0].properties.OCSurveyNeighborhoodID;
-          this.neighborhoodService.getMetricsForYear(OCSurveyNeighborhoodID, this.metricEndDate.getUTCFullYear(), this.metricEndDate.getUTCMonth()).subscribe(metricResult => {
-            this.metricsForYear = metricResult;
-            if (this.metricsForYear.length > 0) {
-              this.setupMetricsAndGetStatements();
-            }
-          });       
-          this.getMapImageAndDrainsToText(geoserverResponse, stormshedResponse);
-      ).subscribe(([geoserverResponse, stormshedResponse]) => {
+        this.neighborhoodService.getStormshed(id),
+        this.neighborhoodService.getDroolPerLandscapedAcreChart(id)
+      ).subscribe(([geoserverResponse, stormshedResponse, droolChartResponse]) => {
         const OCSurveyNeighborhoodID = geoserverResponse.features[0].properties.OCSurveyNeighborhoodID;
         this.neighborhoodService.getMetricsForYear(OCSurveyNeighborhoodID, this.metricEndDate.getUTCFullYear(), this.metricEndDate.getUTCMonth()).subscribe(metricResult => {
-          this.setupMetricsAndGetStatements(metricResult);
+          this.metricsForYear = metricResult;
+          if (this.metricsForYear.length > 0) {
+            this.setupMetricsAndGetStatements();
+          }
         });
         this.getMapImageAndDrainsToText(geoserverResponse, stormshedResponse);
-        this.cdr.detectChanges();
-        debugger;
 
 
-        this.neighborhoodService.getDroolPerLandscapedAcreChart(id).subscribe(x => {
-          this.droolChartData = x;
-          vegaEmbed("#vis", this.yourVlSpec(), {actions: false});
+        this.droolChartData = droolChartResponse;
 
-        })
       })
     }
-  }
-
-  public yourVlSpec() {
-    const stuff=  {
-      $schema: 'https://vega.github.io/schema/vega-lite/v2.0.json',
-      description: 'A simple bar chart with embedded data.',
-      data: {
-        values: this.makeVegaData(this.droolChartData)
-      },
-      mark: 'line',
-      encoding: {
-        x: { field: 'x', type: 'ordinal' },
-        y: { field: 'y', type: 'quantitative' }
-      }
-    }
-    console.log(stuff);
-    return stuff;
-  };
-
-  makeVegaData(rawData: DroolPerLandscapedAcreChartDto[]): any {
-    return rawData.map(datum => {
-      return {
-        x: `${this.months[datum.MetricMonth]} ${datum.MetricYear}`,
-        y: datum.DroolPerLandscapedAcre
-      };
-    });
   }
 
   getMapImageAndDrainsToText(geoserverResponse: any, stormshedResponse: any) {
@@ -239,7 +198,7 @@ export class FactSheetComponent implements AfterViewInit {
     let difference = (totalDroolMostRecent / totalDroolOldest) - 1;
     let improvement = difference <= 0;
     let briefStatement = improvement ? "improvement" : "regression";
-    let lengthOfTime = length < 13 ? length  - 1 + " months ago" : "last year";
+    let lengthOfTime = length < 13 ? length - 1 + " months ago" : "last year";
     let lineOfEncouragement = improvement ? "keep up the good work?" : "get back on track?"
 
     return `This is a ${Math.abs(Math.round(difference * 100))}% ${briefStatement} from ${lengthOfTime}${improvement ? "!" : "."} <br/> What can you do right now to ${lineOfEncouragement}`;

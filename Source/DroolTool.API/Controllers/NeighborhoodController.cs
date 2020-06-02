@@ -8,6 +8,7 @@ using NetTopologySuite.Operation.Union;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DroolTool.API.Controllers
 {
@@ -190,7 +191,7 @@ namespace DroolTool.API.Controllers
                 return NotFound();
             }
 
-            return _dbContext.vNeighborhoodMetric
+            var droolPerLandscapedAcreChartDtos = _dbContext.vNeighborhoodMetric
                 .Where(x => x.OCSurveyCatchmentID == neighborhood.OCSurveyNeighborhoodID)
                 .OrderByDescending(x => x.MetricDate)
                 .Take(24).Select(x => new DroolPerLandscapedAcreChartDto
@@ -198,6 +199,8 @@ namespace DroolTool.API.Controllers
                     MetricMonth = x.MetricMonth, MetricYear = x.MetricYear,
                     DroolPerLandscapedAcre = x.DroolPerLandscapedAcre
                 }).ToList();
+            droolPerLandscapedAcreChartDtos.Reverse();
+            return droolPerLandscapedAcreChartDtos;
         }
 
         [HttpGet("neighborhood/get-metric-timeline")]
