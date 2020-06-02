@@ -218,7 +218,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     var legend = L.control({position: 'bottomright'});
     legend.onAdd = function (map) {
       var div = L.DomUtil.create('div', 'legend');
-      div.innerHTML = "<img src='../../../assets/neighborhood-explorer/MapKey.png' style='height:100px; border-radius:25px'>"
+      div.innerHTML = "<img src='./assets/neighborhood-explorer/MapKey.png' style='height:100px; border-radius:25px'>"
       return div;
     }
     legend.addTo(this.map);

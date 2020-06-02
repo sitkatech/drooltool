@@ -1,26 +1,38 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/shared/services';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto';
 import { NeighborhoodMetricAvailableDatesDto } from 'src/app/shared/models/neighborhood-metric-available-dates-dto';
+import { isNullOrUndefined } from 'util';
 import { DroolPerLandscapedAcreChartDto } from 'src/app/shared/models/drool-per-landscaped-acre-chart-dto';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NeighborhoodService {
+
+    private _searchedAddressSubject: BehaviorSubject<string>;
       
-    constructor(private apiService: ApiService) { } 
+    constructor(private apiService: ApiService) {
+        let searchedAddressAsJson = window.localStorage.getItem('searchedAddress');
+        let initialSearchedAddress = "My Selected Neighborhood";
 
-    private searchedAddress;
+        if (!isNullOrUndefined(searchedAddressAsJson) && searchedAddressAsJson !== "undefined") {
+            // if the saved account is valid for this user, make it the current active account. Otherwise clear it from local storage.
+            initialSearchedAddress = JSON.parse(searchedAddressAsJson);
+        }
 
-    getSearchedAddress(): string {
-        return this.searchedAddress;
+        this._searchedAddressSubject = new BehaviorSubject<string>(initialSearchedAddress);
+     } 
+
+    getSearchedAddress(): Observable<string> {
+        return this._searchedAddressSubject.asObservable();
     }
 
     updateSearchedAddress(address: string) {
-        this.searchedAddress = address;
+        window.localStorage.setItem('searchedAddress', JSON.stringify(address));
+        this._searchedAddressSubject.next(address);
     }
 
     getNeighborhoodsWithMetricsIds(): Observable<number[]> {
