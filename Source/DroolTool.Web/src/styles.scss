@@ -326,3 +326,14 @@ $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
 //   }
 // }
 //end ngx-slick-carousel styles
+
+
+#vg-tooltip-element.vg-tooltip.custom-theme {
+  font-size: 14px;
+  border-radius: 10px;
+  font-family: "Nunito"
+
+  h2 {
+    font-size: 16px;
+  }
+}

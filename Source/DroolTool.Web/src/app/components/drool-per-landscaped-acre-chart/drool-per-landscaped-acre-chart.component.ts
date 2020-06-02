@@ -30,7 +30,9 @@ export class DroolPerLandscapedAcreChartComponent implements OnInit {
 
   ngOnInit(): void {
     //droolChartContainer
-    vegaEmbed("#droolChartContainer", this.droolPerLandscapedAcreChartSpec(), { actions: false });
+    vegaEmbed("#droolChartContainer", this.droolPerLandscapedAcreChartSpec(), { actions: false, tooltip: {
+      theme: "custom"
+    } });
   }
 
   public droolPerLandscapedAcreChartSpec() {
@@ -42,37 +44,37 @@ export class DroolPerLandscapedAcreChartComponent implements OnInit {
         values: this.makeVegaData(this.droolChartData)
       },
       transform: [
-        { "calculate": "datum.y + ' gal/acre'", "as": "Drool per Landscaped Acre" },
+        { "calculate": "datum.DroolAmountFormatted + ' gal/acre'", "as": "Drool" },
       ],
       mark: { type: 'line', tooltip: true, point: { shape: "circle", size: 100 }, strokeWidth: 3 },
       encoding: {
         x: {
           field: 'Month', type: 'ordinal',
           axis: {
-            title: false, labelFont: "Nunito", labelFontSize:14,
+            title: false, labelFont: "Nunito", labelFontSize:14, labelAngle: -75
           },
           sort: null
         },
         y: {
-          field: 'y', type: 'quantitative',
+          field: 'DroolAmount', type: 'quantitative',
           axis: {
-            title: "Drool (gal/acre)", titleFont: "Nunito", labelFont:"Nunito", titleFontSize: 18, titleColor: "#00728d", labelFontSize: 14, titlePadding: 20
+            title: "Drool (gal/acre)", titleFont: "Helvetica", labelFont:"Nunito", titleFontSize: 18, titleColor: "#00728d", labelFontSize: 14, titlePadding: 20
           }
         },
         tooltip: [
           { field: "Month", type: "ordinal" },
-          { field: "Drool per Landscaped Acre", type: "ordinal" }
+          { field: "Drool", type: "ordinal" }
         ]
       }
     };
   };
 
   makeVegaData(rawData: DroolPerLandscapedAcreChartDto[]): any {
-    debugger;
     const out = rawData.map(datum => {
       return {
         Month: `${this.months[datum.MetricMonth - 1]} ${datum.MetricYear}`,
-        y: datum.DroolPerLandscapedAcre
+        DroolAmount: datum.DroolPerLandscapedAcre,
+        DroolAmountFormatted: datum.DroolPerLandscapedAcre && datum.DroolPerLandscapedAcre.toLocaleString()
       };
     });
     return out;
