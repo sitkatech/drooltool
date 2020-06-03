@@ -18,6 +18,10 @@ namespace DroolTool.EFModels.Entities
                 PercentParticipation = metric.PercentParticipation,
                 DroolPerLandscapedAcre = metric.DroolPerLandscapedAcre,
                 TotalWaterAccounts = metric.TotalWaterAccounts,
+                PercentResidentialWaterAccounts = metric.PercentResidentialWaterAccounts,
+                PercentHOAWaterAccounts = metric.PercentHOAWaterAccounts,
+                PercentCommercialWaterAccounts = metric.PercentCommercialWaterAccounts,
+                PercentMunicipalWaterAccounts = metric.PercentMunicipalWaterAccounts,
                 TotalIrrigatedArea = metric.TotalIrrigatedArea,
                 TotalWaterUsedForIrrigation = metric.TotalWaterUsedForIrrigation
             };

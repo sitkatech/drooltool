@@ -63,16 +63,27 @@
             </div>
         </div>
         <div *ngIf="metricsForMostRecentMonth" class="row">
-            <div class="col-6">
-                Neighborhood water customers chart
-            </div>
-            <div class="col-6">
-                <p class="b2">There are {{metricsForMostRecentMonth.TotalWaterAccounts}} water accounts in your
-                    neighborhood.</p>
-                <p class="b2"><strong>{{metricsForMostRecentMonth.OverallParticipation}}</strong> of your neighbors have
-                    participated in water conservation rebate programs.
-                </p>
-                <p class="b2">{{neighborhoodsParticipatingChangeStatement}}</p>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6 text-center">
+                        <h4 class="drool-orange">Neighborhood Water Customers</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 text-center">
+
+                        <drooltool-water-accounts-chart [droolChartData]='waterAccountsChartData'>
+                        </drooltool-water-accounts-chart>
+                    </div>
+                    <div class="col-6">
+                        <p class="b2">There are {{metricsForMostRecentMonth.TotalWaterAccounts}} water accounts in your
+                            neighborhood.</p>
+                        <p class="b2"><strong>{{metricsForMostRecentMonth.OverallParticipation}}</strong> of your neighbors have
+                            participated in water conservation rebate programs.
+                        </p>
+                        <p class="b2">{{neighborhoodsParticipatingChangeStatement}}</p>
+                    </div>
+                </div>
             </div>
         </div>
         <hr>
