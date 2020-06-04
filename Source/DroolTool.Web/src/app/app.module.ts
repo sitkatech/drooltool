@@ -39,6 +39,7 @@ import { WatershedExplorerComponent } from './pages/watershed-explorer/watershed
 import { FactSheetComponent } from './pages/fact-sheet/fact-sheet.component';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { DroolPerLandscapedAcreChartComponent } from './components/drool-per-landscaped-acre-chart/drool-per-landscaped-acre-chart.component';
+import { WaterAccountsChartComponent } from './components/water-accounts-chart/water-accounts-chart.component';
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -62,6 +63,7 @@ export function init_app(appLoadService: AppInitService) {
     WatershedExplorerComponent,
     FactSheetComponent,
     DroolPerLandscapedAcreChartComponent,
+    WaterAccountsChartComponent,
   ],
   imports: [
     AppRoutingModule,

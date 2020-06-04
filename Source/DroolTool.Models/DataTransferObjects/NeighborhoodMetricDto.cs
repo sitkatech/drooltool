@@ -13,6 +13,10 @@ namespace DroolTool.Models.DataTransferObjects
         public double? PercentParticipation { get; set; }
         public double? DroolPerLandscapedAcre { get; set; }
         public double? TotalWaterAccounts { get; set; }
+        public double? ResidentialWaterAccounts { get; set; }
+        public double? HOAWaterAccounts { get; set; }
+        public double? CommercialWaterAccounts { get; set; }
+        public double? MunicipalWaterAccounts { get; set; }
         public double? TotalIrrigatedArea { get; set; }
         public double? TotalWaterUsedForIrrigation { get; set; }
     }

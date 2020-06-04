@@ -7,6 +7,7 @@ import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import * as L from 'leaflet';
 import { DroolPerLandscapedAcreChartDto } from 'src/app/shared/models/drool-per-landscaped-acre-chart-dto';
+import { WaterAccountsChartDto } from 'src/app/shared/models/water-accounts-chart-dto';
 
 
 @Component({
@@ -59,6 +60,7 @@ export class FactSheetComponent implements AfterViewInit {
   neighborhoodSearchedSubscription: Subscription;
 
   droolChartData: DroolPerLandscapedAcreChartDto[];
+  waterAccountsChartData: WaterAccountsChartDto;
 
 
   constructor(
@@ -176,6 +178,7 @@ export class FactSheetComponent implements AfterViewInit {
 
   setupMetricsAndGetStatements() {
     this.metricsForMostRecentMonth = this.metricsForYear[0];
+    this.waterAccountsChartData = new WaterAccountsChartDto(this.metricsForMostRecentMonth);
     this.metricsForMonthPriorToMostRecentMonth = this.metricsForYear[1];
     this.metricsFurthestFromEndDate = this.metricsForYear[this.metricsForYear.length - 1];
 
