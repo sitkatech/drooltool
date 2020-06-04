@@ -9,7 +9,8 @@ declare var vegaEmbed: any;
   styleUrls: ['./water-accounts-chart.component.scss']
 })
 export class WaterAccountsChartComponent implements OnInit {
-  @Input() droolChartData: WaterAccountsChartDto
+  @Input() droolChartData: WaterAccountsChartDto;
+  @Input() smallScreen: boolean = false;;
 
   constructor() { }
 
@@ -23,10 +24,10 @@ export class WaterAccountsChartComponent implements OnInit {
     return {
       "data": {
         "values": [
-          {"legendVal": ["Residential", this.droolChartData.ResidentialWaterAccounts], "value": this.droolChartData.ResidentialWaterAccounts},
-          {"legendVal": ["HOA", this.droolChartData.HOAWaterAccounts], "value": this.droolChartData.HOAWaterAccounts},
-          {"legendVal": ["Commercial",  this.droolChartData.CommercialWaterAccounts], "value": this.droolChartData.CommercialWaterAccounts},
-          {"legendVal": ["Municipal", this.droolChartData.MunicipalWaterAccounts], "value": this.droolChartData.MunicipalWaterAccounts}
+          {"legendVal": `Residential - ${this.droolChartData.ResidentialWaterAccounts}`, "value": this.droolChartData.ResidentialWaterAccounts},
+          {"legendVal": `HOA - ${this.droolChartData.HOAWaterAccounts}`, "value": this.droolChartData.HOAWaterAccounts},
+          {"legendVal": `Commercial - ${this.droolChartData.CommercialWaterAccounts}`, "value": this.droolChartData.CommercialWaterAccounts},
+          {"legendVal": `Municipal - ${this.droolChartData.MunicipalWaterAccounts}`, "value": this.droolChartData.MunicipalWaterAccounts}
         ]
       },
       "mark": {"type":"arc","outerRadius":100},
@@ -38,7 +39,9 @@ export class WaterAccountsChartComponent implements OnInit {
                   "legend": {
                     "labelFont": "Nunito",
                     "labelFontSize":17,
-                    "title":null
+                    "title":null,
+                    "orient": this.smallScreen ? "top" : "right",
+                    "direction":"vertical"
                   }}
       },
       "view": {"stroke": null}

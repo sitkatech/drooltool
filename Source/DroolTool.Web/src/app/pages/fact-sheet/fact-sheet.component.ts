@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 import { UserDto } from 'src/app/shared/models/user/user-dto';
@@ -16,7 +16,6 @@ import { WaterAccountsChartDto } from 'src/app/shared/models/water-accounts-char
   styleUrls: ['./fact-sheet.component.scss']
 })
 export class FactSheetComponent implements AfterViewInit {
-
   public mapHeight = "234px"
   public mapID = "FactSheetMap";
   public map: L.Map;
@@ -61,6 +60,9 @@ export class FactSheetComponent implements AfterViewInit {
 
   droolChartData: DroolPerLandscapedAcreChartDto[];
   waterAccountsChartData: WaterAccountsChartDto;
+  innerWidth: number;
+  smallScreen: boolean;
+  refresh:boolean = false;
 
 
   constructor(
@@ -91,6 +93,7 @@ export class FactSheetComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.smallScreen = window.innerWidth < 400;
     const id = parseInt(this.route.snapshot.paramMap.get("id"));
     if (id) {
       this.metricEndDate = this.neighborhoodService.getDefaultMetricDate();
@@ -217,5 +220,12 @@ export class FactSheetComponent implements AfterViewInit {
     else {
       return "remaining steady";
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.smallScreen = window.innerWidth < 400;
+    setTimeout(() => this.refresh = true);
+    setTimeout(() => this.refresh = false);
   }
 }

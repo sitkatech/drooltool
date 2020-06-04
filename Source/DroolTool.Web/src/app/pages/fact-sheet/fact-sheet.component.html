@@ -71,8 +71,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6 text-center">
-
-                        <drooltool-water-accounts-chart [droolChartData]='waterAccountsChartData'>
+                        <drooltool-water-accounts-chart *ngIf="!refresh" [droolChartData]='waterAccountsChartData' [(smallScreen)]='smallScreen'>
                         </drooltool-water-accounts-chart>
                     </div>
                     <div class="col-lg-6">
