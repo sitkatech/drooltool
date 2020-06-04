@@ -13,6 +13,7 @@ import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
+import { forkJoin } from 'rxjs';
 
 declare var $: any;
 
@@ -60,6 +61,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public selectedNeighborhoodMetrics: NeighborhoodMetricDto;
   public selectedNeighborhoodID: number;
   public selectedNeighborhoodWatershed: string;
+  public selectedNeighborhoodWatershedMask: L.Layers;
   public defaultSelectedMetricDate: Date;
 
   public areMetricsCollapsed: boolean = true;
@@ -366,6 +368,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
     setTimeout(() => { this.clickMarker.closePopup(); }, 5000);
     this.selectedNeighborhoodWatershed = this.selectedNeighborhoodProperties.Watershed;
+    this.watershedMaskService.getWatershedMask(this.selectedNeighborhoodWatershed).subscribe(maskString => {
+      this.selectedNeighborhoodWatershedMask = this.getMaskGeoJsonLayer(maskString);
+    })
     this.searchActive = true;
   }
 
@@ -381,7 +386,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
           fillColor: "#C0FF6C",
           fill: true,
           fillOpacity: 0.3,
-          stroke: false
+          color: "#EA842C",
+          weight: 5,
+          stroke: true
         };
       }
     })
@@ -432,6 +439,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
     if (!this.traceActive) {
       this.clearLayer(this.traceLayer);
       this.neighborhoodService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
+        this.clearLayer(this.currentMask);
+        this.selectedNeighborhoodWatershedMask.addTo(this.map);
         this.traceLayer = L.geoJSON(response,
           {
             style: function (feature) {
@@ -451,7 +460,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
     }
     else {
       this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
-      this.map.removeLayer(this.traceLayer);
+      this.clearLayer(this.traceLayer);
+      this.clearLayer(this.selectedNeighborhoodWatershedMask);
+      this.currentMask.addTo(this.map);
       this.traceActive = false;
     }
   }
@@ -482,6 +493,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     [this.clickMarker,
     this.currentSearchLayer,
     this.currentMask,
+    this.selectedNeighborhoodWatershedMask,
     this.stormshedLayer,
     this.backboneDetailLayer,
     this.traceLayer].forEach((x) => {
@@ -524,5 +536,19 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public setSearchingAndLoadScreen(searching: boolean) {
     this.currentlySearching = searching;
     this.map.fireEvent(this.currentlySearching ? 'dataloading' : 'dataload');
+  }
+
+  public getMaskGeoJsonLayer(maskString: string): L.geoJSON {
+    return L.geoJSON(maskString, {
+      invert: true,
+      style: function (feature) {
+        return {
+          fillColor: "#323232",
+          fill: true,
+          fillOpacity: 0.4,
+          stroke: false
+        };
+      }
+    });
   }
 }
