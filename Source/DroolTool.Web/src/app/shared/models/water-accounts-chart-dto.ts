@@ -1,10 +1,10 @@
 export class WaterAccountsChartDto {
     public MetricYear: number;
     public MetricMonth: number;
-    public PercentResidentialWaterAccounts?: number;
-    public PercentHOAWaterAccounts?: number;
-    public PercentCommercialWaterAccounts?: number;
-    public PercentMunicipalWaterAccounts?: number;
+    public ResidentialWaterAccounts?: number;
+    public HOAWaterAccounts?: number;
+    public CommercialWaterAccounts?: number;
+    public MunicipalWaterAccounts?: number;
     constructor(obj?: any) {
         Object.assign(this, obj);
     }
