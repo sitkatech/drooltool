@@ -21,8 +21,6 @@ export class WaterAccountsChartComponent implements OnInit {
 
   public waterAccountsChartSpec() {
     return {
-      "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-      "description": "A simple pie chart with labels.",
       "data": {
         "values": [
           {"legendVal": ["Residential", this.droolChartData.ResidentialWaterAccounts], "value": this.droolChartData.ResidentialWaterAccounts},
