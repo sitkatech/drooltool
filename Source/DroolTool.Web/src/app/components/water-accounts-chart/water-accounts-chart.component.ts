@@ -24,15 +24,15 @@ export class WaterAccountsChartComponent implements OnInit {
     return {
       "data": {
         "values": [
-          {"legendVal": `Residential - ${this.droolChartData.ResidentialWaterAccounts}`, "value": this.droolChartData.ResidentialWaterAccounts},
-          {"legendVal": `HOA - ${this.droolChartData.HOAWaterAccounts}`, "value": this.droolChartData.HOAWaterAccounts},
-          {"legendVal": `Commercial - ${this.droolChartData.CommercialWaterAccounts}`, "value": this.droolChartData.CommercialWaterAccounts},
-          {"legendVal": `Municipal - ${this.droolChartData.MunicipalWaterAccounts}`, "value": this.droolChartData.MunicipalWaterAccounts}
+          {"legendVal": `Residential - ${this.droolChartData.ResidentialWaterAccounts}`, "Account Type": "Residential", "Number of Accounts": this.droolChartData.ResidentialWaterAccounts},
+          {"legendVal": `HOA - ${this.droolChartData.HOAWaterAccounts}`, "Account Type": "HOA", "Number of Accounts": this.droolChartData.HOAWaterAccounts},
+          {"legendVal": `Commercial - ${this.droolChartData.CommercialWaterAccounts}`, "Account Type": "Commercial", "Number of Accounts": this.droolChartData.CommercialWaterAccounts},
+          {"legendVal": `Municipal - ${this.droolChartData.MunicipalWaterAccounts}`, "Account Type": "Municipal", "Number of Accounts": this.droolChartData.MunicipalWaterAccounts}
         ]
       },
-      "mark": {"type":"arc","outerRadius":100},
+      "mark": {"type":"arc", tooltip: true, "outerRadius":100},
       "encoding": {
-        "theta": {"field": "value", "type": "quantitative", "stack":true},
+        "theta": {"field": "Number of Accounts", "type": "quantitative", "stack":true},
         "color": {"field": "legendVal", 
                   "type": "nominal", 
                   "scale": {"range": ["#FBD177", "#F0A148", "#EA842C", "#B65C1F"]},
@@ -42,7 +42,11 @@ export class WaterAccountsChartComponent implements OnInit {
                     "title":null,
                     "orient": this.smallScreen ? "top" : "right",
                     "direction":"vertical"
-                  }}
+                  }},
+                  "tooltip": [
+                    { field: "Account Type", type: "ordinal"},
+                    { field: "Number of Accounts", type: "ordinal"}
+                  ]
       },
       "view": {"stroke": null}
     }
