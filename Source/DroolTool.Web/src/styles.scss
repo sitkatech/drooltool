@@ -19,7 +19,7 @@ $secondary-font-size: 13px;
 $header-icon-size: 13px;
 $cell-horizontal-padding: 12px;
 $tooltip-padding: 0px;
-$header-background-color: #448AC6;
+$header-background-color: #448ac6;
 $header-foreground-color: #fff;
 
 // changes the default icon color
@@ -37,257 +37,264 @@ $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
 @import "~ag-grid-community/src/styles/ag-grid.scss";
 @import "~ag-grid-community/src/styles/ag-theme-balham/sass/legacy/ag-theme-balham-v22-compat.scss";
 
-.ag-theme-balham
-{
-    font-family: 'Poppins';
+.ag-theme-balham {
+  font-family: "Poppins";
 }
 
-
-.ag-paging-panel .ag-icon
-{
-    color: rgba(0, 0, 0, 0.54);
+.ag-paging-panel .ag-icon {
+  color: rgba(0, 0, 0, 0.54);
 }
 
-.ag-theme-balham .ag-header
-{
-    background-color: $header-nav-color;
+.ag-theme-balham .ag-header {
+  background-color: $header-nav-color;
 }
 // end ag-grid settings
 
 //ckeditor css
 
-  .image {
-    display:table;
-    clear: both;
-    text-align:center;
-    margin:1em auto;
-  }
+.image {
+  display: table;
+  clear: both;
+  text-align: center;
+  margin: 1em auto;
+}
 
-  .image>img {
-    display:block;
-    margin:0 auto;
-    max-width:100%;
-    min-width: 50px;
-  }
+.image > img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  min-width: 50px;
+}
 
-  .image-style-side,
-  .image-style-align-left,
-  .image-style-align-center,
-  .image-style-align-right {
-    max-width: 50%;
-  }
+.image-style-side,
+.image-style-align-left,
+.image-style-align-center,
+.image-style-align-right {
+  max-width: 50%;
+}
 
-  .image-style-side {
-    float: right;
-    margin-left: var(--ck-image-style-spacing);
-  }
+.image-style-side {
+  float: right;
+  margin-left: var(--ck-image-style-spacing);
+}
 
-  .image-style-align-left {
-    float: left;
-    margin-right: var(--ck-image-style-spacing);
-  }
+.image-style-align-left {
+  float: left;
+  margin-right: var(--ck-image-style-spacing);
+}
 
-  .image-style-align-center {
-    margin-left: auto;
-    margin-right: auto;
-  }
+.image-style-align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
 
-  .image-style-align-right {
-    float: right;
-    margin-left: var(--ck-image-style-spacing);
-  }
+.image-style-align-right {
+  float: right;
+  margin-left: var(--ck-image-style-spacing);
+}
 
-  blockquote {
-    overflow: hidden;
-    padding-right: 1.5em;
-    padding-left: 1.5em;
-    margin-left: 0;
-    margin-right: 0;
-    font-style: italic;
-    border-left: 5px solid #ccc;
-  }
+blockquote {
+  overflow: hidden;
+  padding-right: 1.5em;
+  padding-left: 1.5em;
+  margin-left: 0;
+  margin-right: 0;
+  font-style: italic;
+  border-left: 5px solid #ccc;
+}
 
 //end ckeditor css
 .switch {
-    position: relative;
-    display: inline-block;
-    width: 98px;
-    height: 21px;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .switch input {display:none;}
-  
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #6b6b6b;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-  
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 17px;
-    width: 17px;
-    left: 2px;
-    bottom: 2px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-  
-  input:checked + .slider {
-    background-color: #196004;
-  }
-  
-  input:focus + .slider {
-    box-shadow: 0 0 1px #196004;
-  }
-  
-  input:checked + .slider:before {
-    -webkit-transform: translateX(77px);
-    -ms-transform: translateX(7px);
-    transform: translateX(77px);
-  }
-  
-  /*------ ADDED CSS ---------*/
-  .on
-  {
-    display: none;
-  }
-  
-  .on, .off
-  {
-    color: white;
-    position: absolute;
-    transform: translate(-50%,-50%);
-    top: 50%;
-    left: 50%;
-    font-size: 10px;
-  }
-  
-  input:checked+ .slider .on
-  {display: block;}
-  
-  input:checked + .slider .off
-  {display: none;}
-  
-  /*--------- END --------*/
-  
-  /* Rounded sliders */
-  .slider.round {
-    border-radius: 34px;
-  }
-  
-  .slider.round:before {
-    border-radius: 50%;}
+  position: relative;
+  display: inline-block;
+  width: 98px;
+  height: 21px;
+  padding: 0;
+  margin: 0;
+}
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    color: #555555;  
-    line-height:1.25; 
-  }
+.switch input {
+  display: none;
+}
 
-  .b1, .b2, .b3, .b4 {
-    font-weight: 400; 
-    text-align: center;
-    font-family: 'Nunito', sans-serif;
-    color: #555555;
-  }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #6b6b6b;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
 
-  //Large field values
-  .b1 {
-    font-size: 28px;
-  }
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
 
-  //Regular sized field values
-  .b2 {
-    font-size: 24px;
-  }
+input:checked + .slider {
+  background-color: #196004;
+}
 
-  //Field Title Descriptions
-  .b3 {
-    font-size: 20px;
-  }
+input:focus + .slider {
+  box-shadow: 0 0 1px #196004;
+}
 
-  .b4 {
-    font-size: 16px;
-  }
+input:checked + .slider:before {
+  -webkit-transform: translateX(77px);
+  -ms-transform: translateX(7px);
+  transform: translateX(77px);
+}
 
-  h1, h2, h3, h4 {
-    color:#ea842c;
-    font-family: 'Poppins', sans-serif;
-  }
+/*------ ADDED CSS ---------*/
+.on {
+  display: none;
+}
 
-  h1 {
-    font-size: 40px;
-  }
+.on,
+.off {
+  color: white;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  font-size: 10px;
+}
 
-  //H2 elements should be camel cased
-  h2 {
-    font-size: 28px;
-    font-weight: 600; //semibold
-  }
+input:checked + .slider .on {
+  display: block;
+}
 
-  h3 {
-    font-size: 22px;
-  }
+input:checked + .slider .off {
+  display: none;
+}
 
-  h4 {
-    font-size: 18px;
-  }
+/*--------- END --------*/
 
-  //Begin ngx-slick-carousel styles
-  .prev, .next {
-    z-index: 1;
-    position: absolute;
-    display: block;
-    height: 20px;
-    width: 20px;
-    line-height: 0px;
-    font-size: 55px;
-    cursor: pointer;
-    background: transparent;
-    color: #555;
-    top: 40%;
-    -webkit-transform: translate(0, -50%);
-    transform: translate(0, -50%);
-    padding: 0;
-    border: none;
-    outline: none;
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+body {
+  font-family: "Nunito", sans-serif;
+  color: #555555;
+  line-height: 1.25;
+}
+
+.b1,
+.b2,
+.b3,
+.b4 {
+  font-weight: 400;
+  text-align: center;
+  font-family: "Nunito", sans-serif;
+  color: #555555;
+}
+
+//Large field values
+.b1 {
+  font-size: 28px;
+}
+
+//Regular sized field values
+.b2 {
+  font-size: 24px;
+}
+
+//Field Title Descriptions
+.b3 {
+  font-size: 20px;
+}
+
+.b4 {
+  font-size: 16px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: #ea842c;
+  font-family: "Poppins", sans-serif;
+}
+
+h1 {
+  font-size: 40px;
+}
+
+//H2 elements should be camel cased
+h2 {
+  font-size: 28px;
+  font-weight: 600; //semibold
+}
+
+h3 {
+  font-size: 22px;
+}
+
+h4 {
+  font-size: 18px;
+}
+
+//Begin ngx-slick-carousel styles
+.prev,
+.next {
+  z-index: 1;
+  position: absolute;
+  display: block;
+  height: 20px;
+  width: 20px;
+  line-height: 0px;
+  font-size: 55px;
+  cursor: pointer;
+  background: transparent;
+  color: #555;
+  top: 40%;
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  padding: 0;
+  border: none;
+  outline: none;
 }
 
 .prev:focus,
 .next:focus {
-  outline:none;
+  outline: none;
 }
 
 .prev {
-  left:-10px;
+  left: -10px;
 }
 
 .next {
-  right:5px;
+  right: 5px;
 }
 
 .slide-background {
-  display:inline-block; 
-  height:350px; 
-  width:350px; 
-  background-color:lightgrey;
+  display: inline-block;
+  height: 350px;
+  width: 350px;
+  background-color: lightgrey;
   margin-bottom: 23px;
-  background-size:cover;
+  background-size: cover;
 }
 
 .slide-module-accent {
-  width:230px;
+  width: 230px;
   background-color: #89bf40;
   position: relative;
   top: 313px;
@@ -300,21 +307,20 @@ $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
 }
 
 .slide-link-text {
-  width:230px;
-  margin-top:20px;
-  margin-left:auto;
-  margin-right:auto;
+  width: 230px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .slide-container {
-  width:100%;
-  text-align:center;
+  width: 100%;
+  text-align: center;
 }
 
-@media only screen and (max-width: 359px)
-{
+@media only screen and (max-width: 359px) {
   .slide-module-accent {
-    left:-50px
+    left: -50px;
   }
 }
 
@@ -327,13 +333,94 @@ $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
 // }
 //end ngx-slick-carousel styles
 
-
 #vg-tooltip-element.vg-tooltip.custom-theme {
   font-size: 14px;
   border-radius: 10px;
-  font-family: "Nunito"
-
-  h2 {
+  font-family: "Nunito" h2 {
     font-size: 16px;
   }
 }
+
+//Share this gdpr iframe that we aren't using but still shows up for some reason
+iframe#st_gdpr_iframe {
+  display: none;
+}
+
+//Share this main div. Keep it hidden unless you need it, in which case rehide it when destroying component
+body div#st-2 {
+  display: none !important;
+}
+
+//Start of ShareThis css. It should be doing these things on it's own, but it isn't, so we'll take care of it
+@media only screen and (max-width: 1024px) {
+  body div#st-2.display .st-btn:hover > svg {
+    margin-left: 0;
+  }
+  body div#st-2.display .st-btn:hover > span {
+    display: none;
+  }
+
+  body div#st-2.display {
+    bottom: 0;
+    display: flex !important;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+  }
+
+  body div#st-2.display > div {
+    clear: none;
+    flex: 1;
+    float: none;
+  }
+
+  body div#st-2.display .st-toggle {
+    display:none;
+  }
+
+  body div#st-2.display .st-btn {
+    text-align:center;
+    width:auto;
+  }
+
+  body div#st-2.display .st-btn > span {
+    display:none;
+  }
+}
+
+@media only screen and (min-width: 1025px) {
+  body div#st-2.display {
+    display: block !important;
+    position: fixed;
+    opacity: 1;
+    text-align: left;
+    top: 205px;
+    z-index: 94034;
+  }
+
+  body div#st-2.display > div {
+    clear: left;
+    float: left;
+  }
+
+  body div#st-2.display .st-btn:hover > img {
+    margin-left: 5px;
+  }
+  body div#st-2.display .st-btn:hover > span {
+    opacity: 1;
+    display: inline-block;
+    left: 0;
+    filter: alpha(opacity=100);
+  }
+
+  body div#st-2.display .st-toggle {
+    display:block;
+  }
+
+  body div#st-2.display .st-btn {
+    text-align:left;
+  }
+}
+
+//end ShareThis css

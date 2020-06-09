@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, HostListener, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 import { UserDto } from 'src/app/shared/models/user/user-dto';
@@ -8,6 +8,8 @@ import { WfsService } from 'src/app/shared/services/wfs.service';
 import * as L from 'leaflet';
 import { DroolPerLandscapedAcreChartDto } from 'src/app/shared/models/drool-per-landscaped-acre-chart-dto';
 import { WaterAccountsChartDto } from 'src/app/shared/models/water-accounts-chart-dto';
+import { DOCUMENT } from '@angular/common';
+import { Meta } from '@angular/platform-browser';
 
 
 @Component({
@@ -70,7 +72,9 @@ export class FactSheetComponent implements AfterViewInit {
     private router: Router,
     private neighborhoodService: NeighborhoodService,
     private wfsService: WfsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    @Inject(DOCUMENT) private document: Document,
+    private meta: Meta
   ) {
   }
 
@@ -116,6 +120,8 @@ export class FactSheetComponent implements AfterViewInit {
 
       })
     }
+
+    this.prepareShareThis();
   }
 
   getMapImageAndDrainsToText(geoserverResponse: any, stormshedResponse: any) {
@@ -228,4 +234,26 @@ export class FactSheetComponent implements AfterViewInit {
     setTimeout(() => this.refresh = true);
     setTimeout(() => this.refresh = false);
   }
+
+  public prepareShareThis() {
+    let el = this.document.getElementById("st-2");
+    el.classList.add("display");
+
+    //ShareThis can read these and tell the links how to show properly
+    el.dataset.url = window.location.href;
+    el.dataset.title = "Urban Drool Tool Fact Sheet";
+    el.dataset.description = `Runoff from overwatering and car washing picks up fertilizer, bacteria, and other contaminants on
+    its way to creeks and beaches. It starts in a gutter near you...This “Urban Drool” contributes to more than 1 million gallons of polluted discharge to
+    Aliso Creek each day. But small changes in how you use water can eliminate drool and save you money. `;
+    el.dataset.image = window.location.origin + "/assets/home/news-and-updates-1.jpg";
+
+    //But I also don't trust it, so let's update our meta tags just in case
+    this.meta.updateTag({name : 'og:title', content: 'Urban Drool Tool Fact Sheet'});
+
+    this.meta.updateTag({name : 'og:description', content: `Runoff from overwatering and car washing picks up fertilizer, bacteria, and other contaminants on
+    its way to creeks and beaches. It starts in a gutter near you...This “Urban Drool” contributes to more than 1 million gallons of polluted discharge to
+    Aliso Creek each day. But small changes in how you use water can eliminate drool and save you money. `});
+    
+    this.meta.updateTag({name : 'og:image', content: window.location.origin + "/assets/home/news-and-updates-1.jpg"})
+}
 }
