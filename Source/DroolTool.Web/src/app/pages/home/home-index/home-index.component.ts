@@ -92,7 +92,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnDestroy(): void {
         this.watchUserChangeSubscription.unsubscribe();
-        this.document.getElementById("st-2").classList.remove("display");
+        this.clearShareThisAndMetaTags();
     }
 
     public userIsUnassigned() {
@@ -192,5 +192,14 @@ export class HomeIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         Aliso Creek each day. But small changes in how you use water can eliminate drool and save you money. `});
 
         this.meta.updateTag({name : 'og:image', content: window.location.origin + "/assets/home/news-and-updates-1.jpg"})
+    }
+
+    public clearShareThisAndMetaTags() {
+        this.document.getElementById("st-2").classList.remove("display");
+
+        this.meta.removeTag("name='og:title'");
+        this.meta.removeTag("name='og:description'");
+        this.meta.removeTag("name='og:image'");
+
     }
 }

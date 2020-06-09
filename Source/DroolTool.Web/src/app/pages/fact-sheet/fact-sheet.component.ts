@@ -64,7 +64,7 @@ export class FactSheetComponent implements AfterViewInit {
   waterAccountsChartData: WaterAccountsChartDto;
   innerWidth: number;
   smallScreen: boolean;
-  refresh:boolean = false;
+  refresh: boolean = false;
 
 
   constructor(
@@ -94,6 +94,7 @@ export class FactSheetComponent implements AfterViewInit {
 
   ngOnDestroy() {
     this.neighborhoodSearchedSubscription.unsubscribe();
+    this.clearShareThisAndMetaTags();
   }
 
   ngAfterViewInit() {
@@ -248,12 +249,21 @@ export class FactSheetComponent implements AfterViewInit {
     el.dataset.image = window.location.origin + "/assets/home/news-and-updates-1.jpg";
 
     //But I also don't trust it, so let's update our meta tags just in case
-    this.meta.updateTag({name : 'og:title', content: 'Urban Drool Tool Fact Sheet'});
+    this.meta.updateTag({ name: 'og:title', content: 'Urban Drool Tool Fact Sheet' });
 
-    this.meta.updateTag({name : 'og:description', content: `Runoff from overwatering and car washing picks up fertilizer, bacteria, and other contaminants on
+    this.meta.updateTag({
+      name: 'og:description', content: `Runoff from overwatering and car washing picks up fertilizer, bacteria, and other contaminants on
     its way to creeks and beaches. It starts in a gutter near you...This “Urban Drool” contributes to more than 1 million gallons of polluted discharge to
     Aliso Creek each day. But small changes in how you use water can eliminate drool and save you money. `});
-    
-    this.meta.updateTag({name : 'og:image', content: window.location.origin + "/assets/home/news-and-updates-1.jpg"})
-}
+
+    this.meta.updateTag({ name: 'og:image', content: window.location.origin + "/assets/home/news-and-updates-1.jpg" })
+  }
+
+  public clearShareThisAndMetaTags() {
+    this.document.getElementById("st-2").classList.remove("display");
+
+    this.meta.removeTag("name='og:title'");
+    this.meta.removeTag("name='og:description'");
+    this.meta.removeTag("name='og:image'");
+  }
 }
