@@ -8,8 +8,8 @@ import { DOCUMENT } from '@angular/common';
   styleUrls: ['./social-media-sharing.component.scss']
 })
 export class SocialMediaSharingComponent implements OnInit {
-  innerWidth: number;
-  bottom: string = null;
+  public innerWidth: number;
+  public bottom: string = null;
 
   @Input() platforms: Array<string> = ['facebook','twitter','linkedin','email','copy'];
   @Input() numItemsToShow: number = -1;
@@ -20,6 +20,7 @@ export class SocialMediaSharingComponent implements OnInit {
   ngOnInit(): void {
     this.innerWidth = window.innerWidth;
     this.addOrRemoveSms();
+    this.calculateBottom();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -30,10 +31,7 @@ export class SocialMediaSharingComponent implements OnInit {
 
   @HostListener('window:scroll', ['$event'])
   onScroll(event) {
-    var rect = document.getElementsByTagName("footer")[0].getBoundingClientRect();
-    if (this.innerWidth < 767) {
-      this.bottom = rect.top < window.innerHeight && rect.bottom >= 0 ? (window.innerHeight - rect.top) + "px" : "10px";
-    }
+    this.calculateBottom();
   }
 
   public addOrRemoveSms() {
@@ -52,6 +50,16 @@ export class SocialMediaSharingComponent implements OnInit {
 
   public getNumItemsToShow() {
     return this.innerWidth > 767 ? (this.numItemsToShow != -1 ? this.numItemsToShow : 5) : 0;
+  }
+
+  public calculateBottom() {
+    var rect = document.getElementsByTagName("footer")[0].getBoundingClientRect();
+    if (this.innerWidth < 768) {
+      this.bottom = rect.top < window.innerHeight && rect.bottom >= 0 ? (window.innerHeight - rect.top) + "px" : "10px";
+    }
+    else {
+      this.bottom = '';
+    }
   }
 
 }
