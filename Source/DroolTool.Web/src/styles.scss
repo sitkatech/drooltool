@@ -12,6 +12,9 @@
 @import "scss/_forms.scss";
 @import "scss/_custom-bootstrap.scss";
 
+@import '~ngx-sharebuttons/themes/default/default-theme';
+@import '~ngx-sharebuttons/themes/circles/circles-dark-theme';
+
 // begin ag-grid settings
 $grid-size: 4px;
 $font-size: 12px;
@@ -341,86 +344,36 @@ h4 {
   }
 }
 
-//Share this gdpr iframe that we aren't using but still shows up for some reason
-iframe#st_gdpr_iframe {
-  display: none;
+share-buttons {
+  position: fixed;
+    z-index:100;
+    
+  
+    @media only screen and (min-width:768px) {   
+      left: 0;
+      text-align:left;
+    }
+  
+    @media only screen and (max-width:767px) {
+      right: 10px;
+      bottom: 10px;
+      text-align:right;
+    }
+
+    .sb-group, .sb-button {
+      display:block;
+    }
+  
+    share-button {
+      display:block;
+      :focus {
+        outline:none;
+      }
+    }
+
+    expand-button {
+      :focus {
+        outline:none;
+      }
+    }
 }
-
-//Share this main div. Keep it hidden unless you need it, in which case rehide it when destroying component
-body div#st-2 {
-  display: none !important;
-}
-
-//Start of ShareThis css. It should be doing these things on it's own, but it isn't, so we'll take care of it
-@media only screen and (max-width: 1024px) {
-  body div#st-2.display .st-btn:hover > svg {
-    margin-left: 0;
-  }
-  body div#st-2.display .st-btn:hover > span {
-    display: none;
-  }
-
-  body div#st-2.display {
-    bottom: 0;
-    display: flex !important;
-    left: 0;
-    right: 0;
-    top: auto;
-    width: 100%;
-  }
-
-  body div#st-2.display > div {
-    clear: none;
-    flex: 1;
-    float: none;
-  }
-
-  body div#st-2.display .st-toggle {
-    display:none;
-  }
-
-  body div#st-2.display .st-btn {
-    text-align:center;
-    width:auto;
-  }
-
-  body div#st-2.display .st-btn > span {
-    display:none;
-  }
-}
-
-@media only screen and (min-width: 1025px) {
-  body div#st-2.display {
-    display: block !important;
-    position: fixed;
-    opacity: 1;
-    text-align: left;
-    top: 205px;
-    z-index: 94034;
-  }
-
-  body div#st-2.display > div {
-    clear: left;
-    float: left;
-  }
-
-  body div#st-2.display .st-btn:hover > img {
-    margin-left: 5px;
-  }
-  body div#st-2.display .st-btn:hover > span {
-    opacity: 1;
-    display: inline-block;
-    left: 0;
-    filter: alpha(opacity=100);
-  }
-
-  body div#st-2.display .st-toggle {
-    display:block;
-  }
-
-  body div#st-2.display .st-btn {
-    text-align:left;
-  }
-}
-
-//end ShareThis css

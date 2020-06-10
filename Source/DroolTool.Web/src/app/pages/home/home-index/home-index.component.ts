@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, Inject, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, Inject, AfterViewInit, HostListener } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { RoleEnum } from 'src/app/shared/models/enums/role.enum';
 import { environment } from 'src/environments/environment';
@@ -13,7 +13,7 @@ import { Meta } from '@angular/platform-browser';
     templateUrl: './home-index.component.html',
     styleUrls: ['./home-index.component.scss']
 })
-export class HomeIndexComponent implements OnInit, OnDestroy, AfterViewInit {
+export class HomeIndexComponent implements OnInit, OnDestroy {
     public watchUserChangeSubscription: any;
     public currentUser: UserDto;
     public node:any;
@@ -86,13 +86,8 @@ export class HomeIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    ngAfterViewInit(){
-        this.prepareShareThis();
-    }
-
     ngOnDestroy(): void {
         this.watchUserChangeSubscription.unsubscribe();
-        this.clearShareThisAndMetaTags();
     }
 
     public userIsUnassigned() {
@@ -169,37 +164,5 @@ export class HomeIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public beforeChange(e) {
         // console.log('beforeChange');
-    }
-
-    public prepareShareThis() {
-        let el = this.document.getElementById("st-2");
-        el.classList.add("display");
-
-        //ShareThis can use these data properties to tell the social media platform how to render our link
-        //https://sharethis.com/support/customization/customize-share-urls/
-        el.dataset.url = window.location.href;
-        el.dataset.title = "Urban Drool Tool";
-        el.dataset.description = `Runoff from overwatering and car washing picks up fertilizer, bacteria, and other contaminants on
-        its way to creeks and beaches. It starts in a gutter near you...This “Urban Drool” contributes to more than 1 million gallons of polluted discharge to
-        Aliso Creek each day. But small changes in how you use water can eliminate drool and save you money. `;
-        el.dataset.image = window.location.origin + "/assets/home/news-and-updates-1.jpg";
-
-        //But I also don't trust it, so update our meta tags just in case
-        this.meta.updateTag({name : 'og:title', content: 'Urban Drool Tool'});
-
-        this.meta.updateTag({name : 'og:description', content: `Runoff from overwatering and car washing picks up fertilizer, bacteria, and other contaminants on
-        its way to creeks and beaches. It starts in a gutter near you...This “Urban Drool” contributes to more than 1 million gallons of polluted discharge to
-        Aliso Creek each day. But small changes in how you use water can eliminate drool and save you money. `});
-
-        this.meta.updateTag({name : 'og:image', content: window.location.origin + "/assets/home/news-and-updates-1.jpg"})
-    }
-
-    public clearShareThisAndMetaTags() {
-        this.document.getElementById("st-2").classList.remove("display");
-
-        this.meta.removeTag("name='og:title'");
-        this.meta.removeTag("name='og:description'");
-        this.meta.removeTag("name='og:image'");
-
     }
 }

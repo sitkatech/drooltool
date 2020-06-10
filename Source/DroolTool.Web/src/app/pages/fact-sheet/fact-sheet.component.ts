@@ -94,7 +94,6 @@ export class FactSheetComponent implements AfterViewInit {
 
   ngOnDestroy() {
     this.neighborhoodSearchedSubscription.unsubscribe();
-    this.clearShareThisAndMetaTags();
   }
 
   ngAfterViewInit() {
@@ -121,8 +120,6 @@ export class FactSheetComponent implements AfterViewInit {
 
       })
     }
-
-    this.prepareShareThis();
   }
 
   getMapImageAndDrainsToText(geoserverResponse: any, stormshedResponse: any) {
@@ -234,36 +231,5 @@ export class FactSheetComponent implements AfterViewInit {
     this.smallScreen = window.innerWidth < 400;
     setTimeout(() => this.refresh = true);
     setTimeout(() => this.refresh = false);
-  }
-
-  public prepareShareThis() {
-    let el = this.document.getElementById("st-2");
-    el.classList.add("display");
-
-    //ShareThis can read these and tell the links how to show properly
-    el.dataset.url = window.location.href;
-    el.dataset.title = "Urban Drool Tool Fact Sheet";
-    el.dataset.description = `Runoff from overwatering and car washing picks up fertilizer, bacteria, and other contaminants on
-    its way to creeks and beaches. It starts in a gutter near you...This “Urban Drool” contributes to more than 1 million gallons of polluted discharge to
-    Aliso Creek each day. But small changes in how you use water can eliminate drool and save you money. `;
-    el.dataset.image = window.location.origin + "/assets/home/news-and-updates-1.jpg";
-
-    //But I also don't trust it, so let's update our meta tags just in case
-    this.meta.updateTag({ name: 'og:title', content: 'Urban Drool Tool Fact Sheet' });
-
-    this.meta.updateTag({
-      name: 'og:description', content: `Runoff from overwatering and car washing picks up fertilizer, bacteria, and other contaminants on
-    its way to creeks and beaches. It starts in a gutter near you...This “Urban Drool” contributes to more than 1 million gallons of polluted discharge to
-    Aliso Creek each day. But small changes in how you use water can eliminate drool and save you money. `});
-
-    this.meta.updateTag({ name: 'og:image', content: window.location.origin + "/assets/home/news-and-updates-1.jpg" })
-  }
-
-  public clearShareThisAndMetaTags() {
-    this.document.getElementById("st-2").classList.remove("display");
-
-    this.meta.removeTag("name='og:title'");
-    this.meta.removeTag("name='og:description'");
-    this.meta.removeTag("name='og:image'");
   }
 }
