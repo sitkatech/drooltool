@@ -40,6 +40,10 @@ import { FactSheetComponent } from './pages/fact-sheet/fact-sheet.component';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { DroolPerLandscapedAcreChartComponent } from './components/drool-per-landscaped-acre-chart/drool-per-landscaped-acre-chart.component';
 import { WaterAccountsChartComponent } from './components/water-accounts-chart/water-accounts-chart.component';
+import { ShareButtonsModule } from 'ngx-sharebuttons/buttons';
+import { ShareIconsModule } from 'ngx-sharebuttons/icons';
+import { ShareButtonsPopupModule } from 'ngx-sharebuttons/popup'
+import { SocialMediaSharingComponent } from './components/social-media-sharing/social-media-sharing.component'
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -64,6 +68,7 @@ export function init_app(appLoadService: AppInitService) {
     FactSheetComponent,
     DroolPerLandscapedAcreChartComponent,
     WaterAccountsChartComponent,
+    SocialMediaSharingComponent
   ],
   imports: [
     AppRoutingModule,
@@ -81,7 +86,10 @@ export function init_app(appLoadService: AppInitService) {
     MyDatePickerModule,
     SlickCarouselModule,
     Ng5SliderModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    ShareButtonsModule,
+    ShareIconsModule,
+    ShareButtonsPopupModule
   ],  
   providers: [
     CookieService,

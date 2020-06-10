@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, HostListener, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 import { UserDto } from 'src/app/shared/models/user/user-dto';
@@ -8,6 +8,8 @@ import { WfsService } from 'src/app/shared/services/wfs.service';
 import * as L from 'leaflet';
 import { DroolPerLandscapedAcreChartDto } from 'src/app/shared/models/drool-per-landscaped-acre-chart-dto';
 import { WaterAccountsChartDto } from 'src/app/shared/models/water-accounts-chart-dto';
+import { DOCUMENT } from '@angular/common';
+import { Meta } from '@angular/platform-browser';
 
 
 @Component({
@@ -62,7 +64,7 @@ export class FactSheetComponent implements AfterViewInit {
   waterAccountsChartData: WaterAccountsChartDto;
   innerWidth: number;
   smallScreen: boolean;
-  refresh:boolean = false;
+  refresh: boolean = false;
 
 
   constructor(
@@ -70,7 +72,9 @@ export class FactSheetComponent implements AfterViewInit {
     private router: Router,
     private neighborhoodService: NeighborhoodService,
     private wfsService: WfsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    @Inject(DOCUMENT) private document: Document,
+    private meta: Meta
   ) {
   }
 
