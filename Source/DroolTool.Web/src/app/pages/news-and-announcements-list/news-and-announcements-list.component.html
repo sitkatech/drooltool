@@ -36,7 +36,7 @@
     </div>
 </div>
 <ng-template #addNew let-modal>
-    <form (ngSubmit)="onSubmit()">
+    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
         <div class="modal-header">
             <h4 class="modal-title" id="addNewModalTitle">Add New</h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -44,7 +44,65 @@
             </button>
         </div>
         <div class="modal-body">
-            This will grab the latest data from Beehive. Are you sure you want to proceed?
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input 
+                    formControlName="title"
+                    id="title" 
+                    type="text" 
+                    class="form-control"
+                    required>
+                <div *ngIf="f.title.touched && f.title.invalid" class="alert alert-danger">
+                    <div *ngIf="f.title.errors.required">Title is required.</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <div class="input-group">
+                    <input 
+                    formControlName="date"
+                    id="date" 
+                    type="text" 
+                    ngbDatepicker #d="ngbDatepicker"
+                    placeholder="yyyy-mm-dd"
+                    (click)="d.toggle()"
+                    class="form-control">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"><i class="fa fa-calendar" aria-hidden="true"></i></button>
+                      </div>
+                </div>
+                              
+                <div *ngIf="f.date.touched && f.date.invalid" class="alert alert-danger">
+                    <div *ngIf="f.date.errors.required">Date is required.</div>
+                    <!-- <div *ngIf="f.date.errors.pattern">Date must be in the format 'yyyy-mm-dd'</div> -->
+                </div>
+            </div>   
+            <div class="form-group">
+                <label for="link">Link</label>
+                <input 
+                    formControlName="link"
+                    id="link" 
+                    type="text" 
+                    class="form-control"
+                    >
+            </div>        
+            <div class="form-group">
+                <label for="image">Image</label>
+                <input 
+                    formControlName="image"
+                    id="image" 
+                    type="file" 
+                    class="form-control"
+                    (change)="onFileChange($event)">
+                <div *ngIf="f.image.touched && f.image.invalid" class="alert alert-danger">
+                    <div *ngIf="f.image.errors.required">File is required.</div>
+                </div>
+            </div>
+            
+            <ng-container *ngIf="imageSrc">
+                <label>Image Preview</label>
+                <img [src]="imageSrc" *ngIf="imageSrc" style="height:auto; width:auto; max-height:350px; max-width:350px">
+            </ng-container>
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-drooltool btn-sm"
