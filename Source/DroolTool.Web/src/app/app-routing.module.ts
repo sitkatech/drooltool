@@ -16,11 +16,13 @@ import { TakeActionComponent } from './pages/take-action/take-action.component';
 import { WatershedExplorerComponent } from './pages/watershed-explorer/watershed-explorer.component';
 import { HelpComponent } from './pages/help/help.component';
 import { FactSheetComponent } from './pages/fact-sheet/fact-sheet.component';
+import { NewsAndAnnouncementsListComponent } from './pages/news-and-announcements-list/news-and-announcements-list.component';
 
 const routes: Routes = [
   { path: "users", component: UserListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard]},
   { path: "users/:id", component: UserDetailComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard] },
   { path: "users/:id/edit", component: UserEditComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard] },
+  { path: "news-and-announcements", component: NewsAndAnnouncementsListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard]},
   { path: "invite-user", component: UserInviteComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard] },
   { path: "neighborhood-explorer", component: NeighborhoodExplorerComponent},
   { path: "watershed-explorer", component: WatershedExplorerComponent},

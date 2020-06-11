@@ -7,6 +7,11 @@ namespace DroolTool.EFModels.Entities
 {
     public partial class FileResource
     {
+        public FileResource()
+        {
+            NewsAndAnnouncements = new HashSet<NewsAndAnnouncements>();
+        }
+
         [Key]
         public int FileResourceID { get; set; }
         public int FileResourceMimeTypeID { get; set; }
@@ -29,5 +34,7 @@ namespace DroolTool.EFModels.Entities
         [ForeignKey(nameof(FileResourceMimeTypeID))]
         [InverseProperty("FileResource")]
         public virtual FileResourceMimeType FileResourceMimeType { get; set; }
+        [InverseProperty("FileResource")]
+        public virtual ICollection<NewsAndAnnouncements> NewsAndAnnouncements { get; set; }
     }
 }

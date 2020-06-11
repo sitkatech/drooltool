@@ -43,7 +43,8 @@ import { WaterAccountsChartComponent } from './components/water-accounts-chart/w
 import { ShareButtonsModule } from 'ngx-sharebuttons/buttons';
 import { ShareIconsModule } from 'ngx-sharebuttons/icons';
 import { ShareButtonsPopupModule } from 'ngx-sharebuttons/popup'
-import { SocialMediaSharingComponent } from './components/social-media-sharing/social-media-sharing.component'
+import { SocialMediaSharingComponent } from './components/social-media-sharing/social-media-sharing.component';
+import { NewsAndAnnouncementsListComponent } from './pages/news-and-announcements-list/news-and-announcements-list.component'
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -68,7 +69,8 @@ export function init_app(appLoadService: AppInitService) {
     FactSheetComponent,
     DroolPerLandscapedAcreChartComponent,
     WaterAccountsChartComponent,
-    SocialMediaSharingComponent
+    SocialMediaSharingComponent,
+    NewsAndAnnouncementsListComponent
   ],
   imports: [
     AppRoutingModule,
