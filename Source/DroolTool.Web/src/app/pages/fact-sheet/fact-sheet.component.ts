@@ -32,7 +32,7 @@ export class FactSheetComponent implements AfterViewInit {
 
   public totalIrrigationWaterUsed: any;
   public droolChangeOverLastTwoMonthsStatement: string;
-  public droolChangeOverLastYearStatement: string;
+  public droolPerLandscapedAcreChangeOverLastYearStatement: string;
   public neighborhoodsParticipatingChangeStatement: string;
   public drainsToText: string;
   public watershedImage: string;
@@ -190,10 +190,21 @@ export class FactSheetComponent implements AfterViewInit {
     this.metricsFurthestFromEndDate = this.metricsForYear[this.metricsForYear.length - 1];
 
     this.droolChangeOverLastTwoMonthsStatement = this.getLastTwoMonthsStatement(this.metricsForMostRecentMonth.TotalDrool, this.metricsForMonthPriorToMostRecentMonth.TotalDrool);
-    this.droolChangeOverLastYearStatement = this.getDroolChangeOverLastYearStatement(this.metricsForMostRecentMonth.TotalDrool, this.metricsFurthestFromEndDate.TotalDrool, this.metricsForYear.length);
+    this.droolPerLandscapedAcreChangeOverLastYearStatement = this.getDroolPerLandscapedAcreChangeOverLastYearStatement(this.metricsForMostRecentMonth.DroolPerLandscapedAcre, this.metricsFurthestFromEndDate.DroolPerLandscapedAcre, this.metricsForYear.length);
 
     this.neighborhoodsParticipatingChangeStatement = this.getNeighborhoodsParticipatingChangeStatement(this.metricsForMostRecentMonth?.OverallParticipation, this.metricsFurthestFromEndDate?.OverallParticipation, this.metricsForYear.length);
-    this.totalIrrigationWaterUsed = this.metricsForYear.reduce((tiw, m) => tiw + m.TotalWaterUsedForIrrigation, 0);
+    this.totalIrrigationWaterUsed = this.getTotalIrrigationWater();
+  }
+
+  getTotalIrrigationWater(): number {
+    if (this.metricsForYear.length < 13) {
+      return this.metricsForYear.reduce((tiw, m) => tiw + m.TotalWaterUsedForIrrigation, 0);
+    }
+    else {
+      let temp = this.metricsForYear;
+      temp.shift();
+      return temp.reduce((tiw, m) => tiw + m.TotalWaterUsedForIrrigation, 0);
+    }
   }
 
   getNeighborhoodsParticipatingChangeStatement(overallParticipationMostRecent: number, overallParticipationOldest: number, length: number): any {
@@ -204,7 +215,7 @@ export class FactSheetComponent implements AfterViewInit {
     return `This is ${differenceStatement} ${lengthOfTime}${difference > 0 ? "!" : "."}`
   }
 
-  getDroolChangeOverLastYearStatement(totalDroolMostRecent: number, totalDroolOldest: number, length: number): any {
+  getDroolPerLandscapedAcreChangeOverLastYearStatement(totalDroolMostRecent: number, totalDroolOldest: number, length: number): any {
     let briefStatement;
     let lengthOfTime = length < 13 ? length - 1 + " months ago" : "last year";
     let improvement =  false;
