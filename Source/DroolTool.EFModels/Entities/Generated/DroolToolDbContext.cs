@@ -23,6 +23,7 @@ namespace DroolTool.EFModels.Entities
         public virtual DbSet<FileResource> FileResource { get; set; }
         public virtual DbSet<FileResourceMimeType> FileResourceMimeType { get; set; }
         public virtual DbSet<Neighborhood> Neighborhood { get; set; }
+        public virtual DbSet<NewsAndAnnouncements> NewsAndAnnouncements { get; set; }
         public virtual DbSet<RawDroolMetric> RawDroolMetric { get; set; }
         public virtual DbSet<RegionalSubbasin> RegionalSubbasin { get; set; }
         public virtual DbSet<Role> Role { get; set; }
@@ -173,6 +174,24 @@ namespace DroolTool.EFModels.Entities
                     .HasPrincipalKey(p => p.OCSurveyNeighborhoodID)
                     .HasForeignKey(d => d.OCSurveyDownstreamNeighborhoodID)
                     .HasConstraintName("FK_Neighborhood_Neighborhood_OCSurveyDownstreamNeighborhoodID_OCSurveyNeighborhoodID");
+            });
+
+            modelBuilder.Entity<NewsAndAnnouncements>(entity =>
+            {
+                entity.Property(e => e.NewsAndAnnouncementsLink).IsUnicode(false);
+
+                entity.Property(e => e.NewsAndAnnouncementsTitle).IsUnicode(false);
+
+                entity.HasOne(d => d.FileResource)
+                    .WithMany(p => p.NewsAndAnnouncements)
+                    .HasForeignKey(d => d.FileResourceID)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+                entity.HasOne(d => d.NewsAndAnnouncementsLastUpdatedByUser)
+                    .WithMany(p => p.NewsAndAnnouncements)
+                    .HasForeignKey(d => d.NewsAndAnnouncementsLastUpdatedByUserID)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_NewsAndAnnoucements_User_NewsAndAnnouncementsLastUpdatedByUserID_UserID");
             });
 
             modelBuilder.Entity<RawDroolMetric>(entity =>

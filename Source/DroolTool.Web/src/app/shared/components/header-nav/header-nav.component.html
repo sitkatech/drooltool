@@ -76,6 +76,9 @@
                                     <a *ngIf="isAdministrator()" routerLink="/users" class="dropdown-item">
                                         View all Users
                                     </a>
+                                    <a *ngIf="isAdministrator()" routerLink="/news-and-announcements" class="dropdown-item">
+                                        View all News And Announcements
+                                    </a>
                                     <a href="javascript:void(0);" (click)="logout()" class="dropdown-item">Sign Out</a>
                                 </div>
                             </li>
