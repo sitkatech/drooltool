@@ -202,6 +202,7 @@ export class FactSheetComponent implements AfterViewInit {
     }
     else {
       let temp = this.metricsForYear;
+      debugger;
       temp.shift();
       return temp.reduce((tiw, m) => tiw + m.TotalWaterUsedForIrrigation, 0);
     }

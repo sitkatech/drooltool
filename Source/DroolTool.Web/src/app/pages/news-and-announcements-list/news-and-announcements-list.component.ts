@@ -7,6 +7,9 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DatePipe } from '@angular/common';
 import { CellRendererComponent } from 'ag-grid-community/dist/lib/components/framework/componentTypes';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NewsAndAnnouncementsDto } from 'src/app/shared/models/news-and-announcements/news-and-announcements-dto';
+import { NewsAndAnnouncementsUpsertDto } from 'src/app/shared/models/news-and-announcements/news-and-announcements-upsert-dto';
 
 @Component({
   selector: 'drooltool-news-and-announcements-list',
@@ -17,6 +20,17 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
 
   @ViewChild('newsAndAnnouncementsGrid') newsAndAnnouncementsGrid: AgGridAngular;
 
+  public upsertTitle:string;
+  public upsertDate:Date;
+  public upsertLink:string;
+  imageSrc:string;
+  myForm = new FormGroup({
+    title: new FormControl(this.upsertTitle, [Validators.required]),
+    date: new FormControl(this.upsertDate, [Validators.required]),
+    image: new FormControl('', [Validators.required]),
+    link: new FormControl(this.upsertLink)
+  });
+
   private watchUserChangeSubscription: any;
   private currentUser: UserDto;
 
@@ -25,6 +39,7 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
   public closeResult: string;
   public modalReference: NgbModalRef;
   columnDefs: any;
+  fileToUpload: any;
 
   constructor(private cdr: ChangeDetectorRef,
     private authenticationService: AuthenticationService,
@@ -129,10 +144,29 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
     });
   }
 
+  get f(){
+    return this.myForm.controls;
+  }
+
   ngOnDestroy() {
     this.watchUserChangeSubscription.unsubscribe();
     this.authenticationService.dispose();
     this.cdr.detach();
+  }
+
+  onFileChange(event) {
+    const reader = new FileReader();
+    
+    if(event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+    
+      reader.onload = () => {  
+        this.imageSrc = reader.result as string;
+        this.fileToUpload = event.target.files.item(0);
+      };
+   
+    }
   }
 
   public updateGridData() {
@@ -148,5 +182,21 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
     }, (reason) => {
       this.closeResult = `Dismissed`;// ${this.getDismissReason(reason)}`;
     });
+  }
+
+  public onSubmit() {
+    if (this.myForm.valid) {
+      console.log(this.myForm);
+      let upsertDto = new NewsAndAnnouncementsUpsertDto({Title:this.upsertTitle, Date:this.upsertDate, Link:this.upsertLink});
+      this.newsAndAnnouncementsService.upsertNewsAndAnnouncements(this.fileToUpload, upsertDto).subscribe(result => {
+        console.log('yay');
+      });
+    }
+    else {
+      Object.keys(this.myForm.controls).forEach(field => {
+        const control = this.myForm.get(field);            
+        control.markAsTouched({ onlySelf: true });       
+      });
+    }
   }
 }

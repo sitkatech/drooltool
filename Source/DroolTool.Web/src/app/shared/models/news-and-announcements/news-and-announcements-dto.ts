@@ -1,4 +1,4 @@
-import { UserSimpleDto } from './user/user-simple-dto';
+import { UserSimpleDto } from '../user/user-simple-dto';
 
 export class NewsAndAnnouncementsDto{
 
