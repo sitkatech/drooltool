@@ -7,6 +7,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { DOCUMENT, Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Meta } from '@angular/platform-browser';
+import { NewsAndAnnouncementsService } from 'src/app/services/news-and-announcements/news-and-announcements.service';
 
 @Component({
     selector: 'app-home-index',
@@ -18,18 +19,37 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
     public currentUser: UserDto;
     public node:any;
 
-    public slides = [
-        {
-            date: "Wednesday, <br/> March 2, 2020",
-            title: "Join Fix A Leak Week Through March",
-            image: "./assets/home/news-and-updates-1.jpg"
-        },
-        {
-            date: "Friday, <br/> March 19, 2020",
-            title: "Landscape Workshop",
-            image: "./assets/home/news-and-updates-2.jpg"
-        }
-    ];
+    public dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    public months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+
+    public slides;
+
+    // public slides = [
+    //     {
+    //         date: "Wednesday, <br/> March 2, 2020",
+    //         title: "Join Fix A Leak Week Through March",
+    //         image: "./assets/home/news-and-updates-1.jpg"
+    //     },
+    //     {
+    //         date: "Friday, <br/> March 19, 2020",
+    //         title: "Landscape Workshop",
+    //         image: "./assets/home/news-and-updates-2.jpg"
+    //     }
+    // ];
     public slideConfig = {
         "dots": false,
         "slidesToShow": 2,
@@ -73,7 +93,8 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         private router: Router,
         private meta: Meta,
         private activatedRoute: ActivatedRoute,
-        private location: Location) {
+        private location: Location,
+        private newsAndAnnouncementsService: NewsAndAnnouncementsService) {
     }
 
     public ngOnInit(): void {
@@ -83,11 +104,26 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         }
         this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
             this.currentUser = currentUser;
+            this.newsAndAnnouncementsService.getNewsAndAnnouncementsForHomePage().subscribe(results => {
+                this.slides = results.map((x) => {
+                    let date = new Date(x.Date);
+                    return {
+                        date: `${this.dayOfWeek[date.getUTCDay()]}, <br/> ${this.months[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`,
+                        title: x.Title,
+                        image: `https://${environment.apiHostName}/FileResource/${x.FileResourceGUIDAsString}`,
+                        link: x.Link
+                    }
+                })
+            })
         });
     }
 
     ngOnDestroy(): void {
         this.watchUserChangeSubscription.unsubscribe();
+    }
+
+    public showSlides(): boolean {
+        return this.slides && this.slides.length > 0 ? true : false;
     }
 
     public userIsUnassigned() {
