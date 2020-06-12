@@ -116,6 +116,7 @@ export class WatershedExplorerComponent implements OnInit {
       return this.months[value-1];
     }
   }
+  districtBoundaryLayer: any;
   
 
   constructor(
@@ -123,7 +124,7 @@ export class WatershedExplorerComponent implements OnInit {
     private compileService: CustomCompileService,
     private neighborhoodService: NeighborhoodService,
     private wfsService: WfsService,
-    private watershedMaskService: StaticFeatureService,
+    private staticFeatureService: StaticFeatureService,
     private spinner: NgxSpinnerService
   ) {
   }
@@ -218,30 +219,48 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public initializeMap(): void {
-    this.watershedMaskService.getWatershedMask().subscribe(maskString => {
+
+    const mapOptions: L.MapOptions = {
+      minZoom: 6,
+      maxZoom: 22,
+      layers: [
+        this.tileLayers["Hillshade"],
+        this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
+        this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
+      ],
+      gestureHandling: true,
+      loadingControl:true
+    } as L.MapOptions;
+
+    this.map = L.map(this.mapID, mapOptions);
+
+    this.initializePanes();
+
+    this.staticFeatureService.getDistrictBoundary().subscribe(districtBoundaryFeature =>{
+      this.districtBoundaryLayer = L.geoJSON(districtBoundaryFeature,{
+        pane:"droolToolOverlayPane",
+        style: function (feature) {
+          return {
+            fill: false,
+            color: "#6819ae",
+            weight: 5,
+            stroke: true
+          };
+        }
+      })
+      this.districtBoundaryLayer.addTo(this.map);
+      this.setControl();
+      this.initializeMapEvents();
+      this.defaultFitBounds();
+
+      this.layerControl.addOverlay(this.districtBoundaryLayer, "District Boundary");
+    });
+
+    this.staticFeatureService.getWatershedMask().subscribe(maskString => {
       this.maskLayer = this.getMaskGeoJsonLayer(maskString);
       L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
-      const mapOptions: L.MapOptions = {
-        minZoom: 6,
-        maxZoom: 22,
-        layers: [
-          this.tileLayers["Hillshade"],
-          this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
-          this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
-        ],
-        gestureHandling: true,
-        loadingControl:true
-      } as L.MapOptions;
-
-      this.map = L.map(this.mapID, mapOptions);
-
-      this.initializePanes();
-      this.initializeMapEvents();
-      this.setControl();
-
       this.maskLayer.addTo(this.map);
-      this.defaultFitBounds();
 
       if (window.innerWidth > 991) {
         this.mapElement.nativeElement.scrollIntoView();
@@ -469,7 +488,7 @@ export class WatershedExplorerComponent implements OnInit {
   //won't be honored because it's in the middle of a zoom. So we'll manipulate
   //it a bit.
   public defaultFitBounds(): void {
-    let target = this.map._getBoundsCenterZoom(this.maskLayer.getBounds(), null);
+    let target = this.map._getBoundsCenterZoom(this.districtBoundaryLayer.getBounds(), null);
     this.map.setView(target.center, this.defaultMapZoom, null);
   }
 
@@ -573,7 +592,7 @@ export class WatershedExplorerComponent implements OnInit {
     this.map.removeLayer(this.maskLayer);
     this.maskLayer = null;
     this.map.fireEvent('dataloading');
-    this.watershedMaskService.getWatershedMask(this.selectedWatershed).subscribe(maskString => {
+    this.staticFeatureService.getWatershedMask(this.selectedWatershed).subscribe(maskString => {
       this.maskLayer = this.getMaskGeoJsonLayer(maskString);
       this.maskLayer.addTo(this.map);
       this.defaultFitBounds();     

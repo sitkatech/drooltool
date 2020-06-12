@@ -190,7 +190,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
           return {
             fillColor: "#323232",
             fill: true,
-            fillOpacity: 0.4,
+            fillOpacity: 0.25,
             color: "#6819ae",
             weight: 5,
             stroke: true
@@ -212,7 +212,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
           return {
             fillColor: "#323232",
             fill: true,
-            fillOpacity: 0.4,
+            fillOpacity: 0.2,
             color: "#3388ff",
             weight: 5,
             stroke: true
