@@ -109,7 +109,7 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig"
+                    <ngx-slick-carousel *ngIf="showSlides()" class="carousel" #slickModal="slick-carousel" [config]="slideConfig"
                         (init)="slickInit($event)" (breakpoint)="breakpoint($event)" (afterChange)="afterChange($event)"
                         (beforeChange)="beforeChange($event)" style="padding-top:40px">
                         <div ngxSlickItem *ngFor="let slide of slides" class="slide">
@@ -119,10 +119,14 @@
                                         <p class="b3" style="color:#FFF" [innerHTML]="slide.date"></p>
                                     </div>
                                 </div>
-                                <p class="b3 slide-link-text"><a href="/">{{slide.title}}</a></p>
+                                <p class="b3 slide-link-text">
+                                    <a href="{{slide.link}}" *ngIf="slide.link" target="_blank">{{slide.title}}</a>
+                                    <span *ngIf="!slide.link">{{slide.title}}</span>
+                                </p>
                             </div>
                         </div>
                     </ngx-slick-carousel>
+                    <p class="b3" *ngIf="!showSlides()">Nothing yet, stay tuned!</p>
                 </div>
             </div>
         </div>
