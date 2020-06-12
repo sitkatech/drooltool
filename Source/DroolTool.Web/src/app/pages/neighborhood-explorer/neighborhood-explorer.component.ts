@@ -8,7 +8,7 @@ import '../../../../node_modules/leaflet-loading/src/Control.Loading.js';
 import * as esri from 'esri-leaflet'
 import { CustomCompileService } from '../../shared/services/custom-compile.service';
 import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
-import { WatershedMaskService } from 'src/app/services/watershed-mask/watershed-mask.service';
+import { StaticFeatureService } from 'src/app/services/static-feature/static-feature.service';
 import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
@@ -25,7 +25,7 @@ declare var $: any;
 export class NeighborhoodExplorerComponent implements OnInit {
   @ViewChild("mapDiv") mapElement: ElementRef;
 
-  public defaultMapZoom = 12;
+  public defaultMapZoom = 13;
   public afterSetControl = new EventEmitter();
   public afterLoadMap = new EventEmitter();
   public onMapMoveEnd = new EventEmitter();
@@ -80,12 +80,13 @@ export class NeighborhoodExplorerComponent implements OnInit {
     "November",
     "December"
   ]
+  districtBoundaryLayer: any;
 
   constructor(
     private appRef: ApplicationRef,
     private compileService: CustomCompileService,
     private neighborhoodService: NeighborhoodService,
-    private watershedMaskService: WatershedMaskService,
+    private staticFeatureService: StaticFeatureService,
     private nominatimService: NominatimService,
     private wfsService: WfsService
   ) {
@@ -164,7 +165,47 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public initializeMap(): void {
-    this.watershedMaskService.getWatershedMask().subscribe(maskString => {
+    
+    const mapOptions: L.MapOptions = {
+      minZoom: 6,
+      maxZoom: 22,
+      layers: [
+        this.tileLayers["Street"],
+        this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
+        this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
+      ],
+      gestureHandling: true,
+      loadingControl:true
+
+    } as L.MapOptions;
+
+    this.map = L.map(this.mapID, mapOptions);
+    this.initializePanes();
+    
+    this.staticFeatureService.getDistrictBoundary().subscribe(districtBoundaryFeature =>{
+      this.districtBoundaryLayer = L.geoJSON(districtBoundaryFeature,{
+        invert:true,
+        pane:"droolToolOverlayPane",
+        style: function (feature) {
+          return {
+            fillColor: "#323232",
+            fill: true,
+            fillOpacity: 0.4,
+            color: "#ea9eff",
+            weight: 5,
+            stroke: true
+          };
+        }
+      })
+      this.districtBoundaryLayer.addTo(this.map);
+      this.setControl();
+      this.initializeMapEvents();
+      this.defaultFitBounds();
+
+      this.layerControl.addOverlay(this.districtBoundaryLayer, "District Boundary");
+
+    })
+    this.staticFeatureService.getWatershedMask().subscribe(maskString => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
         style: function (feature) {
@@ -181,27 +222,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
       L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
-      const mapOptions: L.MapOptions = {
-        minZoom: 6,
-        maxZoom: 22,
-        layers: [
-          this.tileLayers["Street"],
-          this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
-          this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
-        ],
-        gestureHandling: true,
-        loadingControl:true
 
-      } as L.MapOptions;
-
-      this.map = L.map(this.mapID, mapOptions);
-
-      this.initializePanes();
-      this.setControl();
-      this.initializeMapEvents();
 
       this.maskLayer.addTo(this.map);
-      this.defaultFitBounds();
 
       if (window.innerWidth > 991) {
         this.mapElement.nativeElement.scrollIntoView();
@@ -368,7 +391,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
     setTimeout(() => { this.clickMarker.closePopup(); }, 5000);
     this.selectedNeighborhoodWatershed = this.selectedNeighborhoodProperties.Watershed;
-    this.watershedMaskService.getWatershedMask(this.selectedNeighborhoodWatershed).subscribe(maskString => {
+    this.staticFeatureService.getWatershedMask(this.selectedNeighborhoodWatershed).subscribe(maskString => {
       this.selectedNeighborhoodWatershedMask = this.getMaskGeoJsonLayer(maskString);
     })
     this.searchActive = true;
@@ -514,7 +537,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   //won't be honored because it's in the middle of a zoom. So we'll manipulate
   //it a bit.
   public defaultFitBounds(): void {
-    let target = this.map._getBoundsCenterZoom(this.maskLayer.getBounds(), null);
+    let target = this.map._getBoundsCenterZoom(this.districtBoundaryLayer.getBounds(), null);
     this.map.setView(target.center, this.defaultMapZoom, null);
   }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ViewChildren, QueryList } from '@angular/core';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
 import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
-import { WatershedMaskService } from 'src/app/services/watershed-mask/watershed-mask.service';
+import { StaticFeatureService } from 'src/app/services/static-feature/static-feature.service';
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import { environment } from 'src/environments/environment';
 import * as L from 'leaflet';
@@ -123,7 +123,7 @@ export class WatershedExplorerComponent implements OnInit {
     private compileService: CustomCompileService,
     private neighborhoodService: NeighborhoodService,
     private wfsService: WfsService,
-    private watershedMaskService: WatershedMaskService,
+    private watershedMaskService: StaticFeatureService,
     private spinner: NgxSpinnerService
   ) {
   }
