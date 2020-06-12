@@ -28,7 +28,7 @@ export class WatershedExplorerComponent implements OnInit {
   @ViewChild("mapDiv", { static: false }) mapElement: ElementRef;
   @ViewChild("largePanel", { static: false }) largeDisplayMetricsPanel: ElementRef;
 
-  public defaultMapZoom = 12;
+  public defaultMapZoom = 13;
   public afterSetControl = new EventEmitter();
   public afterLoadMap = new EventEmitter();
   public onMapMoveEnd = new EventEmitter();
