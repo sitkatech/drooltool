@@ -191,7 +191,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
             fillColor: "#323232",
             fill: true,
             fillOpacity: 0.4,
-            color: "#ea9eff",
+            color: "#6819ae",
             weight: 5,
             stroke: true
           };
@@ -203,8 +203,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.defaultFitBounds();
 
       this.layerControl.addOverlay(this.districtBoundaryLayer, "District Boundary");
+    });
 
-    })
     this.staticFeatureService.getWatershedMask().subscribe(maskString => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
@@ -221,8 +221,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
       });
 
       L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
-
-
 
       this.maskLayer.addTo(this.map);
 
@@ -345,6 +343,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public displaySearchResults(response: FeatureCollection, latlng: Object): void {
+    this.hideDistrictBoundaryMask();
 
     this.currentSearchLayer = L.geoJSON(response, {
       style: function (feature) {
@@ -522,6 +521,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.traceLayer].forEach((x) => {
       this.clearLayer(x);
     });
+
+    this.showDistrictBoundaryMask();
   }
 
   public clearLayer(layer: L.Layer): void {
@@ -573,5 +574,15 @@ export class NeighborhoodExplorerComponent implements OnInit {
         };
       }
     });
+  }
+  
+  public hideDistrictBoundaryMask(): void {
+    this.districtBoundaryLayer.options.invert = false;
+    this.districtBoundaryLayer.setStyle({fillOpacity: 0});
+  }
+
+  public showDistrictBoundaryMask(): void{
+    this.districtBoundaryLayer.options.invert = true;
+    this.districtBoundaryLayer.setStyle({fillOpacity: .4});
   }
 }
