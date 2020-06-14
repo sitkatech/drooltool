@@ -28,25 +28,15 @@ export class NewsAndAnnouncementsService {
         return this.apiService.getFromApi(route);
     }
 
-    upsertNewsAndAnnouncements(file:any, model:NewsAndAnnouncementsUpsertDto): Observable<NewsAndAnnouncementsDto> {
+    upsertNewsAndAnnouncements(file:any, model:NewsAndAnnouncementsUpsertDto): any {
+        let formData = new FormData();
+        formData.append('file', file);
+        formData.append('model', JSON.stringify(model));
         const apiHostName = environment.apiHostName;
-        const route = `https://${apiHostName}/news-and-announcements/upsert-news-and-announcements/${model.NewsAndAnnouncementsID}/${model.Title}/${model.Date}/${model.Link ? encodeURIComponent(model.Link) : ""}`;
+        const route = `https://${apiHostName}/news-and-announcements/upsert-news-and-announcements`;
         var result = this.httpClient.post<any>(
             route,
-            file ?? null, // Send the File Blob as the POST body.
-            {
-              // NOTE: Because we are posting a Blob (File is a specialized Blob
-              // object) as the POST body, we have to include the Content-Type
-              // header. If we don't, the server will try to parse the body as
-              // plain text.
-              headers: {
-                "Content-Type": file?.type ?? 'application/json'
-              },
-              params: {
-                clientFilename: file?.name,
-                mimeType: file?.type
-              }
-            }
+            formData
           );
       
           return result;
