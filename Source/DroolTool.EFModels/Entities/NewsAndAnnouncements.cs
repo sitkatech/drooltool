@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DroolTool.Models.DataTransferObjects;
 using System.Linq;
 using System.Net;
+using DroolTool.Models.DataTransferObjects.NewsAndAnnouncements;
 using Microsoft.EntityFrameworkCore;
 
 namespace DroolTool.EFModels.Entities
@@ -33,13 +34,13 @@ namespace DroolTool.EFModels.Entities
                 .ToList();
         }
 
-        public static void CreateNewsAndAnnouncementsEntity(DroolToolDbContext dbContext, string title, DateTime date, string link, int userID, int fileResourceID)
+        public static void CreateNewsAndAnnouncementsEntity(DroolToolDbContext dbContext, NewsAndAnnouncementsUpsertDto upsertDto, int userID, int fileResourceID)
         {
             var newsAndUpdatesEntity = new NewsAndAnnouncements()
             {
-                NewsAndAnnouncementsTitle = title,
-                NewsAndAnnouncementsDate = date,
-                NewsAndAnnouncementsLink = WebUtility.UrlDecode(link),
+                NewsAndAnnouncementsTitle = upsertDto.Title,
+                NewsAndAnnouncementsDate = Convert.ToDateTime(upsertDto.Date),
+                NewsAndAnnouncementsLink = upsertDto.Link,
                 NewsAndAnnouncementsLastUpdatedByUserID = userID,
                 NewsAndAnnouncementsLastUpdatedDate = DateTime.Now,
                 FileResourceID = fileResourceID
@@ -49,14 +50,14 @@ namespace DroolTool.EFModels.Entities
             dbContext.SaveChanges();
         }
 
-        public static void UpdateNewsAndAnnouncementsEntity(DroolToolDbContext dbContext, int newsAndAnnouncementsID, string title, DateTime date, string link, int userID, int fileResourceID)
+        public static void UpdateNewsAndAnnouncementsEntity(DroolToolDbContext dbContext, NewsAndAnnouncementsUpsertDto upsertDto, int userID, int fileResourceID)
         {
             var newsAndAnnouncementsEntity = dbContext.NewsAndAnnouncements
-                .Single(x => x.NewsAndAnnouncementsID == newsAndAnnouncementsID);
+                .Single(x => x.NewsAndAnnouncementsID == upsertDto.NewsAndAnnouncementsID);
 
-            newsAndAnnouncementsEntity.NewsAndAnnouncementsTitle = title;
-            newsAndAnnouncementsEntity.NewsAndAnnouncementsDate = date;
-            newsAndAnnouncementsEntity.NewsAndAnnouncementsLink = WebUtility.UrlDecode(link);
+            newsAndAnnouncementsEntity.NewsAndAnnouncementsTitle = upsertDto.Title;
+            newsAndAnnouncementsEntity.NewsAndAnnouncementsDate = upsertDto.Date;
+            newsAndAnnouncementsEntity.NewsAndAnnouncementsLink = upsertDto.Link;
             
             if (fileResourceID != -1)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -8,10 +9,13 @@ using DroolTool.API.Services;
 using DroolTool.EFModels.Entities;
 using DroolTool.Models.DataTransferObjects;
 using DroolTool.Models.DataTransferObjects.NewsAndAnnouncements;
+using DroolTool.Models.DataTransferObjects.User;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Features;
 using NetTopologySuite.Operation.Union;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DroolTool.API.Controllers
@@ -37,30 +41,23 @@ namespace DroolTool.API.Controllers
             return Ok(NewsAndAnnouncements.GetNewsAndAnnouncementsByDate(_dbContext, 2));
         }
 
-        [HttpPost("news-and-announcements/upsert-news-and-announcements/{newsAndAnnouncementsID}/{title}/{date}/{link?}")]
-        public async Task<ActionResult> UpsertNewsAndAnnouncements([FromRoute] int newsAndAnnouncementsID, [FromRoute] string title, [FromRoute] string date, [FromRoute] string link = null)
+        [HttpPost("news-and-announcements/upsert-news-and-announcements")]
+        public async Task<ActionResult> UpsertNewsAndAnnouncements()
         {
-            if (newsAndAnnouncementsID == -1)
-            {
-                var fileResource = await HttpUtilities.MakeFileResourceFromHttpRequest(Request, _dbContext, HttpContext);
-                _dbContext.FileResource.Add(fileResource);
-                _dbContext.SaveChanges();
-
-                NewsAndAnnouncements.CreateNewsAndAnnouncementsEntity(_dbContext, title, Convert.ToDateTime(date), link, UserContext.GetUserFromHttpContext(_dbContext, HttpContext).UserID, fileResource.FileResourceID);
+            var upsertDto = JsonConvert.DeserializeObject<NewsAndAnnouncementsUpsertDto>(Request.Form["model"]);
+            var userDto = UserContext.GetUserFromHttpContext(_dbContext, HttpContext);
+            if (upsertDto.NewsAndAnnouncementsID == -1)
+            { 
+                NewsAndAnnouncements.CreateNewsAndAnnouncementsEntity(_dbContext, upsertDto, userDto.UserID, await UploadImage(Request.Form.Files[0], userDto));
             }
             else
             {
-                var fileResourceID = -1;
-                if (Request.ContentLength != 0)
-                {
-                    var fileResource = await HttpUtilities.MakeFileResourceFromHttpRequest(Request, _dbContext, HttpContext);
-                    _dbContext.FileResource.Add(fileResource);
-                    _dbContext.SaveChanges();
-                    fileResourceID = fileResource.FileResourceID;
-                }
+                var fileResourceID = Request.Form.Files.Count > 0
+                    ? await UploadImage(Request.Form.Files[0], userDto)
+                    : -1;
 
-                NewsAndAnnouncements.UpdateNewsAndAnnouncementsEntity(_dbContext, newsAndAnnouncementsID, title, Convert.ToDateTime(date), link,
-                    UserContext.GetUserFromHttpContext(_dbContext, HttpContext).UserID, fileResourceID);
+                NewsAndAnnouncements.UpdateNewsAndAnnouncementsEntity(_dbContext, upsertDto,
+                    userDto.UserID, fileResourceID);
             }
             return Ok();
         }
@@ -83,6 +80,39 @@ namespace DroolTool.API.Controllers
 
             NewsAndAnnouncements.Delete(_dbContext, newsAndAnnouncementsID);
             return Ok();
+        }
+
+        private async Task<int> UploadImage(IFormFile file, UserDto user)
+        {
+            byte[] bytes;
+
+            await using (var ms = new MemoryStream(2048))
+            {
+                await file.CopyToAsync(ms);
+                bytes = ms.ToArray();
+            }
+
+            var fileResourceMimeType = FileResourceMimeType.GetFileResourceMimeTypeByContentTypeName(_dbContext,
+                file.ContentType);
+
+            var clientFilename = file.FileName;
+            var extension = clientFilename.Split('.').Last();
+            var fileResourceGuid = Guid.NewGuid();
+            var fileResource = new FileResource
+            {
+                CreateDate = DateTime.Now,
+                CreateUserID = user.UserID,
+                FileResourceData = bytes,
+                FileResourceGUID = fileResourceGuid,
+                FileResourceMimeTypeID = fileResourceMimeType.FileResourceMimeTypeID,
+                OriginalBaseFilename = clientFilename,
+                OriginalFileExtension = extension,
+            };
+
+            _dbContext.FileResource.Add(fileResource);
+            _dbContext.SaveChanges();
+
+            return fileResource.FileResourceID;
         }
     }
 }

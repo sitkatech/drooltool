@@ -271,6 +271,7 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
 
   public clearFormAndResetImageSrc() {
     this.myForm.reset();
+    this.fileToUpload = null;
     this.imageSrc = null;
     this.newsAndAnnouncementsID = -1;
   }
