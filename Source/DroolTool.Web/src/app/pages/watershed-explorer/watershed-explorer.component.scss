@@ -28,6 +28,17 @@
     left:10px;
 }
 
+.instructions-toast {
+    position:absolute;
+    left:50%;
+    top:50%;
+    z-index:10000;
+    height:190px;
+    width:350px;
+    margin-left:-175px;
+    margin-top:-95px;
+}
+
 .input-group {
     color:#333
 }
