@@ -25,8 +25,12 @@ export class AnnouncementService {
 
     upsertAnnouncement(file:any, model:AnnouncementUpsertDto): any {
         let formData = new FormData();
-        formData.append('file', file);
-        formData.append('model', JSON.stringify(model));
+        formData.append('image', file);
+        Object.keys(model).forEach(key => {
+            if (model[key]) {
+                formData.append(key, model[key]);
+            }
+        });
         const apiHostName = environment.apiHostName;
         const route = `https://${apiHostName}/announcement/upsert-announcement`;
         var result = this.httpClient.post<any>(

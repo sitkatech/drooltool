@@ -8,6 +8,7 @@ using DroolTool.EFModels.Entities;
 using DroolTool.Models.DataTransferObjects;
 using DroolTool.Models.DataTransferObjects.Announcement;
 using DroolTool.Models.DataTransferObjects.User;
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -36,18 +37,17 @@ namespace DroolTool.API.Controllers
         }
 
         [HttpPost("announcement/upsert-announcement")]
-        public async Task<ActionResult> UpsertAnnouncement()
+        public async Task<ActionResult> UpsertAnnouncement([FromForm]AnnouncementUpsertDto upsertDto, [FromForm] IFormFile image)
         {
-            var upsertDto = JsonConvert.DeserializeObject<AnnouncementUpsertDto>(Request.Form["model"]);
             var userDto = UserContext.GetUserFromHttpContext(_dbContext, HttpContext);
             if (upsertDto.AnnouncementID == -1)
             {
-                Announcement.CreateAnnouncementEntity(_dbContext, upsertDto, userDto.UserID, await UploadImage(Request.Form.Files[0], userDto));
+                Announcement.CreateAnnouncementEntity(_dbContext, upsertDto, userDto.UserID, await UploadImage(image, userDto));
             }
             else
             {
-                var fileResourceID = Request.Form.Files.Count > 0
-                    ? await UploadImage(Request.Form.Files[0], userDto)
+                var fileResourceID = image != null
+                    ? await UploadImage(image, userDto)
                     : -1;
 
                 Announcement.UpdateAnnouncementEntity(_dbContext, upsertDto,
