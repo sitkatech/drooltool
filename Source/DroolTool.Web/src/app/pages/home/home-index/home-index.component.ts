@@ -105,7 +105,6 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
             this.currentUser = currentUser;
             this.announcementService.getAnnouncementsForHomePage().subscribe(results => {
-                debugger;
                 this.slides = results.map((x) => {
                     return {
                         date: x.AnnouncementDate,
