@@ -16,6 +16,7 @@ import { forkJoin } from 'rxjs';
 import { NeighborhoodMetricAvailableDatesDto } from 'src/app/shared/models/neighborhood-metric-available-dates-dto.js';
 import { Options } from 'ng5-slider';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { NgbToast } from '@ng-bootstrap/ng-bootstrap'
 
 declare var $: any;
 
@@ -27,6 +28,7 @@ declare var $: any;
 export class WatershedExplorerComponent implements OnInit {
   @ViewChild("mapDiv", { static: false }) mapElement: ElementRef;
   @ViewChild("largePanel", { static: false }) largeDisplayMetricsPanel: ElementRef;
+  @ViewChild("instructionsToast") instructionsToast: NgbToast;
 
   public defaultMapZoom = 13;
   public afterSetControl = new EventEmitter();
@@ -71,6 +73,8 @@ export class WatershedExplorerComponent implements OnInit {
   public errorMessage: string = "";
   public errorSpecificIcon: string = "";
   public errorCallToAction: string = "";
+
+  public showInstructionsToast = true;
 
   public searchOutsideServiceAreaErrorMessage = "Sorry, the area you selected is not within the Urban Drool Tool service area.";
   public searchOutsideServiceAreaErrorCallToAction = "Select an area within the highlighted service boundary to view results."
@@ -698,5 +702,9 @@ export class WatershedExplorerComponent implements OnInit {
 
     return this.allYearsWithAvailableMetricMonths.map(x => x.MetricYear);
 
+  }
+
+  public hideInstructionsToast(event: Event) {
+    this.showInstructions = false;
   }
 }
