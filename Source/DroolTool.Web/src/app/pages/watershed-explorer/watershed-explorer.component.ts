@@ -28,7 +28,7 @@ export class WatershedExplorerComponent implements OnInit {
   @ViewChild("mapDiv", { static: false }) mapElement: ElementRef;
   @ViewChild("largePanel", { static: false }) largeDisplayMetricsPanel: ElementRef;
 
-  public defaultMapZoom = 13;
+  public defaultMapZoom = 12;
   public afterSetControl = new EventEmitter();
   public afterLoadMap = new EventEmitter();
   public onMapMoveEnd = new EventEmitter();
@@ -238,7 +238,7 @@ export class WatershedExplorerComponent implements OnInit {
 
     this.staticFeatureService.getDistrictBoundary().subscribe(districtBoundaryFeature =>{
       this.districtBoundaryLayer = L.geoJSON(districtBoundaryFeature,{
-        pane:"droolToolOverlayPane",
+        //pane:"droolToolOverlayPane",
         style: function (feature) {
           return {
             fill: false,

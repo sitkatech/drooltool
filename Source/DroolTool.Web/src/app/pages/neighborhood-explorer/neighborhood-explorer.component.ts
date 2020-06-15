@@ -25,7 +25,7 @@ declare var $: any;
 export class NeighborhoodExplorerComponent implements OnInit {
   @ViewChild("mapDiv") mapElement: ElementRef;
 
-  public defaultMapZoom = 13;
+  public defaultMapZoom = 12;
   public afterSetControl = new EventEmitter();
   public afterLoadMap = new EventEmitter();
   public onMapMoveEnd = new EventEmitter();
@@ -185,7 +185,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.staticFeatureService.getDistrictBoundary().subscribe(districtBoundaryFeature =>{
       this.districtBoundaryLayer = L.geoJSON(districtBoundaryFeature,{
         invert:true,
-        pane:"droolToolOverlayPane",
+        //pane:"droolToolOverlayPane",
         style: function (feature) {
           return {
             fillColor: "#323232",
@@ -201,6 +201,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.setControl();
       this.initializeMapEvents();
       this.defaultFitBounds();
+
+      //this.districtBoundaryLayer.bringToBack();
 
       this.layerControl.addOverlay(this.districtBoundaryLayer, "District Boundary");
     });
