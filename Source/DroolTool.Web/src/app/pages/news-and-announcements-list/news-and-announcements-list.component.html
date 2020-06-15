@@ -25,8 +25,8 @@
         </ag-grid-angular>
     </div>
 </div>
-<ng-template #addNew let-modal>
-    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+<ng-template #upsertNewsAndAnnouncementsEntity let-modal>
+    <form [formGroup]="upsertForm" (ngSubmit)="onSubmit()">
         <div class="modal-header">
             <h4 class="modal-title" id="upsertModalTitle">{{newsAndAnnouncementsID == -1 ? "Add New" : "Update"}}</h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
