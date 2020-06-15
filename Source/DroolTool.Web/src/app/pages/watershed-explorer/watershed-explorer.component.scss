@@ -19,13 +19,30 @@
     .section-search {
         text-align:center;
     }
+
+    #buttonDiv {
+        left:10px
+    }
+}
+
+@media only screen and (min-width:992px) {
+    #buttonDiv {      
+        right:65px;
+    }
+
+    #traceButton {
+        height:45px;
+    }
+
+    .shifted {
+        right:165px !important;
+    }
 }
 
 #buttonDiv {
     position:absolute; 
     z-index:10000; 
-    top:11px; 
-    left:10px;
+    top:11px;
 }
 
 .instructions-toast {
