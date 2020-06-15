@@ -383,3 +383,26 @@ share-buttons {
       }
     }
 }
+
+ngb-toast {
+
+  .toast-header {
+    background-color:$header-background-color;
+    color: #FFF;
+    font-size:16px;
+    font-family:"Poppins";
+
+    > strong {
+      font-weight:600;
+    }
+  }
+
+  .close {
+    color: #FFF;
+  }
+
+  .toast-body {
+    font-size:16px;
+    font-family:"Nunito";
+  }
+}
