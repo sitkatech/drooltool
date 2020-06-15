@@ -19,23 +19,6 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
     public currentUser: UserDto;
     public node:any;
 
-    public dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-    public months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-      ]
-
     public slides;
 
     // public slides = [

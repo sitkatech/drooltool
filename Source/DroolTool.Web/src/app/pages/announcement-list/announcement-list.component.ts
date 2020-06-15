@@ -26,23 +26,6 @@ export class AnnouncementListComponent implements OnInit {
   @ViewChild('deleteAnnouncementEntity') deleteEntity: any;
   @ViewChildren('fileInput') public fileInput: QueryList<any>;
 
-  public dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-  public months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ]
-
   public announcementTitle: string;
   public announcementDate: string;
   public announcementLink: string;
@@ -99,9 +82,9 @@ export class AnnouncementListComponent implements OnInit {
           cellRendererParams: { isSpan: true, fontawesomeIconName: 'pencil-square-o' },
           sortable: false, filter: false, width: 38
         },
-        { headerName: 'Title', field: 'Title', sortable: true, filter: true, width: 150 },
+        { headerName: 'Title', field: 'AnnouncementTitle', sortable: true, filter: true, width: 150 },
         {
-          headerName: 'Date', field: 'Date', valueFormatter: function (params) {
+          headerName: 'Date', field: 'AnnouncementDate', valueFormatter: function (params) {
             return _datePipe.transform(params.value, "M/d/yyyy", "UTC")
           },
           filterValueGetter: function (params: any) {
@@ -136,7 +119,7 @@ export class AnnouncementListComponent implements OnInit {
           },
           sortable: true, filter: 'agDateColumnFilter', width: 150
         },
-        { headerName: 'Link', field: 'Link', sortable: true, filter: true, width: 300 },
+        { headerName: 'Link', field: 'AnnouncementLink', sortable: true, filter: true, width: 300 },
         {
           headerName: 'Last Updated By', field: 'LastUpdatedByUser', valueGetter: function (params: any) {
             return params.data.LastUpdatedByUser.FullName;
@@ -247,9 +230,9 @@ export class AnnouncementListComponent implements OnInit {
 
     this.clearFormAndResetImageSrc();
     let data = event.data;
-    this.announcementTitle = data.Title;
-    this.announcementDate = data.Date;
-    this.announcementLink = data.Link;
+    this.announcementTitle = data.AnnouncementTitle;
+    this.announcementDate = data.AnnouncementDate;
+    this.announcementLink = data.AnnouncementLink;
     this.imageSrc = `https://${environment.apiHostName}/FileResource/${data.FileResourceGUIDAsString}`;
     this.announcementID = data.AnnouncementID;
 
