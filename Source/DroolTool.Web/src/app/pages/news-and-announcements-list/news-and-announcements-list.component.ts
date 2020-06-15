@@ -1,17 +1,14 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, Inject } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import { UserDto } from 'src/app/shared/models/user/user-dto';
-import { GridOptions, AgGridEvent } from 'ag-grid-community';
+import { GridOptions } from 'ag-grid-community';
 import { NewsAndAnnouncementsService } from 'src/app/services/news-and-announcements/news-and-announcements.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DatePipe, DOCUMENT } from '@angular/common';
-import { CellRendererComponent } from 'ag-grid-community/dist/lib/components/framework/componentTypes';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
-import { NewsAndAnnouncementsDto } from 'src/app/shared/models/news-and-announcements/news-and-announcements-dto';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NewsAndAnnouncementsUpsertDto } from 'src/app/shared/models/news-and-announcements/news-and-announcements-upsert-dto';
 import { FontAwesomeIconLinkRendererComponent } from 'src/app/shared/components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
-import { Template } from '@angular/compiler/src/render3/r3_ast';
 import { environment } from 'src/environments/environment';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
@@ -25,33 +22,33 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 export class NewsAndAnnouncementsListComponent implements OnInit {
 
   @ViewChild('newsAndAnnouncementsGrid') newsAndAnnouncementsGrid: AgGridAngular;
-  @ViewChild('addNew') addNew: any;
-  @ViewChild('deleteNewsAndAnnouncementsEntity') delete: any;
+  @ViewChild('upsertNewsAndAnnouncementsEntity') upsertEntity: any;
+  @ViewChild('deleteNewsAndAnnouncementsEntity') deleteEntity: any;
   @ViewChildren('fileInput') public fileInput: QueryList<any>;
 
   public dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-    public months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-      ]
+  public months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ]
 
   public newsAndAnnouncementsTitle: string;
   public newsAndAnnouncementsDate: string;
   public newsAndAnnouncementsLink: string;
   public newsAndAnnouncementsID: number = -1;
-  imageSrc: string;
-  myForm = new FormGroup({
+  public imageSrc: string;
+  public upsertForm = new FormGroup({
     title: new FormControl('', [Validators.required]),
     date: new FormControl('', [Validators.required]),
     image: new FormControl('', [Validators.required]),
@@ -68,8 +65,8 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
   public allowableFileTypes = ["png", "jpg", "jpeg", "jfif", "bmp", "gif"];
   public maximumFileSizeMB = 30;
   public isPerformingAction = false;
-  columnDefs: any;
-  fileToUpload: any;
+  public columnDefs: any;
+  public fileToUpload: any;
 
   constructor(private cdr: ChangeDetectorRef,
     private authenticationService: AuthenticationService,
@@ -92,11 +89,13 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
       });
 
       this.columnDefs = [
-        {cellRendererFramework: FontAwesomeIconLinkRendererComponent,
+        {
+          cellRendererFramework: FontAwesomeIconLinkRendererComponent,
           cellRendererParams: { isSpan: true, fontawesomeIconName: 'trash' },
           sortable: false, filter: false, width: 35
         },
-        {cellRendererFramework: FontAwesomeIconLinkRendererComponent,
+        {
+          cellRendererFramework: FontAwesomeIconLinkRendererComponent,
           cellRendererParams: { isSpan: true, fontawesomeIconName: 'pencil-square-o' },
           sortable: false, filter: false, width: 38
         },
@@ -188,7 +187,7 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
   }
 
   get f() {
-    return this.myForm.controls;
+    return this.upsertForm.controls;
   }
 
   ngOnDestroy() {
@@ -203,11 +202,10 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
       const [file] = event.target.files;
       let incorrectFileType = !this.allowableFileTypes.some(x => `image/${x}` == file.type);
       //returns bytes, but I'd rather not handle a constant that's a huge value
-      let exceedsMaximumSize = (file.size/1024/1024) > this.maximumFileSizeMB;
+      let exceedsMaximumSize = (file.size / 1024 / 1024) > this.maximumFileSizeMB;
       this.fileToUpload = event.target.files.item(0);
 
-      if (!incorrectFileType && !exceedsMaximumSize)
-      {
+      if (!incorrectFileType && !exceedsMaximumSize) {
         reader.readAsDataURL(file);
 
         reader.onload = () => {
@@ -215,8 +213,8 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
         };
       }
       else {
-        this.myForm.get('image').setErrors({'requiredFileType':incorrectFileType,'fileSize':exceedsMaximumSize});
-        this.myForm.get('image').markAsTouched();
+        this.upsertForm.get('image').setErrors({ 'requiredFileType': incorrectFileType, 'fileSize': exceedsMaximumSize });
+        this.upsertForm.get('image').markAsTouched();
       }
     }
   }
@@ -232,14 +230,14 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
     this.modalReference.result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
-      this.closeResult = `Dismissed`;// ${this.getDismissReason(reason)}`;
+      this.closeResult = `Dismissed`;
     });
   }
 
   public openModalForNewNewsAndAnnouncementsEntity() {
     this.clearFormAndResetImageSrc();
     this.setImageCategoryValidators();
-    this.launchModal(this.addNew, 'addNewModalTitle');
+    this.launchModal(this.upsertEntity, 'upsertModalTitle');
   }
 
   public onCellClicked(event: any) {
@@ -258,19 +256,19 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
     if (event.column.colId == "0") {
       let date = new Date(this.newsAndAnnouncementsDate);
       this.newsAndAnnouncementsDate = `${this.dayOfWeek[date.getUTCDay()]}, <br/> ${this.months[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`
-      this.launchModal(this.delete,'deleteNewsAndAnnouncementsEntity')
+      this.launchModal(this.deleteEntity, 'deleteNewsAndAnnouncementsEntity')
     }
     else {
-      this.myForm.patchValue({title: this.newsAndAnnouncementsTitle});
-      this.myForm.patchValue({date: this.formatDateForNgbDatepicker(this.newsAndAnnouncementsDate)});
-      this.myForm.patchValue({link: this.newsAndAnnouncementsLink});
+      this.upsertForm.patchValue({ title: this.newsAndAnnouncementsTitle });
+      this.upsertForm.patchValue({ date: this.formatDateForNgbDatepicker(this.newsAndAnnouncementsDate) });
+      this.upsertForm.patchValue({ link: this.newsAndAnnouncementsLink });
       this.setImageCategoryValidators();
-      this.launchModal(this.addNew,'addNewModalTitle')
+      this.launchModal(this.upsertEntity, 'upsertModalTitle')
     }
   }
 
   public clearFormAndResetImageSrc() {
-    this.myForm.reset();
+    this.upsertForm.reset();
     this.fileToUpload = null;
     this.imageSrc = null;
     this.newsAndAnnouncementsID = -1;
@@ -278,29 +276,29 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
 
   public setImageCategoryValidators() {
     if (this.newsAndAnnouncementsID != -1) {
-      this.myForm.get('image').setValidators(null);
+      this.upsertForm.get('image').setValidators(null);
     }
     else {
-      this.myForm.get('image').setValidators([Validators.required]);
+      this.upsertForm.get('image').setValidators([Validators.required]);
     }
   }
 
-  public formatDateForNgbDatepicker(date:string): any {
+  public formatDateForNgbDatepicker(date: string): any {
     let dateToChange = new Date(date);
-    return {year:dateToChange.getUTCFullYear(), month: dateToChange.getUTCMonth() + 1, day: dateToChange.getUTCDate()};
+    return { year: dateToChange.getUTCFullYear(), month: dateToChange.getUTCMonth() + 1, day: dateToChange.getUTCDate() };
   }
 
   public onSubmit() {
-    if (this.myForm.valid) {
-      
-      var date = this.myForm.get('date').value;
+    if (this.upsertForm.valid) {
+
+      var date = this.upsertForm.get('date').value;
       let upsertDate = `${date["year"]}-${date["month"]}-${date["day"]}`;
       let upsertDto = new NewsAndAnnouncementsUpsertDto(
         {
           NewsAndAnnouncementsID: this.newsAndAnnouncementsID,
-          Title: this.myForm.get('title').value,
+          Title: this.upsertForm.get('title').value,
           Date: upsertDate,
-          Link: this.myForm.get('link').value
+          Link: this.upsertForm.get('link').value
         });
       this.isPerformingAction = true;
       this.newsAndAnnouncementsService.upsertNewsAndAnnouncements(this.fileToUpload, upsertDto).subscribe(result => {
@@ -315,8 +313,8 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
       });
     }
     else {
-      Object.keys(this.myForm.controls).forEach(field => {
-        const control = this.myForm.get(field);
+      Object.keys(this.upsertForm.controls).forEach(field => {
+        const control = this.upsertForm.get(field);
         control.markAsTouched({ onlySelf: true });
       });
     }
