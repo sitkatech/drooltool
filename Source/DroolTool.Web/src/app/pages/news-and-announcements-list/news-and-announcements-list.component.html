@@ -4,11 +4,8 @@
 
     <div class="row">
         <div class="col">
-            <div class="float-right my-2">
-                <button class="btn btn-drooltool btn-sm ml-3" (click)="openModalForNewNewsAndAnnouncementsEntity()">Add
-                    New</button>
-            </div>
             <h2 class="d-inline-block my-2">News And Announcements</h2>
+            <p class="b3 text-left">A list of News and Announcements posts are shown below. The two posts with the newest Date will be shown on the <a routerLink="/" routerLinkActive=true>home page</a>.</p>
         </div>
     </div>
     <!-- <div class="row mt-1 mb-2">
@@ -18,6 +15,10 @@
     </div>-->
 </div>
 <div class="container">
+    <div class="float-right my-2">
+        <button class="btn btn-drooltool btn-sm ml-3" (click)="openModalForNewNewsAndAnnouncementsEntity()">Add
+            New</button>
+    </div>
     <div class="table-responsive">
         <ag-grid-angular #newsAndAnnouncementsGrid style="width: 100%; height: 400px;" class="ag-theme-balham"
             [rowData]="newsAndAnnouncements" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="100"
