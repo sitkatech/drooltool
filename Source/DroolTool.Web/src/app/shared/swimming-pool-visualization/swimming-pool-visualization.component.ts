@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'drooltool-swimming-pool-visualization',
@@ -9,7 +9,7 @@ export class SwimmingPoolVisualizationComponent implements OnInit {
 
   @Input("numberOfPools") numberOfPools: number;
 
-  maxIndividualPools = 16;
+  maxIndividualPools = 12;
 
   constructor() { }
 

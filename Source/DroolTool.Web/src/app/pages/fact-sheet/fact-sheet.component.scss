@@ -7,19 +7,11 @@
     .top-section p {
         width: 807px;
     }
-
-    .drool-drain-section p {
-        width: 360px;
-    }
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .top-section p {
         width: 660px;
-    }
-
-    .drool-drain-section p {
-        width: 360px;
     }
 }
 
@@ -27,19 +19,11 @@
     .top-section p {
         width: 470px;
     }
-
-    .drool-drain-section p {
-        width: 308px;
-    }
 }
 
 @media only screen and (max-width: 575px) {
     .top-section p {
         max-width: 470px;
-    }
-
-    .drool-drain-section p {
-        max-width: 308px;
     }
 }
 
@@ -53,8 +37,8 @@ p {
 
 hr {
     border-top: 10px solid rgb(42, 194, 223);
-    margin-top: 0rem;
-    margin-bottom: 1.5rem;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .drool-orange {

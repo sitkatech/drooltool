@@ -202,7 +202,6 @@ export class FactSheetComponent implements AfterViewInit {
     }
     else {
       let temp = this.metricsForYear;
-      debugger;
       temp.shift();
       return temp.reduce((tiw, m) => tiw + m.TotalWaterUsedForIrrigation, 0);
     }
@@ -218,7 +217,7 @@ export class FactSheetComponent implements AfterViewInit {
 
   getDroolPerLandscapedAcreChangeOverLastYearStatement(totalDroolMostRecent: number, totalDroolOldest: number, length: number): any {
     let briefStatement;
-    let lengthOfTime = length < 13 ? length - 1 + " months ago" : "last year";
+    let lengthOfTime = length < 13 ? length - 1 + " months ago" : "this month last year";
     let improvement =  false;
     
     if (totalDroolOldest != 0)
