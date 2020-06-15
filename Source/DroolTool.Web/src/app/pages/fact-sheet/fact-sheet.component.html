@@ -99,7 +99,14 @@
                     <br />
                     This would also be enough to irrigate {{totalIrrigationWaterUsed / 350000 | number:'1.0-0':'en-US'}}
                     acres of drought tolerant landscaping.</p>
-                <p class="b2">Visualization reference</p>
+                <div class="row">
+                    <div class="col-3 text-center">
+                        <img src="/assets/fact-sheet/OlympicPool-21fc9e.png" style="width:85%; margin: auto;"/>
+                    </div>
+                    <div class="col-9 text-center">
+                        <p style="margin-top: 10%;" class="b2">An Olympic swimming pool holds about 660,000 gallons of water.</p>
+                    </div>
+                </div>
             </div>
             <div class="col-md-6 col-sm-12">
                 <drooltool-swimming-pool-visualization [numberOfPools]="totalIrrigationWaterUsed / 660000"></drooltool-swimming-pool-visualization>
