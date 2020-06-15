@@ -21,7 +21,7 @@ import { DecimalPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { LinkRendererComponent } from './shared/components/ag-grid/link-renderer/link-renderer.component';
 import { Ng5SliderModule } from 'ng5-slider';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { SlickCarouselModule} from 'ngx-slick-carousel';
 import { FontAwesomeIconLinkRendererComponent } from './shared/components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
@@ -43,7 +43,8 @@ import { WaterAccountsChartComponent } from './components/water-accounts-chart/w
 import { ShareButtonsModule } from 'ngx-sharebuttons/buttons';
 import { ShareIconsModule } from 'ngx-sharebuttons/icons';
 import { ShareButtonsPopupModule } from 'ngx-sharebuttons/popup'
-import { SocialMediaSharingComponent } from './components/social-media-sharing/social-media-sharing.component'
+import { SocialMediaSharingComponent } from './components/social-media-sharing/social-media-sharing.component';
+import { AnnouncementListComponent } from './pages/announcement-list/announcement-list.component'
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -68,7 +69,8 @@ export function init_app(appLoadService: AppInitService) {
     FactSheetComponent,
     DroolPerLandscapedAcreChartComponent,
     WaterAccountsChartComponent,
-    SocialMediaSharingComponent
+    SocialMediaSharingComponent,
+    AnnouncementListComponent
   ],
   imports: [
     AppRoutingModule,
@@ -79,6 +81,7 @@ export function init_app(appLoadService: AppInitService) {
     OAuthModule.forRoot(),
     SharedModule.forRoot(),
     FormsModule,
+    ReactiveFormsModule,
     NgxChartsModule,
     BrowserAnimationsModule,
     AgGridModule.withComponents([]),

@@ -1,0 +1,13 @@
+.close:focus {
+    outline:none;
+}
+
+.custom-file-label::after {
+    display: none;
+}
+
+.custom-file-label {
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    overflow:hidden;
+}

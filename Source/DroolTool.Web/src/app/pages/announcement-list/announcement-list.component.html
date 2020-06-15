@@ -1,0 +1,137 @@
+<div class="container">
+
+    <app-alert-display></app-alert-display>
+
+    <div class="row">
+        <div class="col">
+            <h2 class="d-inline-block my-2">News And Announcements</h2>
+            <p class="b3 text-left">A list of News and Announcements posts are shown below. The two posts with the newest Date will be shown on the <a routerLink="/" routerLinkActive=true>home page</a>.</p>
+        </div>
+    </div>
+    <!-- <div class="row mt-1 mb-2">
+        <div class="col">
+            <custom-rich-text [customRichTextTypeID]="richTextTypeID"></custom-rich-text>
+        </div>
+    </div>-->
+</div>
+<div class="container">
+    <div class="float-right my-2">
+        <button class="btn btn-drooltool btn-sm ml-3" (click)="openModalForNewAnnouncementEntity()">Add
+            New</button>
+    </div>
+    <div class="table-responsive">
+        <ag-grid-angular #announcementGrid style="width: 100%; height: 400px;" class="ag-theme-balham"
+            [rowData]="announcements" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="100"
+            (cellClicked)='onCellClicked($event)'>
+        </ag-grid-angular>
+    </div>
+</div>
+<ng-template #upsertAnnouncementEntity let-modal>
+    <form [formGroup]="upsertForm" (ngSubmit)="onSubmit()">
+        <div class="modal-header">
+            <h4 class="modal-title" id="upsertModalTitle">{{announcementID == -1 ? "Add New" : "Update"}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input formControlName="title" id="title" type="text" class="form-control" required>
+                <div *ngIf="f.title.touched && f.title.invalid" class="alert alert-danger">
+                    <div *ngIf="f.title.errors.required">Title is required.</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <div class="input-group">
+                    <input formControlName="date" id="date" type="text" ngbDatepicker #d="ngbDatepicker"
+                        placeholder="yyyy-mm-dd" (click)="d.toggle()" class="form-control">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"><i
+                                class="fa fa-calendar" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+
+                <div *ngIf="f.date.touched && f.date.invalid" class="alert alert-danger">
+                    <div *ngIf="f.date.errors.required">Date is required.</div>
+                    <!-- <div *ngIf="f.date.errors.pattern">Date must be in the format 'yyyy-mm-dd'</div> -->
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="link">Link</label>
+                <input formControlName="link" id="link" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="image">Image</label>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input #fileInput formControlName="image" id="image" type="file" class="form-control custom-file-input"
+                            aria-describedby="imageHelp" (change)="onFileChange($event)">
+                        <label for="image" class="custom-file-label">{{fileToUpload ? fileToUpload.name : "No file chosen..."}}</label>
+                    </div>
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-drooltool" (click)="clickFileInput()"><i class="fas fa-folder-open"></i></button>
+                    </div>
+                </div>
+                <small id="imageHelp" class="form-text text-muted">
+                    Accepted file types are: png, jpg, jpeg, jfif, gif and bmp.<br />
+                    Maximum file size should not exceed 30MB.<br />
+                </small>
+                <div *ngIf="f.image.touched && f.image.invalid" class="alert alert-danger">
+                    <div *ngIf="f.image.errors.required">Image is required.</div>
+                    <div *ngIf="f.image.errors.requiredFileType">Image is not of an accepted type. Accepted types are:
+                        png, jpg, jpeg, jfif, gif and bmp.</div>
+                    <div *ngIf="f.image.errors.fileSize">Image file is too large. Please compress image or use a
+                        different image.</div>
+                </div>
+            </div>
+
+            <ng-container *ngIf="imageSrc">
+                <label>Image Preview</label>
+                <br />
+                <img [src]="imageSrc" *ngIf="imageSrc"
+                    style="height:auto; width:auto; max-height:350px; max-width:350px">
+            </ng-container>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-drooltool btn-sm" [disabled]="isPerformingAction">
+                <span *ngIf="isPerformingAction" class="fa fa-spinner loading-spinner"></span>
+                Submit</button>
+            <button type="button" class="btn btn-secondary btn-sm" (click)="modal.close('Cancel click')"
+                [disabled]="isPerformingAction">Cancel</button>
+        </div>
+    </form>
+</ng-template>
+<ng-template #deleteAnnouncementEntity  let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="deleteAnnouncementEntity">Delete</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        Are you sure you want to delete this post?
+        <div class="slide mt-4">
+            <div class="slide-container">
+                <div class="slide-background" style="background-image:url({{imageSrc}})">
+                    <div class="slide-module-accent">
+                        <p class="b3" style="color:#FFF">{{announcementDate | date:'EEEE'}} <br/> {{announcementDate | date:'longDate'}}</p>
+                    </div>
+                </div>
+                <p class="b3 slide-link-text">
+                    <a href="{{announcementLink}}" *ngIf="announcementLink"
+                        target="_blank">{{announcementTitle}}</a>
+                    <span *ngIf="!announcementLink">{{announcementTitle}}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-drooltool btn-sm" [disabled]="isPerformingAction" (click)="onDelete()">
+            <span *ngIf="isLoadingSubmit" class="fa fa-spinner loading-spinner"></span>
+            Confirm</button>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="modal.close('Cancel click')"
+            [disabled]="isPerformingAction">Cancel</button>
+    </div>
+</ng-template>
