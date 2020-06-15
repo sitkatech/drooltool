@@ -282,9 +282,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.map.zoomIn();
     })
 
-    $(".leaflet-control-layers-toggle").on("click", () => {
-       this.layerControlOpen = true;
-    })
+    $(".leaflet-control-layers").hover(
+      () => {this.layerControlOpen = true;},
+      () => {this.layerControlOpen = false;}
+    );
   }
 
   public makeNominatimRequest(searchText: any): void {

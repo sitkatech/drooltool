@@ -89,18 +89,6 @@
                         <p class="b3 text-left">*Measured in {{selectedMetric.metricUnits}}</p>
                     </div>
                 </div>
-                <div *ngIf="searchActive" class="col-12 d-none d-lg-flex p-lg-4">
-                    <div class="row w-100">
-                        <div class="col-12 mb-1 text-center">
-                            <button (click)="displayTrace($event, true)" class="btn btn-drooltool"
-                                style="width:202px">What drains to here?</button>
-                        </div>
-                        <div class="col-12 text-center">
-                            <button (click)="displayTrace($event, false)" class="btn btn-drooltool"
-                                style="width:202px">Where does water flow?</button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -114,14 +102,14 @@
                     of the highlighted neighborhoods within the service boundary to learn more about them!
                 </ngb-toast>
             </div>
-            <div id="buttonDiv" *ngIf="areMetricsCollapsed && !errorActive" class="d-lg-none">
+            <div id="buttonDiv" *ngIf="areMetricsCollapsed && !errorActive" [class]="layerControlOpen ? 'shifted' : ''">
                 <button class="btn btn-drooltool d-lg-none mb-1 w-100" [attr.aria-expanded]="!areMetricsCollapsed"
                     aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
                     (click)="showMetrics($event)"><span>Metric Info</span></button>
                 <br class="d-lg-none" />
                 <button *ngIf="searchActive" (click)="displayTrace($event, true)"
                     class="btn btn-drooltool mb-1 w-100"><span>What drains to here?</span></button>
-                <br class="d-lg-none" />
+                <br/>
                 <button *ngIf="searchActive" (click)="displayTrace($event, false)"
                     class="btn btn-drooltool mb-1 w-100"><span>Where does water flow?</span></button>
             </div>
