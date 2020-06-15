@@ -87,8 +87,8 @@
                 <h2>WHAT DOES OUR WATER USAGE LOOK LIKE?</h2>
             </div>
         </div>
-        <div class="row">
-            <div class="col-6">
+        <div class="row mb-2">
+            <div class="col-md-6 col-sm-12">
                 <p class="b2 mt-3">An estimated <strong>{{totalIrrigationWaterUsed | number:'1.0-0':'en-US'}}
                         gallons</strong> has been used over the last year to irrigate
                     {{metricsForMostRecentMonth.TotalIrrigatedArea | number:'1.0-0':'en-US'}} acres of landscaping.
@@ -101,8 +101,8 @@
                     acres of drought tolerant landscaping.</p>
                 <p class="b2">Visualization reference</p>
             </div>
-            <div class="col-6">
-                Visualization
+            <div class="col-md-6 col-sm-12">
+                <drooltool-swimming-pool-visualization [numberOfPools]="totalIrrigationWaterUsed / 660000"></drooltool-swimming-pool-visualization>
             </div>
         </div>
         <hr>

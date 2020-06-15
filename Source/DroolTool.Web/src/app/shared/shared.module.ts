@@ -16,6 +16,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { CustomRichTextComponent } from './components/custom-rich-text/custom-rich-text.component'
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { StylizedDropdownComponent } from './components/stylized-dropdown/stylized-dropdown.component';
+import { SwimmingPoolVisualizationComponent } from './swimming-pool-visualization/swimming-pool-visualization.component';
 
 @NgModule({
     declarations: [
@@ -27,7 +28,8 @@ import { StylizedDropdownComponent } from './components/stylized-dropdown/styliz
         FontAwesomeIconLinkRendererComponent,
         MultiLinkRendererComponent,
         CustomRichTextComponent,
-        StylizedDropdownComponent
+        StylizedDropdownComponent,
+        SwimmingPoolVisualizationComponent
     ],
     imports: [
         CommonModule,
@@ -46,7 +48,8 @@ import { StylizedDropdownComponent } from './components/stylized-dropdown/styliz
         NotFoundComponent,
         HeaderNavComponent,
         CustomRichTextComponent,
-        StylizedDropdownComponent
+        StylizedDropdownComponent,
+        SwimmingPoolVisualizationComponent
     ],
     entryComponents:[
     ]
