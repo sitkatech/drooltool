@@ -7,6 +7,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { DOCUMENT, Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Meta } from '@angular/platform-browser';
+import { AnnouncementService } from 'src/app/services/announcement/announcement.service';
 
 @Component({
     selector: 'app-home-index',
@@ -18,18 +19,20 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
     public currentUser: UserDto;
     public node:any;
 
-    public slides = [
-        {
-            date: "Wednesday, <br/> March 2, 2020",
-            title: "Join Fix A Leak Week Through March",
-            image: "./assets/home/news-and-updates-1.jpg"
-        },
-        {
-            date: "Friday, <br/> March 19, 2020",
-            title: "Landscape Workshop",
-            image: "./assets/home/news-and-updates-2.jpg"
-        }
-    ];
+    public slides;
+
+    // public slides = [
+    //     {
+    //         date: "Wednesday, <br/> March 2, 2020",
+    //         title: "Join Fix A Leak Week Through March",
+    //         image: "./assets/home/news-and-updates-1.jpg"
+    //     },
+    //     {
+    //         date: "Friday, <br/> March 19, 2020",
+    //         title: "Landscape Workshop",
+    //         image: "./assets/home/news-and-updates-2.jpg"
+    //     }
+    // ];
     public slideConfig = {
         "dots": false,
         "slidesToShow": 2,
@@ -73,7 +76,8 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         private router: Router,
         private meta: Meta,
         private activatedRoute: ActivatedRoute,
-        private location: Location) {
+        private location: Location,
+        private announcementService: AnnouncementService) {
     }
 
     public ngOnInit(): void {
@@ -83,11 +87,25 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         }
         this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
             this.currentUser = currentUser;
+            this.announcementService.getAnnouncementsForHomePage().subscribe(results => {
+                this.slides = results.map((x) => {
+                    return {
+                        date: x.AnnouncementDate,
+                        title: x.AnnouncementTitle,
+                        image: `https://${environment.apiHostName}/FileResource/${x.FileResourceGUIDAsString}`,
+                        link: x.AnnouncementLink
+                    }
+                })
+            })
         });
     }
 
     ngOnDestroy(): void {
         this.watchUserChangeSubscription.unsubscribe();
+    }
+
+    public showSlides(): boolean {
+        return this.slides && this.slides.length > 0 ? true : false;
     }
 
     public userIsUnassigned() {

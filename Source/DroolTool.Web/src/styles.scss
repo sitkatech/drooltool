@@ -293,7 +293,9 @@ h4 {
   width: 350px;
   background-color: lightgrey;
   margin-bottom: 23px;
-  background-size: cover;
+  background-size: contain;
+  background-repeat:   no-repeat;
+  background-position: center center;
 }
 
 .slide-module-accent {
@@ -319,6 +321,10 @@ h4 {
 .slide-container {
   width: 100%;
   text-align: center;
+}
+
+.slide:active {
+  outline:none;
 }
 
 @media only screen and (max-width: 359px) {
