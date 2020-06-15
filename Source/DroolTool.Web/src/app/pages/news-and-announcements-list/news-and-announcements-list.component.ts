@@ -136,11 +136,11 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
           },
           sortable: true, filter: 'agDateColumnFilter', width: 150
         },
-        { headerName: 'Link', field: 'Link', sortable: true, filter: true, width: 150 },
+        { headerName: 'Link', field: 'Link', sortable: true, filter: true, width: 300 },
         {
           headerName: 'Last Updated By', field: 'LastUpdatedByUser', valueGetter: function (params: any) {
             return params.data.LastUpdatedByUser.FullName;
-          }, sortable: true, filter: true, width: 120
+          }, sortable: true, filter: true, width: 200
         },
         {
           headerName: 'Last Updated Date', field: 'LastUpdatedDate', valueFormatter: function (params) {
@@ -176,7 +176,7 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
             }
             return 0;
           },
-          sortable: true, filter: 'agDateColumnFilter', width: 150
+          sortable: true, filter: 'agDateColumnFilter', width: 200
         }
       ];
 
