@@ -16,6 +16,7 @@ import { forkJoin } from 'rxjs';
 import { NeighborhoodMetricAvailableDatesDto } from 'src/app/shared/models/neighborhood-metric-available-dates-dto.js';
 import { Options } from 'ng5-slider';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { NgbToast } from '@ng-bootstrap/ng-bootstrap'
 
 declare var $: any;
 
@@ -27,6 +28,7 @@ declare var $: any;
 export class WatershedExplorerComponent implements OnInit {
   @ViewChild("mapDiv", { static: false }) mapElement: ElementRef;
   @ViewChild("largePanel", { static: false }) largeDisplayMetricsPanel: ElementRef;
+  @ViewChild("instructionsToast") instructionsToast: NgbToast;
 
   public defaultMapZoom = 12;
   public afterSetControl = new EventEmitter();
@@ -56,6 +58,7 @@ export class WatershedExplorerComponent implements OnInit {
   public maskLayer: any;
   public neighborhoodsWhereItIsOkayToClickIDs: number[];
   public watershedStyle = "drooltoolwatershed-dark";
+  public layerControlOpen = false;
 
   public wmsParams: any;
   public stormshedLayer: L.Layers;
@@ -71,6 +74,8 @@ export class WatershedExplorerComponent implements OnInit {
   public errorMessage: string = "";
   public errorSpecificIcon: string = "";
   public errorCallToAction: string = "";
+
+  public showInstructionsToast = true;
 
   public searchOutsideServiceAreaErrorMessage = "Sorry, the area you selected is not within the Urban Drool Tool service area.";
   public searchOutsideServiceAreaErrorCallToAction = "Select an area within the highlighted service boundary to view results."
@@ -183,7 +188,7 @@ export class WatershedExplorerComponent implements OnInit {
     this.overlayLayers = Object.assign({}, {
       "<span><img src='../../assets/neighborhood-explorer/neighborhood.png' height='12px' style='margin-bottom:3px;' /> Neighborhoods</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", neighborhoodsWMSOptions),
       "<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions),
-      "<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedOptions),
+      "<span><img src='../../assets/watershed-explorer/watershed.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedOptions),
       "<span>Stormwater Network <br/> <img src='../../assets/neighborhood-explorer/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({ url: "https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/" }),
     })
 
@@ -226,7 +231,7 @@ export class WatershedExplorerComponent implements OnInit {
       layers: [
         this.tileLayers["Hillshade"],
         this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
-        this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
+        this.overlayLayers["<span><img src='../../assets/watershed-explorer/watershed.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
       ],
       gestureHandling: true,
       loadingControl:true
@@ -314,6 +319,11 @@ export class WatershedExplorerComponent implements OnInit {
       dblClickTimer = null;
       this.map.zoomIn();
     })
+
+    $(".leaflet-control-layers").hover(
+      () => {this.layerControlOpen = true;},
+      () => {this.layerControlOpen = false;}
+    );
   }
 
   public getNeighborhoodFromLatLong(latlng: Object): void {
@@ -698,5 +708,9 @@ export class WatershedExplorerComponent implements OnInit {
 
     return this.allYearsWithAvailableMetricMonths.map(x => x.MetricYear);
 
+  }
+
+  public hideInstructionsToast(event: Event) {
+    this.showInstructions = false;
   }
 }

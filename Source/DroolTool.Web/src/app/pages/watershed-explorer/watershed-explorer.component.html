@@ -7,35 +7,22 @@
                     <div class="container p-0">
                         <div class="row">
                             <div class="col-12 mx-auto mx-lg-0">
-                                <drooltool-stylized-dropdown [heading]="'Choose from one of the metrics below'" [options]="metrics"
-                                    [(selectedOption)]="selectedMetric" [showInstructions]="true"
+                                <drooltool-stylized-dropdown [heading]="'Choose from one of the metrics below'"
+                                    [options]="metrics" [(selectedOption)]="selectedMetric" [showInstructions]="true"
                                     (showInstructionsTriggered)="showInstructions = true"
-                                    (selectedOptionChange)="clearErrorsAndDisplayNewMetric()"></drooltool-stylized-dropdown>
+                                    (selectedOptionChange)="clearErrorsAndDisplayNewMetric()">
+                                </drooltool-stylized-dropdown>
                                 <drooltool-stylized-dropdown [heading]="'Choose a watershed'" [options]="watershedNames"
                                     [(selectedOption)]="selectedWatershed"
                                     (selectedOptionChange)="getNewWatershedMask()"></drooltool-stylized-dropdown>
                                 <drooltool-stylized-dropdown [heading]="'Choose a year'" [options]="getYears()"
                                     [(selectedOption)]="selectedMetricYear"
-                                    (selectedOptionChange)="getSelectedMetricYearAvailableMonthsThenDisplayMetric()"></drooltool-stylized-dropdown>
+                                    (selectedOptionChange)="getSelectedMetricYearAvailableMonthsThenDisplayMetric()">
+                                </drooltool-stylized-dropdown>
                                 <ng5-slider style="max-width:353px" [(value)]="selectedMetricMonth"
                                     [options]="ng5SliderOptions" (userChange)="getAppropriateMetricsForDateChange()">
                                 </ng5-slider>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div *ngIf="showInstructions && !errorActive" class="col-12 d-lg-none">
-                    <div class="row">
-                        <div class="col-12 text-right">
-                            <span><a class="search-close" (click)="showInstructions = false"><i
-                                        class="fas fa-close"></i></a></span>
-                        </div>
-                    </div>
-                    <div class="row section-stats">
-                        <div class="col-12 text-center mb-3">
-                            <h3 class="mb-0 pl-2 pr-2">
-                                Click the exposed areas of the map to explore different watershed metrics
-                            </h3>
                         </div>
                     </div>
                 </div>
@@ -102,31 +89,27 @@
                         <p class="b3 text-left">*Measured in {{selectedMetric.metricUnits}}</p>
                     </div>
                 </div>
-                <div *ngIf="searchActive" class="col-12 d-none d-lg-flex p-lg-4">
-                    <div class="row w-100">
-                        <div class="col-12 mb-1 text-center">
-                            <button (click)="displayTrace($event, true)" class="btn btn-drooltool"
-                                style="width:202px">What drains to here?</button>
-                        </div>
-                        <div class="col-12 text-center">
-                            <button (click)="displayTrace($event, false)" class="btn btn-drooltool"
-                                style="width:202px">Where does water flow?</button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
     <div class="col-lg-9 pl-0 pr-0">
         <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight" style="height:100%">
-            <div id="buttonDiv" *ngIf="areMetricsCollapsed && !errorActive" class="d-lg-none">
+            <div (click)="$event.stopPropagation();">
+                <ngb-toast #instructionsToast class="instructions-toast" *ngIf="showInstructions"
+                    header="Get started with the Watershed Map!" (click)="$event.stopPropagation()"
+                    (hide)="hideInstructionsToast($event)" [autohide]="false">
+                    Use the panel on the left to update to choropleth with values for the selected metric. Click on any
+                    of the highlighted neighborhoods within the service boundary to learn more about them!
+                </ngb-toast>
+            </div>
+            <div id="buttonDiv" *ngIf="areMetricsCollapsed && !errorActive" [class]="layerControlOpen ? 'shifted' : ''">
                 <button class="btn btn-drooltool d-lg-none mb-1 w-100" [attr.aria-expanded]="!areMetricsCollapsed"
                     aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
                     (click)="showMetrics($event)"><span>Metric Info</span></button>
                 <br class="d-lg-none" />
                 <button *ngIf="searchActive" (click)="displayTrace($event, true)"
                     class="btn btn-drooltool mb-1 w-100"><span>What drains to here?</span></button>
-                <br class="d-lg-none" />
+                <br/>
                 <button *ngIf="searchActive" (click)="displayTrace($event, false)"
                     class="btn btn-drooltool mb-1 w-100"><span>Where does water flow?</span></button>
             </div>
