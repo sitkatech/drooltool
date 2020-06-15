@@ -1,54 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using DroolTool.API.Services;
 using DroolTool.EFModels.Entities;
 using DroolTool.Models.DataTransferObjects;
-using DroolTool.Models.DataTransferObjects.NewsAndAnnouncements;
+using DroolTool.Models.DataTransferObjects.Announcement;
 using DroolTool.Models.DataTransferObjects.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Features;
-using NetTopologySuite.Operation.Union;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace DroolTool.API.Controllers
 {
-    public class NewsAndAnnouncementsController : ControllerBase
+    public class AnnouncementController : ControllerBase
     {
         private readonly DroolToolDbContext _dbContext;
 
-        public NewsAndAnnouncementsController(DroolToolDbContext dbContext)
+        public AnnouncementController(DroolToolDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        [HttpGet("news-and-announcements/get-news-and-announcements")]
-        public ActionResult<List<NewsAndAnnouncementsDto>> GetNewsAndAnnouncements()
+        [HttpGet("announcement/get-announcements")]
+        public ActionResult<List<AnnouncementDto>> GetAnnouncements()
         {
-            return Ok(NewsAndAnnouncements.GetNewsAndAnnouncements(_dbContext));
+            return Ok(Announcement.GetAnnouncements(_dbContext));
         }
 
-        [HttpGet("news-and-announcements/get-news-and-announcements-for-homepage")]
-        public ActionResult<List<NewsAndAnnouncementsDto>> GetNewsAndAnnouncementsForHomepage()
+        [HttpGet("announcement/get-announcements-for-homepage")]
+        public ActionResult<List<AnnouncementDto>> GetAnnouncementsForHomepage()
         {
-            return Ok(NewsAndAnnouncements.GetNewsAndAnnouncementsByDate(_dbContext, 2));
+            return Ok(Announcement.GetAnnouncementsByDate(_dbContext, 2));
         }
 
-        [HttpPost("news-and-announcements/upsert-news-and-announcements")]
-        public async Task<ActionResult> UpsertNewsAndAnnouncements()
+        [HttpPost("announcement/upsert-announcement")]
+        public async Task<ActionResult> UpsertAnnouncement()
         {
-            var upsertDto = JsonConvert.DeserializeObject<NewsAndAnnouncementsUpsertDto>(Request.Form["model"]);
+            var upsertDto = JsonConvert.DeserializeObject<AnnouncementUpsertDto>(Request.Form["model"]);
             var userDto = UserContext.GetUserFromHttpContext(_dbContext, HttpContext);
-            if (upsertDto.NewsAndAnnouncementsID == -1)
-            { 
-                NewsAndAnnouncements.CreateNewsAndAnnouncementsEntity(_dbContext, upsertDto, userDto.UserID, await UploadImage(Request.Form.Files[0], userDto));
+            if (upsertDto.AnnouncementID == -1)
+            {
+                Announcement.CreateAnnouncementEntity(_dbContext, upsertDto, userDto.UserID, await UploadImage(Request.Form.Files[0], userDto));
             }
             else
             {
@@ -56,19 +50,19 @@ namespace DroolTool.API.Controllers
                     ? await UploadImage(Request.Form.Files[0], userDto)
                     : -1;
 
-                NewsAndAnnouncements.UpdateNewsAndAnnouncementsEntity(_dbContext, upsertDto,
+                Announcement.UpdateAnnouncementEntity(_dbContext, upsertDto,
                     userDto.UserID, fileResourceID);
             }
             return Ok();
         }
 
-        [HttpDelete("news-and-announcements/{newsAndAnnouncementsID}/delete")]
-        public ActionResult DeleteNewsAndAnnouncementsEntity([FromRoute] int newsAndAnnouncementsID)
+        [HttpDelete("announcement/{announcementID}/delete")]
+        public ActionResult DeleteAnnouncementEntity([FromRoute] int announcementID)
         {
-            var newsAndAnnouncementsDto =
-                _dbContext.NewsAndAnnouncements.SingleOrDefault(x =>
-                    x.NewsAndAnnouncementsID == newsAndAnnouncementsID);
-            if (newsAndAnnouncementsDto == null)
+            var announcementDto =
+                _dbContext.Announcement.SingleOrDefault(x =>
+                    x.AnnouncementID == announcementID);
+            if (announcementDto == null)
             {
                 return NotFound();
             }
@@ -78,7 +72,7 @@ namespace DroolTool.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            NewsAndAnnouncements.Delete(_dbContext, newsAndAnnouncementsID);
+            Announcement.Delete(_dbContext, announcementID);
             return Ok();
         }
 

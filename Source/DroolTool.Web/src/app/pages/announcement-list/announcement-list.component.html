@@ -16,20 +16,20 @@
 </div>
 <div class="container">
     <div class="float-right my-2">
-        <button class="btn btn-drooltool btn-sm ml-3" (click)="openModalForNewNewsAndAnnouncementsEntity()">Add
+        <button class="btn btn-drooltool btn-sm ml-3" (click)="openModalForNewAnnouncementEntity()">Add
             New</button>
     </div>
     <div class="table-responsive">
-        <ag-grid-angular #newsAndAnnouncementsGrid style="width: 100%; height: 400px;" class="ag-theme-balham"
-            [rowData]="newsAndAnnouncements" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="100"
+        <ag-grid-angular #announcementGrid style="width: 100%; height: 400px;" class="ag-theme-balham"
+            [rowData]="announcements" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="100"
             (cellClicked)='onCellClicked($event)'>
         </ag-grid-angular>
     </div>
 </div>
-<ng-template #upsertNewsAndAnnouncementsEntity let-modal>
+<ng-template #upsertAnnouncementEntity let-modal>
     <form [formGroup]="upsertForm" (ngSubmit)="onSubmit()">
         <div class="modal-header">
-            <h4 class="modal-title" id="upsertModalTitle">{{newsAndAnnouncementsID == -1 ? "Add New" : "Update"}}</h4>
+            <h4 class="modal-title" id="upsertModalTitle">{{announcementID == -1 ? "Add New" : "Update"}}</h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -103,9 +103,9 @@
         </div>
     </form>
 </ng-template>
-<ng-template #deleteNewsAndAnnouncementsEntity  let-modal>
+<ng-template #deleteAnnouncementEntity  let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="deleteNewsAndAnnouncementsEntity">Delete</h4>
+        <h4 class="modal-title" id="deleteAnnouncementEntity">Delete</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -116,13 +116,13 @@
             <div class="slide-container">
                 <div class="slide-background" style="background-image:url({{imageSrc}})">
                     <div class="slide-module-accent">
-                        <p class="b3" style="color:#FFF" [innerHTML]="newsAndAnnouncementsDate"></p>
+                        <p class="b3" style="color:#FFF">{{announcementDate | date:'EEEE'}} <br/> {{announcementDate | date:'longDate'}}</p>
                     </div>
                 </div>
                 <p class="b3 slide-link-text">
-                    <a href="{{newsAndAnnouncementsLink}}" *ngIf="newsAndAnnouncementsLink"
-                        target="_blank">{{newsAndAnnouncementsTitle}}</a>
-                    <span *ngIf="!newsAndAnnouncementsLink">{{newsAndAnnouncementsTitle}}</span>
+                    <a href="{{announcementLink}}" *ngIf="announcementLink"
+                        target="_blank">{{announcementTitle}}</a>
+                    <span *ngIf="!announcementLink">{{announcementTitle}}</span>
                 </p>
             </div>
         </div>

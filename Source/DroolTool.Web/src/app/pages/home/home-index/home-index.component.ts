@@ -7,7 +7,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { DOCUMENT, Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Meta } from '@angular/platform-browser';
-import { NewsAndAnnouncementsService } from 'src/app/services/news-and-announcements/news-and-announcements.service';
+import { AnnouncementService } from 'src/app/services/announcement/announcement.service';
 
 @Component({
     selector: 'app-home-index',
@@ -94,7 +94,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         private meta: Meta,
         private activatedRoute: ActivatedRoute,
         private location: Location,
-        private newsAndAnnouncementsService: NewsAndAnnouncementsService) {
+        private announcementService: AnnouncementService) {
     }
 
     public ngOnInit(): void {
@@ -104,14 +104,14 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         }
         this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
             this.currentUser = currentUser;
-            this.newsAndAnnouncementsService.getNewsAndAnnouncementsForHomePage().subscribe(results => {
+            this.announcementService.getAnnouncementsForHomePage().subscribe(results => {
+                debugger;
                 this.slides = results.map((x) => {
-                    let date = new Date(x.Date);
                     return {
-                        date: `${this.dayOfWeek[date.getUTCDay()]}, <br/> ${this.months[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`,
-                        title: x.Title,
+                        date: x.AnnouncementDate,
+                        title: x.AnnouncementTitle,
                         image: `https://${environment.apiHostName}/FileResource/${x.FileResourceGUIDAsString}`,
-                        link: x.Link
+                        link: x.AnnouncementLink
                     }
                 })
             })

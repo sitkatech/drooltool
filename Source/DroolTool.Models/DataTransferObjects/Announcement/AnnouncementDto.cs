@@ -5,12 +5,12 @@ using DroolTool.Models.DataTransferObjects.User;
 
 namespace DroolTool.Models.DataTransferObjects
 {
-    public class NewsAndAnnouncementsDto
+    public class AnnouncementDto
     {
-        public int NewsAndAnnouncementsID { get; set; }
-        public DateTime Date { get; set; }
-        public string Title { get; set; }
-        public string Link { get; set; }
+        public int AnnouncementID { get; set; }
+        public DateTime AnnouncementDate { get; set; }
+        public string AnnouncementTitle { get; set; }
+        public string AnnouncementLink { get; set; }
         public string FileResourceGUIDAsString { get; set; }
         public UserSimpleDto LastUpdatedByUser { get; set; }
         public DateTime LastUpdatedDate { get; set; }

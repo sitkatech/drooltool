@@ -2,12 +2,12 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewChildren, QueryLis
 import { AgGridAngular } from 'ag-grid-angular';
 import { UserDto } from 'src/app/shared/models/user/user-dto';
 import { GridOptions } from 'ag-grid-community';
-import { NewsAndAnnouncementsService } from 'src/app/services/news-and-announcements/news-and-announcements.service';
+import { AnnouncementService } from 'src/app/services/announcement/announcement.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DatePipe, DOCUMENT } from '@angular/common';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { NewsAndAnnouncementsUpsertDto } from 'src/app/shared/models/news-and-announcements/news-and-announcements-upsert-dto';
+import { AnnouncementUpsertDto } from 'src/app/shared/models/announcement/announcement-upsert-dto';
 import { FontAwesomeIconLinkRendererComponent } from 'src/app/shared/components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
 import { environment } from 'src/environments/environment';
 import { Alert } from 'src/app/shared/models/alert';
@@ -15,15 +15,15 @@ import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
-  selector: 'drooltool-news-and-announcements-list',
-  templateUrl: './news-and-announcements-list.component.html',
-  styleUrls: ['./news-and-announcements-list.component.scss']
+  selector: 'drooltool-announcement-list',
+  templateUrl: './announcement-list.component.html',
+  styleUrls: ['./announcement-list.component.scss']
 })
-export class NewsAndAnnouncementsListComponent implements OnInit {
+export class AnnouncementListComponent implements OnInit {
 
-  @ViewChild('newsAndAnnouncementsGrid') newsAndAnnouncementsGrid: AgGridAngular;
-  @ViewChild('upsertNewsAndAnnouncementsEntity') upsertEntity: any;
-  @ViewChild('deleteNewsAndAnnouncementsEntity') deleteEntity: any;
+  @ViewChild('announcementGrid') announcementGrid: AgGridAngular;
+  @ViewChild('upsertAnnouncementEntity') upsertEntity: any;
+  @ViewChild('deleteAnnouncementEntity') deleteEntity: any;
   @ViewChildren('fileInput') public fileInput: QueryList<any>;
 
   public dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -43,10 +43,10 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
     "December"
   ]
 
-  public newsAndAnnouncementsTitle: string;
-  public newsAndAnnouncementsDate: string;
-  public newsAndAnnouncementsLink: string;
-  public newsAndAnnouncementsID: number = -1;
+  public announcementTitle: string;
+  public announcementDate: string;
+  public announcementLink: string;
+  public announcementID: number = -1;
   public imageSrc: string;
   public upsertForm = new FormGroup({
     title: new FormControl('', [Validators.required]),
@@ -59,7 +59,7 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
   private currentUser: UserDto;
 
   public gridOptions: GridOptions;
-  public newsAndAnnouncements = [];
+  public announcements = [];
   public closeResult: string;
   public modalReference: NgbModalRef;
   public allowableFileTypes = ["png", "jpg", "jpeg", "jfif", "bmp", "gif"];
@@ -71,7 +71,7 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
   constructor(private cdr: ChangeDetectorRef,
     private authenticationService: AuthenticationService,
     private alertService: AlertService,
-    private newsAndAnnouncementsService: NewsAndAnnouncementsService,
+    private announcementService: AnnouncementService,
     private modalService: NgbModal,
     private datePipe: DatePipe,
     @Inject(DOCUMENT) private document: Document) { }
@@ -81,10 +81,10 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
       this.gridOptions = <GridOptions>{};
       this.currentUser = currentUser;
       let _datePipe = this.datePipe;
-      this.newsAndAnnouncementsGrid.api.showLoadingOverlay();
-      this.newsAndAnnouncementsService.getNewsAndAnnouncements().subscribe(newsAndAnnouncements => {
-        this.newsAndAnnouncements = newsAndAnnouncements;
-        this.newsAndAnnouncementsGrid.api.hideOverlay();
+      this.announcementGrid.api.showLoadingOverlay();
+      this.announcementService.getAnnouncements().subscribe(announcement => {
+        this.announcements = announcement;
+        this.announcementGrid.api.hideOverlay();
         this.cdr.detectChanges();
       });
 
@@ -220,8 +220,8 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
   }
 
   public updateGridData() {
-    this.newsAndAnnouncementsService.getNewsAndAnnouncements().subscribe(result => {
-      this.newsAndAnnouncementsGrid.api.setRowData(result);
+    this.announcementService.getAnnouncements().subscribe(result => {
+      this.announcementGrid.api.setRowData(result);
     });
   }
 
@@ -234,7 +234,7 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
     });
   }
 
-  public openModalForNewNewsAndAnnouncementsEntity() {
+  public openModalForNewAnnouncementEntity() {
     this.clearFormAndResetImageSrc();
     this.setImageCategoryValidators();
     this.launchModal(this.upsertEntity, 'upsertModalTitle');
@@ -247,21 +247,19 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
 
     this.clearFormAndResetImageSrc();
     let data = event.data;
-    this.newsAndAnnouncementsTitle = data.Title;
-    this.newsAndAnnouncementsDate = data.Date;
-    this.newsAndAnnouncementsLink = data.Link;
+    this.announcementTitle = data.Title;
+    this.announcementDate = data.Date;
+    this.announcementLink = data.Link;
     this.imageSrc = `https://${environment.apiHostName}/FileResource/${data.FileResourceGUIDAsString}`;
-    this.newsAndAnnouncementsID = data.NewsAndAnnouncementsID;
+    this.announcementID = data.AnnouncementID;
 
     if (event.column.colId == "0") {
-      let date = new Date(this.newsAndAnnouncementsDate);
-      this.newsAndAnnouncementsDate = `${this.dayOfWeek[date.getUTCDay()]}, <br/> ${this.months[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`
-      this.launchModal(this.deleteEntity, 'deleteNewsAndAnnouncementsEntity')
+      this.launchModal(this.deleteEntity, 'deleteAnnouncementEntity')
     }
     else {
-      this.upsertForm.patchValue({ title: this.newsAndAnnouncementsTitle });
-      this.upsertForm.patchValue({ date: this.formatDateForNgbDatepicker(this.newsAndAnnouncementsDate) });
-      this.upsertForm.patchValue({ link: this.newsAndAnnouncementsLink });
+      this.upsertForm.patchValue({ title: this.announcementTitle });
+      this.upsertForm.patchValue({ date: this.formatDateForNgbDatepicker(this.announcementDate) });
+      this.upsertForm.patchValue({ link: this.announcementLink });
       this.setImageCategoryValidators();
       this.launchModal(this.upsertEntity, 'upsertModalTitle')
     }
@@ -271,11 +269,11 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
     this.upsertForm.reset();
     this.fileToUpload = null;
     this.imageSrc = null;
-    this.newsAndAnnouncementsID = -1;
+    this.announcementID = -1;
   }
 
   public setImageCategoryValidators() {
-    if (this.newsAndAnnouncementsID != -1) {
+    if (this.announcementID != -1) {
       this.upsertForm.get('image').setValidators(null);
     }
     else {
@@ -293,23 +291,23 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
 
       var date = this.upsertForm.get('date').value;
       let upsertDate = `${date["year"]}-${date["month"]}-${date["day"]}`;
-      let upsertDto = new NewsAndAnnouncementsUpsertDto(
+      let upsertDto = new AnnouncementUpsertDto(
         {
-          NewsAndAnnouncementsID: this.newsAndAnnouncementsID,
-          Title: this.upsertForm.get('title').value,
-          Date: upsertDate,
-          Link: this.upsertForm.get('link').value
+          AnnouncementID: this.announcementID,
+          AnnouncementTitle: this.upsertForm.get('title').value,
+          AnnouncementDate: upsertDate,
+          AnnouncementLink: this.upsertForm.get('link').value
         });
       this.isPerformingAction = true;
-      this.newsAndAnnouncementsService.upsertNewsAndAnnouncements(this.fileToUpload, upsertDto).subscribe(result => {
+      this.announcementService.upsertAnnouncement(this.fileToUpload, upsertDto).subscribe(result => {
         this.modalReference.close();
         this.isPerformingAction = false;
-        this.alertService.pushAlert(new Alert(`Successfully ${this.newsAndAnnouncementsID != -1 ? "updated" : "created"} post`, AlertContext.Success, true));
+        this.alertService.pushAlert(new Alert(`Successfully ${this.announcementID != -1 ? "updated" : "created"} post`, AlertContext.Success, true));
         this.updateGridData();
       }, error => {
         this.modalReference.close();
         this.isPerformingAction = false;
-        this.alertService.pushAlert(new Alert(`There was an error ${this.newsAndAnnouncementsID != -1 ? "updating" : "creating"} the post. Please try again`, AlertContext.Danger, true));
+        this.alertService.pushAlert(new Alert(`There was an error ${this.announcementID != -1 ? "updating" : "creating"} the post. Please try again`, AlertContext.Danger, true));
       });
     }
     else {
@@ -322,7 +320,7 @@ export class NewsAndAnnouncementsListComponent implements OnInit {
 
   public onDelete() {
     this.isPerformingAction = true;
-    this.newsAndAnnouncementsService.deleteNewsAndAnnouncements(this.newsAndAnnouncementsID).subscribe(result => {
+    this.announcementService.deleteAnnouncement(this.announcementID).subscribe(result => {
       this.modalReference.close();
       this.isPerformingAction = false;
       this.alertService.pushAlert(new Alert(`Successfully deleted post`, AlertContext.Success, true));

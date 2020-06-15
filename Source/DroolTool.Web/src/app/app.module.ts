@@ -44,7 +44,7 @@ import { ShareButtonsModule } from 'ngx-sharebuttons/buttons';
 import { ShareIconsModule } from 'ngx-sharebuttons/icons';
 import { ShareButtonsPopupModule } from 'ngx-sharebuttons/popup'
 import { SocialMediaSharingComponent } from './components/social-media-sharing/social-media-sharing.component';
-import { NewsAndAnnouncementsListComponent } from './pages/news-and-announcements-list/news-and-announcements-list.component'
+import { AnnouncementListComponent } from './pages/announcement-list/announcement-list.component'
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -70,7 +70,7 @@ export function init_app(appLoadService: AppInitService) {
     DroolPerLandscapedAcreChartComponent,
     WaterAccountsChartComponent,
     SocialMediaSharingComponent,
-    NewsAndAnnouncementsListComponent
+    AnnouncementListComponent
   ],
   imports: [
     AppRoutingModule,

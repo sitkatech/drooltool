@@ -1,11 +1,11 @@
 import { UserSimpleDto } from '../user/user-simple-dto';
 
-export class NewsAndAnnouncementsDto{
+export class AnnouncementDto{
 
-    public NewsAndAnnouncementsID: number;
-    public Title:string;
-    public Link?: string;
-    public Date: Date;
+    public AnnouncementID: number;
+    public AnnouncementTitle:string;
+    public AnnouncementLink?: string;
+    public AnnouncementDate: Date;
     public LastUpdatedByUser:UserSimpleDto;
     public LastUpdatedDate: Date;
     public FileResourceGUIDAsString: string;

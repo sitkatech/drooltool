@@ -9,8 +9,8 @@ namespace DroolTool.EFModels.Entities
     {
         public User()
         {
+            Announcement = new HashSet<Announcement>();
             FileResource = new HashSet<FileResource>();
-            NewsAndAnnouncements = new HashSet<NewsAndAnnouncements>();
         }
 
         [Key]
@@ -42,9 +42,9 @@ namespace DroolTool.EFModels.Entities
         [ForeignKey(nameof(RoleID))]
         [InverseProperty("User")]
         public virtual Role Role { get; set; }
+        [InverseProperty("LastUpdatedByUser")]
+        public virtual ICollection<Announcement> Announcement { get; set; }
         [InverseProperty("CreateUser")]
         public virtual ICollection<FileResource> FileResource { get; set; }
-        [InverseProperty("NewsAndAnnouncementsLastUpdatedByUser")]
-        public virtual ICollection<NewsAndAnnouncements> NewsAndAnnouncements { get; set; }
     }
 }

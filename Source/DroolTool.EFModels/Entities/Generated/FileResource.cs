@@ -9,7 +9,7 @@ namespace DroolTool.EFModels.Entities
     {
         public FileResource()
         {
-            NewsAndAnnouncements = new HashSet<NewsAndAnnouncements>();
+            Announcement = new HashSet<Announcement>();
         }
 
         [Key]
@@ -35,6 +35,6 @@ namespace DroolTool.EFModels.Entities
         [InverseProperty("FileResource")]
         public virtual FileResourceMimeType FileResourceMimeType { get; set; }
         [InverseProperty("FileResource")]
-        public virtual ICollection<NewsAndAnnouncements> NewsAndAnnouncements { get; set; }
+        public virtual ICollection<Announcement> Announcement { get; set; }
     }
 }
