@@ -1,10 +1,10 @@
-<div class="container">
+<div class="container pt-2">
 
     <app-alert-display></app-alert-display>
 
-    <div class="row">
+    <div class="row mb-2">
         <div class="col">
-            <h2 class="d-inline-block my-2">News And Announcements</h2>
+            <h1>News And Announcements</h1>
             <p class="b3 text-left">A list of News and Announcements posts are shown below. The two posts with the newest Date will be shown on the <a routerLink="/" routerLinkActive=true>home page</a>.</p>
         </div>
     </div>
@@ -17,7 +17,7 @@
 <div class="container">
     <div class="float-right my-2">
         <button class="btn btn-drooltool btn-sm ml-3" (click)="openModalForNewAnnouncementEntity()">Add
-            New</button>
+            News Item</button>
     </div>
     <div class="table-responsive">
         <ag-grid-angular #announcementGrid style="width: 100%; height: 400px;" class="ag-theme-balham"
@@ -29,21 +29,21 @@
 <ng-template #upsertAnnouncementEntity let-modal>
     <form [formGroup]="upsertForm" (ngSubmit)="onSubmit()">
         <div class="modal-header">
-            <h4 class="modal-title" id="upsertModalTitle">{{announcementID == -1 ? "Add New" : "Update"}}</h4>
+            <h4 class="modal-title" id="upsertModalTitle">{{announcementID == -1 ? "Add" : "Edit"}} News Item</h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label for="title">Title</label>
+                <label for="title" class="required">Title</label>
                 <input formControlName="title" id="title" type="text" class="form-control" required>
                 <div *ngIf="f.title.touched && f.title.invalid" class="alert alert-danger">
                     <div *ngIf="f.title.errors.required">Title is required.</div>
                 </div>
             </div>
             <div class="form-group">
-                <label for="date">Date</label>
+                <label for="date" class="required">Date</label>
                 <div class="input-group">
                     <input formControlName="date" id="date" type="text" ngbDatepicker #d="ngbDatepicker"
                         placeholder="yyyy-mm-dd" (click)="d.toggle()" class="form-control">
@@ -63,7 +63,7 @@
                 <input formControlName="link" id="link" type="text" class="form-control">
             </div>
             <div class="form-group">
-                <label for="image">Image</label>
+                <label for="image" [class]="announcementID != -1 ? '' : 'required'">Image</label>
                 <div class="input-group">
                     <div class="custom-file">
                         <input #fileInput formControlName="image" id="image" type="file" class="form-control custom-file-input"
@@ -88,11 +88,16 @@
             </div>
 
             <ng-container *ngIf="imageSrc">
-                <label>Image Preview</label>
-                <br />
-                <img [src]="imageSrc" *ngIf="imageSrc"
-                    style="height:auto; width:auto; max-height:350px; max-width:350px">
+                        <label>Image Preview</label>
+                        <br />
+                        <img [src]="imageSrc" *ngIf="imageSrc"
+                            style="height:auto; width:auto; max-height:350px; max-width:350px">
+                            <br/>
+                            <br/>
             </ng-container>
+
+            <i class="fas fa-bolt"></i> Required Field
+
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-drooltool btn-sm" [disabled]="isPerformingAction">
@@ -105,7 +110,7 @@
 </ng-template>
 <ng-template #deleteAnnouncementEntity  let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="deleteAnnouncementEntity">Delete</h4>
+        <h4 class="modal-title" id="deleteAnnouncementEntity">Delete News Item</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>

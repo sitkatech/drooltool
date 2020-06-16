@@ -27,7 +27,7 @@ namespace DroolTool.API.Controllers
         [HttpGet("announcement/get-announcements")]
         public ActionResult<List<AnnouncementDto>> GetAnnouncements()
         {
-            return Ok(Announcement.GetAnnouncements(_dbContext));
+            return Ok(Announcement.GetAnnouncementsByDate(_dbContext));
         }
 
         [HttpGet("announcement/get-announcements-for-homepage")]

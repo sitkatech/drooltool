@@ -68,7 +68,7 @@
                                     aria-haspopup="true" aria-expanded="false">
                                     Account
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdown">
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     
                                     <a routerLink="/help" class="dropdown-item">
                                         Get Help
@@ -77,7 +77,7 @@
                                         View all Users
                                     </a>
                                     <a *ngIf="isAdministrator()" routerLink="/news-and-announcements" class="dropdown-item">
-                                        View all News And Announcements
+                                        Manage News And Announcements
                                     </a>
                                     <a href="javascript:void(0);" (click)="logout()" class="dropdown-item">Sign Out</a>
                                 </div>

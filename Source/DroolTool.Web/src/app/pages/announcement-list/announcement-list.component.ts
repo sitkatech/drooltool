@@ -82,7 +82,7 @@ export class AnnouncementListComponent implements OnInit {
           cellRendererParams: { isSpan: true, fontawesomeIconName: 'pencil-square-o' },
           sortable: false, filter: false, width: 38
         },
-        { headerName: 'Title', field: 'AnnouncementTitle', sortable: true, filter: true, width: 150 },
+        { headerName: 'Title', field: 'AnnouncementTitle', sortable: true, filter: true, width: 275 },
         {
           headerName: 'Date', field: 'AnnouncementDate', valueFormatter: function (params) {
             return _datePipe.transform(params.value, "M/d/yyyy", "UTC")
@@ -117,7 +117,7 @@ export class AnnouncementListComponent implements OnInit {
             }
             return 0;
           },
-          sortable: true, filter: 'agDateColumnFilter', width: 150
+          sortable: true, filter: 'agDateColumnFilter', width: 100
         },
         { headerName: 'Link', field: 'AnnouncementLink', sortable: true, filter: true, width: 300 },
         {
@@ -159,7 +159,7 @@ export class AnnouncementListComponent implements OnInit {
             }
             return 0;
           },
-          sortable: true, filter: 'agDateColumnFilter', width: 200
+          sortable: true, filter: 'agDateColumnFilter', width: 155
         }
       ];
 
