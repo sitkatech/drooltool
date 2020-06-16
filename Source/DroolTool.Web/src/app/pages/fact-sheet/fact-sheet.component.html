@@ -95,7 +95,7 @@
                         gallons</strong> has been used over the last year to irrigate
                     {{metricsForMostRecentMonth.TotalIrrigatedArea | number:'1.0-0':'en-US'}} acres of landscaping.
                 </p>
-                <p class="b2">This would be enough to irrigate {{totalIrrigationWaterUsed / 350000 | number:'1.0-0':'en-US'}}
+                <p class="b2" *ngIf="showDroughtTolerantIrrigationEquivalent()">This would be enough to irrigate {{totalIrrigationWaterUsed / 350000 | number:'1.0-0':'en-US'}}
                     acres of drought tolerant landscaping.</p>
                 <div class="row">
                     <div class="col-3 text-center">
