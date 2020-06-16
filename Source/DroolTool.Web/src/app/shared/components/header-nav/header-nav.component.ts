@@ -43,9 +43,9 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
             }
 
 
-            if (currentUser && this.isAdministrator()){
-                this.userService.getUnassignedUserReport().subscribe(report =>{
-                    if (report.Count > 0){
+            if (currentUser && this.isAdministrator()) {
+                this.userService.getUnassignedUserReport().subscribe(report => {
+                    if (report.Count > 0) {
                         this.alertService.pushAlert(new Alert(`There are ${report.Count} users who are waiting for you to configure their account. <a href='/users'>Manage Users</a>.`, AlertContext.Info, true, AlertService.USERS_AWAITING_CONFIGURATION));
                     }
                 })
@@ -71,11 +71,11 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
         return this.authenticationService.isUserAnAdministrator(this.currentUser);
     }
 
-    public isUnassigned(): boolean{
+    public isUnassigned(): boolean {
         return this.authenticationService.isUserUnassigned(this.currentUser);
     }
 
-    public isUnassignedOrDisabled(): boolean{
+    public isUnassignedOrDisabled(): boolean {
         return this.authenticationService.isUserUnassigned(this.currentUser) || this.authenticationService.isUserRoleDisabled(this.currentUser);
     }
 
@@ -97,11 +97,11 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
         });
     }
 
-    public platformShortName(): string{
+    public platformShortName(): string {
         return environment.platformShortName;
     }
 
-    public leadOrganizationHomeUrl(): string{
+    public leadOrganizationHomeUrl(): string {
         return environment.leadOrganizationHomeUrl;
     }
 
