@@ -90,10 +90,10 @@
             <ng-container *ngIf="imageSrc">
                         <label>Image Preview</label>
                         <br />
-                        <img [src]="imageSrc" *ngIf="imageSrc"
-                            style="height:auto; width:auto; max-height:350px; max-width:350px">
-                            <br/>
-                            <br/>
+                        <div class="w-100 text-center">
+                            <div *ngIf="imageSrc" class="slide-background text-center" style="background-image:url({{imageSrc}})">
+                            </div>
+                        </div>
             </ng-container>
 
             <i class="fas fa-bolt"></i> Required Field
