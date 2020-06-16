@@ -1,6 +1,8 @@
 <div class="row text-center">
-    <p class="b2">That would be enough to fill <strong>{{integerPools() | number:'1.0-0':'en-US'}} Olympic swimming pools!</strong></p>
-    <ng-container *ngIf="showAllPools()">
+    <p class="b2 m-auto">That would be enough to fill <br/><strong>{{integerPools() | number:'1.0-0':'en-US'}} Olympic swimming pools!</strong></p>
+</div>
+<div>
+<ng-container *ngIf="showAllPools()">
         <img src="/assets/fact-sheet/OlympicPool-21fc9e.png" style="width:19%; margin:3%;" *ngFor="let item of array(numberOfPools)"/>
     </ng-container>
     <ng-container *ngIf="!showAllPools()">
