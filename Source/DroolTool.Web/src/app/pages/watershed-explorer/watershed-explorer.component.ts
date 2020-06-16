@@ -253,7 +253,7 @@ export class WatershedExplorerComponent implements OnInit {
           };
         }
       })
-      this.districtBoundaryLayer.addTo(this.map);
+      //this.districtBoundaryLayer.addTo(this.map);
       this.setControl();
       this.initializeMapEvents();
       this.defaultFitBounds();
