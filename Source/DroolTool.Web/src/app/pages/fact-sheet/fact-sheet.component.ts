@@ -252,7 +252,7 @@ export class FactSheetComponent implements AfterViewInit {
 
   showDroughtTolerantIrrigationEquivalent(): boolean {
     // only show "This would be enough to irrigate [x] drought tolerant etc" if [x] is better than they're currently doing.
-    return (this.totalIrrigationWaterUsed / 350000) > this.metricsForMostRecentMonth.TotalIrrigatedArea;
+    return (this.totalIrrigationWaterUsed / 350000) > (1.1 * this.metricsForMostRecentMonth.TotalIrrigatedArea);
   }
 
   @HostListener('window:resize', ['$event'])
