@@ -351,10 +351,12 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.currentSearchLayer = L.geoJSON(response, {
       style: function (feature) {
         return {
-          fillColor: "#34FFCC",
+          fillColor: "#C0FF6C", 
           fill: true,
-          fillOpacity: 0.3,
-          stroke: false
+          fillOpacity: 0.5,
+          stroke: true,
+          color: "#65b300",
+          weight: 5
         };
       }
     }).addTo(this.map);
@@ -387,9 +389,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
     this.currentMask.bringToFront();
     this.currentSearchLayer.bringToFront();
-    this.clickMarker.addTo(this.map)
-      .bindPopup(popupContent, popupOptions)
-      .openPopup();
+    this.clickMarker.addTo(this.map);
+      // .bindPopup(popupContent, popupOptions)
+      // .openPopup();
 
     setTimeout(() => { this.clickMarker.closePopup(); }, 5000);
     this.selectedNeighborhoodWatershed = this.selectedNeighborhoodProperties.Watershed;
@@ -408,10 +410,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.stormshedLayer = L.geoJson(featureCollection, {
       style: function (feature) {
         return {
-          fillColor: "#C0FF6C",
+          fillColor: "#34FFCC", 
           fill: true,
           fillOpacity: 0.3,
-          color: "#EA842C",
+          color: "#00b386",
           weight: 5,
           stroke: true
         };
@@ -430,7 +432,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
           fillColor: "#323232",
           fill: true,
           fillOpacity: 0.4,
-          color: "#EA842C",
+          color: "#00b386",
           weight: 5,
           stroke: true
         };

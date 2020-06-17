@@ -145,42 +145,42 @@ export class FactSheetComponent implements AfterViewInit {
     let neighborhoodLayer = L.geoJSON(geoserverResponse, {
       style: function (feature) {
         return {
-          fillColor: "#34FFCC",
-          fill: true,
-          fillOpacity: 0.3,
-          stroke: false
-        };
-      }
-    }).addTo(this.map);
-
-    let stormshedLayer = L.geoJson(stormshedResponse, {
-      style: function (feature) {
-        return {
           fillColor: "#C0FF6C",
           fill: true,
           fillOpacity: 0.3,
-          stroke: false
+          stroke: true,
+          weight: 5,
+          color: "#65b300"
         };
       }
     }).addTo(this.map);
 
-    stormshedLayer.bringToBack();
+    // let stormshedLayer = L.geoJson(stormshedResponse, {
+    //   style: function (feature) {
+    //     return {
+    //       fillColor: "#C0FF6C",
+    //       fill: true,
+    //       fillOpacity: 0.3,
+    //       stroke: false
+    //     };
+    //   }
+    // }).addTo(this.map);
 
-    let mask = L.geoJSON(stormshedResponse, {
+    // stormshedLayer.bringToBack();
+
+    let mask = L.geoJSON(geoserverResponse, {
       invert: true,
       style: function (feature) {
         return {
           fillColor: "#323232",
           fill: true,
           fillOpacity: 0.4,
-          color: "#EA842C",
-          weight: 5,
-          stroke: true
+          stroke: false
         };
       }
     }).addTo(this.map);
 
-    this.map.fitBounds([neighborhoodLayer.getBounds(), stormshedLayer.getBounds()]);
+    this.map.fitBounds([neighborhoodLayer.getBounds()]);
   }
 
   setupMetricsAndGetStatements() {
