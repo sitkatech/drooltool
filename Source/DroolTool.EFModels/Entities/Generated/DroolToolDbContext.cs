@@ -15,6 +15,7 @@ namespace DroolTool.EFModels.Entities
         {
         }
 
+        public virtual DbSet<Announcement> Announcement { get; set; }
         public virtual DbSet<BackboneSegment> BackboneSegment { get; set; }
         public virtual DbSet<BackboneSegmentType> BackboneSegmentType { get; set; }
         public virtual DbSet<CustomRichText> CustomRichText { get; set; }
@@ -46,6 +47,24 @@ namespace DroolTool.EFModels.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Announcement>(entity =>
+            {
+                entity.Property(e => e.AnnouncementLink).IsUnicode(false);
+
+                entity.Property(e => e.AnnouncementTitle).IsUnicode(false);
+
+                entity.HasOne(d => d.FileResource)
+                    .WithMany(p => p.Announcement)
+                    .HasForeignKey(d => d.FileResourceID)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+                entity.HasOne(d => d.LastUpdatedByUser)
+                    .WithMany(p => p.Announcement)
+                    .HasForeignKey(d => d.LastUpdatedByUserID)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Announcement_User_LastUpdatedByUserID_UserID");
+            });
+
             modelBuilder.Entity<BackboneSegment>(entity =>
             {
                 entity.Property(e => e.StreamName).IsUnicode(false);
@@ -283,8 +302,6 @@ namespace DroolTool.EFModels.Entities
                 entity.ToView("vGeoServerNeighborhood");
 
                 entity.Property(e => e.DrainID).IsUnicode(false);
-
-                entity.Property(e => e.NeighborhoodID).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Watershed).IsUnicode(false);
             });

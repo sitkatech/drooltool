@@ -14,7 +14,9 @@ import { MultiLinkRendererComponent } from './components/ag-grid/multi-link-rend
 import { SelectDropDownModule } from 'ngx-select-dropdown';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { CustomRichTextComponent } from './components/custom-rich-text/custom-rich-text.component'
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular'
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { StylizedDropdownComponent } from './components/stylized-dropdown/stylized-dropdown.component';
+import { SwimmingPoolVisualizationComponent } from './swimming-pool-visualization/swimming-pool-visualization.component';
 
 @NgModule({
     declarations: [
@@ -25,7 +27,9 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular'
         LinkRendererComponent,
         FontAwesomeIconLinkRendererComponent,
         MultiLinkRendererComponent,
-        CustomRichTextComponent
+        CustomRichTextComponent,
+        StylizedDropdownComponent,
+        SwimmingPoolVisualizationComponent
     ],
     imports: [
         CommonModule,
@@ -43,7 +47,9 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular'
         FormsModule,
         NotFoundComponent,
         HeaderNavComponent,
-        CustomRichTextComponent
+        CustomRichTextComponent,
+        StylizedDropdownComponent,
+        SwimmingPoolVisualizationComponent
     ],
     entryComponents:[
     ]

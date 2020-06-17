@@ -8,11 +8,12 @@ import '../../../../node_modules/leaflet-loading/src/Control.Loading.js';
 import * as esri from 'esri-leaflet'
 import { CustomCompileService } from '../../shared/services/custom-compile.service';
 import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
-import { WatershedMaskService } from 'src/app/services/watershed-mask/watershed-mask.service';
+import { StaticFeatureService } from 'src/app/services/static-feature/static-feature.service';
 import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
+import { forkJoin } from 'rxjs';
 
 declare var $: any;
 
@@ -60,6 +61,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public selectedNeighborhoodMetrics: NeighborhoodMetricDto;
   public selectedNeighborhoodID: number;
   public selectedNeighborhoodWatershed: string;
+  public selectedNeighborhoodWatershedMask: L.Layers;
   public defaultSelectedMetricDate: Date;
 
   public areMetricsCollapsed: boolean = true;
@@ -78,12 +80,13 @@ export class NeighborhoodExplorerComponent implements OnInit {
     "November",
     "December"
   ]
+  districtBoundaryLayer: any;
 
   constructor(
     private appRef: ApplicationRef,
     private compileService: CustomCompileService,
     private neighborhoodService: NeighborhoodService,
-    private watershedMaskService: WatershedMaskService,
+    private staticFeatureService: StaticFeatureService,
     private nominatimService: NominatimService,
     private wfsService: WfsService
   ) {
@@ -162,14 +165,56 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public initializeMap(): void {
-    this.watershedMaskService.getWatershedMask().subscribe(maskString => {
+    
+    const mapOptions: L.MapOptions = {
+      minZoom: 6,
+      maxZoom: 22,
+      layers: [
+        this.tileLayers["Street"],
+        this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
+        this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
+      ],
+      gestureHandling: true,
+      loadingControl:true
+
+    } as L.MapOptions;
+
+    this.map = L.map(this.mapID, mapOptions);
+    this.initializePanes();
+    
+    this.staticFeatureService.getDistrictBoundary().subscribe(districtBoundaryFeature =>{
+      this.districtBoundaryLayer = L.geoJSON(districtBoundaryFeature,{
+        invert:true,
+        //pane:"droolToolOverlayPane",
+        style: function (feature) {
+          return {
+            fillColor: "#323232",
+            fill: true,
+            fillOpacity: 0.25,
+            color: "#6819ae",
+            weight: 5,
+            stroke: true
+          };
+        }
+      })
+      this.districtBoundaryLayer.addTo(this.map);
+      this.setControl();
+      this.initializeMapEvents();
+      this.defaultFitBounds();
+
+      //this.districtBoundaryLayer.bringToBack();
+
+      this.layerControl.addOverlay(this.districtBoundaryLayer, "District Boundary");
+    });
+
+    this.staticFeatureService.getWatershedMask().subscribe(maskString => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
         style: function (feature) {
           return {
             fillColor: "#323232",
             fill: true,
-            fillOpacity: 0.4,
+            fillOpacity: 0.2,
             color: "#3388ff",
             weight: 5,
             stroke: true
@@ -179,27 +224,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
       L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
-      const mapOptions: L.MapOptions = {
-        minZoom: 6,
-        maxZoom: 22,
-        layers: [
-          this.tileLayers["Street"],
-          this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
-          this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
-        ],
-        gestureHandling: true,
-        loadingControl:true
-
-      } as L.MapOptions;
-
-      this.map = L.map(this.mapID, mapOptions);
-
-      this.initializePanes();
-      this.setControl();
-      this.initializeMapEvents();
-
       this.maskLayer.addTo(this.map);
-      this.defaultFitBounds();
 
       if (window.innerWidth > 991) {
         this.mapElement.nativeElement.scrollIntoView();
@@ -218,7 +243,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     var legend = L.control({position: 'bottomright'});
     legend.onAdd = function (map) {
       var div = L.DomUtil.create('div', 'legend');
-      div.innerHTML = "<img src='../../../assets/neighborhood-explorer/MapKey.png' style='height:100px; border-radius:25px'>"
+      div.innerHTML = "<img src='./assets/neighborhood-explorer/MapKey.png' style='height:100px; border-radius:25px'>"
       return div;
     }
     legend.addTo(this.map);
@@ -259,9 +284,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.map.zoomIn();
     })
 
-    $(".leaflet-control-layers-toggle").on("click", () => {
-       this.layerControlOpen = true;
-    })
+    $(".leaflet-control-layers").hover(
+      () => {this.layerControlOpen = true;},
+      () => {this.layerControlOpen = false;}
+    );
   }
 
   public makeNominatimRequest(searchText: any): void {
@@ -310,6 +336,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
             null,
             () => this.setSearchingAndLoadScreen(false)
           );
+          this.neighborhoodService.updateSearchedAddress(this.searchAddress);
         }
         else {
           this.searchAddressNotFoundOrNotServiced();
@@ -319,6 +346,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public displaySearchResults(response: FeatureCollection, latlng: Object): void {
+    this.hideDistrictBoundaryMask();
 
     this.currentSearchLayer = L.geoJSON(response, {
       style: function (feature) {
@@ -365,6 +393,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
     setTimeout(() => { this.clickMarker.closePopup(); }, 5000);
     this.selectedNeighborhoodWatershed = this.selectedNeighborhoodProperties.Watershed;
+    this.staticFeatureService.getWatershedMask(this.selectedNeighborhoodWatershed).subscribe(maskString => {
+      this.selectedNeighborhoodWatershedMask = this.getMaskGeoJsonLayer(maskString);
+    })
     this.searchActive = true;
   }
 
@@ -380,7 +411,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
           fillColor: "#C0FF6C",
           fill: true,
           fillOpacity: 0.3,
-          stroke: false
+          color: "#EA842C",
+          weight: 5,
+          stroke: true
         };
       }
     })
@@ -431,6 +464,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
     if (!this.traceActive) {
       this.clearLayer(this.traceLayer);
       this.neighborhoodService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
+        this.clearLayer(this.currentMask);
+        this.selectedNeighborhoodWatershedMask.addTo(this.map);
         this.traceLayer = L.geoJSON(response,
           {
             style: function (feature) {
@@ -450,7 +485,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
     }
     else {
       this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
-      this.map.removeLayer(this.traceLayer);
+      this.clearLayer(this.traceLayer);
+      this.clearLayer(this.selectedNeighborhoodWatershedMask);
+      this.currentMask.addTo(this.map);
       this.traceActive = false;
     }
   }
@@ -461,6 +498,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.activeSearchNotFound = false;
     this.traceActive = false;
     this.selectedNeighborhoodMetrics = null;
+    this.neighborhoodService.updateSearchedAddress(null);
     this.removeCurrentSearchLayer();
   }
 
@@ -480,11 +518,14 @@ export class NeighborhoodExplorerComponent implements OnInit {
     [this.clickMarker,
     this.currentSearchLayer,
     this.currentMask,
+    this.selectedNeighborhoodWatershedMask,
     this.stormshedLayer,
     this.backboneDetailLayer,
     this.traceLayer].forEach((x) => {
       this.clearLayer(x);
     });
+
+    this.showDistrictBoundaryMask();
   }
 
   public clearLayer(layer: L.Layer): void {
@@ -500,7 +541,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   //won't be honored because it's in the middle of a zoom. So we'll manipulate
   //it a bit.
   public defaultFitBounds(): void {
-    let target = this.map._getBoundsCenterZoom(this.maskLayer.getBounds(), null);
+    let target = this.map._getBoundsCenterZoom(this.districtBoundaryLayer.getBounds(), null);
     this.map.setView(target.center, this.defaultMapZoom, null);
   }
 
@@ -522,5 +563,29 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public setSearchingAndLoadScreen(searching: boolean) {
     this.currentlySearching = searching;
     this.map.fireEvent(this.currentlySearching ? 'dataloading' : 'dataload');
+  }
+
+  public getMaskGeoJsonLayer(maskString: string): L.geoJSON {
+    return L.geoJSON(maskString, {
+      invert: true,
+      style: function (feature) {
+        return {
+          fillColor: "#323232",
+          fill: true,
+          fillOpacity: 0.4,
+          stroke: false
+        };
+      }
+    });
+  }
+  
+  public hideDistrictBoundaryMask(): void {
+    this.districtBoundaryLayer.options.invert = false;
+    this.districtBoundaryLayer.setStyle({fillOpacity: 0});
+  }
+
+  public showDistrictBoundaryMask(): void{
+    this.districtBoundaryLayer.options.invert = true;
+    this.districtBoundaryLayer.setStyle({fillOpacity: .4});
   }
 }

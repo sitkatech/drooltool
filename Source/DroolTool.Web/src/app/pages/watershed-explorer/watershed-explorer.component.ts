@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ViewChildren, QueryList } from '@angular/core';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
 import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
-import { WatershedMaskService } from 'src/app/services/watershed-mask/watershed-mask.service';
+import { StaticFeatureService } from 'src/app/services/static-feature/static-feature.service';
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import { environment } from 'src/environments/environment';
 import * as L from 'leaflet';
@@ -12,6 +12,11 @@ import * as esri from 'esri-leaflet'
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
 import { WatershedExplorerMetric } from 'src/app/shared/models/watershed-explorer-metric.js';
+import { forkJoin } from 'rxjs';
+import { NeighborhoodMetricAvailableDatesDto } from 'src/app/shared/models/neighborhood-metric-available-dates-dto.js';
+import { Options } from 'ng5-slider';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { NgbToast } from '@ng-bootstrap/ng-bootstrap'
 
 declare var $: any;
 
@@ -21,9 +26,9 @@ declare var $: any;
   styleUrls: ['./watershed-explorer.component.scss']
 })
 export class WatershedExplorerComponent implements OnInit {
-
   @ViewChild("mapDiv", { static: false }) mapElement: ElementRef;
   @ViewChild("largePanel", { static: false }) largeDisplayMetricsPanel: ElementRef;
+  @ViewChild("instructionsToast") instructionsToast: NgbToast;
 
   public defaultMapZoom = 12;
   public afterSetControl = new EventEmitter();
@@ -53,6 +58,7 @@ export class WatershedExplorerComponent implements OnInit {
   public maskLayer: any;
   public neighborhoodsWhereItIsOkayToClickIDs: number[];
   public watershedStyle = "drooltoolwatershed-dark";
+  public layerControlOpen = false;
 
   public wmsParams: any;
   public stormshedLayer: L.Layers;
@@ -62,12 +68,28 @@ export class WatershedExplorerComponent implements OnInit {
   public traceActive: boolean = false;
   public showInstructions: boolean = true;
   public searchActive: boolean = false;
-  public activeSearchNotFound: boolean = false;
   public currentlySearching: boolean = false;
 
+  public errorActive: boolean = false;
+  public errorMessage: string = "";
+  public errorSpecificIcon: string = "";
+  public errorCallToAction: string = "";
+
+  public showInstructionsToast = true;
+
+  public searchOutsideServiceAreaErrorMessage = "Sorry, the area you selected is not within the Urban Drool Tool service area.";
+  public searchOutsideServiceAreaErrorCallToAction = "Select an area within the highlighted service boundary to view results."
+  public searchOutsideServiceAreaErrorSpecificIcon = "<span><i class='fas fa-map-marker-alt fa-3x'></i></span>"
+  public noDataForTimeSelectedErrorMessage = "Sorry, it appears we don't have Urban Drool data for ";
+  public noDataForTimeSelectedErrorCallToAction = "Select a different month, or select a different year and view months in that range."
+  public noDataForTimeSelectedErrorSpecificIcon = "<span><i class='far fa-calendar-alt fa-3x'></i></span>";
+  
   public selectedNeighborhoodID: number;
   public selectedMetricMonth: number;
   public selectedMetricYear: number;
+  public selectedYearMinMonth: number;
+  public selectedYearMaxMonth: number;
+  public allYearsWithAvailableMetricMonths: NeighborhoodMetricAvailableDatesDto[];
 
   public areMetricsCollapsed: boolean = true;
 
@@ -86,17 +108,34 @@ export class WatershedExplorerComponent implements OnInit {
     "December"
   ]
 
+  public ng5SliderOptions: Options = {
+    floor:1,
+    ceil:12,
+    //Can't find an option to turn values off entirely while keeping ticks,
+    //so we'll just make the values nothing
+    translate: (value: number): string => {
+      return '';
+    },
+    showTicks: true,
+    getLegend: (value: number): string => {
+      return this.months[value-1];
+    }
+  }
+  districtBoundaryLayer: any;
+  
+
   constructor(
     private appRef: ApplicationRef,
     private compileService: CustomCompileService,
     private neighborhoodService: NeighborhoodService,
     private wfsService: WfsService,
-    private watershedMaskService: WatershedMaskService
+    private staticFeatureService: StaticFeatureService,
+    private spinner: NgxSpinnerService
   ) {
   }
 
   public ngOnInit(): void {
-
+    this.spinner.show();
     this.tileLayers = Object.assign({}, {
       "Aerial": L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Aerial',
@@ -149,18 +188,26 @@ export class WatershedExplorerComponent implements OnInit {
     this.overlayLayers = Object.assign({}, {
       "<span><img src='../../assets/neighborhood-explorer/neighborhood.png' height='12px' style='margin-bottom:3px;' /> Neighborhoods</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", neighborhoodsWMSOptions),
       "<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions),
-      "<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedOptions),
+      "<span><img src='../../assets/watershed-explorer/watershed.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedOptions),
       "<span>Stormwater Network <br/> <img src='../../assets/neighborhood-explorer/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({ url: "https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/" }),
     })
 
     this.compileService.configure(this.appRef);
 
-    this.neighborhoodService.getMostRecentMetric().subscribe(result => {
-      this.metricsForCurrentSelection = result;
-      this.selectedMetricMonth = result.MetricMonth;
-      this.selectedMetricYear = result.MetricYear;
-      this.applyMetricOverlay();
-    })
+    forkJoin(
+      this.neighborhoodService.getMetricTimeline(),
+      this.neighborhoodService.getMostRecentMetric()
+    ).subscribe(([metricTimeline, mostRecentMetric]) => {
+      this.allYearsWithAvailableMetricMonths = metricTimeline;
+
+      this.metricsForCurrentSelection = mostRecentMetric;
+      this.selectedMetricMonth = mostRecentMetric.MetricMonth;
+      this.selectedMetricYear = mostRecentMetric.MetricYear;
+
+      this.addDisabledToAppropriateSliderMonths();
+      this.applyMetricOverlay(false);
+      this.spinner.hide();
+    });
 
     this.neighborhoodService.getServicedNeighborhoodsWatershedNames().subscribe(result => {
       this.watershedNames = this.watershedNames.concat(result);
@@ -177,36 +224,54 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public initializeMap(): void {
-    this.watershedMaskService.getWatershedMask().subscribe(maskString => {
+
+    const mapOptions: L.MapOptions = {
+      minZoom: 6,
+      maxZoom: 22,
+      layers: [
+        this.tileLayers["Hillshade"],
+        this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
+        this.overlayLayers["<span><img src='../../assets/watershed-explorer/watershed.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
+      ],
+      gestureHandling: true,
+      loadingControl:true
+    } as L.MapOptions;
+
+    this.map = L.map(this.mapID, mapOptions);
+
+    this.initializePanes();
+
+    this.staticFeatureService.getDistrictBoundary().subscribe(districtBoundaryFeature =>{
+      this.districtBoundaryLayer = L.geoJSON(districtBoundaryFeature,{
+        //pane:"droolToolOverlayPane",
+        style: function (feature) {
+          return {
+            fill: false,
+            color: "#6819ae",
+            weight: 5,
+            stroke: true
+          };
+        }
+      })
+      //this.districtBoundaryLayer.addTo(this.map);
+      this.setControl();
+      this.initializeMapEvents();
+      this.defaultFitBounds();
+
+      this.layerControl.addOverlay(this.districtBoundaryLayer, "District Boundary");
+    });
+
+    this.staticFeatureService.getWatershedMask().subscribe(maskString => {
       this.maskLayer = this.getMaskGeoJsonLayer(maskString);
       L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
-      const mapOptions: L.MapOptions = {
-        minZoom: 6,
-        maxZoom: 22,
-        layers: [
-          this.tileLayers["Hillshade"],
-          this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
-          this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"]
-        ],
-        gestureHandling: true,
-        loadingControl:true
-      } as L.MapOptions;
-
-      this.map = L.map(this.mapID, mapOptions);
-
-      this.initializePanes();
-      this.initializeMapEvents();
-      this.setControl();
-
       this.maskLayer.addTo(this.map);
-      this.defaultFitBounds();
 
       if (window.innerWidth > 991) {
         this.mapElement.nativeElement.scrollIntoView();
       }
 
-      this.applyMetricOverlay();
+      this.applyMetricOverlay(false);
     });
   }
 
@@ -254,6 +319,11 @@ export class WatershedExplorerComponent implements OnInit {
       dblClickTimer = null;
       this.map.zoomIn();
     })
+
+    $(".leaflet-control-layers").hover(
+      () => {this.layerControlOpen = true;},
+      () => {this.layerControlOpen = false;}
+    );
   }
 
   public getNeighborhoodFromLatLong(latlng: Object): void {
@@ -378,7 +448,6 @@ export class WatershedExplorerComponent implements OnInit {
 
   public clearSearchResults(): void {
     this.searchActive = false;
-    this.activeSearchNotFound = false;
     this.traceActive = false;
     [this.clickMarker,
       this.stormshedLayer,
@@ -388,14 +457,31 @@ export class WatershedExplorerComponent implements OnInit {
       });
   }
 
+  public clearErrors() {
+    this.errorActive = false;
+    this.errorMessage = "";
+    this.errorSpecificIcon = "";
+    this.errorCallToAction = "";
+  }
+
   public returnToDefault(): void {
-    this.clearSearchResults();
-    this.defaultFitBounds();
+    this.clearErrors();
     this.map.invalidateSize();
+    
+    if (this.metricOverlayLayer == null) {
+      this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(result => {
+        this.metricsForCurrentSelection = result;
+        this.displayNewMetric(false);
+        this.addDisabledToAppropriateSliderMonths();
+      });
+    }
   }
 
   public searchAddressNotFoundOrNotServiced(): void {
-    this.activeSearchNotFound = true;
+    this.errorActive = true;
+    this.errorMessage = this.searchOutsideServiceAreaErrorMessage;
+    this.errorSpecificIcon = this.searchOutsideServiceAreaErrorSpecificIcon;
+    this.errorCallToAction = this.searchOutsideServiceAreaErrorCallToAction;
     this.currentlySearching = false;
   }
 
@@ -412,7 +498,7 @@ export class WatershedExplorerComponent implements OnInit {
   //won't be honored because it's in the middle of a zoom. So we'll manipulate
   //it a bit.
   public defaultFitBounds(): void {
-    let target = this.map._getBoundsCenterZoom(this.maskLayer.getBounds(), null);
+    let target = this.map._getBoundsCenterZoom(this.districtBoundaryLayer.getBounds(), null);
     this.map.setView(target.center, this.defaultMapZoom, null);
   }
 
@@ -426,8 +512,8 @@ export class WatershedExplorerComponent implements OnInit {
     this.map.fitBounds(featureGroup.getBounds(), { padding: [paddingHeight, paddingHeight] });
   }
 
-  public applyMetricOverlay(): void {
-    if (!this.metricsForCurrentSelection || !this.map) {
+  public applyMetricOverlay(clearAsResultOfError: boolean): void {
+    if (!this.map) {
       return null;
     }
 
@@ -436,12 +522,12 @@ export class WatershedExplorerComponent implements OnInit {
       this.metricOverlayLayer = null;
     }
 
-    if (this.selectedMetric == WatershedExplorerMetric.NoMetric) {
+    if (this.selectedMetric == WatershedExplorerMetric.NoMetric || clearAsResultOfError) {
       return null;
     }
 
-    let cql_filter = "MetricYear = " + this.metricsForCurrentSelection.MetricYear
-      + " and MetricMonth = " + this.metricsForCurrentSelection.MetricMonth;
+    let cql_filter = "MetricYear = " + this.selectedMetricYear
+      + " and MetricMonth = " + this.selectedMetricMonth;
 
     if (this.selectedWatershed != "All Watersheds") {
       cql_filter += " and WatershedAliasName = '" + this.selectedWatershed + "'";
@@ -465,49 +551,25 @@ export class WatershedExplorerComponent implements OnInit {
   public getMetricPopupContent(): string {
     let metricContent = "";
     if (!this.metricsForCurrentSelection) {
-      metricContent = "No metrics found for this location";
+      metricContent = "No metrics found for " + this.months[this.selectedMetricMonth - 1] + " " + this.selectedMetricYear + " at this location";
     }
     else {
-      switch (this.selectedMetric) {
-        case WatershedExplorerMetric.TotalDrool: {
-          metricContent = this.selectedMetric + ": " +
-            (this.metricsForCurrentSelection.TotalDrool == null
-              ? "Not available"
-              : this.metricsForCurrentSelection.TotalDrool.toLocaleString() + " gal/month");
-          break;
-        }
-        case WatershedExplorerMetric.OverallParticipation: {
-          metricContent = this.selectedMetric + ": " +
-            (this.metricsForCurrentSelection.OverallParticipation == null
-              ? "Not available"
-              : this.metricsForCurrentSelection.OverallParticipation.toLocaleString() + " active meters");
-          break;
-        }
-        case WatershedExplorerMetric.PercentParticipation: {
-          metricContent = this.selectedMetric + ": " +
-            (this.metricsForCurrentSelection.PercentParticipation == null
-              ? "Not available"
-              : Math.round(this.metricsForCurrentSelection.PercentParticipation).toString() + "%");
-          break;
-        }
-        case WatershedExplorerMetric.DroolPerLandscapedAcre: {
-          metricContent = this.selectedMetric + ": " +
-            (this.metricsForCurrentSelection.DroolPerLandscapedAcre == null
-              ? "Not available"
-              : "<br/>" + this.metricsForCurrentSelection.DroolPerLandscapedAcre.toLocaleString() + " gal/acre");
-          break;
-        }
-        default: {
-          metricContent = "Select a metric from the dropdown to get started!";
-        }
+          Object.keys(WatershedExplorerMetric).filter(x => WatershedExplorerMetric[x].toString() != WatershedExplorerMetric.NoMetric.toString()).forEach((key, index) => {
+            if (index != 0) {
+              metricContent += "<br/>";
+            }
+            metricContent += WatershedExplorerMetric[key].toString() + ": " + (this.metricsForCurrentSelection[key] == null ? "Not available" : this.metricsForCurrentSelection[key].toLocaleString() + " " + WatershedExplorerMetric[key].metricUnitsShort)
+          })
       }
-    }
 
     return "<span>" + metricContent + "</span>"
   }
 
-  public displayNewMetric(): void {
-    this.applyMetricOverlay();
+  public displayNewMetric(clearAsResultOfError: boolean): void {
+    if (!this.map) {
+      return null;
+    }
+    this.applyMetricOverlay(clearAsResultOfError);
     this.map.invalidateSize();
     if (!this.clickMarker) {
       return null;
@@ -531,15 +593,20 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public getNewWatershedMask() {
+    if (!this.map) {
+      return null;
+    }
+
     this.clearSearchResults();
+    this.clearErrors();
     this.map.removeLayer(this.maskLayer);
     this.maskLayer = null;
     this.map.fireEvent('dataloading');
-    this.watershedMaskService.getWatershedMask(this.selectedWatershed).subscribe(maskString => {
+    this.staticFeatureService.getWatershedMask(this.selectedWatershed).subscribe(maskString => {
       this.maskLayer = this.getMaskGeoJsonLayer(maskString);
       this.maskLayer.addTo(this.map);
       this.defaultFitBounds();     
-      this.displayNewMetric();
+      this.displayNewMetric(false);
       this.map.fireEvent('dataload');
     });
   }
@@ -547,5 +614,103 @@ export class WatershedExplorerComponent implements OnInit {
   public showMetrics(event: Event) {
     event.stopPropagation();
     this.areMetricsCollapsed = !this.areMetricsCollapsed;
+  }
+
+  public clearErrorsAndDisplayNewMetric() {
+    this.clearErrors();
+    this.displayNewMetric(false);
+  }
+
+  public experiment() {
+    if (!this.map) {
+      return null;
+    }
+
+    this.errorActive = true;
+    this.errorMessage = this.noDataForTimeSelectedErrorMessage + this.months[this.selectedMetricMonth - 1] + " " + this.selectedMetricYear;
+    this.errorSpecificIcon = this.noDataForTimeSelectedErrorSpecificIcon;
+    this.errorCallToAction = this.noDataForTimeSelectedErrorCallToAction;
+    this.metricsForCurrentSelection = null;
+    this.displayNewMetric(true);
+
+    if (this.selectedYearMinMonth > this.selectedMetricMonth) {
+      this.selectedMetricMonth = this.selectedYearMinMonth;
+    }
+    else if (this.selectedYearMaxMonth < this.selectedMetricMonth) {
+      this.selectedMetricMonth = this.selectedYearMaxMonth;
+    }
+
+    let sliderImage = $(".ng5-slider .ng5-slider-pointer");
+    sliderImage.addClass("shake");
+    setTimeout(() => {
+      sliderImage.removeClass("shake");
+    }, 1000);
+    
+  }
+
+  public getSelectedMetricYearAvailableMonthsThenDisplayMetric() {
+    this.addDisabledToAppropriateSliderMonths();
+    this.getAppropriateMetricsForDateChange();
+  }
+
+  public getAppropriateMetricsForDateChange() {
+    if (!this.map)
+    {
+      return null;
+    }
+
+    this.clearErrors();
+
+    if (this.selectedMetricMonth < this.selectedYearMinMonth || this.selectedMetricMonth > this.selectedYearMaxMonth) {
+      setTimeout(() => {this.experiment()}, 300);
+    }
+    else {
+      this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(result => {
+        this.metricsForCurrentSelection = result;
+        this.displayNewMetric(false);
+        this.addDisabledToAppropriateSliderMonths();
+      });
+    }
+  }
+
+  public addDisabledToAppropriateSliderMonths() {
+    if (!this.allYearsWithAvailableMetricMonths) {
+      return null;
+    }
+
+    this.selectedYearMinMonth = this.allYearsWithAvailableMetricMonths
+      .filter(x => x.MetricYear == this.selectedMetricYear)[0]
+      .AvailableMonths
+      .reduce((lowest, x) => Math.min(lowest, x), Number.MAX_VALUE);
+
+    this.selectedYearMaxMonth = this.allYearsWithAvailableMetricMonths
+    .filter(x => x.MetricYear == this.selectedMetricYear)[0]
+    .AvailableMonths
+    .reduce((highest, x) => Math.max(highest, x), 0);
+
+    var sliderLegendValues = $(".ng5-slider-tick-legend");
+    var sliderTicks = $(".ng5-slider-tick");
+    sliderTicks.removeClass("ng5-slider-disabled-tick");
+    sliderLegendValues.removeClass("ng5-slider-disabled-legend");
+
+    let x = 1;
+    while (x < 13) {
+      $(sliderLegendValues[x-1]).addClass(x < this.selectedYearMinMonth || x > this.selectedYearMaxMonth ? "ng5-slider-disabled-legend" : "");
+      $(sliderTicks[x-1]).addClass(x < this.selectedYearMinMonth || x > this.selectedYearMaxMonth ? "ng5-slider-disabled-tick" : "");
+      x = x + 1;
+    }
+  }
+
+  public getYears(): Array<number> {
+    if (!this.allYearsWithAvailableMetricMonths) {
+      return null;
+    }
+
+    return this.allYearsWithAvailableMetricMonths.map(x => x.MetricYear);
+
+  }
+
+  public hideInstructionsToast(event: Event) {
+    this.showInstructions = false;
   }
 }

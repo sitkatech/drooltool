@@ -34,7 +34,7 @@ export class AppComponent {
                 window.scrollTo(0, 0);
             }
         });
-        
+
         this.configureAuthService().subscribe(() => {
             this.oauthService.tryLogin();
         });

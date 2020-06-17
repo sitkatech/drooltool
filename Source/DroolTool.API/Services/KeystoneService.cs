@@ -25,6 +25,7 @@ namespace DroolTool.API.Services
             public string RedirectURL { get; set; }
             public string SiteName { get; set; }
             public string SignatureBlock { get; set; }
+            public string SupportBlock { get; set; }
             public string SupportURL { get; set; }
             public string SupportEmail { get; set; }
         }

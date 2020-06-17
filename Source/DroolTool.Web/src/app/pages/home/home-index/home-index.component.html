@@ -20,19 +20,22 @@
     </ngb-alert>
 
     <app-alert-display></app-alert-display>
+    <drooltool-social-media-sharing></drooltool-social-media-sharing>
     <div class="row homeSection">
         <div class="col-12 col-lg-6 text-center order-lg-last">
             <h1>Only rain down the drain</h1>
             <div>
                 <p class="b1">
-                    Urban drool contributes to more than 1&nbsp;million gallons of polluted discharge to 
-                    Aliso Creek each day.
+                    Runoff from overwatering and car washing picks up fertilizer, bacteria, and other contaminants on
+                    its way to creeks and beaches.
                 </p>
                 <p class="b1">
                     It starts in a gutter near you...
                 </p>
                 <p class="b1">
-                    Small changes in how you use water outdoors can eliminate drool and save you money.
+                    This “Urban Drool” contributes to more than <span class="d-inline-block"><strong>1 million gallons</strong></span>
+                    of polluted discharge to
+                    Aliso Creek each day. But small changes in how you use water can eliminate drool and save you money. 
                 </p>
                 <p class="b1">
                     <a routerLink="/about" routerLinkActive="true">Learn more about Urban Drool</a>
@@ -40,43 +43,46 @@
             </div>
         </div>
         <div class="col-12 col-lg-6 order-lg-first text-over-picture">
-            <img id="topImage" src="../../../../assets/home/top-image.png">
+            <img id="topImage" src="./assets/home/top-image.png">
         </div>
     </div>
 </div>
-    <div id="mapImage" class="row homeSection h-100 pt-0">
-        <div class="col-12 text-center my-auto">
-            <h1 style="margin-bottom:30px">Do you add to urban drool?
-            </h1>
-            <div class="row" style="margin-bottom:30px">
-                <div class="col-12 col-md-6 offset-md-3">
-                    <p class="b1">
-                        Use these interactive tools to learn more about urban water usage 
-                        and its effect on our watersheds.
-                    </p>
-                </div>
+<div id="mapImage" class="row homeSection h-100 pt-0">
+    <div class="col-12 text-center my-auto">
+        <h1 style="margin-bottom:30px">Do you add to urban drool?
+        </h1>
+        <div class="row" style="margin-bottom:30px">
+            <div class="col-12 col-md-6 offset-md-3">
+                <p class="b1">
+                    Use these interactive tools to learn more about urban water usage
+                    and its effect on our watersheds.
+                </p>
             </div>
-            <div class="row">
-                <div class="col-6 col-lg-4 neighborhood-button">
-                    <a routerLink="/neighborhood-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool" style="margin-bottom:20px">Neighborhood Explorer</a>
-                    <p class="b2">
-                        Find out how your neighborhood contributes to urban drool and 
-                        what you can do.
-                    </p>
-                </div>
-                <div class="col-6 col-lg-4 watershed-button">
-                    <a routerLink="/watershed-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool" style="margin-bottom:20px">Watershed Explorer</a>
-                    <p class="b2">
-                        Learn more about your watershed and the benefits of reducing urban drool
-                    </p>
-                </div>
+        </div>
+        <div class="row">
+            <div class="col-6 col-lg-4 neighborhood-button">
+                <a routerLink="/neighborhood-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool"
+                    style="margin-bottom:20px">Neighborhood Explorer</a>
+                <p class="b2">
+                    Find out how your neighborhood contributes to urban drool and
+                    what you can do.
+                </p>
+            </div>
+            <div class="col-6 col-lg-4 watershed-button">
+                <a routerLink="/watershed-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool"
+                    style="margin-bottom:20px">Watershed Explorer</a>
+                <p class="b2">
+                    Learn more about your watershed and the benefits of reducing urban drool
+                </p>
             </div>
         </div>
     </div>
+</div>
 <div class="container">
     <div class="row homeSection">
         <div class="col-12 col-lg-8 m-lg-auto order-lg-last">
-            <div id="takeActionImage">
+            <div class='embed-container'>
+                <iframe src='https://www.youtube.com/embed/kohqy9jmZY0' frameborder='0' allowfullscreen></iframe>
             </div>
         </div>
         <div class="col-12 col-lg-4 m-lg-auto text-center order-lg-first" style="z-index:2">
@@ -103,20 +109,24 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig"
+                    <ngx-slick-carousel *ngIf="showSlides()" class="carousel" #slickModal="slick-carousel" [config]="slideConfig"
                         (init)="slickInit($event)" (breakpoint)="breakpoint($event)" (afterChange)="afterChange($event)"
                         (beforeChange)="beforeChange($event)" style="padding-top:40px">
                         <div ngxSlickItem *ngFor="let slide of slides" class="slide">
-                            <div class="slide-container" >
+                            <div class="slide-container">
                                 <div class="slide-background" style="background-image:url({{slide.image}})">
                                     <div class="slide-module-accent">
-                                        <p class="b3" style="color:#FFF" [innerHTML]="slide.date"></p>
+                                        <p class="b3" style="color:#FFF">{{slide.date | date:'EEEE'}} <br/> {{slide.date | date:'longDate'}}</p>
                                     </div>
                                 </div>
-                                <p class="b3 slide-link-text"><a href="/">{{slide.title}}</a></p>
+                                <p class="b3 slide-link-text">
+                                    <a href="{{slide.link}}" *ngIf="slide.link" target="_blank">{{slide.title}}</a>
+                                    <span *ngIf="!slide.link">{{slide.title}}</span>
+                                </p>
                             </div>
                         </div>
                     </ngx-slick-carousel>
+                    <p class="b3" *ngIf="!showSlides()">Nothing yet, stay tuned!</p>
                 </div>
             </div>
         </div>
@@ -126,7 +136,8 @@
             <div class="row">
                 <div class="col-12">
                     <h1>Resource Spotlight</h1>
-                    <p class="b2" style="margin-bottom:0"><a routerLink="/take-action" routerLinkActive="true">Explore more Resources</a></p>
+                    <p class="b2" style="margin-bottom:0"><a routerLink="/take-action" routerLinkActive="true">Explore
+                            more Resources</a></p>
                 </div>
             </div>
             <div class="row">
@@ -134,7 +145,7 @@
                     <div id="resourceImage" style="margin: 30px auto"></div>
                 </div>
             </div>
-            <div class="row" >
+            <div class="row">
                 <div class="col-12 col-md-6 offset-md-3">
                     <h3 class="mt-1">New Rebate Option: <br>
                         Weather-Based Smart Sprinkler Timers
@@ -148,7 +159,7 @@
     </div>
     <div class="row justify-content-center" style="margin-top:80px">
         <div class="col text-center mt-auto">
-            <img id="waterPlantsImage" src="../../../../assets/home/water-plants.png">
+            <img id="waterPlantsImage" src="./assets/home/water-plants.png">
         </div>
     </div>
 </div>

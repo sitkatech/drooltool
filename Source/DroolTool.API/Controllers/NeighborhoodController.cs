@@ -1,18 +1,14 @@
-﻿using System;
+﻿using DroolTool.API.Services;
+using DroolTool.EFModels.Entities;
+using DroolTool.Models.DataTransferObjects;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Features;
+using NetTopologySuite.Operation.Union;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using DroolTool.EFModels.Entities;
-using DroolTool.API.Services;
-using DroolTool.Models.DataTransferObjects;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Features;
-using NetTopologySuite.IO;
-using NetTopologySuite.Operation.Union;
-using Newtonsoft.Json;
 
 namespace DroolTool.API.Controllers
 {
@@ -164,6 +160,19 @@ namespace DroolTool.API.Controllers
             return Ok(neighborhoodMetric);
         }
 
+        [HttpGet("neighborhood/{OCSurveyNeighborhoodID}/{metricEndYear}/{metricEndMonth}/get-metrics-for-year/")]
+        public ActionResult<List<NeighborhoodMetricDto>> GetMetricsForYear([FromRoute] int OCSurveyNeighborhoodID, [FromRoute] int metricEndYear, [FromRoute] int metricEndMonth)
+        {
+            var desiredStartDate = new DateTime(metricEndYear - 1, metricEndMonth, 1);
+            var neighborhoodMetricsForYear = _dbContext.vNeighborhoodMetric
+                .Where(x => x.OCSurveyCatchmentID == OCSurveyNeighborhoodID &&
+                            x.MetricDate >= desiredStartDate)
+                .OrderByDescending(x => x.MetricDate)
+                .Select(x => x.AsDto())
+                .ToList();
+
+            return Ok(neighborhoodMetricsForYear);
+        }
         [HttpGet("neighborhood/get-most-recent-metric/")]
         public ActionResult<NeighborhoodMetricDto> GetMostRecentMetric()
         {
@@ -171,6 +180,42 @@ namespace DroolTool.API.Controllers
                 .OrderByDescending(x => x.MetricDate)
                 .FirstOrDefault()
                 .AsDto();
+        }
+        
+        [HttpGet("neighborhood/get-drool-per-landscaped-acre-chart/{neighborhoodID}")]
+        public ActionResult<List<DroolPerLandscapedAcreChartDto>> GetDroolPerLandscapedAcreChart([FromRoute] int neighborhoodID)
+        {
+            var neighborhood = _dbContext.Neighborhood.SingleOrDefault(x=>x.NeighborhoodID == neighborhoodID);
+            if (neighborhood == null)
+            {
+                return NotFound();
+            }
+
+            var droolPerLandscapedAcreChartDtos = _dbContext.vNeighborhoodMetric
+                .Where(x => x.OCSurveyCatchmentID == neighborhood.OCSurveyNeighborhoodID)
+                .OrderByDescending(x => x.MetricDate)
+                .Take(24).Select(x => new DroolPerLandscapedAcreChartDto
+                {
+                    MetricMonth = x.MetricMonth, MetricYear = x.MetricYear,
+                    DroolPerLandscapedAcre = x.DroolPerLandscapedAcre
+                }).ToList();
+            droolPerLandscapedAcreChartDtos.Reverse();
+            return droolPerLandscapedAcreChartDtos;
+        }
+
+        [HttpGet("neighborhood/get-metric-timeline")]
+        public ActionResult<List<NeighborhoodMetricAvailableDatesDto>> GetMetricTimeline()
+        { 
+            return _dbContext.vNeighborhoodMetric
+                .ToList()
+                .GroupBy(
+                    x => x.MetricYear,
+                    x => x.MetricMonth,
+                    (year, months) => new NeighborhoodMetricAvailableDatesDto
+                        { MetricYear = year, AvailableMonths = months.ToList() })
+                .Distinct()
+                .OrderByDescending(x => x.MetricYear)
+                .ToList();
         }
 
         [HttpGet("neighborhood/get-serviced-neighborhoods-watershed-names")]

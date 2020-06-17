@@ -1,17 +1,52 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/shared/services';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto';
+import { NeighborhoodMetricAvailableDatesDto } from 'src/app/shared/models/neighborhood-metric-available-dates-dto';
+import { isNullOrUndefined } from 'util';
+import { DroolPerLandscapedAcreChartDto } from 'src/app/shared/models/drool-per-landscaped-acre-chart-dto';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NeighborhoodService {
-    constructor(private apiService: ApiService) { } 
+
+    private _searchedAddressSubject: BehaviorSubject<string>;
+      
+    constructor(private apiService: ApiService) {
+        let searchedAddressAsJson = window.localStorage.getItem('searchedAddress');
+        let initialSearchedAddress = "My Selected Neighborhood";
+
+        if (!isNullOrUndefined(searchedAddressAsJson) && searchedAddressAsJson !== "undefined") {
+            // if the saved account is valid for this user, make it the current active account. Otherwise clear it from local storage.
+            initialSearchedAddress = JSON.parse(searchedAddressAsJson);
+        }
+
+        this._searchedAddressSubject = new BehaviorSubject<string>(initialSearchedAddress);
+     } 
+
+    getSearchedAddress(): Observable<string> {
+        return this._searchedAddressSubject.asObservable();
+    }
+
+    updateSearchedAddress(address: string) {
+        window.localStorage.setItem('searchedAddress', JSON.stringify(address));
+        this._searchedAddressSubject.next(address);
+    }
 
     getNeighborhoodsWithMetricsIds(): Observable<number[]> {
         let route = `/neighborhood/get-neighborhoods-with-metrics-ids`;
+        return this.apiService.getFromApi(route);
+    }
+
+    getMetricTimeline(): Observable<NeighborhoodMetricAvailableDatesDto[]> {
+        let route = `/neighborhood/get-metric-timeline`;
+        return this.apiService.getFromApi(route);
+      }
+
+    getMetricsForYear(OCSurveyNeighborhoodID:number, metricEndYear: number, metricEndMonth:number): Observable<NeighborhoodMetricDto[]> {
+        let route = `/neighborhood/${OCSurveyNeighborhoodID}/${metricEndYear}/${metricEndMonth}/get-metrics-for-year/`;
         return this.apiService.getFromApi(route);
     }
 
@@ -22,6 +57,11 @@ export class NeighborhoodService {
 
     getMostRecentMetric(): Observable<NeighborhoodMetricDto> {
         let route = `/neighborhood/get-most-recent-metric/`;
+        return this.apiService.getFromApi(route);
+    }
+
+    getDroolPerLandscapedAcreChart(neighborhoodID: number): Observable<DroolPerLandscapedAcreChartDto[]>{
+        let route = `neighborhood/get-drool-per-landscaped-acre-chart/${neighborhoodID}`;
         return this.apiService.getFromApi(route);
     }
 
