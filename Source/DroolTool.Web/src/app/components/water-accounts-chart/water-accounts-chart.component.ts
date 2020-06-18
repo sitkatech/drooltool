@@ -21,28 +21,54 @@ export class WaterAccountsChartComponent implements OnInit {
   }
 
   public waterAccountsChartSpec() {
+
+    let values = [];
+    let sort = []
+    let scale = []
+
+    // as soon as you figure out a better way to do this, let me know.
+    if (this.droolChartData.ResidentialWaterAccounts){
+      values.push({"legendVal": `Residential - ${this.droolChartData.ResidentialWaterAccounts}`, "color": "#008080", "Account Type": "Residential", "Number of Accounts": this.droolChartData.ResidentialWaterAccounts});
+      sort.push( `Residential - ${this.droolChartData.ResidentialWaterAccounts}`);
+      scale.push("#008080");
+    }
+    if (this.droolChartData.HOAWaterAccounts){
+      values.push({"legendVal": `HOA - ${this.droolChartData.HOAWaterAccounts}`, "color": "#F0A148", "Account Type": "HOA", "Number of Accounts": this.droolChartData.HOAWaterAccounts});
+      sort.push( `HOA - ${this.droolChartData.HOAWaterAccounts}`);
+      scale.push("#F0A148");
+    }
+    if (this.droolChartData.CommercialWaterAccounts){
+      values.push({"legendVal": `Commercial - ${this.droolChartData.CommercialWaterAccounts}`, "color": "#323232", "Account Type": "Commercial", "Number of Accounts": this.droolChartData.CommercialWaterAccounts});
+      sort.push( `Commercial - ${this.droolChartData.CommercialWaterAccounts}`);
+      scale.push("#323232");
+    }
+    if (this.droolChartData.MunicipalWaterAccounts){
+      values.push({"legendVal": `Municipal - ${this.droolChartData.MunicipalWaterAccounts}`, "color": "#00FFFF", "Account Type": "Municipal", "Number of Accounts": this.droolChartData.MunicipalWaterAccounts});
+      sort.push( `Municipal - ${this.droolChartData.MunicipalWaterAccounts}`);
+      scale.push("#00FFFF");
+    }
+
+    debugger;
+
     return {
       "data": {
-        "values": [
-          {"legendVal": `Residential - ${this.droolChartData.ResidentialWaterAccounts}`, "Account Type": "Residential", "Number of Accounts": this.droolChartData.ResidentialWaterAccounts},
-          {"legendVal": `HOA - ${this.droolChartData.HOAWaterAccounts}`, "Account Type": "HOA", "Number of Accounts": this.droolChartData.HOAWaterAccounts},
-          {"legendVal": `Commercial - ${this.droolChartData.CommercialWaterAccounts}`, "Account Type": "Commercial", "Number of Accounts": this.droolChartData.CommercialWaterAccounts},
-          {"legendVal": `Municipal - ${this.droolChartData.MunicipalWaterAccounts}`, "Account Type": "Municipal", "Number of Accounts": this.droolChartData.MunicipalWaterAccounts}
-        ]
+        "values": values
       },
       "mark": {"type":"arc", tooltip: true, "outerRadius":100},
       "encoding": {
         "theta": {"field": "Number of Accounts", "type": "quantitative", "stack":true},
         "color": {"field": "legendVal", 
                   "type": "nominal", 
-                  "scale": {"range": ["#FBD177", "#F0A148", "#EA842C", "#B65C1F"]},
+                  "sort": sort,
+                  "scale": {"range": scale},
                   "legend": {
                     "labelFont": "Nunito",
                     "labelFontSize":17,
                     "title":null,
                     "orient": this.smallScreen ? "top" : "right",
                     "direction":"vertical"
-                  }},
+                  }
+                },
                   "tooltip": [
                     { field: "Account Type", type: "ordinal"},
                     { field: "Number of Accounts", type: "ordinal"}

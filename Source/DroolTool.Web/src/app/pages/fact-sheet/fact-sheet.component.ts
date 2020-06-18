@@ -185,6 +185,7 @@ export class FactSheetComponent implements AfterViewInit {
 
   setupMetricsAndGetStatements() {
     this.metricsForMostRecentMonth = this.metricsForYear[0];
+    console.log(this.getHoaIrrigationWater());
     this.waterAccountsChartData = new WaterAccountsChartDto(this.metricsForMostRecentMonth);
     this.metricsForMonthPriorToMostRecentMonth = this.metricsForYear[1];
     this.metricsFurthestFromEndDate = this.metricsForYear[this.metricsForYear.length - 1];
@@ -194,6 +195,17 @@ export class FactSheetComponent implements AfterViewInit {
 
     this.neighborhoodsParticipatingChangeStatement = this.getNeighborhoodsParticipatingChangeStatement(this.metricsForMostRecentMonth?.OverallParticipation, this.metricsFurthestFromEndDate?.OverallParticipation, this.metricsForYear.length);
     this.totalIrrigationWaterUsed = this.getTotalIrrigationWater();
+  }
+
+  getHoaIrrigationWater(): number{
+    if (this.metricsForYear.length < 13) {
+      return this.metricsForYear.reduce((tiw, m) => tiw + m.HoaWaterUsedForIrrigation, 0);
+    }
+    else {
+      let temp = this.metricsForYear;
+      temp.shift();
+      return temp.reduce((tiw, m) => tiw + m.HoaWaterUsedForIrrigation, 0);
+    }
   }
 
   getTotalIrrigationWater(): number {
@@ -207,9 +219,17 @@ export class FactSheetComponent implements AfterViewInit {
     }
   }
 
+  getHoaIrrigationPercentage(): number{
+    return 100 * this.getHoaIrrigationWater() / this.getTotalIrrigationWater()
+  }
+
+  showHoaIrrigationMessage(): boolean{
+    return this.getHoaIrrigationPercentage() >= 10;
+  }
+
   getNeighborhoodsParticipatingChangeStatement(overallParticipationMostRecent: number, overallParticipationOldest: number, length: number): any {
     let difference = overallParticipationMostRecent - overallParticipationOldest;
-    let lengthOfTime = length < 13 ? length - 1 + "months ago" : "last year";
+    let lengthOfTime = length < 13 ? length - 1 + " months ago" : "last year";
     let differenceStatement = difference == 0 ? "the same as" : `${difference > 0 ? "up" : "down"} ${Math.abs(difference)} from`;
 
     return `This is ${differenceStatement} ${lengthOfTime}${difference > 0 ? "!" : "."}`
@@ -225,7 +245,7 @@ export class FactSheetComponent implements AfterViewInit {
       let difference = totalDroolMostRecent - totalDroolOldest;
       improvement = difference <= 0;
       let percentChange = Math.abs(Math.round((difference/totalDroolOldest) * 100));
-      let improvementStatement = improvement ? "improvement" : "regression";
+      let improvementStatement = improvement ? "improvement" : "increase";
       briefStatement = `a ${percentChange}% ${improvementStatement}`
     }
     else

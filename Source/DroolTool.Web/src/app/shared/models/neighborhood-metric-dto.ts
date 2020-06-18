@@ -8,6 +8,7 @@ export class NeighborhoodMetricDto{
     public TotalWaterAccounts?: number;
     public TotalIrrigatedArea?: number;
     public TotalWaterUsedForIrrigation?: number;
+    public HoaWaterUsedForIrrigation: number;
 
     constructor(obj?: any){
         Object.assign(this, obj);

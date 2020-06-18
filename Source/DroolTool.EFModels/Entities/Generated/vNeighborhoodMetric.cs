@@ -25,5 +25,6 @@ namespace DroolTool.EFModels.Entities
         public double? MunicipalWaterAccounts { get; set; }
         public double? TotalIrrigatedArea { get; set; }
         public double? TotalWaterUsedForIrrigation { get; set; }
+        public double? HoaWaterUsedForIrrigation { get; set; }
     }
 }

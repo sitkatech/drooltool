@@ -79,6 +79,7 @@
                             participated in water conservation rebate programs.
                         </p>
                         <p class="b2">{{neighborhoodsParticipatingChangeStatement}}</p>
+                        <p class="b2" *ngIf="showHoaIrrigationMessage()">HOAs accounted for an estimated {{getHoaIrrigationPercentage() | number: "1.0-0"}}% of irrigation in your neighborhood last year. Please share these resources with your local HOA Board.</p>
                     </div>
                 </div>
             </div>
