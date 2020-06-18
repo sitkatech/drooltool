@@ -369,6 +369,11 @@ share-buttons {
     .sb-group, .sb-button {
       display:block;
     }
+
+    //https://github.com/MurhafSousli/ngx-sharebuttons/issues/399
+    .sb-button .sb-content {
+      position:relative
+    }
   
     share-button {
       display:block;

@@ -75,6 +75,7 @@
                     </div>
                 </div>
                 <small id="imageHelp" class="form-text text-muted">
+                    For optimal image display, please upload square images.<br/>
                     Accepted file types are: png, jpg, jpeg, jfif, gif and bmp.<br />
                     Maximum file size should not exceed 30MB.<br />
                 </small>
@@ -90,10 +91,10 @@
             <ng-container *ngIf="imageSrc">
                         <label>Image Preview</label>
                         <br />
-                        <img [src]="imageSrc" *ngIf="imageSrc"
-                            style="height:auto; width:auto; max-height:350px; max-width:350px">
-                            <br/>
-                            <br/>
+                        <div class="w-100 text-center">
+                            <div *ngIf="imageSrc" class="slide-background text-center" style="background-image:url({{imageSrc}})">
+                            </div>
+                        </div>
             </ng-container>
 
             <i class="fas fa-bolt"></i> Required Field
