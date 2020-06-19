@@ -32,6 +32,7 @@ export class FactSheetComponent implements AfterViewInit {
 
   public totalIrrigationWaterUsed: any;
   public droolChangeOverLastTwoMonthsStatement: string;
+  public lineOfEncouragement: string;
   public droolPerLandscapedAcreChangeOverLastYearStatement: string;
   public neighborhoodsParticipatingChangeStatement: string;
   public drainsToText: string;
@@ -55,7 +56,7 @@ export class FactSheetComponent implements AfterViewInit {
   public watershedImages = {
     "Salt Creek": "./assets/main/watershed-images/Salt_Creek.png",
     "Laguna Canyon": "./assets/main/watershed-images/Laguna_Canyon.png",
-    "Aliso Creek": "./assets/main/watershed-images/Aliso_Creek.png",
+    "Aliso Creek": "./assets/main/watershed-images/Aliso_Creek.jpg",
     "San Juan Creek": "./assets/main/watershed-images/San_Juan_Creek.png"
   }
   neighborhoodSearchedSubscription: Subscription;
@@ -185,7 +186,6 @@ export class FactSheetComponent implements AfterViewInit {
 
   setupMetricsAndGetStatements() {
     this.metricsForMostRecentMonth = this.metricsForYear[0];
-    console.log(this.getHoaIrrigationWater());
     this.waterAccountsChartData = new WaterAccountsChartDto(this.metricsForMostRecentMonth);
     this.metricsForMonthPriorToMostRecentMonth = this.metricsForYear[1];
     this.metricsFurthestFromEndDate = this.metricsForYear[this.metricsForYear.length - 1];
@@ -245,29 +245,34 @@ export class FactSheetComponent implements AfterViewInit {
       let difference = totalDroolMostRecent - totalDroolOldest;
       improvement = difference <= 0;
       let percentChange = Math.abs(Math.round((difference/totalDroolOldest) * 100));
-      let improvementStatement = improvement ? "improvement" : "increase";
-      briefStatement = `a ${percentChange}% ${improvementStatement}`
+      let improvementStatement = improvement ? "decreased" : "increased";
+      briefStatement = `${improvementStatement} by ${percentChange}%`
     }
     else
     {
       improvement = totalDroolMostRecent == 0;
-      briefStatement = `an increase of ${totalDroolMostRecent} gal/acre`
+      briefStatement = `increased a total of ${totalDroolMostRecent} gal/acre`
     }
-    let lineOfEncouragement = improvement ? "keep up the good work?" : "get back on track?"
+    this.lineOfEncouragement = `What can you do right now to ${improvement ? "keep up the good work?" : "get back on track?"}`;
 
-    return `This is ${briefStatement} from ${lengthOfTime}${improvement ? "!" : "."} <br/> What can you do right now to ${lineOfEncouragement}`;
+    return `Change since last year: On average, urban drool has ${briefStatement} compared to ${lengthOfTime}${improvement ? "!" : "."}`;
   }
 
   getLastTwoMonthsStatement(mostRecent: number, monthPrior: number): string {
+    var trend = "";
+    var secondSentence = "Keep up the good work!";
     if (mostRecent > monthPrior) {
-      return "increasing";
+      trend = "increasing";
+      secondSentence = "It might be time to adjust your watering schedule."
     }
     else if (mostRecent < monthPrior) {
-      return "decreasing";
+      trend = "decreasing";
     }
     else {
-      return "remaining steady";
+      trend = "remaining steady";
     }
+
+    return `Seasonal pattern: Urban drool has been ${trend} over the last two months. ${secondSentence}`
   }
 
   showDroughtTolerantIrrigationEquivalent(): boolean {
