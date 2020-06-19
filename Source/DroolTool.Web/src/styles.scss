@@ -289,9 +289,9 @@ h4 {
 
 .slide-background {
   display: inline-block;
-  height: 350px;
-  width: 350px;
-  background-color: lightgrey;
+  height: 327px;
+  width: 438px;
+  background-color: #FAFAFA;
   margin-bottom: 23px;
   background-size: contain;
   background-repeat:   no-repeat;
@@ -304,6 +304,17 @@ h4 {
   position: relative;
   top: 313px;
   display: inline-block;
+}
+
+@media only screen and (max-width:520px) {
+  .slide-background {
+  width:100%;
+  height:327px;
+  }
+
+  .slide-module-accent {
+    width:80%;
+  }
 }
 
 .slide-module-accent > p {
@@ -327,11 +338,11 @@ h4 {
   outline:none;
 }
 
-@media only screen and (max-width: 359px) {
-  .slide-module-accent {
-    left: -50px;
-  }
-}
+// @media only screen and (max-width: 359px) {
+//   .slide-module-accent {
+//     left: -50px;
+//   }
+// }
 
 // @media only screen and (min-width: 426px)
 // {
