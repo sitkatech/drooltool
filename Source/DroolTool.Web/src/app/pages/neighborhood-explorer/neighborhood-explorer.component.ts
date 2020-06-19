@@ -352,9 +352,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.currentSearchLayer = L.geoJSON(response, {
       style: function (feature) {
         return {
-          fillColor: "#dfff6b", 
+          fillColor: "#C0FF6C",
           fill: true,
-          fillOpacity: 0.5,
+          fillOpacity: 0.3,
           stroke: true,
           color: "#d1ff29",
           weight: 5

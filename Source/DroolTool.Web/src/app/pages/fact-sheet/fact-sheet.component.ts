@@ -201,7 +201,7 @@ export class FactSheetComponent implements AfterViewInit {
       return this.metricsForYear.reduce((tiw, m) => tiw + m.HoaWaterUsedForIrrigation, 0);
     }
     else {
-      let temp = this.metricsForYear;
+      let temp = [...this.metricsForYear];
       temp.shift();
       return temp.reduce((tiw, m) => tiw + m.HoaWaterUsedForIrrigation, 0);
     }
@@ -212,7 +212,7 @@ export class FactSheetComponent implements AfterViewInit {
       return this.metricsForYear.reduce((tiw, m) => tiw + m.TotalWaterUsedForIrrigation, 0);
     }
     else {
-      let temp = this.metricsForYear;
+      let temp = [...this.metricsForYear];
       temp.shift();
       return temp.reduce((tiw, m) => tiw + m.TotalWaterUsedForIrrigation, 0);
     }
