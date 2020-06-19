@@ -48,8 +48,6 @@ export class WaterAccountsChartComponent implements OnInit {
       scale.push("#00FFFF");
     }
 
-    debugger;
-
     return {
       "data": {
         "values": values

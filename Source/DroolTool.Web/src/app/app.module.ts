@@ -45,6 +45,8 @@ import { ShareIconsModule } from 'ngx-sharebuttons/icons';
 import { ShareButtonsPopupModule } from 'ngx-sharebuttons/popup'
 import { SocialMediaSharingComponent } from './components/social-media-sharing/social-media-sharing.component';
 import { AnnouncementListComponent } from './pages/announcement-list/announcement-list.component'
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { FaIconLibrary } from "@fortawesome/angular-fontawesome"
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -90,7 +92,9 @@ export function init_app(appLoadService: AppInitService) {
     SlickCarouselModule,
     Ng5SliderModule,
     NgxSpinnerModule,
-    ShareButtonsModule,
+    ShareButtonsModule.withConfig({
+      moreButtonIcon: 'share-alt'
+    }),
     ShareIconsModule,
     ShareButtonsPopupModule
   ],  
@@ -104,4 +108,8 @@ export function init_app(appLoadService: AppInitService) {
   entryComponents: [LinkRendererComponent, FontAwesomeIconLinkRendererComponent, MultiLinkRendererComponent],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(faIconLibrary: FaIconLibrary) {
+    faIconLibrary.addIconPacks(fas);
+  }
+}
