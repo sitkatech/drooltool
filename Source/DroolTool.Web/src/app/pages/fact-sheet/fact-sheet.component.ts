@@ -104,9 +104,8 @@ export class FactSheetComponent implements AfterViewInit {
       this.metricEndDate = this.neighborhoodService.getDefaultMetricDate();
       forkJoin(
         this.wfsService.geoserverNeighborhoodLookupWithID(id),
-        this.neighborhoodService.getStormshed(id),
         this.neighborhoodService.getDroolPerLandscapedAcreChart(id)
-      ).subscribe(([geoserverResponse, stormshedResponse, droolChartResponse]) => {
+      ).subscribe(([geoserverResponse,  droolChartResponse]) => {
         const OCSurveyNeighborhoodID = geoserverResponse.features[0].properties.OCSurveyNeighborhoodID;
         this.neighborhoodService.getMetricsForYear(OCSurveyNeighborhoodID, this.metricEndDate.getUTCFullYear(), this.metricEndDate.getUTCMonth()).subscribe(metricResult => {
           this.metricsForYear = metricResult;
@@ -114,7 +113,7 @@ export class FactSheetComponent implements AfterViewInit {
             this.setupMetricsAndGetStatements();
           }
         });
-        this.getMapImageAndDrainsToText(geoserverResponse, stormshedResponse);
+        this.getMapImageAndDrainsToText(geoserverResponse);
 
 
         this.droolChartData = droolChartResponse;
@@ -123,7 +122,7 @@ export class FactSheetComponent implements AfterViewInit {
     }
   }
 
-  getMapImageAndDrainsToText(geoserverResponse: any, stormshedResponse: any) {
+  getMapImageAndDrainsToText(geoserverResponse: any) {
     this.drainsToText = geoserverResponse.features[0].properties.Watershed;
     let keyForWatershed = Object.keys(this.watershedImages).filter(x => this.drainsToText.includes(x))[0];
     this.watershedImage = this.watershedImages[keyForWatershed];

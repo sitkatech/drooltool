@@ -40,12 +40,12 @@ export class WaterAccountsChartComponent implements OnInit {
     if (this.droolChartData.CommercialWaterAccounts){
       values.push({"legendVal": `Commercial - ${this.droolChartData.CommercialWaterAccounts}`, "color": "#323232", "Account Type": "Commercial", "Number of Accounts": this.droolChartData.CommercialWaterAccounts});
       sort.push( `Commercial - ${this.droolChartData.CommercialWaterAccounts}`);
-      scale.push("#323232");
+      scale.push("#656565");
     }
     if (this.droolChartData.MunicipalWaterAccounts){
       values.push({"legendVal": `Municipal - ${this.droolChartData.MunicipalWaterAccounts}`, "color": "#00FFFF", "Account Type": "Municipal", "Number of Accounts": this.droolChartData.MunicipalWaterAccounts});
       sort.push( `Municipal - ${this.droolChartData.MunicipalWaterAccounts}`);
-      scale.push("#00FFFF");
+      scale.push("#2AC2DF");
     }
 
     return {

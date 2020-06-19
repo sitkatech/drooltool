@@ -351,11 +351,11 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.currentSearchLayer = L.geoJSON(response, {
       style: function (feature) {
         return {
-          fillColor: "#C0FF6C", 
+          fillColor: "#dfff6b", 
           fill: true,
           fillOpacity: 0.5,
           stroke: true,
-          color: "#65b300",
+          color: "#d1ff29",
           weight: 5
         };
       }
@@ -407,7 +407,13 @@ export class NeighborhoodExplorerComponent implements OnInit {
       return null;
     }
 
-    this.stormshedLayer = L.geoJson(featureCollection, {
+    const wholeStormshedFeature = featureCollection.features.find(x=>x.properties.Name === "WholeStormshed");
+    const stormsehdMinusNeighborhoodFeature = featureCollection.features.find(x=>x.properties.Name === "StormshedMinusNeighborhood");
+
+    debugger;
+
+    // todo: instead of the whole feature collection, this needs to be the "stormshedMinusNeighborhood" feature
+    this.stormshedLayer = L.geoJson(stormsehdMinusNeighborhoodFeature, {
       style: function (feature) {
         return {
           fillColor: "#34FFCC", 
@@ -421,11 +427,12 @@ export class NeighborhoodExplorerComponent implements OnInit {
     })
 
     this.stormshedLayer.addTo(this.map);
-    this.stormshedLayer.bringToBack();
+    this.currentSearchLayer.bringToFront();
 
     //if we get a stormshed, move the mask out
+    // todo: use the WholeStormshedFeature for this one
     this.clearLayer(this.currentMask);
-    this.currentMask = L.geoJSON(featureCollection, {
+    this.currentMask = L.geoJSON(wholeStormshedFeature, {
       invert: true,
       style: function (feature) {
         return {
@@ -434,12 +441,13 @@ export class NeighborhoodExplorerComponent implements OnInit {
           fillOpacity: 0.4,
           color: "#00b386",
           weight: 5,
-          stroke: true
+          stroke: false
         };
       }
     }).addTo(this.map);
 
-    let neighborhoodIDs = featureCollection.features[0].properties["NeighborhoodIDs"];
+    //todo: instead of featureCollection.features[0], this needs to be the "wholeStormshedFeature"
+    let neighborhoodIDs = wholeStormshedFeature.properties["NeighborhoodIDs"];
     let cql_filter = "NeighborhoodID in (" + neighborhoodIDs.join(",") + ")";
 
     let backboneWMSOptions = ({
@@ -457,7 +465,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.backboneDetailLayer.addTo(this.map);
     this.backboneDetailLayer.bringToFront();
 
-    this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
+    if (stormsehdMinusNeighborhoodFeature) {
+      this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
+    }
   }
 
   public displayTraceOrZoomToNeighborhood(event: Event): void {

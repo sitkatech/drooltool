@@ -22,5 +22,5 @@ Select
 	[city_MeterID_count] as MunicipalWaterAccounts,
 	round([overall_irrg_area_sqft_sum] / 43560, 2) as TotalIrrigatedArea,
 	round([overall_daily_est_outdoor_usage_sum] * 748.052 * 30, 0) as TotalWaterUsedForIrrigation,
-	round([reshoa_daily_est_outdoor_usage_sum] * 748.052 * 30, 0) as HoaWaterUsedForIrrigation
+	round([hoa_daily_est_outdoor_usage_sum] * 748.052 * 30, 0) as HoaWaterUsedForIrrigation
 from dbo.RawDroolMetric
