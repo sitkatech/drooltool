@@ -14,6 +14,7 @@ import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
 import { forkJoin } from 'rxjs';
+import { LoggerFactory } from 'ag-grid-community';
 
 declare var $: any;
 
@@ -410,8 +411,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
     const wholeStormshedFeature = featureCollection.features.find(x=>x.properties.Name === "WholeStormshed");
     const stormsehdMinusNeighborhoodFeature = featureCollection.features.find(x=>x.properties.Name === "StormshedMinusNeighborhood");
 
-    debugger;
-
     // todo: instead of the whole feature collection, this needs to be the "stormshedMinusNeighborhood" feature
     this.stormshedLayer = L.geoJson(stormsehdMinusNeighborhoodFeature, {
       style: function (feature) {
@@ -465,8 +464,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.backboneDetailLayer.addTo(this.map);
     this.backboneDetailLayer.bringToFront();
 
-    if (stormsehdMinusNeighborhoodFeature) {
+    if (stormsehdMinusNeighborhoodFeature.geometry) {
       this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
+    } else{
+      this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.currentSearchLayer]));
     }
   }
 
