@@ -20,5 +20,6 @@ namespace DroolTool.Models.DataTransferObjects
         public double? TotalIrrigatedArea { get; set; }
         public double? TotalWaterUsedForIrrigation { get; set; }
         public double? HoaWaterUsedForIrrigation { get; set; }
+        public double? DroolPerLandscapedAcreYearlyPercentDifference { get; set; }
     }
 }
