@@ -79,6 +79,7 @@ namespace DroolTool.EFModels.Entities
         public double? overall_soil_moisture_sensor_rebate_sum { get; set; }
         public double? overall_turf_to_native_rebate_sum { get; set; }
         public double? overall_turf_to_native_rebate_area_sqft_sum { get; set; }
+        public double? overall_sprinkler_nozzles_rebate_sum { get; set; }
         public double? overall_is_in_rebate_program_sum { get; set; }
         public double? overall_turf_rebate_area_sqft_sum { get; set; }
         public double? overall_is_in_AMI_and_rebate_program_sum { get; set; }
@@ -92,6 +93,7 @@ namespace DroolTool.EFModels.Entities
         public double? overall_daily_meter_budget_overage_per_meter { get; set; }
         public double? overall_daily_meter_budget_overage_fraction_total { get; set; }
         public double? overall_daily_est_outdoor_usage_per_irrig_area { get; set; }
+        public double? overall_daily_outdoor_budget_per_irrig_area { get; set; }
         public double? overall_daily_est_outdoor_budget_overage_per_irrig_area { get; set; }
         public double? overall_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
         public double? overall_roll_mean_12mo_meter_over_total_budget_fraction { get; set; }
@@ -116,6 +118,17 @@ namespace DroolTool.EFModels.Entities
         public double? overall_slope_12mo_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
         public double? overall_slope_12mo_rebate_participation_fraction { get; set; }
         public double? overall_slope_12mo_turf_rebate_area_fraction { get; set; }
+        public double? overall_pct_diff_12mo_meter_over_total_budget_fraction { get; set; }
+        public double? overall_pct_diff_12mo_daily_meter_budget_overage_per_meter { get; set; }
+        public double? overall_pct_diff_12mo_meter_over_est_outdoor_budget_fraction { get; set; }
+        public double? overall_pct_diff_12mo_daily_meter_usage_per_capita_mean { get; set; }
+        public double? overall_pct_diff_12mo_daily_meter_est_outdoor_usage_per_capita_mean { get; set; }
+        public double? overall_pct_diff_12mo_daily_meter_budget_overage_fraction_total { get; set; }
+        public double? overall_pct_diff_12mo_daily_est_outdoor_usage_per_irrig_area { get; set; }
+        public double? overall_pct_diff_12mo_daily_est_outdoor_budget_overage_per_irrig_area { get; set; }
+        public double? overall_pct_diff_12mo_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
+        public double? overall_pct_diff_12mo_rebate_participation_fraction { get; set; }
+        public double? overall_pct_diff_12mo_turf_rebate_area_fraction { get; set; }
         public double? reshoa_MeterID_count { get; set; }
         public double? reshoa_is_irrig_sum { get; set; }
         public double? reshoa_irrg_area_sqft_sum { get; set; }
@@ -181,6 +194,7 @@ namespace DroolTool.EFModels.Entities
         public double? reshoa_soil_moisture_sensor_rebate_sum { get; set; }
         public double? reshoa_turf_to_native_rebate_sum { get; set; }
         public double? reshoa_turf_to_native_rebate_area_sqft_sum { get; set; }
+        public double? reshoa_sprinkler_nozzles_rebate_sum { get; set; }
         public double? reshoa_is_in_rebate_program_sum { get; set; }
         public double? reshoa_turf_rebate_area_sqft_sum { get; set; }
         public double? reshoa_is_in_AMI_and_rebate_program_sum { get; set; }
@@ -194,6 +208,7 @@ namespace DroolTool.EFModels.Entities
         public double? reshoa_daily_meter_budget_overage_per_meter { get; set; }
         public double? reshoa_daily_meter_budget_overage_fraction_total { get; set; }
         public double? reshoa_daily_est_outdoor_usage_per_irrig_area { get; set; }
+        public double? reshoa_daily_outdoor_budget_per_irrig_area { get; set; }
         public double? reshoa_daily_est_outdoor_budget_overage_per_irrig_area { get; set; }
         public double? reshoa_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
         public double? reshoa_roll_mean_12mo_meter_over_total_budget_fraction { get; set; }
@@ -218,6 +233,17 @@ namespace DroolTool.EFModels.Entities
         public double? reshoa_slope_12mo_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
         public double? reshoa_slope_12mo_rebate_participation_fraction { get; set; }
         public double? reshoa_slope_12mo_turf_rebate_area_fraction { get; set; }
+        public double? reshoa_pct_diff_12mo_meter_over_total_budget_fraction { get; set; }
+        public double? reshoa_pct_diff_12mo_daily_meter_budget_overage_per_meter { get; set; }
+        public double? reshoa_pct_diff_12mo_meter_over_est_outdoor_budget_fraction { get; set; }
+        public double? reshoa_pct_diff_12mo_daily_meter_usage_per_capita_mean { get; set; }
+        public double? reshoa_pct_diff_12mo_daily_meter_est_outdoor_usage_per_capita_mean { get; set; }
+        public double? reshoa_pct_diff_12mo_daily_meter_budget_overage_fraction_total { get; set; }
+        public double? reshoa_pct_diff_12mo_daily_est_outdoor_usage_per_irrig_area { get; set; }
+        public double? reshoa_pct_diff_12mo_daily_est_outdoor_budget_overage_per_irrig_area { get; set; }
+        public double? reshoa_pct_diff_12mo_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
+        public double? reshoa_pct_diff_12mo_rebate_participation_fraction { get; set; }
+        public double? reshoa_pct_diff_12mo_turf_rebate_area_fraction { get; set; }
         public double? res_MeterID_count { get; set; }
         public double? res_is_irrig_sum { get; set; }
         public double? res_irrg_area_sqft_sum { get; set; }
@@ -283,6 +309,7 @@ namespace DroolTool.EFModels.Entities
         public double? res_soil_moisture_sensor_rebate_sum { get; set; }
         public double? res_turf_to_native_rebate_sum { get; set; }
         public double? res_turf_to_native_rebate_area_sqft_sum { get; set; }
+        public double? res_sprinkler_nozzles_rebate_sum { get; set; }
         public double? res_is_in_rebate_program_sum { get; set; }
         public double? res_turf_rebate_area_sqft_sum { get; set; }
         public double? res_is_in_AMI_and_rebate_program_sum { get; set; }
@@ -296,6 +323,7 @@ namespace DroolTool.EFModels.Entities
         public double? res_daily_meter_budget_overage_per_meter { get; set; }
         public double? res_daily_meter_budget_overage_fraction_total { get; set; }
         public double? res_daily_est_outdoor_usage_per_irrig_area { get; set; }
+        public double? res_daily_outdoor_budget_per_irrig_area { get; set; }
         public double? res_daily_est_outdoor_budget_overage_per_irrig_area { get; set; }
         public double? res_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
         public double? res_roll_mean_12mo_meter_over_total_budget_fraction { get; set; }
@@ -320,6 +348,17 @@ namespace DroolTool.EFModels.Entities
         public double? res_slope_12mo_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
         public double? res_slope_12mo_rebate_participation_fraction { get; set; }
         public double? res_slope_12mo_turf_rebate_area_fraction { get; set; }
+        public double? res_pct_diff_12mo_meter_over_total_budget_fraction { get; set; }
+        public double? res_pct_diff_12mo_daily_meter_budget_overage_per_meter { get; set; }
+        public double? res_pct_diff_12mo_meter_over_est_outdoor_budget_fraction { get; set; }
+        public double? res_pct_diff_12mo_daily_meter_usage_per_capita_mean { get; set; }
+        public double? res_pct_diff_12mo_daily_meter_est_outdoor_usage_per_capita_mean { get; set; }
+        public double? res_pct_diff_12mo_daily_meter_budget_overage_fraction_total { get; set; }
+        public double? res_pct_diff_12mo_daily_est_outdoor_usage_per_irrig_area { get; set; }
+        public double? res_pct_diff_12mo_daily_est_outdoor_budget_overage_per_irrig_area { get; set; }
+        public double? res_pct_diff_12mo_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
+        public double? res_pct_diff_12mo_rebate_participation_fraction { get; set; }
+        public double? res_pct_diff_12mo_turf_rebate_area_fraction { get; set; }
         public double? res_MeterID_count_fraction_overall { get; set; }
         public double? res_daily_total_usage_fraction_overall { get; set; }
         public double? res_daily_total_budget_fraction_overall { get; set; }
@@ -389,6 +428,7 @@ namespace DroolTool.EFModels.Entities
         public double? com_soil_moisture_sensor_rebate_sum { get; set; }
         public double? com_turf_to_native_rebate_sum { get; set; }
         public double? com_turf_to_native_rebate_area_sqft_sum { get; set; }
+        public double? com_sprinkler_nozzles_rebate_sum { get; set; }
         public double? com_is_in_rebate_program_sum { get; set; }
         public double? com_turf_rebate_area_sqft_sum { get; set; }
         public double? com_is_in_AMI_and_rebate_program_sum { get; set; }
@@ -402,6 +442,7 @@ namespace DroolTool.EFModels.Entities
         public double? com_daily_meter_budget_overage_per_meter { get; set; }
         public double? com_daily_meter_budget_overage_fraction_total { get; set; }
         public double? com_daily_est_outdoor_usage_per_irrig_area { get; set; }
+        public double? com_daily_outdoor_budget_per_irrig_area { get; set; }
         public double? com_daily_est_outdoor_budget_overage_per_irrig_area { get; set; }
         public double? com_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
         public double? com_roll_mean_12mo_meter_over_total_budget_fraction { get; set; }
@@ -426,6 +467,17 @@ namespace DroolTool.EFModels.Entities
         public double? com_slope_12mo_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
         public double? com_slope_12mo_rebate_participation_fraction { get; set; }
         public double? com_slope_12mo_turf_rebate_area_fraction { get; set; }
+        public double? com_pct_diff_12mo_meter_over_total_budget_fraction { get; set; }
+        public double? com_pct_diff_12mo_daily_meter_budget_overage_per_meter { get; set; }
+        public double? com_pct_diff_12mo_meter_over_est_outdoor_budget_fraction { get; set; }
+        public double? com_pct_diff_12mo_daily_meter_usage_per_capita_mean { get; set; }
+        public double? com_pct_diff_12mo_daily_meter_est_outdoor_usage_per_capita_mean { get; set; }
+        public double? com_pct_diff_12mo_daily_meter_budget_overage_fraction_total { get; set; }
+        public double? com_pct_diff_12mo_daily_est_outdoor_usage_per_irrig_area { get; set; }
+        public double? com_pct_diff_12mo_daily_est_outdoor_budget_overage_per_irrig_area { get; set; }
+        public double? com_pct_diff_12mo_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
+        public double? com_pct_diff_12mo_rebate_participation_fraction { get; set; }
+        public double? com_pct_diff_12mo_turf_rebate_area_fraction { get; set; }
         public double? com_MeterID_count_fraction_overall { get; set; }
         public double? com_daily_total_usage_fraction_overall { get; set; }
         public double? com_daily_total_budget_fraction_overall { get; set; }
@@ -495,6 +547,7 @@ namespace DroolTool.EFModels.Entities
         public double? city_soil_moisture_sensor_rebate_sum { get; set; }
         public double? city_turf_to_native_rebate_sum { get; set; }
         public double? city_turf_to_native_rebate_area_sqft_sum { get; set; }
+        public double? city_sprinkler_nozzles_rebate_sum { get; set; }
         public double? city_is_in_rebate_program_sum { get; set; }
         public double? city_turf_rebate_area_sqft_sum { get; set; }
         public double? city_is_in_AMI_and_rebate_program_sum { get; set; }
@@ -508,6 +561,7 @@ namespace DroolTool.EFModels.Entities
         public double? city_daily_meter_budget_overage_per_meter { get; set; }
         public double? city_daily_meter_budget_overage_fraction_total { get; set; }
         public double? city_daily_est_outdoor_usage_per_irrig_area { get; set; }
+        public double? city_daily_outdoor_budget_per_irrig_area { get; set; }
         public double? city_daily_est_outdoor_budget_overage_per_irrig_area { get; set; }
         public double? city_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
         public double? city_roll_mean_12mo_meter_over_total_budget_fraction { get; set; }
@@ -532,6 +586,17 @@ namespace DroolTool.EFModels.Entities
         public double? city_slope_12mo_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
         public double? city_slope_12mo_rebate_participation_fraction { get; set; }
         public double? city_slope_12mo_turf_rebate_area_fraction { get; set; }
+        public double? city_pct_diff_12mo_meter_over_total_budget_fraction { get; set; }
+        public double? city_pct_diff_12mo_daily_meter_budget_overage_per_meter { get; set; }
+        public double? city_pct_diff_12mo_meter_over_est_outdoor_budget_fraction { get; set; }
+        public double? city_pct_diff_12mo_daily_meter_usage_per_capita_mean { get; set; }
+        public double? city_pct_diff_12mo_daily_meter_est_outdoor_usage_per_capita_mean { get; set; }
+        public double? city_pct_diff_12mo_daily_meter_budget_overage_fraction_total { get; set; }
+        public double? city_pct_diff_12mo_daily_est_outdoor_usage_per_irrig_area { get; set; }
+        public double? city_pct_diff_12mo_daily_est_outdoor_budget_overage_per_irrig_area { get; set; }
+        public double? city_pct_diff_12mo_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
+        public double? city_pct_diff_12mo_rebate_participation_fraction { get; set; }
+        public double? city_pct_diff_12mo_turf_rebate_area_fraction { get; set; }
         public double? city_MeterID_count_fraction_overall { get; set; }
         public double? city_daily_total_usage_fraction_overall { get; set; }
         public double? city_daily_total_budget_fraction_overall { get; set; }
@@ -601,6 +666,7 @@ namespace DroolTool.EFModels.Entities
         public double? hoa_soil_moisture_sensor_rebate_sum { get; set; }
         public double? hoa_turf_to_native_rebate_sum { get; set; }
         public double? hoa_turf_to_native_rebate_area_sqft_sum { get; set; }
+        public double? hoa_sprinkler_nozzles_rebate_sum { get; set; }
         public double? hoa_is_in_rebate_program_sum { get; set; }
         public double? hoa_turf_rebate_area_sqft_sum { get; set; }
         public double? hoa_is_in_AMI_and_rebate_program_sum { get; set; }
@@ -614,6 +680,7 @@ namespace DroolTool.EFModels.Entities
         public double? hoa_daily_meter_budget_overage_per_meter { get; set; }
         public double? hoa_daily_meter_budget_overage_fraction_total { get; set; }
         public double? hoa_daily_est_outdoor_usage_per_irrig_area { get; set; }
+        public double? hoa_daily_outdoor_budget_per_irrig_area { get; set; }
         public double? hoa_daily_est_outdoor_budget_overage_per_irrig_area { get; set; }
         public double? hoa_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
         public double? hoa_roll_mean_12mo_meter_over_total_budget_fraction { get; set; }
@@ -638,6 +705,17 @@ namespace DroolTool.EFModels.Entities
         public double? hoa_slope_12mo_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
         public double? hoa_slope_12mo_rebate_participation_fraction { get; set; }
         public double? hoa_slope_12mo_turf_rebate_area_fraction { get; set; }
+        public double? hoa_pct_diff_12mo_meter_over_total_budget_fraction { get; set; }
+        public double? hoa_pct_diff_12mo_daily_meter_budget_overage_per_meter { get; set; }
+        public double? hoa_pct_diff_12mo_meter_over_est_outdoor_budget_fraction { get; set; }
+        public double? hoa_pct_diff_12mo_daily_meter_usage_per_capita_mean { get; set; }
+        public double? hoa_pct_diff_12mo_daily_meter_est_outdoor_usage_per_capita_mean { get; set; }
+        public double? hoa_pct_diff_12mo_daily_meter_budget_overage_fraction_total { get; set; }
+        public double? hoa_pct_diff_12mo_daily_est_outdoor_usage_per_irrig_area { get; set; }
+        public double? hoa_pct_diff_12mo_daily_est_outdoor_budget_overage_per_irrig_area { get; set; }
+        public double? hoa_pct_diff_12mo_daily_est_outdoor_budget_overage_fraction_outdoor_budget { get; set; }
+        public double? hoa_pct_diff_12mo_rebate_participation_fraction { get; set; }
+        public double? hoa_pct_diff_12mo_turf_rebate_area_fraction { get; set; }
         public double? hoa_MeterID_count_fraction_overall { get; set; }
         public double? hoa_daily_total_usage_fraction_overall { get; set; }
         public double? hoa_daily_total_budget_fraction_overall { get; set; }

@@ -190,7 +190,7 @@ export class FactSheetComponent implements AfterViewInit {
     this.metricsFurthestFromEndDate = this.metricsForYear[this.metricsForYear.length - 1];
 
     this.droolChangeOverLastTwoMonthsStatement = this.getLastTwoMonthsStatement(this.metricsForMostRecentMonth.TotalDrool, this.metricsForMonthPriorToMostRecentMonth.TotalDrool);
-    this.droolPerLandscapedAcreChangeOverLastYearStatement = this.getDroolPerLandscapedAcreChangeOverLastYearStatement(this.metricsForMostRecentMonth.DroolPerLandscapedAcre, this.metricsFurthestFromEndDate.DroolPerLandscapedAcre, this.metricsForYear.length);
+    this.droolPerLandscapedAcreChangeOverLastYearStatement = this.getDroolPerLandscapedAcreChangeOverLastYearStatement(this.metricsForMostRecentMonth.DroolPerLandscapedAcreYearlyPercentDifference);
 
     this.neighborhoodsParticipatingChangeStatement = this.getNeighborhoodsParticipatingChangeStatement(this.metricsForMostRecentMonth?.OverallParticipation, this.metricsFurthestFromEndDate?.OverallParticipation, this.metricsForYear.length);
     this.totalIrrigationWaterUsed = this.getTotalIrrigationWater();
@@ -234,27 +234,17 @@ export class FactSheetComponent implements AfterViewInit {
     return `This is ${differenceStatement} ${lengthOfTime}${difference > 0 ? "!" : "."}`
   }
 
-  getDroolPerLandscapedAcreChangeOverLastYearStatement(totalDroolMostRecent: number, totalDroolOldest: number, length: number): any {
-    let briefStatement;
-    let lengthOfTime = length < 13 ? length - 1 + " months ago" : "this month last year";
-    let improvement =  false;
-    
-    if (totalDroolOldest != 0)
+  getDroolPerLandscapedAcreChangeOverLastYearStatement(droolPerLandscapedAcreChangeOverLastYearPercentage: number): any {
+    if (droolPerLandscapedAcreChangeOverLastYearPercentage != null)
     {
-      let difference = totalDroolMostRecent - totalDroolOldest;
-      improvement = difference <= 0;
-      let percentChange = Math.abs(Math.round((difference/totalDroolOldest) * 100));
-      let improvementStatement = improvement ? "decreased" : "increased";
-      briefStatement = `${improvementStatement} by ${percentChange}%`
-    }
-    else
-    {
-      improvement = totalDroolMostRecent == 0;
-      briefStatement = `increased a total of ${totalDroolMostRecent} gal/acre`
-    }
+    let improvement =  droolPerLandscapedAcreChangeOverLastYearPercentage > 0 ? false : true;
     this.lineOfEncouragement = `What can you do right now to ${improvement ? "keep up the good work?" : "get back on track?"}`;
 
-    return `Change since last year: On average, urban drool has ${briefStatement} compared to ${lengthOfTime}${improvement ? "!" : "."}`;
+    return `Change since last year: On average, urban drool has ${improvement ? "decreased" : "increased"} by ${Math.abs(droolPerLandscapedAcreChangeOverLastYearPercentage) * 100}% compared to this time last year${improvement ? "!" : "."}`;
+    }
+    else {
+      return `Change since last year: no data present for last year at this time. Check back soon to get an up-to-date value!`;
+    }
   }
 
   getLastTwoMonthsStatement(mostRecent: number, monthPrior: number): string {
