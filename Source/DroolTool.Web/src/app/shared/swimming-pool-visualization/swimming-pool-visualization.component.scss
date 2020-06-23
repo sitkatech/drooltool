@@ -9,6 +9,7 @@ p {
     color: $header-nav-color;
 }
 
+@media (max-width: 576px){
 .swimmingPool{
     max-height: 140px;
-}
+}}
