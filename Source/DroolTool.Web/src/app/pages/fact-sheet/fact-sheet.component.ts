@@ -55,9 +55,9 @@ export class FactSheetComponent implements AfterViewInit {
 
   public watershedImages = {
     "Salt Creek": "./assets/main/watershed-images/Salt_Creek.png",
-    "Laguna Canyon": "./assets/main/watershed-images/Laguna_Canyon.png",
+    "Laguna Canyon": "./assets/main/watershed-images/Laguna_Canyon.jpg",
     "Aliso Creek": "./assets/main/watershed-images/Aliso_Creek.jpg",
-    "San Juan Creek": "./assets/main/watershed-images/San_Juan_Creek.png"
+    "San Juan Creek": "./assets/main/watershed-images/San_Juan_Creek.jpg"
   }
   neighborhoodSearchedSubscription: Subscription;
 
