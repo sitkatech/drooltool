@@ -42,7 +42,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         "nextArrow": "<button type='button' class='next'><i class='fas fa-chevron-right' aria-hidden='true'></i></button>",
         "responsive": [
             {
-                "breakpoint": 991,
+                "breakpoint": 1200,
                 "settings": {
                     "slidesToShow": 1,
                     "slidesToScroll": 1,

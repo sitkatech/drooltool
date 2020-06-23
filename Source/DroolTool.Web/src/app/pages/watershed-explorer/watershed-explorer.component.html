@@ -98,8 +98,7 @@
                 <ngb-toast #instructionsToast class="instructions-toast" *ngIf="showInstructions"
                     header="Get started with the Watershed Map!" (click)="$event.stopPropagation()"
                     (hide)="hideInstructionsToast($event)" [autohide]="false">
-                    Use the panel on the left to update to choropleth with values for the selected metric. Click on any
-                    of the highlighted neighborhoods within the service boundary to learn more about them!
+                    Explore drool creation and outdoor rebate participation metrics over time by toggling the controls in the panel. Click on any of the highlighted neighborhoods to learn more about them!
                 </ngb-toast>
             </div>
             <div id="buttonDiv" *ngIf="areMetricsCollapsed && !errorActive" [class]="layerControlOpen ? 'shifted' : ''">

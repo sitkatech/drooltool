@@ -21,5 +21,7 @@ Select
 	[com_MeterID_count] as CommercialWaterAccounts,
 	[city_MeterID_count] as MunicipalWaterAccounts,
 	round([overall_irrg_area_sqft_sum] / 43560, 2) as TotalIrrigatedArea,
-	round([overall_daily_est_outdoor_usage_sum] * 748.052 * 30, 0) as TotalWaterUsedForIrrigation
+	round([overall_daily_est_outdoor_usage_sum] * 748.052 * 30, 0) as TotalWaterUsedForIrrigation,
+	round([hoa_daily_est_outdoor_usage_sum] * 748.052 * 30, 0) as HoaWaterUsedForIrrigation,
+	round([overall_pct_diff_12mo_daily_est_outdoor_budget_overage_per_irrig_area], 2) as DroolPerLandscapedAcreYearlyPercentDifference
 from dbo.RawDroolMetric

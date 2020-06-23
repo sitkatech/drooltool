@@ -67,15 +67,25 @@ namespace DroolTool.API.Controllers
                 .Where(x => x != null)
                 .ToList();
 
-            var feature = new Feature()
+            var wholeStormshedFeature = new Feature()
             {
                 Geometry = UnaryUnionOp.Union(listBackboneAccumulated.Select(x => x.NeighborhoodGeometry4326).ToList()),
-                Attributes = new AttributesTable()
+                Attributes = new AttributesTable() 
             };
 
-            feature.Attributes.Add("NeighborhoodIDs", listBackboneAccumulated.Select(x => x.NeighborhoodID).ToList());
+            var stormshedMinusNeighborhoodFeature = new Feature()
+            {
+                Geometry = UnaryUnionOp.Union(listBackboneAccumulated.Where(x=>x.NeighborhoodID != neighborhoodID).Select(x=>x.NeighborhoodGeometry4326).ToList()),
+                Attributes = new AttributesTable()
+            };
+            
+            wholeStormshedFeature.Attributes.Add("NeighborhoodIDs", listBackboneAccumulated.Select(x => x.NeighborhoodID).ToList());
+            wholeStormshedFeature.Attributes.Add("Name", "WholeStormshed");
 
-            return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(new List<Feature> { feature }));
+            stormshedMinusNeighborhoodFeature.Attributes.Add("Name", "StormshedMinusNeighborhood");
+
+
+            return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(new List<Feature> { wholeStormshedFeature, stormshedMinusNeighborhoodFeature}));
         }
 
         [HttpGet("neighborhood/{neighborhoodID}/get-downstream-backbone-trace")]

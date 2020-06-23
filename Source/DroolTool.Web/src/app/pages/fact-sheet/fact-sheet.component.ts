@@ -32,6 +32,7 @@ export class FactSheetComponent implements AfterViewInit {
 
   public totalIrrigationWaterUsed: any;
   public droolChangeOverLastTwoMonthsStatement: string;
+  public lineOfEncouragement: string;
   public droolPerLandscapedAcreChangeOverLastYearStatement: string;
   public neighborhoodsParticipatingChangeStatement: string;
   public drainsToText: string;
@@ -55,7 +56,7 @@ export class FactSheetComponent implements AfterViewInit {
   public watershedImages = {
     "Salt Creek": "./assets/main/watershed-images/Salt_Creek.png",
     "Laguna Canyon": "./assets/main/watershed-images/Laguna_Canyon.png",
-    "Aliso Creek": "./assets/main/watershed-images/Aliso_Creek.png",
+    "Aliso Creek": "./assets/main/watershed-images/Aliso_Creek.jpg",
     "San Juan Creek": "./assets/main/watershed-images/San_Juan_Creek.png"
   }
   neighborhoodSearchedSubscription: Subscription;
@@ -103,9 +104,8 @@ export class FactSheetComponent implements AfterViewInit {
       this.metricEndDate = this.neighborhoodService.getDefaultMetricDate();
       forkJoin(
         this.wfsService.geoserverNeighborhoodLookupWithID(id),
-        this.neighborhoodService.getStormshed(id),
         this.neighborhoodService.getDroolPerLandscapedAcreChart(id)
-      ).subscribe(([geoserverResponse, stormshedResponse, droolChartResponse]) => {
+      ).subscribe(([geoserverResponse,  droolChartResponse]) => {
         const OCSurveyNeighborhoodID = geoserverResponse.features[0].properties.OCSurveyNeighborhoodID;
         this.neighborhoodService.getMetricsForYear(OCSurveyNeighborhoodID, this.metricEndDate.getUTCFullYear(), this.metricEndDate.getUTCMonth()).subscribe(metricResult => {
           this.metricsForYear = metricResult;
@@ -113,7 +113,7 @@ export class FactSheetComponent implements AfterViewInit {
             this.setupMetricsAndGetStatements();
           }
         });
-        this.getMapImageAndDrainsToText(geoserverResponse, stormshedResponse);
+        this.getMapImageAndDrainsToText(geoserverResponse);
 
 
         this.droolChartData = droolChartResponse;
@@ -122,7 +122,7 @@ export class FactSheetComponent implements AfterViewInit {
     }
   }
 
-  getMapImageAndDrainsToText(geoserverResponse: any, stormshedResponse: any) {
+  getMapImageAndDrainsToText(geoserverResponse: any) {
     this.drainsToText = geoserverResponse.features[0].properties.Watershed;
     let keyForWatershed = Object.keys(this.watershedImages).filter(x => this.drainsToText.includes(x))[0];
     this.watershedImage = this.watershedImages[keyForWatershed];
@@ -145,42 +145,42 @@ export class FactSheetComponent implements AfterViewInit {
     let neighborhoodLayer = L.geoJSON(geoserverResponse, {
       style: function (feature) {
         return {
-          fillColor: "#34FFCC",
-          fill: true,
-          fillOpacity: 0.3,
-          stroke: false
-        };
-      }
-    }).addTo(this.map);
-
-    let stormshedLayer = L.geoJson(stormshedResponse, {
-      style: function (feature) {
-        return {
           fillColor: "#C0FF6C",
           fill: true,
           fillOpacity: 0.3,
-          stroke: false
+          stroke: true,
+          weight: 5,
+          color: "#65b300"
         };
       }
     }).addTo(this.map);
 
-    stormshedLayer.bringToBack();
+    // let stormshedLayer = L.geoJson(stormshedResponse, {
+    //   style: function (feature) {
+    //     return {
+    //       fillColor: "#C0FF6C",
+    //       fill: true,
+    //       fillOpacity: 0.3,
+    //       stroke: false
+    //     };
+    //   }
+    // }).addTo(this.map);
 
-    let mask = L.geoJSON(stormshedResponse, {
+    // stormshedLayer.bringToBack();
+
+    let mask = L.geoJSON(geoserverResponse, {
       invert: true,
       style: function (feature) {
         return {
           fillColor: "#323232",
           fill: true,
           fillOpacity: 0.4,
-          color: "#EA842C",
-          weight: 5,
-          stroke: true
+          stroke: false
         };
       }
     }).addTo(this.map);
 
-    this.map.fitBounds([neighborhoodLayer.getBounds(), stormshedLayer.getBounds()]);
+    this.map.fitBounds([neighborhoodLayer.getBounds()]);
   }
 
   setupMetricsAndGetStatements() {
@@ -190,10 +190,21 @@ export class FactSheetComponent implements AfterViewInit {
     this.metricsFurthestFromEndDate = this.metricsForYear[this.metricsForYear.length - 1];
 
     this.droolChangeOverLastTwoMonthsStatement = this.getLastTwoMonthsStatement(this.metricsForMostRecentMonth.TotalDrool, this.metricsForMonthPriorToMostRecentMonth.TotalDrool);
-    this.droolPerLandscapedAcreChangeOverLastYearStatement = this.getDroolPerLandscapedAcreChangeOverLastYearStatement(this.metricsForMostRecentMonth.DroolPerLandscapedAcre, this.metricsFurthestFromEndDate.DroolPerLandscapedAcre, this.metricsForYear.length);
+    this.droolPerLandscapedAcreChangeOverLastYearStatement = this.getDroolPerLandscapedAcreChangeOverLastYearStatement(this.metricsForMostRecentMonth.DroolPerLandscapedAcreYearlyPercentDifference);
 
     this.neighborhoodsParticipatingChangeStatement = this.getNeighborhoodsParticipatingChangeStatement(this.metricsForMostRecentMonth?.OverallParticipation, this.metricsFurthestFromEndDate?.OverallParticipation, this.metricsForYear.length);
     this.totalIrrigationWaterUsed = this.getTotalIrrigationWater();
+  }
+
+  getHoaIrrigationWater(): number{
+    if (this.metricsForYear.length < 13) {
+      return this.metricsForYear.reduce((tiw, m) => tiw + m.HoaWaterUsedForIrrigation, 0);
+    }
+    else {
+      let temp = [...this.metricsForYear];
+      temp.shift();
+      return temp.reduce((tiw, m) => tiw + m.HoaWaterUsedForIrrigation, 0);
+    }
   }
 
   getTotalIrrigationWater(): number {
@@ -201,58 +212,61 @@ export class FactSheetComponent implements AfterViewInit {
       return this.metricsForYear.reduce((tiw, m) => tiw + m.TotalWaterUsedForIrrigation, 0);
     }
     else {
-      let temp = this.metricsForYear;
+      let temp = [...this.metricsForYear];
       temp.shift();
       return temp.reduce((tiw, m) => tiw + m.TotalWaterUsedForIrrigation, 0);
     }
   }
 
+  getHoaIrrigationPercentage(): number{
+    return 100 * this.getHoaIrrigationWater() / this.getTotalIrrigationWater()
+  }
+
+  showHoaIrrigationMessage(): boolean{
+    return this.getHoaIrrigationPercentage() >= 10;
+  }
+
   getNeighborhoodsParticipatingChangeStatement(overallParticipationMostRecent: number, overallParticipationOldest: number, length: number): any {
     let difference = overallParticipationMostRecent - overallParticipationOldest;
-    let lengthOfTime = length < 13 ? length - 1 + "months ago" : "last year";
+    let lengthOfTime = length < 13 ? length - 1 + " months ago" : "last year";
     let differenceStatement = difference == 0 ? "the same as" : `${difference > 0 ? "up" : "down"} ${Math.abs(difference)} from`;
 
     return `This is ${differenceStatement} ${lengthOfTime}${difference > 0 ? "!" : "."}`
   }
 
-  getDroolPerLandscapedAcreChangeOverLastYearStatement(totalDroolMostRecent: number, totalDroolOldest: number, length: number): any {
-    let briefStatement;
-    let lengthOfTime = length < 13 ? length - 1 + " months ago" : "this month last year";
-    let improvement =  false;
-    
-    if (totalDroolOldest != 0)
+  getDroolPerLandscapedAcreChangeOverLastYearStatement(droolPerLandscapedAcreChangeOverLastYearPercentage: number): any {
+    if (droolPerLandscapedAcreChangeOverLastYearPercentage != null)
     {
-      let difference = totalDroolMostRecent - totalDroolOldest;
-      improvement = difference <= 0;
-      let percentChange = Math.abs(Math.round((difference/totalDroolOldest) * 100));
-      let improvementStatement = improvement ? "improvement" : "regression";
-      briefStatement = `a ${percentChange}% ${improvementStatement}`
-    }
-    else
-    {
-      improvement = totalDroolMostRecent == 0;
-      briefStatement = `an increase of ${totalDroolMostRecent} gal/acre`
-    }
-    let lineOfEncouragement = improvement ? "keep up the good work?" : "get back on track?"
+    let improvement =  droolPerLandscapedAcreChangeOverLastYearPercentage > 0 ? false : true;
+    this.lineOfEncouragement = `What can you do right now to ${improvement ? "keep up the good work?" : "get back on track?"}`;
 
-    return `This is ${briefStatement} from ${lengthOfTime}${improvement ? "!" : "."} <br/> What can you do right now to ${lineOfEncouragement}`;
+    return `Change since last year: On average, urban drool has ${improvement ? "decreased" : "increased"} by ${Math.abs(droolPerLandscapedAcreChangeOverLastYearPercentage) * 100}% compared to this time last year${improvement ? "!" : "."}`;
+    }
+    else {
+      return `Change since last year: no data present for last year at this time. Check back soon to get an up-to-date value!`;
+    }
   }
 
   getLastTwoMonthsStatement(mostRecent: number, monthPrior: number): string {
+    var trend = "";
+    var secondSentence = "Keep up the good work!";
     if (mostRecent > monthPrior) {
-      return "increasing";
+      trend = "increasing";
+      secondSentence = "It might be time to adjust your watering schedule."
     }
     else if (mostRecent < monthPrior) {
-      return "decreasing";
+      trend = "decreasing";
     }
     else {
-      return "remaining steady";
+      trend = "remaining steady";
     }
+
+    return `Seasonal pattern: Urban drool has been ${trend} over the last two months. ${secondSentence}`
   }
 
   showDroughtTolerantIrrigationEquivalent(): boolean {
     // only show "This would be enough to irrigate [x] drought tolerant etc" if [x] is better than they're currently doing.
-    return (this.totalIrrigationWaterUsed / 350000) > this.metricsForMostRecentMonth.TotalIrrigatedArea;
+    return (this.totalIrrigationWaterUsed / 350000) > (1.1 * this.metricsForMostRecentMonth.TotalIrrigatedArea);
   }
 
   @HostListener('window:resize', ['$event'])

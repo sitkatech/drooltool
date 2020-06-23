@@ -3,12 +3,14 @@
     <div class="row ">
         <div class="col text-center top-section">
             <h1 class="mx-auto mt-3">Does my neighborhood mind the gutter?</h1>
+            <br />
             <p class="b2 mx-auto">
-                Urban Drool is unnatural, unpermitted waterflow that occurs in dry conditions. It
-                carries pollutants into our rivers, lakes, wetlands and ocean.
+                Urban drool is made up of water from overwatering and car washing that  picks up fertilizer, bacteria, and other contaminants on its way to creeks and beaches.
+                <br />
                 <br />
                 This review contains helpful facts about your neighborhood's urban drool impact and ways you can make a
                 difference.
+                <br />
                 <br />
                 Share with your community to spread the word and take action!
             </p>
@@ -18,6 +20,11 @@
     <div class="row">
         <div class="col text-center">
             <p class="b1 drool-orange">{{searchedAddress}}</p>
+            <style>
+                .leaflet-interactive{
+                    cursor: default;
+                }
+            </style>
             <div #mapDiv id={{mapID}} class="location-card mx-auto" [style.min-height]="mapHeight"></div>
         </div>
     </div>
@@ -27,8 +34,9 @@
             <div class="col-12 text-center">
                 <h2>DROOL TRENDS OVER TIME</h2>
                 <p *ngIf="metricsForMostRecentMonth && metricsForMonthPriorToMostRecentMonth" class="b2">
-                    Drool has been {{droolChangeOverLastTwoMonthsStatement}}.
+                    {{droolChangeOverLastTwoMonthsStatement}}
                 </p>
+                <p class="b2" [innerHTML]="droolPerLandscapedAcreChangeOverLastYearStatement"></p>
             </div>
             <div class="col-12 text-center" *ngIf='droolChartData'>
                 <h3 class="drool-orange">ESTIMATED DROOL CREATION (PER LANDSCAPED ACRE)</h3>
@@ -37,7 +45,7 @@
                 </drooltool-drool-per-landscaped-acre-chart>
             </div>
             <div class="col-12">
-                <p class="b2" [innerHTML]="droolPerLandscapedAcreChangeOverLastYearStatement"></p>
+                <p class="b2" *ngIf="lineOfEncouragement">{{lineOfEncouragement}}</p>
                 <ul class="list-of-actions">
                     <li class="b2">Check your system for leaks</li>
                     <li class="b2">Align your sprinkler heads and fix broken ones</li>
@@ -79,6 +87,7 @@
                             participated in water conservation rebate programs.
                         </p>
                         <p class="b2">{{neighborhoodsParticipatingChangeStatement}}</p>
+                        <p class="b2" *ngIf="showHoaIrrigationMessage()">HOAs accounted for an estimated {{getHoaIrrigationPercentage() | number: "1.0-0"}}% of irrigation in your neighborhood last year. Please share these resources with your local HOA Board.</p>
                     </div>
                 </div>
             </div>
@@ -98,11 +107,11 @@
                 <p class="b2" *ngIf="showDroughtTolerantIrrigationEquivalent()">This would be enough to irrigate {{totalIrrigationWaterUsed / 350000 | number:'1.0-0':'en-US'}}
                     acres of drought tolerant landscaping.</p>
                 <div class="row">
-                    <div class="col-3 text-center">
-                        <img src="/assets/fact-sheet/OlympicPool-21fc9e.png" style="width:65%; margin: auto;"/>
+                    <div class="col-3 text-center justify-content-center align-self-center">
+                        <img src="/assets/fact-sheet/OlympicPool-21fc9e.png" style="width:80%; margin: auto;"/>
                     </div>
-                    <div class="col-9 text-center">
-                        <p style="margin-top: 5%;" class="b2">An Olympic swimming pool holds about 660,000 gallons of water.</p>
+                    <div class="col-9 text-center justify-content-center align-self-center">
+                        <p>An Olympic swimming pool holds about 660,000 gallons of water.</p>
                     </div>
                 </div>
             </div>

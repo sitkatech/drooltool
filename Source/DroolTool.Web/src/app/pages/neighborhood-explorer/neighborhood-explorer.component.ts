@@ -14,6 +14,7 @@ import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
 import { forkJoin } from 'rxjs';
+import { LoggerFactory } from 'ag-grid-community';
 
 declare var $: any;
 
@@ -351,10 +352,12 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.currentSearchLayer = L.geoJSON(response, {
       style: function (feature) {
         return {
-          fillColor: "#34FFCC",
+          fillColor: "#C0FF6C",
           fill: true,
           fillOpacity: 0.3,
-          stroke: false
+          stroke: true,
+          color: "#d1ff29",
+          weight: 5
         };
       }
     }).addTo(this.map);
@@ -387,9 +390,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
     this.currentMask.bringToFront();
     this.currentSearchLayer.bringToFront();
-    this.clickMarker.addTo(this.map)
-      .bindPopup(popupContent, popupOptions)
-      .openPopup();
+    this.clickMarker.addTo(this.map);
+      // .bindPopup(popupContent, popupOptions)
+      // .openPopup();
 
     setTimeout(() => { this.clickMarker.closePopup(); }, 5000);
     this.selectedNeighborhoodWatershed = this.selectedNeighborhoodProperties.Watershed;
@@ -405,13 +408,17 @@ export class NeighborhoodExplorerComponent implements OnInit {
       return null;
     }
 
-    this.stormshedLayer = L.geoJson(featureCollection, {
+    const wholeStormshedFeature = featureCollection.features.find(x=>x.properties.Name === "WholeStormshed");
+    const stormsehdMinusNeighborhoodFeature = featureCollection.features.find(x=>x.properties.Name === "StormshedMinusNeighborhood");
+
+    // todo: instead of the whole feature collection, this needs to be the "stormshedMinusNeighborhood" feature
+    this.stormshedLayer = L.geoJson(stormsehdMinusNeighborhoodFeature, {
       style: function (feature) {
         return {
-          fillColor: "#C0FF6C",
+          fillColor: "#34FFCC", 
           fill: true,
           fillOpacity: 0.3,
-          color: "#EA842C",
+          color: "#00b386",
           weight: 5,
           stroke: true
         };
@@ -419,25 +426,27 @@ export class NeighborhoodExplorerComponent implements OnInit {
     })
 
     this.stormshedLayer.addTo(this.map);
-    this.stormshedLayer.bringToBack();
+    this.currentSearchLayer.bringToFront();
 
     //if we get a stormshed, move the mask out
+    // todo: use the WholeStormshedFeature for this one
     this.clearLayer(this.currentMask);
-    this.currentMask = L.geoJSON(featureCollection, {
+    this.currentMask = L.geoJSON(wholeStormshedFeature, {
       invert: true,
       style: function (feature) {
         return {
           fillColor: "#323232",
           fill: true,
           fillOpacity: 0.4,
-          color: "#EA842C",
+          color: "#00b386",
           weight: 5,
-          stroke: true
+          stroke: false
         };
       }
     }).addTo(this.map);
 
-    let neighborhoodIDs = featureCollection.features[0].properties["NeighborhoodIDs"];
+    //todo: instead of featureCollection.features[0], this needs to be the "wholeStormshedFeature"
+    let neighborhoodIDs = wholeStormshedFeature.properties["NeighborhoodIDs"];
     let cql_filter = "NeighborhoodID in (" + neighborhoodIDs.join(",") + ")";
 
     let backboneWMSOptions = ({
@@ -455,7 +464,11 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.backboneDetailLayer.addTo(this.map);
     this.backboneDetailLayer.bringToFront();
 
-    this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
+    if (stormsehdMinusNeighborhoodFeature.geometry) {
+      this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
+    } else{
+      this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.currentSearchLayer]));
+    }
   }
 
   public displayTraceOrZoomToNeighborhood(event: Event): void {

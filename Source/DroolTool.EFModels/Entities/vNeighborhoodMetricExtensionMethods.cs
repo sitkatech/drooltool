@@ -23,7 +23,10 @@ namespace DroolTool.EFModels.Entities
                 CommercialWaterAccounts = metric.CommercialWaterAccounts,
                 MunicipalWaterAccounts = metric.MunicipalWaterAccounts,
                 TotalIrrigatedArea = metric.TotalIrrigatedArea,
-                TotalWaterUsedForIrrigation = metric.TotalWaterUsedForIrrigation
+                TotalWaterUsedForIrrigation = metric.TotalWaterUsedForIrrigation,
+                HoaWaterUsedForIrrigation = metric.HoaWaterUsedForIrrigation,
+                DroolPerLandscapedAcreYearlyPercentDifference = metric.DroolPerLandscapedAcreYearlyPercentDifference
+
             };
         }
     }
