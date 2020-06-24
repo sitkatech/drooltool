@@ -3,7 +3,7 @@
 </div>
 <div class="row text-center mt-3">
 <ng-container *ngIf="showAllPools()">
-        <img src="/assets/fact-sheet/OlympicPool-21fc9e.png" style="width:19%; margin:3%;" *ngFor="let item of array(numberOfPools)"/>
+        <img class="swimmingPool" src="/assets/fact-sheet/OlympicPool-21fc9e.png" style="width:19%; margin:3%;" *ngFor="let item of array(numberOfPools)"/>
     </ng-container>
     <ng-container *ngIf="!showAllPools()">
         <div class="col-6 text-center">
