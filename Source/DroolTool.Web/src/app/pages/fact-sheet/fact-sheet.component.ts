@@ -150,7 +150,7 @@ export class FactSheetComponent implements AfterViewInit {
           fillOpacity: 0.3,
           stroke: true,
           weight: 5,
-          color: "#65b300"
+          color: "#76C83B"
         };
       }
     }).addTo(this.map);

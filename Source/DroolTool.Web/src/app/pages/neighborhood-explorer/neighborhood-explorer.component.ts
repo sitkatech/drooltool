@@ -192,7 +192,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
             fillColor: "#323232",
             fill: true,
             fillOpacity: 0.25,
-            color: "#6819ae",
+            color: "#666",
             weight: 5,
             stroke: true
           };
@@ -356,7 +356,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
           fill: true,
           fillOpacity: 0.3,
           stroke: true,
-          color: "#d1ff29",
+          color: "#76C83B",
           weight: 5
         };
       }
@@ -483,7 +483,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
           {
             style: function (feature) {
               return {
-                color: "#FF20F9",
+                color: "#34DAFF",
                 weight: 3,
                 stroke: true
               }

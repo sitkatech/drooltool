@@ -247,7 +247,7 @@ export class WatershedExplorerComponent implements OnInit {
         style: function (feature) {
           return {
             fill: false,
-            color: "#6819ae",
+            color: "#666",
             weight: 5,
             stroke: true
           };
@@ -385,7 +385,7 @@ export class WatershedExplorerComponent implements OnInit {
           {
             style: function (feature) {
               return {
-                color: "#FF20F9",
+                color: "#34DAFF",
                 weight: 3,
                 stroke: true
               }
