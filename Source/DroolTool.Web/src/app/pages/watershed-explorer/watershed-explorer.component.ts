@@ -62,7 +62,7 @@ export class WatershedExplorerComponent implements OnInit {
 
   public wmsParams: any;
   public stormshedLayer: L.Layers;
-  public downstreamTraceLayer: L.Layers;
+  public downstreamTraceLayer: L.LayerGroup;
   public upstreamTraceLayer: L.Layers;
   public clickMarker: L.Marker;
   public traceActive: boolean = false;
@@ -381,23 +381,33 @@ export class WatershedExplorerComponent implements OnInit {
     if (!upstream) {
       this.clearLayer(this.downstreamTraceLayer);
       this.neighborhoodService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
-        this.downstreamTraceLayer = L.geoJSON(response,
-          {
-            style: function (feature) {
-              return {
-                color: "#34DAFF",
-                weight: 3,
-                stroke: true
-              }
-            },
-            pane: "droolToolOverlayPane"
-          })
+        let baseLayer = L.geoJson(response,{
+          style: function () {
+            return {
+              color: "#FFD400",
+              weight: 12,
+              stroke: true
+            }
+          },
+          pane: "droolToolOverlayPane"
+        });
+        let dottedLayer = L.geoJson(response, {
+          style: function () {
+            return {
+              color: "#E713D4",
+              weight: 3,
+              stroke: true,
+              dashArray: '2, 4'
+            }
+          },        
+          pane: "droolToolOverlayPane"
+        });
+        this.downstreamTraceLayer = L.layerGroup([baseLayer, dottedLayer]);
+          
         this.downstreamTraceLayer.addTo(this.map);
 
         this.traceActive = true;
-        console.log(this.map.getZoom());
-        this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.downstreamTraceLayer, this.clickMarker]));
-        console.log(this.map.getZoom());
+        this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([baseLayer, this.clickMarker]));
       })
     }
     else {
@@ -441,7 +451,6 @@ export class WatershedExplorerComponent implements OnInit {
         this.stormshedLayer.bringToBack();
         this.traceActive = true;
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.upstreamTraceLayer, this.clickMarker, this.stormshedLayer]));
-        console.log(this.map.getZoom());
       });
     }
   }
