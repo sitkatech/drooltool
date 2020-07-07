@@ -47,7 +47,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public wmsParams: any;
   public stormshedLayer: L.Layers;
   public backboneDetailLayer: L.Layers;
-  public traceLayer: L.Layers;
+  public traceLayer: L.LayerGroup;
   public currentSearchLayer: L.Layers;
   public currentMask: L.Layers;
   public clickMarker: L.Marker;
@@ -244,7 +244,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     var legend = L.control({position: 'bottomright'});
     legend.onAdd = function (map) {
       var div = L.DomUtil.create('div', 'legend');
-      div.innerHTML = "<img src='./assets/neighborhood-explorer/MapKey.png' style='height:100px; border-radius:25px'>"
+      div.innerHTML = "<img src='./assets/neighborhood-explorer/MapKey.png' style='height:100px; border-radius:15px'>"
       return div;
     }
     legend.addTo(this.map);
@@ -409,10 +409,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
     }
 
     const wholeStormshedFeature = featureCollection.features.find(x=>x.properties.Name === "WholeStormshed");
-    const stormsehdMinusNeighborhoodFeature = featureCollection.features.find(x=>x.properties.Name === "StormshedMinusNeighborhood");
+    const stormshedMinusNeighborhoodFeature = featureCollection.features.find(x=>x.properties.Name === "StormshedMinusNeighborhood");
 
     // todo: instead of the whole feature collection, this needs to be the "stormshedMinusNeighborhood" feature
-    this.stormshedLayer = L.geoJson(stormsehdMinusNeighborhoodFeature, {
+    this.stormshedLayer = L.geoJson(stormshedMinusNeighborhoodFeature, {
       style: function (feature) {
         return {
           fillColor: "#34FFCC", 
@@ -464,7 +464,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.backboneDetailLayer.addTo(this.map);
     this.backboneDetailLayer.bringToFront();
 
-    if (stormsehdMinusNeighborhoodFeature.geometry) {
+    if (stormshedMinusNeighborhoodFeature.geometry) {
       this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
     } else{
       this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.currentSearchLayer]));
@@ -479,21 +479,33 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.neighborhoodService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
         this.clearLayer(this.currentMask);
         this.selectedNeighborhoodWatershedMask.addTo(this.map);
-        this.traceLayer = L.geoJSON(response,
-          {
-            style: function (feature) {
-              return {
-                color: "#34DAFF",
-                weight: 3,
-                stroke: true
-              }
-            },
-            pane: "droolToolOverlayPane"
-          })
+        let baseLayer = L.geoJson(response,{
+          style: function (feature) {
+            return {
+              color: "#FFD400",
+              weight: 8,
+              stroke: true
+            }
+          },
+          pane: "droolToolOverlayPane"
+        });
+        let dottedLayer = L.geoJson(response, {
+          style: function (feature) {
+            return {
+              color: "#E89E04",
+              weight: 3,
+              stroke: true,
+              dashArray: '2,4'
+            }
+          },        
+          pane: "droolToolOverlayPane"
+        })
+        this.traceLayer = L.layerGroup([baseLayer, dottedLayer]);
+          
         this.traceLayer.addTo(this.map);
 
         this.traceActive = true;
-        this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.traceLayer, this.clickMarker, this.stormshedLayer]));
+        this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([baseLayer, this.clickMarker, this.stormshedLayer]));
       })
     }
     else {
