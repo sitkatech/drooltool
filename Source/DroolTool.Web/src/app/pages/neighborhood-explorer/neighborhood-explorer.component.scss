@@ -139,7 +139,11 @@
 
 .mobile-stats-containing-div {
     width:100%;
-    position:relative
+    position:relative;
+
+    a {
+        color: #FFF !important;
+    }
 }
 
 .metrics-button-panel-collapsed {
