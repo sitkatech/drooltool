@@ -9,5 +9,7 @@
         public string SITKA_EMAIL_REDIRECT { get; set; }
         public string DROOLTOOL_WEB_URL { get; set; }
         public string KEYSTONE_REDIRECT_URL { get; set; }
+        public string HangfireUserName { get; set; }
+        public string HangfirePassword { get; set; }
     }
 }
