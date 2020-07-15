@@ -8,7 +8,6 @@ using NetTopologySuite.Operation.Union;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 namespace DroolTool.API.Controllers
 {
@@ -138,8 +137,7 @@ namespace DroolTool.API.Controllers
             var featureList = backboneAccumulated.Select(x =>
             {
                 var geometry = UnaryUnionOp.Union(x.BackboneSegmentGeometry4326);
-                var feature = new Feature() { Geometry = geometry };
-                return feature;
+                return new Feature { Geometry = geometry };
             }).ToList();
 
             var stormshed = backboneAccumulated.Select(x => x.Neighborhood)
@@ -236,11 +234,12 @@ namespace DroolTool.API.Controllers
                     x => x.Watershed,
                     y => y.WatershedName,
                     (x, y) => new
-                        {OCSurveyNeighborhoodID = x.OCSurveyNeighborhoodID, WatershedAlias = y.WatershedAliasName})
+                        {
+                            x.OCSurveyNeighborhoodID, WatershedAlias = y.WatershedAliasName})
                 .Join(_dbContext.RawDroolMetric,
                     x => x.OCSurveyNeighborhoodID,
                     y => y.MetricCatchIDN,
-                    (x, y) => new {WatershedAlias = x.WatershedAlias})
+                    (x, y) => new {x.WatershedAlias})
                 .Select(x => x.WatershedAlias)
                 .Distinct()
                 .ToList();
