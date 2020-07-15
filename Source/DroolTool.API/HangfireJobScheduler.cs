@@ -14,6 +14,7 @@ namespace DroolTool.API
         {
             var recurringJobIds = new List<string>();
 
+            AddRecurringJob<MetricSyncJob>(MetricSyncJob.JobName, x => x.RunJob(Null), Cron.Monthly(10, 8, 30), recurringJobIds);
 
             // Remove any jobs we haven't explicitly scheduled
             RemoveExtraneousJobs(recurringJobIds);

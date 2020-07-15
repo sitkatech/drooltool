@@ -12,5 +12,6 @@ services:
       - DROOLTOOL_WEB_URL=${DROOLTOOL_WEB_URL}
       - SECRET_PATH=${SECRET_PATH}
       - KEYSTONE_REDIRECT_URL=${KEYSTONE_REDIRECT_URL}
+      - MetricsDatabaseFTPUrl=${MetricsDatabaseFTPUrl}
       - HangfireUserName=${HangfireUserName}
       - HangfirePassword=${HangfirePassword}
