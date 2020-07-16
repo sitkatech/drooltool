@@ -59,7 +59,7 @@ namespace DroolTool.API
             _dbContext.Database.ExecuteSqlRaw("exec dbo.pWriteStagedMetricsToLiveTable");
         }
 
-        private static DataTable LoadMetricsToDataTable(string pathToCsv)
+        private DataTable LoadMetricsToDataTable(string pathToCsv)
         {
             var skippedRecords = 0;
             var notFloats = new List<string> { "index", "CatchIDN", "date", "Year", "Month" };
@@ -100,7 +100,7 @@ namespace DroolTool.API
                 }
             }
 
-            Console.WriteLine($"Number of records skipped due to bad data: {skippedRecords}");
+            _logger.LogInformation($"Number of records skipped due to bad data: {skippedRecords}");
             return csvData;
         }
 
@@ -136,6 +136,8 @@ namespace DroolTool.API
                 }
 
             }
+
+            s.BulkCopyTimeout = 600;
             s.WriteToServer(csvFileData);
         }
     }
