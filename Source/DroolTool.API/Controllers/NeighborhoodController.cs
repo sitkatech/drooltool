@@ -245,6 +245,16 @@ namespace DroolTool.API.Controllers
                 .ToList();
         }
 
+        /// <summary>
+        /// Returns the latest date for which there are metrics. Used by the various explorers.
+        /// </summary>
+        [HttpGet("neighborhood/get-default-metric-display-date")]
+        public ActionResult<MetricDateDto> GetDefaultMetricDisplayDate()
+        {
+            var dateTime = _dbContext.RawDroolMetric.Max(x => x.MetricDate);
+            return Ok(new MetricDateDto{Year = dateTime.Year, Month=dateTime.Month});
+        }
+
         private List<BackboneSegment> GetDownstreamBackboneSegmentsBasedOnCriteria(List<BackboneSegment> allBackboneSegments,
             List<BackboneSegment> accumulatedBackboneSegments)
         {
@@ -263,5 +273,13 @@ namespace DroolTool.API.Controllers
                 .ToList();
             return allBackboneSegments.Where(x => backboneIDsThatMeetCriteria.Contains(x.BackboneSegmentID)).Except(accumulatedBackboneSegments).Distinct().ToList();
         }
+    }
+
+    // trying to return a date directly from GetDefaultMetricDisplayDate led to a weird off-by-one error related to timezone offsets,
+    // so I just return the year and month which are all we need anyway.
+    public class MetricDateDto
+    {
+        public int Year { get; set; }
+        public int Month { get; set; }
     }
 }

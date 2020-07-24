@@ -31,7 +31,7 @@ namespace DroolTool.API
         {
             var tempFileName = DownloadLatestMetricFileToTempFileAndReturnTempFileName(_droolToolConfiguration.MetricsDatabaseFTPUrl, _droolToolConfiguration.MNWDFileTransferUsername, _droolToolConfiguration.MNWDFileTransferPassword);
             
-            _logger.LogInformation($"Length of downloaded file: {new FileInfo(tempFileName).Length}");
+            _logger.LogInformation($"Downloaded file {tempFileName} ({new FileInfo(tempFileName).Length} Bytes)");
 
             var dataTable = LoadMetricsToDataTable(tempFileName);
 

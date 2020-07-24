@@ -90,8 +90,8 @@ export class NeighborhoodService {
         return this.apiService.getFromApi(route);
     }
 
-    getDefaultMetricDate(): Date {
-        return new Date(2019, 4, 1);
-    }
-    
+    getDefaultMetricDate(): Observable<{Year: number, Month: number}> {
+        let route = `neighborhood/get-default-metric-display-date`
+        return this.apiService.getFromApi(route);
+    }    
 }

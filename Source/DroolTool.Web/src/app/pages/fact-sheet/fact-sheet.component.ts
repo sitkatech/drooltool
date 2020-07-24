@@ -24,7 +24,7 @@ export class FactSheetComponent implements AfterViewInit {
   public tileLayers: any;
   public searchedAddress: string = "My Selected Neighborhood";
   public metricsForYear: NeighborhoodMetricDto[];
-  public metricEndDate: Date;
+  public metricEndDate: {Year:number, Month: number};
 
   public metricsForMostRecentMonth: NeighborhoodMetricDto;
   public metricsForMonthPriorToMostRecentMonth: NeighborhoodMetricDto;
@@ -101,13 +101,14 @@ export class FactSheetComponent implements AfterViewInit {
     this.smallScreen = window.innerWidth < 400;
     const id = parseInt(this.route.snapshot.paramMap.get("id"));
     if (id) {
-      this.metricEndDate = this.neighborhoodService.getDefaultMetricDate();
       forkJoin(
         this.wfsService.geoserverNeighborhoodLookupWithID(id),
-        this.neighborhoodService.getDroolPerLandscapedAcreChart(id)
-      ).subscribe(([geoserverResponse,  droolChartResponse]) => {
+        this.neighborhoodService.getDroolPerLandscapedAcreChart(id),
+        this.neighborhoodService.getDefaultMetricDate()
+      ).subscribe(([geoserverResponse,  droolChartResponse, yearAndMonth]) => {
         const OCSurveyNeighborhoodID = geoserverResponse.features[0].properties.OCSurveyNeighborhoodID;
-        this.neighborhoodService.getMetricsForYear(OCSurveyNeighborhoodID, this.metricEndDate.getUTCFullYear(), this.metricEndDate.getUTCMonth()).subscribe(metricResult => {
+        this.metricEndDate = yearAndMonth;
+        this.neighborhoodService.getMetricsForYear(OCSurveyNeighborhoodID, this.metricEndDate.Year, this.metricEndDate.Month).subscribe(metricResult => {
           this.metricsForYear = metricResult;
           if (this.metricsForYear.length > 0) {
             this.setupMetricsAndGetStatements();

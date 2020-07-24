@@ -61,7 +61,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public selectedNeighborhoodID: number;
   public selectedNeighborhoodWatershed: string;
   public selectedNeighborhoodWatershedMask: L.Layers;
-  public defaultSelectedMetricDate: Date;
+  public defaultSelectedMetricDate: {Year: number, Month: number};
 
   public areMetricsCollapsed: boolean = true;
 
@@ -150,7 +150,12 @@ export class NeighborhoodExplorerComponent implements OnInit {
       "<span>Stormwater Network <br/> <img src='../../assets/neighborhood-explorer/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({ url: "https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/" })
     })
 
-    this.defaultSelectedMetricDate = this.neighborhoodService.getDefaultMetricDate();
+    
+    this.neighborhoodService.getDefaultMetricDate().subscribe(x=>{
+
+      this.defaultSelectedMetricDate = x
+      console.log(this.defaultSelectedMetricDate);
+    });
 
     this.compileService.configure(this.appRef);
   }
@@ -326,7 +331,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
         this.selectedNeighborhoodProperties = response.features[0].properties;
         this.selectedNeighborhoodID = this.selectedNeighborhoodProperties.NeighborhoodID;
         if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
-          this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID, this.defaultSelectedMetricDate.getUTCFullYear(), this.defaultSelectedMetricDate.getUTCMonth()).subscribe(result => {
+          this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID, this.defaultSelectedMetricDate.Year, this.defaultSelectedMetricDate.Month).subscribe(result => {
             this.selectedNeighborhoodMetrics = result;
             this.map.invalidateSize();
           });
