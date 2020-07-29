@@ -8,11 +8,6 @@ namespace DroolTool.EFModels.Entities
 {
     public partial class NeighborhoodStaging
     {
-        public NeighborhoodStaging()
-        {
-            InverseOCSurveyDownstreamNeighborhoodStaging = new HashSet<NeighborhoodStaging>();
-        }
-
         [Key]
         public int NeighborhoodStagingID { get; set; }
         [Required]
@@ -25,8 +20,5 @@ namespace DroolTool.EFModels.Entities
         public int? OCSurveyDownstreamNeighborhoodStagingID { get; set; }
         [Column(TypeName = "geometry")]
         public Geometry NeighborhoodStagingGeometry4326 { get; set; }
-
-        public virtual NeighborhoodStaging OCSurveyDownstreamNeighborhoodStaging { get; set; }
-        public virtual ICollection<NeighborhoodStaging> InverseOCSurveyDownstreamNeighborhoodStaging { get; set; }
     }
 }

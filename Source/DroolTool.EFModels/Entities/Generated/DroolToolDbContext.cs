@@ -201,12 +201,6 @@ namespace DroolTool.EFModels.Entities
                     .IsUnique();
 
                 entity.Property(e => e.Watershed).IsUnicode(false);
-
-                entity.HasOne(d => d.OCSurveyDownstreamNeighborhoodStaging)
-                    .WithMany(p => p.InverseOCSurveyDownstreamNeighborhoodStaging)
-                    .HasPrincipalKey(p => p.OCSurveyNeighborhoodStagingID)
-                    .HasForeignKey(d => d.OCSurveyDownstreamNeighborhoodStagingID)
-                    .HasConstraintName("FK_NeighborhoodStaging_NeighborhoodStaging_OCSurveyDownstreamNeighborhoodStagingID_OCSurveyNeighborhoodStagingID");
             });
 
             modelBuilder.Entity<RawDroolMetric>(entity =>
