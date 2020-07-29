@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using DroolTool.API.Services;
 using Microsoft.Extensions.Options;
+using NetTopologySuite.Geometries;
 
 namespace DroolTool.API
 {
@@ -29,18 +30,37 @@ namespace DroolTool.API
         public override List<RunEnvironment> RunEnvironments => new List<RunEnvironment> { RunEnvironment.Development, RunEnvironment.Staging, RunEnvironment.Production };
         protected override void RunJobImplementation()
         {
-            var tempFileName = DownloadLatestMetricFileToTempFileAndReturnTempFileName(_droolToolConfiguration.MetricsDatabaseFTPUrl, _droolToolConfiguration.MNWDFileTransferUsername, _droolToolConfiguration.MNWDFileTransferPassword);
-            
-            _logger.LogInformation($"Downloaded file {tempFileName} ({new FileInfo(tempFileName).Length} Bytes)");
+            var tempNeighborhoodFileName = DownloadLatestNeighborhoodFileToTempFileAndReturnTempFileName(_droolToolConfiguration.MetricsDatabaseFTPUrl, _droolToolConfiguration.MNWDFileTransferUsername, _droolToolConfiguration.MNWDFileTransferPassword);
+            var tempMetricsFileName = DownloadLatestMetricFileToTempFileAndReturnTempFileName(_droolToolConfiguration.MetricsDatabaseFTPUrl, _droolToolConfiguration.MNWDFileTransferUsername, _droolToolConfiguration.MNWDFileTransferPassword);
 
-            var dataTable = LoadMetricsToDataTable(tempFileName);
+            var metricsDataTable = LoadMetricsToDataTable(tempMetricsFileName);
 
-            _logger.LogInformation($"Length of data table: {dataTable.Rows.Count}");
-
-            StageData(dataTable, _dbContext);
+            StageNeighborhoods(tempNeighborhoodFileName);
+            StageData(metricsDataTable, _dbContext);
 
             _dbContext.Database.SetCommandTimeout(600);
             _dbContext.Database.ExecuteSqlRaw("exec dbo.pWriteStagedMetricsToLiveTable");
+        }
+
+        private void StageNeighborhoods(string tempFilename)
+        {
+            _dbContext.Database.SetCommandTimeout(600);
+            _dbContext.Database.ExecuteSqlRaw("TRUNCATE TABLE DBO.NeighborhoodStaging");
+
+            var featureCollectionFromGeoJsonFile = GeoJsonUtilities.GetFeatureCollectionFromGeoJsonFile(tempFilename, 4,
+                _droolToolConfiguration.NeighborhoodSourceCoordinateSystemID);
+
+            var neighborhoodStagings = featureCollectionFromGeoJsonFile.Select(x => new NeighborhoodStaging
+            {
+                Watershed = x.Attributes["Watershed"].ToString(),
+                OCSurveyNeighborhoodStagingID = Int32.Parse(x.Attributes["CatchIDN"].ToString()),
+                OCSurveyDownstreamNeighborhoodStagingID = Int32.Parse(x.Attributes["DwnCatchIDN"].ToString()),
+                NeighborhoodStagingGeometry = x.Geometry,
+                NeighborhoodStagingGeometry4326 = GeoJsonUtilities.Project2230To4326(x.Geometry)
+            }).ToList();
+
+            _dbContext.NeighborhoodStaging.AddRange(neighborhoodStagings);
+            _dbContext.SaveChanges();
         }
 
         private DataTable LoadMetricsToDataTable(string pathToCsv)
@@ -90,6 +110,9 @@ namespace DroolTool.API
 
         static void StageData(DataTable csvFileData, DroolToolDbContext dbContext)
         {
+            dbContext.Database.SetCommandTimeout(600);
+            dbContext.Database.ExecuteSqlRaw("TRUNCATE TABLE DBO.RawDroolMetricStaging");
+
             using var s = new SqlBulkCopy(dbContext.Database.GetDbConnection().ConnectionString)
             {
                 DestinationTableName = "RawDroolMetricStaging"
@@ -125,7 +148,20 @@ namespace DroolTool.API
             s.WriteToServer(csvFileData);
         }
 
-        public static string DownloadLatestMetricFileToTempFileAndReturnTempFileName(string url, string username, string password)
+        public static string DownloadLatestMetricFileToTempFileAndReturnTempFileName(string url, string username,
+            string password)
+        {
+            // find the latest file in the FTP with "Metrics" in its name
+            return DownloadLatestFileToTempFileAndReturnTempFileName(url, username, password, "DroolTool_Metrics");
+        }
+
+        public static string DownloadLatestNeighborhoodFileToTempFileAndReturnTempFileName(string url, string username,
+            string password)
+        {
+            return DownloadLatestFileToTempFileAndReturnTempFileName(url, username, password, "rsb_geo");
+        }
+
+        private static string DownloadLatestFileToTempFileAndReturnTempFileName(string url, string username, string password, string filenameToSearchFor)
         {
             // Get the object used to communicate with the server.
             var directoryRequest = (FtpWebRequest)WebRequest.Create(url);
@@ -144,7 +180,10 @@ namespace DroolTool.API
 
             var filenames = lines.Select(x => x.Split(new[] {' ', '\t'}).Last());
 
-            var latestMetricFilename = filenames.Where(x => x.Contains("Metrics")).Select(x =>
+            // we're expecting filenames to be in the form {Name}_{YY}_{MM}_{DD}.{Extension},
+            // so do some parsing to get the most recent file.
+            // Goes without saying, but if they change their naming convention this will break.
+            var latestMetricFilename = filenames.Where(x => x.Contains(filenameToSearchFor)).Select(x =>
             {
                 var split = x.Split(new[] { '.', '_' });
                 // Not trying to get political, but think it's a safe bet that we don't need to worry about year 2100+ for right now.

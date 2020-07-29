@@ -13,5 +13,6 @@ services:
       - SECRET_PATH=${SECRET_PATH}
       - KEYSTONE_REDIRECT_URL=${KEYSTONE_REDIRECT_URL}
       - MetricsDatabaseFTPUrl=${MetricsDatabaseFTPUrl}
+      - NeighborhoodSourceCoordinateSystemID=${NeighborhoodSourceCoordinateSystemID}
       - HangfireUserName=${HangfireUserName}
       - HangfirePassword=${HangfirePassword}

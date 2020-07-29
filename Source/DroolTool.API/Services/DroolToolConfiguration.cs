@@ -11,7 +11,7 @@
         public string KEYSTONE_REDIRECT_URL { get; set; }
         public string HangfireUserName { get; set; }
         public string HangfirePassword { get; set; }
-
+        public int NeighborhoodSourceCoordinateSystemID { get; set; }
         public string MNWDFileTransferUsername { get; set; }
         public string MNWDFileTransferPassword { get; set; }
 

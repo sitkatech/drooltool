@@ -24,7 +24,9 @@ namespace DroolTool.EFModels.Entities
         public virtual DbSet<FileResource> FileResource { get; set; }
         public virtual DbSet<FileResourceMimeType> FileResourceMimeType { get; set; }
         public virtual DbSet<Neighborhood> Neighborhood { get; set; }
+        public virtual DbSet<NeighborhoodStaging> NeighborhoodStaging { get; set; }
         public virtual DbSet<RawDroolMetric> RawDroolMetric { get; set; }
+        public virtual DbSet<RawDroolMetricStaging> RawDroolMetricStaging { get; set; }
         public virtual DbSet<RegionalSubbasin> RegionalSubbasin { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<User> User { get; set; }
@@ -183,8 +185,6 @@ namespace DroolTool.EFModels.Entities
                     .HasName("AK_Neighborhood_OCSurveyNeighborhoodID")
                     .IsUnique();
 
-                entity.Property(e => e.DrainID).IsUnicode(false);
-
                 entity.Property(e => e.Watershed).IsUnicode(false);
 
                 entity.HasOne(d => d.OCSurveyDownstreamNeighborhood)
@@ -192,6 +192,21 @@ namespace DroolTool.EFModels.Entities
                     .HasPrincipalKey(p => p.OCSurveyNeighborhoodID)
                     .HasForeignKey(d => d.OCSurveyDownstreamNeighborhoodID)
                     .HasConstraintName("FK_Neighborhood_Neighborhood_OCSurveyDownstreamNeighborhoodID_OCSurveyNeighborhoodID");
+            });
+
+            modelBuilder.Entity<NeighborhoodStaging>(entity =>
+            {
+                entity.HasIndex(e => e.OCSurveyNeighborhoodStagingID)
+                    .HasName("AK_NeighborhoodStaging_OCSurveyNeighborhoodStagingID")
+                    .IsUnique();
+
+                entity.Property(e => e.Watershed).IsUnicode(false);
+
+                entity.HasOne(d => d.OCSurveyDownstreamNeighborhoodStaging)
+                    .WithMany(p => p.InverseOCSurveyDownstreamNeighborhoodStaging)
+                    .HasPrincipalKey(p => p.OCSurveyNeighborhoodStagingID)
+                    .HasForeignKey(d => d.OCSurveyDownstreamNeighborhoodStagingID)
+                    .HasConstraintName("FK_NeighborhoodStaging_NeighborhoodStaging_OCSurveyDownstreamNeighborhoodStagingID_OCSurveyNeighborhoodStagingID");
             });
 
             modelBuilder.Entity<RawDroolMetric>(entity =>
@@ -204,6 +219,11 @@ namespace DroolTool.EFModels.Entities
                     .HasForeignKey(d => d.MetricCatchIDN)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RawDroolMetric_Neighborhood_CatchIDN_OCSurveyNeighborhoodID");
+            });
+
+            modelBuilder.Entity<RawDroolMetricStaging>(entity =>
+            {
+                entity.Property(e => e.RawDroolMetricStagingID).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<RegionalSubbasin>(entity =>
@@ -300,8 +320,6 @@ namespace DroolTool.EFModels.Entities
                 entity.HasNoKey();
 
                 entity.ToView("vGeoServerNeighborhood");
-
-                entity.Property(e => e.DrainID).IsUnicode(false);
 
                 entity.Property(e => e.Watershed).IsUnicode(false);
             });

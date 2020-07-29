@@ -4,7 +4,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Neighborhood](
 	[NeighborhoodID] [int] IDENTITY(1,1) NOT NULL,
-	[DrainID] [varchar](10) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	[Watershed] [varchar](100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	[NeighborhoodGeometry] [geometry] NOT NULL,
 	[OCSurveyNeighborhoodID] [int] NOT NULL,
