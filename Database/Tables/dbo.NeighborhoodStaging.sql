@@ -7,7 +7,7 @@ CREATE TABLE [dbo].[NeighborhoodStaging](
 	[Watershed] [varchar](100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	[NeighborhoodStagingGeometry] [geometry] NOT NULL,
 	[OCSurveyNeighborhoodStagingID] [int] NOT NULL,
-	[OCSurveyDownstreamNeighborhoodStagingID] [int] NULL,
+	[OCSurveyDownstreamNeighborhoodStagingID] [int] NOT NULL,
 	[NeighborhoodStagingGeometry4326] [geometry] NULL,
  CONSTRAINT [PK_NeighborhoodStaging_NeighborhoodStagingID] PRIMARY KEY CLUSTERED 
 (

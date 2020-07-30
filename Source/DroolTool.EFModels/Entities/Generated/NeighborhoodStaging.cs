@@ -17,7 +17,7 @@ namespace DroolTool.EFModels.Entities
         [Column(TypeName = "geometry")]
         public Geometry NeighborhoodStagingGeometry { get; set; }
         public int OCSurveyNeighborhoodStagingID { get; set; }
-        public int? OCSurveyDownstreamNeighborhoodStagingID { get; set; }
+        public int OCSurveyDownstreamNeighborhoodStagingID { get; set; }
         [Column(TypeName = "geometry")]
         public Geometry NeighborhoodStagingGeometry4326 { get; set; }
     }

@@ -69,8 +69,6 @@ namespace DroolTool.EFModels.Entities
 
             modelBuilder.Entity<BackboneSegment>(entity =>
             {
-                entity.Property(e => e.StreamName).IsUnicode(false);
-
                 entity.HasOne(d => d.BackboneSegmentType)
                     .WithMany(p => p.BackboneSegment)
                     .HasForeignKey(d => d.BackboneSegmentTypeID)
@@ -305,8 +303,6 @@ namespace DroolTool.EFModels.Entities
                 entity.ToView("vGeoServerBackbone");
 
                 entity.Property(e => e.BackboneSegmentType).IsUnicode(false);
-
-                entity.Property(e => e.StreamName).IsUnicode(false);
             });
 
             modelBuilder.Entity<vGeoServerNeighborhood>(entity =>

@@ -1,7 +1,9 @@
-﻿using DroolTool.EFModels.Entities;
+﻿using DroolTool.API.Services;
+using DroolTool.EFModels.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
@@ -10,9 +12,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
-using DroolTool.API.Services;
-using Microsoft.Extensions.Options;
-using NetTopologySuite.Geometries;
+using static System.Int32;
 
 namespace DroolTool.API
 {
@@ -39,7 +39,7 @@ namespace DroolTool.API
             StageData(metricsDataTable, _dbContext);
 
             _dbContext.Database.SetCommandTimeout(600);
-            _dbContext.Database.ExecuteSqlRaw("exec dbo.pWriteStagedMetricsToLiveTable");
+            _dbContext.Database.ExecuteSqlRaw("exec dbo.pWriteStagedMetricsAndNeighborhoodsToLiveTable");
         }
 
         private void StageNeighborhoods(string tempFilename)
@@ -50,14 +50,33 @@ namespace DroolTool.API
             var featureCollectionFromGeoJsonFile = GeoJsonUtilities.GetFeatureCollectionFromGeoJsonFile(tempFilename, 4,
                 _droolToolConfiguration.NeighborhoodSourceCoordinateSystemID);
 
-            var neighborhoodStagings = featureCollectionFromGeoJsonFile.Select(x => new NeighborhoodStaging
+            List<NeighborhoodStaging> neighborhoodStagings;
+            try
             {
-                Watershed = x.Attributes["Watershed"].ToString(),
-                OCSurveyNeighborhoodStagingID = Int32.Parse(x.Attributes["CatchIDN"].ToString()),
-                OCSurveyDownstreamNeighborhoodStagingID = Int32.Parse(x.Attributes["DwnCatchIDN"].ToString()),
-                NeighborhoodStagingGeometry = x.Geometry,
-                NeighborhoodStagingGeometry4326 = GeoJsonUtilities.Project2230To4326(x.Geometry)
-            }).ToList();
+                neighborhoodStagings = featureCollectionFromGeoJsonFile.Select(x => new NeighborhoodStaging
+                {
+                    Watershed = x.Attributes["Watershed"].ToString(),
+                    OCSurveyNeighborhoodStagingID = Parse(x.Attributes["CatchIDN"].ToString()),
+                    OCSurveyDownstreamNeighborhoodStagingID = Parse(x.Attributes["DwnCatchIDN"].ToString()),
+                    NeighborhoodStagingGeometry = x.Geometry,
+                    NeighborhoodStagingGeometry4326 = GeoJsonUtilities.Project2230To4326(x.Geometry)
+                }).ToList();
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new NeighborhoodSyncException("The Neighborhood file from MNWD contained null catchment IDs", e);
+            }
+
+            var catchmentIDs = neighborhoodStagings.Select(x => x.OCSurveyNeighborhoodStagingID).ToList();
+            var neighborhoodStagingsWithBrokenDownstream = neighborhoodStagings.Where(x =>
+                x.OCSurveyDownstreamNeighborhoodStagingID != 0 &&
+                !catchmentIDs.Contains(x.OCSurveyDownstreamNeighborhoodStagingID));
+
+            if (neighborhoodStagingsWithBrokenDownstream.Any())
+            {
+                throw new NeighborhoodSyncException(
+                    "The Neighborhood file from MNWD contained invalid downstream catchment IDs");
+            }
 
             _dbContext.NeighborhoodStaging.AddRange(neighborhoodStagings);
             _dbContext.SaveChanges();
@@ -187,9 +206,9 @@ namespace DroolTool.API
             {
                 var split = x.Split(new[] { '.', '_' });
                 // Not trying to get political, but think it's a safe bet that we don't need to worry about year 2100+ for right now.
-                var year = 2000 + Int32.Parse(split[2]);
-                var month = Int32.Parse(split[3]);
-                var day = Int32.Parse(split[4]);
+                var year = 2000 + Parse(split[2]);
+                var month = Parse(split[3]);
+                var day = Parse(split[4]);
                 return new { Filename = x, Date = new DateTime(year, month, day) };
             }).OrderByDescending(x=>x.Date).First().Filename;
 
@@ -209,6 +228,18 @@ namespace DroolTool.API
             }
 
             return tempFileName;
+        }
+    }
+
+    internal class NeighborhoodSyncException : Exception
+    {
+        public NeighborhoodSyncException(string message) : base(message)
+        {
+        }
+
+        public NeighborhoodSyncException(string message, Exception exception): base(message, exception)
+        {
+            throw new NotImplementedException();
         }
     }
 }

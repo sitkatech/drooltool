@@ -4,7 +4,7 @@ CREATE TABLE [dbo].[NeighborhoodStaging](
 	[NeighborhoodStagingGeometry] [geometry] NOT NULL,
 	[OCSurveyNeighborhoodStagingID] [int] NOT NULL
 		constraint AK_NeighborhoodStaging_OCSurveyNeighborhoodStagingID unique,
-	[OCSurveyDownstreamNeighborhoodStagingID] [int] NULL,
+	[OCSurveyDownstreamNeighborhoodStagingID] [int] Not NULL,
 	[NeighborhoodStagingGeometry4326] [geometry] NULL
 )
 GO

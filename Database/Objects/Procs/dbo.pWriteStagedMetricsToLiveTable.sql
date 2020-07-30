@@ -1,11 +1,40 @@
-IF EXISTS(SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'dbo.pWriteStagedMetricsToLiveTable'))
-    drop procedure dbo.pWriteStagedMetricsToLiveTable
+IF EXISTS(SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'dbo.pWriteStagedMetricsAndNeighborhoodsToLiveTable'))
+    drop procedure dbo.pWriteStagedMetricsAndNeighborhoodsToLiveTable
 go
 
-create procedure dbo.pWriteStagedMetricsToLiveTable
+create procedure dbo.pWriteStagedMetricsAndNeighborhoodsToLiveTable
 as
 begin
 	truncate table RawDroolMetric;
+	
+	Merge dbo.Neighborhood n Using dbo.NeighborhoodStaging ns
+		On n.OCSurveyNeighborhoodID = ns.OCSurveyNeighborhoodStagingID
+		When Matched
+			Then Update Set
+				n.Watershed = ns.Watershed,
+				n.NeighborhoodGeometry = ns.NeighborhoodStagingGeometry,
+				n.OCSurveyDownstreamNeighborhoodID =
+					case
+						when ns.OCSurveyDownstreamNeighborhoodStagingID = 0
+							then null
+						else ns.OCSurveyDownstreamNeighborhoodStagingID
+					end,
+				n.NeighborhoodGeometry4326 = ns.NeighborhoodStagingGeometry4326
+		When Not Matched By Target
+			Then insert (Watershed, NeighborhoodGeometry, OCSurveyNeighborhoodID, OCSurveyDownstreamNeighborhoodID, NeighborhoodGeometry4326)
+				Values (
+					ns.Watershed,
+					ns.NeighborhoodStagingGeometry,
+					OCSurveyNeighborhoodStagingID,
+					case
+						when ns.OCSurveyDownstreamNeighborhoodStagingID = 0
+							then null
+						else ns.OCSurveyDownstreamNeighborhoodStagingID
+					end,
+					NeighborhoodStagingGeometry4326
+				)
+		When Not Matched By Source
+			Then Delete;
 	
 	INSERT INTO [dbo].[RawDroolMetric]
            ([RawDroolMetricID]
@@ -722,6 +751,7 @@ begin
 		select * from dbo.RawDroolMetricStaging
 			where MetricCatchIDN in (select OCSurveyNeighborhoodID from dbo.Neighborhood);
 
-	truncate table RawDroolMetricStaging;
+	truncate table dbo.RawDroolMetricStaging;
+	truncate table dbo.NeighborhoodStaging;
 	end
 go
