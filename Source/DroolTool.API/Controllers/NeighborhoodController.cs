@@ -37,12 +37,9 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood/{neighborhoodID}/get-stormshed")]
         public ActionResult<string> GetStormshed([FromRoute]int neighborhoodID)
         {
-            var backboneAccumulated = new List<BackboneSegment>();
+            var backboneAccumulated = new List<vBackboneWithoutGeometry>();
 
-            var allBackboneSegments = _dbContext.BackboneSegment
-                .Include(x => x.Neighborhood)
-                .Include(x => x.DownstreamBackboneSegment)
-                .Include(x => x.InverseDownstreamBackboneSegment)
+            var allBackboneSegments = _dbContext.vBackboneWithoutGeometry
                 .Where(x => x.BackboneSegmentTypeID != (int)BackboneSegmentTypeEnum.Channel)
                 .ToList();
 
@@ -60,25 +57,24 @@ namespace DroolTool.API.Controllers
                 lookingAt = upFromHere.Union(downFromHere).ToList();
             }
 
-            var listBackboneAccumulated = backboneAccumulated.Select(x => x.Neighborhood)
-                .ToList()
-                .Distinct()
-                .Where(x => x != null)
-                .ToList();
+            var neighborhoodIDs = backboneAccumulated.Select(x => x.NeighborhoodID).Distinct();
+            var neighborhoods =
+                _dbContext.Neighborhood.Where(x => neighborhoodIDs.Contains(x.NeighborhoodID)).ToList();
+
 
             var wholeStormshedFeature = new Feature()
             {
-                Geometry = UnaryUnionOp.Union(listBackboneAccumulated.Select(x => x.NeighborhoodGeometry4326).ToList()),
+                Geometry = UnaryUnionOp.Union(neighborhoods.Select(x => x.NeighborhoodGeometry4326).ToList()),
                 Attributes = new AttributesTable() 
             };
 
             var stormshedMinusNeighborhoodFeature = new Feature()
             {
-                Geometry = UnaryUnionOp.Union(listBackboneAccumulated.Where(x=>x.NeighborhoodID != neighborhoodID).Select(x=>x.NeighborhoodGeometry4326).ToList()),
+                Geometry = UnaryUnionOp.Union(neighborhoods.Where(x=>x.NeighborhoodID != neighborhoodID).Select(x=>x.NeighborhoodGeometry4326).ToList()),
                 Attributes = new AttributesTable()
             };
             
-            wholeStormshedFeature.Attributes.Add("NeighborhoodIDs", listBackboneAccumulated.Select(x => x.NeighborhoodID).ToList());
+            wholeStormshedFeature.Attributes.Add("NeighborhoodIDs", neighborhoods.Select(x => x.NeighborhoodID).ToList());
             wholeStormshedFeature.Attributes.Add("Name", "WholeStormshed");
 
             stormshedMinusNeighborhoodFeature.Attributes.Add("Name", "StormshedMinusNeighborhood");
@@ -90,10 +86,10 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood/{neighborhoodID}/get-downstream-backbone-trace")]
         public ActionResult<string> GetDownstreamBackboneTrace([FromRoute] int neighborhoodID)
         {
-            var backboneAccumulated = new List<BackboneSegment>();
+            var backboneAccumulated = new List<vBackboneWithoutGeometry>();
 
-            var allBackboneSegments = _dbContext.BackboneSegment
-                .Include(x => x.DownstreamBackboneSegment)
+            var allBackboneSegments = _dbContext.vBackboneWithoutGeometry
+                //.Include(x => x.DownstreamBackboneSegment)
                 .ToList();
 
             var lookingAt = allBackboneSegments.Where(x => x.NeighborhoodID == neighborhoodID).ToList();
@@ -104,8 +100,13 @@ namespace DroolTool.API.Controllers
 
                 lookingAt = GetDownstreamBackboneSegmentsBasedOnCriteria(allBackboneSegments, backboneAccumulated);
             }
-
-            var featureList = backboneAccumulated.Select(x =>
+            
+            var backboneSegmentIDs = backboneAccumulated.Select(y => y.BackboneSegmentID).ToList();
+            var backboneSegments = _dbContext.BackboneSegment.Where(
+                x => backboneSegmentIDs.Contains(x.BackboneSegmentID)
+            );
+            
+            var featureList = backboneSegments.ToList().Select(x =>
             {
                 var geometry = UnaryUnionOp.Union(x.BackboneSegmentGeometry4326);
                 var feature = new Feature() { Geometry = geometry };
@@ -118,11 +119,9 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood/{neighborhoodID}/get-upstream-backbone-trace")]
         public ActionResult<string> GetUpstreamBackboneTrace([FromRoute] int neighborhoodID)
         {
-            var backboneAccumulated = new List<BackboneSegment>();
+            var backboneAccumulated = new List<vBackboneWithoutGeometry>();
 
-            var allBackboneSegments = _dbContext.BackboneSegment
-                .Include(x => x.InverseDownstreamBackboneSegment)
-                .Include(x => x.Neighborhood)
+            var allBackboneSegments = _dbContext.vBackboneWithoutGeometry
                 .ToList();
 
             var lookingAt = allBackboneSegments.Where(x => x.NeighborhoodID == neighborhoodID).ToList();
@@ -133,14 +132,19 @@ namespace DroolTool.API.Controllers
 
                 lookingAt = GetInverseDownstreamBackboneSegmentsBasedOnCriteria(allBackboneSegments, backboneAccumulated);
             }
+            
+            var backboneSegmentIDs = backboneAccumulated.Select(y => y.BackboneSegmentID).ToList();
+            var backboneSegments = _dbContext.BackboneSegment.Where(
+                x => backboneSegmentIDs.Contains(x.BackboneSegmentID)
+            ).ToList();
 
-            var featureList = backboneAccumulated.Select(x =>
+            var featureList = backboneSegments.Select(x =>
             {
                 var geometry = UnaryUnionOp.Union(x.BackboneSegmentGeometry4326);
                 return new Feature { Geometry = geometry };
             }).ToList();
 
-            var stormshed = backboneAccumulated.Select(x => x.Neighborhood)
+            var stormshed = backboneSegments.Select(x => x.Neighborhood)
                 .ToList()
                 .Distinct()
                 .Where(x => x != null)
@@ -255,8 +259,8 @@ namespace DroolTool.API.Controllers
             return Ok(new MetricDateDto{Year = dateTime.Year, Month=dateTime.Month});
         }
 
-        private List<BackboneSegment> GetDownstreamBackboneSegmentsBasedOnCriteria(List<BackboneSegment> allBackboneSegments,
-            List<BackboneSegment> accumulatedBackboneSegments)
+        private List<vBackboneWithoutGeometry> GetDownstreamBackboneSegmentsBasedOnCriteria(List<vBackboneWithoutGeometry> allBackboneSegments,
+            List<vBackboneWithoutGeometry> accumulatedBackboneSegments)
         {
             var backboneIDsThatMeetCriteria = allBackboneSegments.Where(accumulatedBackboneSegments.Contains)
                 .Where(x => x.DownstreamBackboneSegmentID.HasValue)
@@ -264,13 +268,14 @@ namespace DroolTool.API.Controllers
                 .ToList();
             return allBackboneSegments.Where(x => backboneIDsThatMeetCriteria.Contains(x.BackboneSegmentID)).Except(accumulatedBackboneSegments).Distinct().ToList();
         }
-        private List<BackboneSegment> GetInverseDownstreamBackboneSegmentsBasedOnCriteria(List<BackboneSegment> allBackboneSegments,
-            List<BackboneSegment> accumulatedBackboneSegments)
+        private List<vBackboneWithoutGeometry> GetInverseDownstreamBackboneSegmentsBasedOnCriteria(List<vBackboneWithoutGeometry> allBackboneSegments,
+            List<vBackboneWithoutGeometry> accumulatedBackboneSegments)
         {
-            var backboneIDsThatMeetCriteria = allBackboneSegments.Where(accumulatedBackboneSegments.Contains)
-                .Where(x => x.InverseDownstreamBackboneSegment != null)
-                .SelectMany(x => x.InverseDownstreamBackboneSegment.Select(y => y.BackboneSegmentID))
-                .ToList();
+            var backboneIDsThatMeetCriteria =
+                allBackboneSegments.Where(x =>
+                    accumulatedBackboneSegments.Select(y => y.DownstreamBackboneSegmentID)
+                        .Contains(x.BackboneSegmentID)).Select(x => x.BackboneSegmentID).Distinct().ToList();
+
             return allBackboneSegments.Where(x => backboneIDsThatMeetCriteria.Contains(x.BackboneSegmentID)).Except(accumulatedBackboneSegments).Distinct().ToList();
         }
     }
