@@ -13,6 +13,7 @@ import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
+import { _ } from 'ag-grid-community';
 
 declare var $: any;
 
@@ -263,6 +264,13 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.afterSetControl.emit(this.layerControl);
   }
 
+  public deinitializeMapEvents(){
+    this.map.off('load');
+    this.map.off('movend');
+    this.map.off('click');
+    this.map.off('dblclick');
+  }
+
   public initializeMapEvents(): void {
     this.map.on('load', (event: L.LeafletEvent) => {
       this.afterLoadMap.emit(event);
@@ -478,6 +486,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
     event.stopPropagation();
     if (!this.traceActive) {
       this.clearLayer(this.traceLayer);
+      this.deinitializeMapEvents();
+      this.setSearchingAndLoadScreen(true);
       this.neighborhoodService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
         this.clearLayer(this.currentMask);
         this.selectedNeighborhoodWatershedMask.addTo(this.map);
@@ -508,6 +518,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
         this.traceActive = true;
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([baseLayer, this.clickMarker, this.stormshedLayer]));
+        this.setSearchingAndLoadScreen(false);
+        this.initializeMapEvents();
       })
     }
     else {
