@@ -107,10 +107,16 @@
                     (click)="showMetrics($event)"><span>Metric Info</span></button>
                 <br class="d-lg-none" />
                 <button *ngIf="searchActive" (click)="displayTrace($event, true)"
-                    class="btn btn-drooltool mb-1 w-100"><span>What drains to here?</span></button>
+                    class="btn btn-drooltool mb-1 w-100" [disabled]="currentlyTracing">
+                    <span *ngIf="currentlyTracing" class="fa fa-spinner loading-spinner mr-2"></span>
+                    <span>What drains to here?</span>
+                </button>
                 <br/>
                 <button *ngIf="searchActive" (click)="displayTrace($event, false)"
-                    class="btn btn-drooltool mb-1 w-100"><span>Where does water flow?</span></button>
+                    class="btn btn-drooltool mb-1 w-100" [disabled]="currentlyTracing">
+                    <span *ngIf="currentlyTracing" class="fa fa-spinner loading-spinner mr-2"></span>
+                    <span>Where does water flow?</span>
+                </button>
             </div>
             <div class="mobile-stats-containing-div" *ngIf="!errorActive">
                 <div *ngIf="selectedMetric != WatershedExplorerMetric.NoMetric" id="collapsePanel"
