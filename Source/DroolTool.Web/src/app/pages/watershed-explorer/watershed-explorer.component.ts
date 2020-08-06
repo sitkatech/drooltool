@@ -466,7 +466,7 @@ export class WatershedExplorerComponent implements OnInit {
         this.traceActive = true;
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.upstreamTraceLayer, this.clickMarker, this.stormshedLayer]));
         this.map.fireEvent("dataload");
-        this.deinitializeMapClickEvents();
+        this.initializeMapClickEvents();
       });
     }
   }
