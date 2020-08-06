@@ -271,9 +271,9 @@ namespace DroolTool.API.Controllers
             List<vBackboneWithoutGeometry> accumulatedBackboneSegments)
         {
             var backboneIDsThatMeetCriteria =
-                allBackboneSegments.Where(x =>
-                    accumulatedBackboneSegments.Select(y => y.DownstreamBackboneSegmentID)
-                        .Contains(x.BackboneSegmentID)).Select(x => x.BackboneSegmentID).Distinct().ToList();
+                allBackboneSegments.Where(x => x.DownstreamBackboneSegmentID != null &&
+                    accumulatedBackboneSegments.Select(y => y.BackboneSegmentID)
+                        .Contains(x.DownstreamBackboneSegmentID.Value)).Select(x => x.BackboneSegmentID).Distinct().ToList();
 
             return allBackboneSegments.Where(x => backboneIDsThatMeetCriteria.Contains(x.BackboneSegmentID)).Except(accumulatedBackboneSegments).Distinct().ToList();
         }

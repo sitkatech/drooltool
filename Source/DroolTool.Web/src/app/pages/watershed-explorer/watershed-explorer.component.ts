@@ -378,6 +378,7 @@ export class WatershedExplorerComponent implements OnInit {
     this.clearLayer(this.downstreamTraceLayer);
     this.clearLayer(this.upstreamTraceLayer);
     this.clearLayer(this.stormshedLayer);
+    this.map.fireEvent("dataloading");
     if (!upstream) {
       this.clearLayer(this.downstreamTraceLayer);
       this.neighborhoodService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
@@ -408,6 +409,7 @@ export class WatershedExplorerComponent implements OnInit {
 
         this.traceActive = true;
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([baseLayer, this.clickMarker]));
+        this.map.fireEvent("dataload");
       })
     }
     else {
@@ -451,6 +453,7 @@ export class WatershedExplorerComponent implements OnInit {
         this.stormshedLayer.bringToBack();
         this.traceActive = true;
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.upstreamTraceLayer, this.clickMarker, this.stormshedLayer]));
+        this.map.fireEvent("dataload");
       });
     }
   }
