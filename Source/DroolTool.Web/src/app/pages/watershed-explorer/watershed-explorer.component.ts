@@ -69,6 +69,7 @@ export class WatershedExplorerComponent implements OnInit {
   public showInstructions: boolean = true;
   public searchActive: boolean = false;
   public currentlySearching: boolean = false;
+  public currentlyTracing: boolean = false;
 
   public errorActive: boolean = false;
   public errorMessage: string = "";
@@ -384,6 +385,7 @@ export class WatershedExplorerComponent implements OnInit {
   public displayTrace(event: Event, upstream: boolean): void {
     this.deinitializeMapClickEvents();
     this.map.fireEvent("dataloading");
+    this.currentlyTracing = true;
     
     //Button lies on top of map, so we don't to be selecting a new area
     event.stopPropagation();
@@ -422,6 +424,7 @@ export class WatershedExplorerComponent implements OnInit {
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([baseLayer, this.clickMarker]));
         this.map.fireEvent("dataload");
         this.initializeMapClickEvents();
+        this.currentlyTracing = false;
       })
     }
     else {
@@ -467,6 +470,7 @@ export class WatershedExplorerComponent implements OnInit {
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.upstreamTraceLayer, this.clickMarker, this.stormshedLayer]));
         this.map.fireEvent("dataload");
         this.initializeMapClickEvents();
+        this.currentlyTracing = false;
       });
     }
   }
