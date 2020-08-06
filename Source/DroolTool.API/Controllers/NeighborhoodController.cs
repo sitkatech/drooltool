@@ -54,7 +54,18 @@ namespace DroolTool.API.Controllers
 
                 var upFromHere = GetInverseDownstreamBackboneSegmentsBasedOnCriteria(allBackboneSegments, lookingAt);
 
-                lookingAt = upFromHere.Union(downFromHere).ToList();
+                /*
+                 * NP 8/6/2020
+                 * The .Except() is necessary here because the trace is bidirectional, so after we go
+                 * from segment A to segment B, we can go back up from B to A if we're not careful.
+                 * Thus: infinite loop, and we are sad.
+                 * (Technically this is still making one redundant step from B back to A, but this won't
+                 * reoccur after the next iteration, and the total number of steps across the graph is
+                 * still bounded linearly by the diameter of the graph as it should be.
+                 * Sharper bounds on the bounding factor are possible with refactoring but unnecessary,
+                 * given current performance.)
+                 */
+                lookingAt = upFromHere.Union(downFromHere).Except(backboneAccumulated).ToList();
             }
 
             var neighborhoodIDs = backboneAccumulated.Select(x => x.NeighborhoodID).Distinct();

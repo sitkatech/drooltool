@@ -419,7 +419,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
     const wholeStormshedFeature = featureCollection.features.find(x=>x.properties.Name === "WholeStormshed");
     const stormshedMinusNeighborhoodFeature = featureCollection.features.find(x=>x.properties.Name === "StormshedMinusNeighborhood");
 
-    // todo: instead of the whole feature collection, this needs to be the "stormshedMinusNeighborhood" feature
     this.stormshedLayer = L.geoJson(stormshedMinusNeighborhoodFeature, {
       style: function () {
         return {
@@ -437,7 +436,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.currentSearchLayer.bringToFront();
 
     //if we get a stormshed, move the mask out
-    // todo: use the WholeStormshedFeature for this one
     this.clearLayer(this.currentMask);
     this.currentMask = L.geoJSON(wholeStormshedFeature, {
       invert: true,
@@ -453,7 +451,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
       }
     }).addTo(this.map);
 
-    //todo: instead of featureCollection.features[0], this needs to be the "wholeStormshedFeature"
     let neighborhoodIDs = wholeStormshedFeature.properties["NeighborhoodIDs"];
     let cql_filter = "NeighborhoodID in (" + neighborhoodIDs.join(",") + ")";
 
