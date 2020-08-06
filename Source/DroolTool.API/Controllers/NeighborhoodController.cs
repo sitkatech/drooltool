@@ -50,9 +50,9 @@ namespace DroolTool.API.Controllers
                 backboneAccumulated.AddRange(lookingAt);
 
                 var downFromHere =
-                    GetDownstreamBackboneSegmentsBasedOnCriteria(allBackboneSegments, backboneAccumulated);
+                    GetDownstreamBackboneSegmentsBasedOnCriteria(allBackboneSegments, lookingAt);
 
-                var upFromHere = GetInverseDownstreamBackboneSegmentsBasedOnCriteria(allBackboneSegments, backboneAccumulated);
+                var upFromHere = GetInverseDownstreamBackboneSegmentsBasedOnCriteria(allBackboneSegments, lookingAt);
 
                 lookingAt = upFromHere.Union(downFromHere).ToList();
             }
@@ -129,7 +129,7 @@ namespace DroolTool.API.Controllers
             {
                 backboneAccumulated.AddRange(lookingAt);
 
-                lookingAt = GetInverseDownstreamBackboneSegmentsBasedOnCriteria(allBackboneSegments, backboneAccumulated);
+                lookingAt = GetInverseDownstreamBackboneSegmentsBasedOnCriteria(allBackboneSegments, lookingAt);
             }
             
             var backboneSegmentIDs = backboneAccumulated.Select(y => y.BackboneSegmentID).ToList();
