@@ -303,6 +303,15 @@ export class WatershedExplorerComponent implements OnInit {
       this.onMapMoveEnd.emit(event);
     });
 
+    this.initializeMapClickEvents();
+
+    $(".leaflet-control-layers").hover(
+      () => {this.layerControlOpen = true;},
+      () => {this.layerControlOpen = false;}
+    );
+  }
+
+  public initializeMapClickEvents(){
     let dblClickTimer = null;
 
     //to handle click for select area vs double click for zoom
@@ -318,12 +327,12 @@ export class WatershedExplorerComponent implements OnInit {
       clearTimeout(dblClickTimer);
       dblClickTimer = null;
       this.map.zoomIn();
-    })
+    });
+  }
 
-    $(".leaflet-control-layers").hover(
-      () => {this.layerControlOpen = true;},
-      () => {this.layerControlOpen = false;}
-    );
+  public deinitializeMapClickEvents(){
+    this.map.off("click");
+    this.map.off("dblclick");
   }
 
   public getNeighborhoodFromLatLong(latlng: Object): void {
@@ -373,12 +382,14 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public displayTrace(event: Event, upstream: boolean): void {
+    this.deinitializeMapClickEvents();
+    this.map.fireEvent("dataloading");
+    
     //Button lies on top of map, so we don't to be selecting a new area
     event.stopPropagation();
     this.clearLayer(this.downstreamTraceLayer);
     this.clearLayer(this.upstreamTraceLayer);
     this.clearLayer(this.stormshedLayer);
-    this.map.fireEvent("dataloading");
     if (!upstream) {
       this.clearLayer(this.downstreamTraceLayer);
       this.neighborhoodService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
@@ -410,6 +421,7 @@ export class WatershedExplorerComponent implements OnInit {
         this.traceActive = true;
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([baseLayer, this.clickMarker]));
         this.map.fireEvent("dataload");
+        this.initializeMapClickEvents();
       })
     }
     else {
@@ -454,6 +466,7 @@ export class WatershedExplorerComponent implements OnInit {
         this.traceActive = true;
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.upstreamTraceLayer, this.clickMarker, this.stormshedLayer]));
         this.map.fireEvent("dataload");
+        this.deinitializeMapClickEvents();
       });
     }
   }
