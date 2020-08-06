@@ -89,7 +89,6 @@ namespace DroolTool.API.Controllers
             var backboneAccumulated = new List<vBackboneWithoutGeometry>();
 
             var allBackboneSegments = _dbContext.vBackboneWithoutGeometry
-                //.Include(x => x.DownstreamBackboneSegment)
                 .ToList();
 
             var lookingAt = allBackboneSegments.Where(x => x.NeighborhoodID == neighborhoodID).ToList();
@@ -98,7 +97,7 @@ namespace DroolTool.API.Controllers
             {
                 backboneAccumulated.AddRange(lookingAt);
 
-                lookingAt = GetDownstreamBackboneSegmentsBasedOnCriteria(allBackboneSegments, backboneAccumulated);
+                lookingAt = GetDownstreamBackboneSegmentsBasedOnCriteria(allBackboneSegments, lookingAt);
             }
             
             var backboneSegmentIDs = backboneAccumulated.Select(y => y.BackboneSegmentID).ToList();
