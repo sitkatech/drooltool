@@ -24,12 +24,15 @@ namespace DroolTool.EFModels.Entities
         public virtual DbSet<FileResource> FileResource { get; set; }
         public virtual DbSet<FileResourceMimeType> FileResourceMimeType { get; set; }
         public virtual DbSet<Neighborhood> Neighborhood { get; set; }
+        public virtual DbSet<NeighborhoodStaging> NeighborhoodStaging { get; set; }
         public virtual DbSet<RawDroolMetric> RawDroolMetric { get; set; }
+        public virtual DbSet<RawDroolMetricStaging> RawDroolMetricStaging { get; set; }
         public virtual DbSet<RegionalSubbasin> RegionalSubbasin { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<WatershedAlias> WatershedAlias { get; set; }
         public virtual DbSet<WatershedMask> WatershedMask { get; set; }
+        public virtual DbSet<vBackboneWithoutGeometry> vBackboneWithoutGeometry { get; set; }
         public virtual DbSet<vGeoServerBackbone> vGeoServerBackbone { get; set; }
         public virtual DbSet<vGeoServerNeighborhood> vGeoServerNeighborhood { get; set; }
         public virtual DbSet<vGeoServerWatershedExplorerMapMetrics> vGeoServerWatershedExplorerMapMetrics { get; set; }
@@ -67,8 +70,6 @@ namespace DroolTool.EFModels.Entities
 
             modelBuilder.Entity<BackboneSegment>(entity =>
             {
-                entity.Property(e => e.StreamName).IsUnicode(false);
-
                 entity.HasOne(d => d.BackboneSegmentType)
                     .WithMany(p => p.BackboneSegment)
                     .HasForeignKey(d => d.BackboneSegmentTypeID)
@@ -183,8 +184,6 @@ namespace DroolTool.EFModels.Entities
                     .HasName("AK_Neighborhood_OCSurveyNeighborhoodID")
                     .IsUnique();
 
-                entity.Property(e => e.DrainID).IsUnicode(false);
-
                 entity.Property(e => e.Watershed).IsUnicode(false);
 
                 entity.HasOne(d => d.OCSurveyDownstreamNeighborhood)
@@ -192,6 +191,15 @@ namespace DroolTool.EFModels.Entities
                     .HasPrincipalKey(p => p.OCSurveyNeighborhoodID)
                     .HasForeignKey(d => d.OCSurveyDownstreamNeighborhoodID)
                     .HasConstraintName("FK_Neighborhood_Neighborhood_OCSurveyDownstreamNeighborhoodID_OCSurveyNeighborhoodID");
+            });
+
+            modelBuilder.Entity<NeighborhoodStaging>(entity =>
+            {
+                entity.HasIndex(e => e.OCSurveyNeighborhoodStagingID)
+                    .HasName("AK_NeighborhoodStaging_OCSurveyNeighborhoodStagingID")
+                    .IsUnique();
+
+                entity.Property(e => e.Watershed).IsUnicode(false);
             });
 
             modelBuilder.Entity<RawDroolMetric>(entity =>
@@ -204,6 +212,11 @@ namespace DroolTool.EFModels.Entities
                     .HasForeignKey(d => d.MetricCatchIDN)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RawDroolMetric_Neighborhood_CatchIDN_OCSurveyNeighborhoodID");
+            });
+
+            modelBuilder.Entity<RawDroolMetricStaging>(entity =>
+            {
+                entity.Property(e => e.RawDroolMetricStagingID).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<RegionalSubbasin>(entity =>
@@ -284,6 +297,13 @@ namespace DroolTool.EFModels.Entities
                 entity.Property(e => e.WatershedMaskName).IsUnicode(false);
             });
 
+            modelBuilder.Entity<vBackboneWithoutGeometry>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vBackboneWithoutGeometry");
+            });
+
             modelBuilder.Entity<vGeoServerBackbone>(entity =>
             {
                 entity.HasNoKey();
@@ -291,8 +311,6 @@ namespace DroolTool.EFModels.Entities
                 entity.ToView("vGeoServerBackbone");
 
                 entity.Property(e => e.BackboneSegmentType).IsUnicode(false);
-
-                entity.Property(e => e.StreamName).IsUnicode(false);
             });
 
             modelBuilder.Entity<vGeoServerNeighborhood>(entity =>
@@ -300,8 +318,6 @@ namespace DroolTool.EFModels.Entities
                 entity.HasNoKey();
 
                 entity.ToView("vGeoServerNeighborhood");
-
-                entity.Property(e => e.DrainID).IsUnicode(false);
 
                 entity.Property(e => e.Watershed).IsUnicode(false);
             });

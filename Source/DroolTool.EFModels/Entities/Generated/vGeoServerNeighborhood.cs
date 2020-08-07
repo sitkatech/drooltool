@@ -12,9 +12,6 @@ namespace DroolTool.EFModels.Entities
         public int OCSurveyNeighborhoodID { get; set; }
         public int? OCSurveyDownstreamNeighborhoodID { get; set; }
         [Required]
-        [StringLength(10)]
-        public string DrainID { get; set; }
-        [Required]
         [StringLength(100)]
         public string Watershed { get; set; }
         [Column(TypeName = "geometry")]

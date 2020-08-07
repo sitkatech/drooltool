@@ -13,6 +13,7 @@ import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
 import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
+import { _ } from 'ag-grid-community';
 
 declare var $: any;
 
@@ -61,7 +62,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public selectedNeighborhoodID: number;
   public selectedNeighborhoodWatershed: string;
   public selectedNeighborhoodWatershedMask: L.Layers;
-  public defaultSelectedMetricDate: Date;
+  public defaultSelectedMetricDate: {Year: number, Month: number};
 
   public areMetricsCollapsed: boolean = true;
 
@@ -150,7 +151,12 @@ export class NeighborhoodExplorerComponent implements OnInit {
       "<span>Stormwater Network <br/> <img src='../../assets/neighborhood-explorer/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({ url: "https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/" })
     })
 
-    this.defaultSelectedMetricDate = this.neighborhoodService.getDefaultMetricDate();
+    
+    this.neighborhoodService.getDefaultMetricDate().subscribe(x=>{
+
+      this.defaultSelectedMetricDate = x
+      console.log(this.defaultSelectedMetricDate);
+    });
 
     this.compileService.configure(this.appRef);
   }
@@ -258,6 +264,13 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.afterSetControl.emit(this.layerControl);
   }
 
+  public deinitializeMapEvents(){
+    this.map.off('load');
+    this.map.off('movend');
+    this.map.off('click');
+    this.map.off('dblclick');
+  }
+
   public initializeMapEvents(): void {
     this.map.on('load', (event: L.LeafletEvent) => {
       this.afterLoadMap.emit(event);
@@ -326,7 +339,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
         this.selectedNeighborhoodProperties = response.features[0].properties;
         this.selectedNeighborhoodID = this.selectedNeighborhoodProperties.NeighborhoodID;
         if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
-          this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID, this.defaultSelectedMetricDate.getUTCFullYear(), this.defaultSelectedMetricDate.getUTCMonth()).subscribe(result => {
+          this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID, this.defaultSelectedMetricDate.Year, this.defaultSelectedMetricDate.Month).subscribe(result => {
             this.selectedNeighborhoodMetrics = result;
             this.map.invalidateSize();
           });
@@ -406,7 +419,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
     const wholeStormshedFeature = featureCollection.features.find(x=>x.properties.Name === "WholeStormshed");
     const stormshedMinusNeighborhoodFeature = featureCollection.features.find(x=>x.properties.Name === "StormshedMinusNeighborhood");
 
-    // todo: instead of the whole feature collection, this needs to be the "stormshedMinusNeighborhood" feature
     this.stormshedLayer = L.geoJson(stormshedMinusNeighborhoodFeature, {
       style: function () {
         return {
@@ -424,7 +436,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.currentSearchLayer.bringToFront();
 
     //if we get a stormshed, move the mask out
-    // todo: use the WholeStormshedFeature for this one
     this.clearLayer(this.currentMask);
     this.currentMask = L.geoJSON(wholeStormshedFeature, {
       invert: true,
@@ -440,7 +451,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
       }
     }).addTo(this.map);
 
-    //todo: instead of featureCollection.features[0], this needs to be the "wholeStormshedFeature"
     let neighborhoodIDs = wholeStormshedFeature.properties["NeighborhoodIDs"];
     let cql_filter = "NeighborhoodID in (" + neighborhoodIDs.join(",") + ")";
 
@@ -473,6 +483,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
     event.stopPropagation();
     if (!this.traceActive) {
       this.clearLayer(this.traceLayer);
+      this.deinitializeMapEvents();
+      this.setSearchingAndLoadScreen(true);
       this.neighborhoodService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
         this.clearLayer(this.currentMask);
         this.selectedNeighborhoodWatershedMask.addTo(this.map);
@@ -503,6 +515,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
         this.traceActive = true;
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([baseLayer, this.clickMarker, this.stormshedLayer]));
+        this.setSearchingAndLoadScreen(false);
+        this.initializeMapEvents();
       })
     }
     else {

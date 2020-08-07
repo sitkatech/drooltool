@@ -13,7 +13,6 @@ namespace DroolTool.EFModels.Entities
         public int? NeighborhoodID { get; set; }
         public int BackboneSegmentTypeID { get; set; }
         public int? DownstreamBackboneSegmentID { get; set; }
-        public string StreamName { get; set; }
         [Column(TypeName = "geometry")]
         public Geometry BackboneSegmentGeometry { get; set; }
         [Required]

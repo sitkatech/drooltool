@@ -18,9 +18,6 @@ namespace DroolTool.EFModels.Entities
         [Key]
         public int NeighborhoodID { get; set; }
         [Required]
-        [StringLength(10)]
-        public string DrainID { get; set; }
-        [Required]
         [StringLength(100)]
         public string Watershed { get; set; }
         [Required]

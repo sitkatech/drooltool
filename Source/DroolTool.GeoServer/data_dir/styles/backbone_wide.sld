@@ -27,33 +27,6 @@
               </CssParameter>
             </Stroke>
           </LineSymbolizer>
-          <TextSymbolizer>
-            <Label>
-              <ogc:PropertyName>StreamName</ogc:PropertyName>
-            </Label>
-            <Font>
-              <CssParameter name="font-size">12</CssParameter>
-            </Font>
-            <LabelPlacement>
-              <LinePlacement >
-              <PerpendicularOffset>8</PerpendicularOffset>
-              </LinePlacement>
-            </LabelPlacement>
-            <Halo>
-              <Radius>3</Radius>
-              <Fill>
-                <CssParameter name="fill">#FFFFFF</CssParameter>
-              </Fill>
-            </Halo>
-            <Fill>
-              <CssParameter name="fill">#000000</CssParameter>
-            </Fill>
-            <VendorOption name="followLine">true</VendorOption>
-            <VendorOption name="maxAngleDelta">15</VendorOption>
-            <VendorOption name="maxDisplacement">500</VendorOption>
-            <VendorOption name="repeat">150</VendorOption>
-            <VendorOption name="group">yes</VendorOption>
-          </TextSymbolizer>
         </Rule>
       </FeatureTypeStyle>
     </UserStyle>
