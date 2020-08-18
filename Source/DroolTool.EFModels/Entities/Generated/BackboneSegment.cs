@@ -24,6 +24,7 @@ namespace DroolTool.EFModels.Entities
         [Column(TypeName = "geometry")]
         public Geometry BackboneSegmentGeometry4326 { get; set; }
         public int? NeighborhoodID { get; set; }
+        public bool InStream { get; set; }
 
         [ForeignKey(nameof(BackboneSegmentTypeID))]
         [InverseProperty("BackboneSegment")]

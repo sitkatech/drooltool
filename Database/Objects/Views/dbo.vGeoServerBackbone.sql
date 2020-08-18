@@ -9,7 +9,8 @@ Select	BackboneSegmentID,
 		b.BackboneSegmentTypeID,
 		DownstreamBackboneSegmentID,
 		BackboneSegmentGeometry4326 as BackboneSegmentGeometry,
-		t.BackboneSegmentTypeName as BackboneSegmentType
+		t.BackboneSegmentTypeName as BackboneSegmentType,
+		InStream as InStream
 From	dbo.BackboneSegment b 
 join	dbo.BackboneSegmentType t on b.BackboneSegmentTypeID = t.BackboneSegmentTypeID
 

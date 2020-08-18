@@ -10,6 +10,7 @@ CREATE TABLE [dbo].[BackboneSegment](
 	[DownstreamBackboneSegmentID] [int] NULL,
 	[BackboneSegmentGeometry4326] [geometry] NULL,
 	[NeighborhoodID] [int] NULL,
+	[InStream] [bit] NOT NULL,
  CONSTRAINT [PK_BackboneSegment_BackboneSegmentID] PRIMARY KEY CLUSTERED 
 (
 	[BackboneSegmentID] ASC
