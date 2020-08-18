@@ -10,7 +10,7 @@ Select	BackboneSegmentID,
 		DownstreamBackboneSegmentID,
 		BackboneSegmentGeometry4326 as BackboneSegmentGeometry,
 		t.BackboneSegmentTypeName as BackboneSegmentType,
-		InStream as InStream
+		case when InStream = 1 then 'True' else 'False' end as InStream
 From	dbo.BackboneSegment b 
 join	dbo.BackboneSegmentType t on b.BackboneSegmentTypeID = t.BackboneSegmentTypeID
 
