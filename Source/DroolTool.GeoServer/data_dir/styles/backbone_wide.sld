@@ -13,8 +13,8 @@
           <Title>Streams</Title>
           <ogc:Filter>
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>BackboneSegmentType</ogc:PropertyName>
-              <ogc:Literal>Channel</ogc:Literal>
+              <ogc:PropertyName>InStream</ogc:PropertyName>
+              <ogc:Literal>True</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <LineSymbolizer>
