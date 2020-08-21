@@ -144,8 +144,9 @@ namespace DroolTool.API.Controllers
             }
             
             var backboneSegmentIDs = backboneAccumulated.Select(y => y.BackboneSegmentID).ToList();
-            var backboneSegments = _dbContext.BackboneSegment.Where(
-                x => backboneSegmentIDs.Contains(x.BackboneSegmentID)
+            var backboneSegments = _dbContext.BackboneSegment
+                .Include(x => x.Neighborhood)
+                .Where(x => backboneSegmentIDs.Contains(x.BackboneSegmentID)
             ).ToList();
 
             var featureList = backboneSegments.Select(x =>
