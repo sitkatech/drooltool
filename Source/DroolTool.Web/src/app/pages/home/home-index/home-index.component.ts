@@ -87,17 +87,18 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         }
         this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
             this.currentUser = currentUser;
-            this.announcementService.getAnnouncementsForHomePage().subscribe(results => {
-                this.slides = results.map((x) => {
-                    return {
-                        date: x.AnnouncementDate,
-                        title: x.AnnouncementTitle,
-                        image: `https://${environment.apiHostName}/FileResource/${x.FileResourceGUIDAsString}`,
-                        link: x.AnnouncementLink
-                    }
-                })
-            })
         });
+
+        this.announcementService.getAnnouncementsForHomePage().subscribe(results => {
+            this.slides = results.map((x) => {
+                return {
+                    date: x.AnnouncementDate,
+                    title: x.AnnouncementTitle,
+                    image: `https://${environment.apiHostName}/FileResource/${x.FileResourceGUIDAsString}`,
+                    link: x.AnnouncementLink
+                }
+            })
+        })
     }
 
     ngOnDestroy(): void {
