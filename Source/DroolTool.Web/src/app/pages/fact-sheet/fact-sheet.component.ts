@@ -241,7 +241,7 @@ export class FactSheetComponent implements AfterViewInit {
     let improvement =  droolPerLandscapedAcreChangeOverLastYearPercentage > 0 ? false : true;
     this.lineOfEncouragement = `What can you do right now to ${improvement ? "keep up the good work?" : "get back on track?"}`;
 
-    return `Change since last year: On average, urban drool has ${improvement ? "decreased" : "increased"} by ${Math.abs(droolPerLandscapedAcreChangeOverLastYearPercentage) * 100}% compared to this time last year${improvement ? "!" : "."}`;
+    return `Change since last year: On average, urban drool has ${improvement ? "decreased" : "increased"} by ${Math.round(Math.abs(droolPerLandscapedAcreChangeOverLastYearPercentage) * 100)}% compared to this time last year${improvement ? "!" : "."}`;
     }
     else {
       return `Change since last year: no data present for last year at this time. Check back soon to get an up-to-date value!`;
