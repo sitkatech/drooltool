@@ -27,7 +27,7 @@ Select
 from dbo.RawDroolMetric
 --We update files on the 12th, and won't typically have a full set for a month until
 --the next month's pull. 
---So: get last month if we've passed the 12th of this month, otherwise get 2 months back
+--So: get last month if we've passed the 11th of this month, otherwise get 2 months back
 where [MetricDate] <= CASE
 						when day(getdate()) > 11 then DATEFROMPARTS(YEAR(dateadd(m, -1, getdate())),MONTH(dateadd(m, -1, getdate())),1)
 						else DATEFROMPARTS(YEAR(dateadd(m, -2, getdate())),MONTH(dateadd(m, -2, getdate())),1)
