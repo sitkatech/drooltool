@@ -244,19 +244,10 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood/get-serviced-neighborhoods-watershed-names")]
         public ActionResult<List<string>> GetServicedNeighborhoodWatershedNames()
         {
-            return _dbContext.Neighborhood
-                .Join(_dbContext.WatershedAlias,
-                    x => x.Watershed,
-                    y => y.WatershedName,
-                    (x, y) => new
-                        {
-                            x.OCSurveyNeighborhoodID, WatershedAlias = y.WatershedAliasName})
-                .Join(_dbContext.RawDroolMetric,
-                    x => x.OCSurveyNeighborhoodID,
-                    y => y.MetricCatchIDN,
-                    (x, y) => new {x.WatershedAlias})
-                .Select(x => x.WatershedAlias)
-                .Distinct()
+            var watershedsInMask = _dbContext.WatershedMask;
+            return _dbContext.WatershedAlias
+                .Where(x => watershedsInMask.Any(y => x.WatershedAliasName.Contains(y.WatershedMaskName)))
+                .Select(x => x.WatershedAliasName)
                 .ToList();
         }
 
