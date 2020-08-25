@@ -25,3 +25,10 @@ Select
 	round([hoa_daily_est_outdoor_usage_sum] * 748.052 * 30, 0) as HoaWaterUsedForIrrigation,
 	round([overall_pct_diff_12mo_daily_est_outdoor_budget_overage_per_irrig_area], 2) as DroolPerLandscapedAcreYearlyPercentDifference
 from dbo.RawDroolMetric
+--We update files on the 12th, and won't typically have a full set for a month until
+--the next month's pull. 
+--So: get last month if we've passed the 11th of this month, otherwise get 2 months back
+where [MetricDate] <= CASE
+						when day(getdate()) > 11 then DATEFROMPARTS(YEAR(dateadd(m, -1, getdate())),MONTH(dateadd(m, -1, getdate())),1)
+						else DATEFROMPARTS(YEAR(dateadd(m, -2, getdate())),MONTH(dateadd(m, -2, getdate())),1)
+				   END

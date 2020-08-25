@@ -257,7 +257,7 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood/get-default-metric-display-date")]
         public ActionResult<MetricDateDto> GetDefaultMetricDisplayDate()
         {
-            var dateTime = _dbContext.RawDroolMetric.Max(x => x.MetricDate);
+            var dateTime = _dbContext.vNeighborhoodMetric.Max(x => x.MetricDate);
             return Ok(new MetricDateDto{Year = dateTime.Year, Month=dateTime.Month});
         }
 

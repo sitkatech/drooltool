@@ -14,6 +14,7 @@ namespace DroolTool.API
         {
             var recurringJobIds = new List<string>();
 
+            //If this date changes, update the vNeighborhoodMetric view as well to ensure we are getting the appropriate metrics at the appropriate time
             AddRecurringJob<MetricSyncJob>(MetricSyncJob.JobName, x => x.RunJob(Null), Cron.Monthly(12, 8, 30), recurringJobIds);
 
             // Remove any jobs we haven't explicitly scheduled
