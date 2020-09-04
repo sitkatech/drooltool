@@ -16,3 +16,4 @@ services:
       - NeighborhoodSourceCoordinateSystemID=${NeighborhoodSourceCoordinateSystemID}
       - HangfireUserName=${HangfireUserName}
       - HangfirePassword=${HangfirePassword}
+      - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}

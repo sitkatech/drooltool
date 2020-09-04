@@ -17,6 +17,7 @@ import { WatershedExplorerComponent } from './pages/watershed-explorer/watershed
 import { HelpComponent } from './pages/help/help.component';
 import { FactSheetComponent } from './pages/fact-sheet/fact-sheet.component';
 import { AnnouncementListComponent } from './pages/announcement-list/announcement-list.component';
+import { ProvideFeedbackComponent } from './pages/provide-feedback/provide-feedback.component';
 
 const routes: Routes = [
   { path: "users", component: UserListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard]},
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: "users/:id/edit", component: UserEditComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard] },
   { path: "news-and-announcements", component: AnnouncementListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard]},
   { path: "invite-user", component: UserInviteComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard] },
+  { path: "feedback", component:ProvideFeedbackComponent},
   { path: "neighborhood-explorer", component: NeighborhoodExplorerComponent},
   { path: "watershed-explorer", component: WatershedExplorerComponent},
   { path: ":id/fact-sheet", component: FactSheetComponent},

@@ -159,44 +159,38 @@ Subject: {mm.Subject}
 
         public static void AddReplyToEmail(MailMessage mailMessage)
         {
-            mailMessage.ReplyToList.Add("admin@rrbwsd.com");
+            mailMessage.ReplyToList.Add("support@sitkatech.com");
         }
 
         public static string GetDefaultEmailSignature()
         {
             const string defaultEmailSignature = @"<br /><br />
-Respectfully, the RRB WSD Water Accounting Platform team
+Respectfully, the Urban Drool Tool team
 <br /><br />
 ***
 <br /><br />
-You have received this email because you are a registered user of the Rosedale-DroolTool Bravo WSD Water Accounting Platform. 
+You have received this email because you are a registered user of the Urban Drool Tool. 
 <br /><br />
-P.O. Box 20820<br />
-Bakersfield, CA 93390-0820<br />
-Phone: (661) 589-6045<br />
-<a href=""mailto:admin@rrbwsd.com"">admin@rrbwsd.com</a>";
+<a href=""mailto:support@sitkatech.com"">support@sitkatech.com</a>";
             return defaultEmailSignature;
         }
 
         public static string GetSupportNotificationEmailSignature()
         {
             const string supportNotificationEmailSignature = @"<br /><br />
-Respectfully, the RRB WSD Water Accounting Platform team
+Respectfully, the Urban Drool Tool team
 <br /><br />
 ***
 <br /><br />
-You have received this email because you are assigned to receive support notifications within the Rosedale-DroolTool Bravo WSD Water Accounting Platform. 
+You have received this email because you are assigned to receive support notifications within the Urban Drool Tool. 
 <br /><br />
-P.O. Box 20820<br />
-Bakersfield, CA 93390-0820<br />
-Phone: (661) 589-6045<br />
-<a href=""mailto:admin@rrbwsd.com"">admin@rrbwsd.com</a>";
+<a href=""mailto:support@sitkatech.com"">support@sitkatech.com</a>";
             return supportNotificationEmailSignature;
         }
 
         public static MailAddress GetDefaultEmailFrom()
         {
-            return new MailAddress("donotreply @sitkatech.com", "RRB Water Accounting Platform");
+            return new MailAddress("donotreply @sitkatech.com", "Urban Drool Tool");
         }
 
         public static void AddBccRecipientsToEmail(MailMessage mailMessage, IEnumerable<string> recipients)

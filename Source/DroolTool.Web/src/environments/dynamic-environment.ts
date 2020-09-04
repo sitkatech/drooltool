@@ -72,4 +72,10 @@ export class DynamicEnvironment {
     public get mapquestApiUrlWithNominatimApiKey() {
         return window.config.mapquestApiUrlWithNominatimApiKey;
     }
+
+    public get recaptchaV3SiteKey() {
+        //ng-recaptcha has certain  limitations, in  this case they only accept a  hard coded string as opposed to allowing for a promise
+        //Check periodically to see  if this has changed, and when it has call window.config as opposed to using this
+        return "6LdI1ccZAAAAAGy1g9fYofkqcp5gHGGr6cfO69JU";
+    }
 }

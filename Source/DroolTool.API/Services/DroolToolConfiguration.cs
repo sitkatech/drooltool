@@ -16,5 +16,6 @@
         public string MNWDFileTransferPassword { get; set; }
 
         public string MetricsDatabaseFTPUrl { get; set; }
+        public string RECAPTCHA_SECRET_KEY { get; set; }
     }
 }
