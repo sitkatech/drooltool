@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="row" style="z-index:1">
             <div class="col-12">
-                <nav class="navbar navbar-drooltool navbar-expand-lg navbar-dark stroke nav-fill">
+                <nav class="navbar navbar-drooltool navbar-dark navbar-expand-xl stroke nav-fill">
                     <a routerLink="/" routerLinkActive="active" class="navbar-brand">
                         <img src="assets/main/logos/{{leadOrganizationLogoFilename()}}" class="navbarLogo">
                     </a>
@@ -33,6 +33,12 @@
                             <li class="nav-item" routerLinkActive="active">
                                 <a class="nav-link" routerLink="/take-action" routerLinkActive="active">
                                     Take Action
+                                </a>
+                            </li>
+                            <div class="dropdown-divider"></div>
+                            <li class="nav-item" routerLinkActive="active">
+                                <a class="nav-link" routerLink="/feedback" routerLinkActive="active">
+                                    Provide Feedback
                                 </a>
                             </li>
                         </ul>
