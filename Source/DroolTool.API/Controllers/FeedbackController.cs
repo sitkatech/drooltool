@@ -31,7 +31,7 @@ namespace DroolTool.API.Controllers
         [HttpPost("feedback/provide-feedback")]
         public async Task<ActionResult> ProvideFeedback([FromForm] FeedbackDto feedbackDto, [FromForm] string token)
         {
-            if (await RecaptchaValidator.IsValidResponseAsync(token, _drooltoolConfiguration.RECAPTCHA_SECRET_KEY) == false)
+            if (await RecaptchaValidator.IsValidResponseAsync(token, _drooltoolConfiguration.RECAPTCHA_SECRET_KEY, _drooltoolConfiguration.RECAPTCHA_VERIFY_URL, _drooltoolConfiguration.RECAPTCHA_SCORE_THRESHOLD) == false)
             {
                 return BadRequest("Recaptcha validation failed. Please try again.");
             }

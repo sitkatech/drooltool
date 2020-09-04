@@ -14,14 +14,13 @@ namespace DroolTool.API.Services
         {
         }
 
-        public static async Task<bool> IsValidResponseAsync(string response, string secret)
+        public static async Task<bool> IsValidResponseAsync(string response, string secret, string verifyURL, double scoreThreshold)
         {
-            var url = "https://www.google.com/recaptcha/api/siteverify";
             var parameters = new Dictionary<string, string> { { "secret", secret }, { "response", response } };
             var encodedContent = new FormUrlEncodedContent(parameters);
 
             HttpClient httpClient = new HttpClient();
-            var httpResponse = await httpClient.PostAsync(url, encodedContent);
+            var httpResponse = await httpClient.PostAsync(verifyURL, encodedContent);
             if (httpResponse.StatusCode != HttpStatusCode.OK)
             {
                 return false;
@@ -35,7 +34,7 @@ namespace DroolTool.API.Services
                 case "true":
                     double score;
                     var convertScore = Double.TryParse(recaptchaResponseJson["score"].ToString(), out score);
-                    return convertScore && score > 0.75;
+                    return convertScore && score > scoreThreshold;
                 case "false":
                     return false;
 

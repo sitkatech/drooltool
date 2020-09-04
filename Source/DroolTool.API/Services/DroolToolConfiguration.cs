@@ -17,5 +17,7 @@
 
         public string MetricsDatabaseFTPUrl { get; set; }
         public string RECAPTCHA_SECRET_KEY { get; set; }
+        public string RECAPTCHA_VERIFY_URL { get; set; }
+        public double RECAPTCHA_SCORE_THRESHOLD { get; set; }
     }
 }

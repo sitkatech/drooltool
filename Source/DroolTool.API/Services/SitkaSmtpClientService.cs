@@ -190,7 +190,7 @@ You have received this email because you are assigned to receive support notific
 
         public static MailAddress GetDefaultEmailFrom()
         {
-            return new MailAddress("donotreply @sitkatech.com", "Urban Drool Tool");
+            return new MailAddress("donotreply@sitkatech.com", "Urban Drool Tool");
         }
 
         public static void AddBccRecipientsToEmail(MailMessage mailMessage, IEnumerable<string> recipients)
