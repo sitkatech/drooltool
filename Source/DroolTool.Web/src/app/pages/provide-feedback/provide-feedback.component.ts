@@ -50,8 +50,9 @@ export class ProvideFeedbackComponent implements OnInit {
         this.isPerformingAction = true;
         this.feedbackService.provideFeedback(feedbackDto, token).subscribe(result => {
           this.isPerformingAction = false;
-          this.alertService.pushAlert(new Alert(`Feedback successfully submitted, thank you!`, AlertContext.Success, true));
-          this.feedbackForm.reset();
+          this.router.navigateByUrl("/").then(x => {
+            this.alertService.pushAlert(new Alert(`Feedback successfully submitted, thank you!`, AlertContext.Success, true));
+          });
         }, error => {
           this.isPerformingAction = false;
           this.alertService.pushAlert(new Alert(`There was an error submitting feedback. Please try again`, AlertContext.Danger, true));
