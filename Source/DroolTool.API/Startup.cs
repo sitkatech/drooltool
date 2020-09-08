@@ -15,6 +15,7 @@ using DroolTool.API.Services.Authorization;
 using DroolTool.EFModels.Entities;
 using Hangfire;
 using Hangfire.SqlServer;
+using Serilog;
 
 namespace DroolTool.API
 {
@@ -50,10 +51,7 @@ namespace DroolTool.API
                 });
 
             services.Configure<DroolToolConfiguration>(Configuration);
-
-            // todo: Calling 'BuildServiceProvider' from application code results in an additional copy of singleton services being created.
-            // Consider alternatives such as dependency injecting services as parameters to 'Configure'.
-            var drooltoolConfiguration = services.BuildServiceProvider().GetService<IOptions<DroolToolConfiguration>>().Value;
+            var drooltoolConfiguration = Configuration.Get<DroolToolConfiguration>();
 
             var keystoneHost = drooltoolConfiguration.KEYSTONE_HOST;
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme).AddIdentityServerAuthentication(options =>
@@ -110,6 +108,7 @@ namespace DroolTool.API
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
             app.UseCors(policy =>

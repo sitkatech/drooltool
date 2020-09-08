@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Events;
 
 namespace DroolTool.API
 {
@@ -13,52 +12,42 @@ namespace DroolTool.API
     {
         public static void Main(string[] args)
         {
-            var host = new HostBuilder()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseKestrel(serverOptions =>
-                        {
-                            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-                            serverOptions.Listen(IPAddress.Any, 80);
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
 
-                            // 1/23 CG & MK - This is done so that Azure wont load the cert, it will only be used locally.
-                            if (env == Environments.Development)
-                            {
-                                serverOptions.Listen(IPAddress.Any, 443, configure =>
-                                {
-                                    var httpsConnectionAdapterOptions = new HttpsConnectionAdapterOptions()
-                                    {
-                                        ClientCertificateMode = ClientCertificateMode.AllowCertificate,
-                                        ServerCertificate = new X509Certificate2("api-dev.drooltool.org.pfx", "password#1"),
-                                        ClientCertificateValidation = (certificate2, chain, arg3) => true
-                                    };
+            try
+            {
+                Log.Information("DroolTool.API starting up");
 
-                                    configure.UseHttps(httpsConnectionAdapterOptions);
-                                });
-                            }
-                        })
-                        .UseIISIntegration()
-                        .UseStartup<Startup>();
-                })
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "DroolTool.API start-up failed");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            var hostBuilder = Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureAppConfiguration((hostContext, config) =>
                 {
-                    // delete all default configuration providers
-                    config.Sources.Clear();
-                    config.SetBasePath(Directory.GetCurrentDirectory());
-                    config.AddEnvironmentVariables();
-
                     var configurationRoot = config.Build();
-
                     var secretPath = configurationRoot["SECRET_PATH"];
                     if (File.Exists(secretPath))
                     {
                         config.AddJsonFile(secretPath);
                     }
-                })
-                .Build();
-
-            host.Run();
+                }).ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+            return hostBuilder;
         }
     }
 }
