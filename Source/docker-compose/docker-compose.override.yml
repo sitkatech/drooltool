@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3.7'
 
 services:
   drooltool.api:
@@ -16,3 +16,6 @@ services:
       - NeighborhoodSourceCoordinateSystemID=${NeighborhoodSourceCoordinateSystemID}
       - HangfireUserName=${HangfireUserName}
       - HangfirePassword=${HangfirePassword}
+      - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
+      - RECAPTCHA_VERIFY_URL=${RECAPTCHA_VERIFY_URL}
+      - RECAPTCHA_SCORE_THRESHOLD=${RECAPTCHA_SCORE_THRESHOLD}

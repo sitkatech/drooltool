@@ -46,7 +46,10 @@ import { ShareButtonsPopupModule } from 'ngx-sharebuttons/popup'
 import { SocialMediaSharingComponent } from './components/social-media-sharing/social-media-sharing.component';
 import { AnnouncementListComponent } from './pages/announcement-list/announcement-list.component'
 import { fas } from "@fortawesome/free-solid-svg-icons";
-import { FaIconLibrary } from "@fortawesome/angular-fontawesome"
+import { FaIconLibrary } from "@fortawesome/angular-fontawesome";
+import { ProvideFeedbackComponent } from './pages/provide-feedback/provide-feedback.component'
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
+import { environment } from 'src/environments/environment';
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -72,7 +75,8 @@ export function init_app(appLoadService: AppInitService) {
     DroolPerLandscapedAcreChartComponent,
     WaterAccountsChartComponent,
     SocialMediaSharingComponent,
-    AnnouncementListComponent
+    AnnouncementListComponent,
+    ProvideFeedbackComponent
   ],
   imports: [
     AppRoutingModule,
@@ -96,13 +100,15 @@ export function init_app(appLoadService: AppInitService) {
       moreButtonIcon: 'share-alt'
     }),
     ShareIconsModule,
-    ShareButtonsPopupModule
+    ShareButtonsPopupModule,
+    RecaptchaV3Module
   ],  
   providers: [
     CookieService,
     AppInitService,
     { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppInitService], multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: RECAPTCHA_V3_SITE_KEY, useValue:environment.recaptchaV3SiteKey},
     DecimalPipe, CurrencyPipe, DatePipe
   ],
   entryComponents: [LinkRendererComponent, FontAwesomeIconLinkRendererComponent, MultiLinkRendererComponent],

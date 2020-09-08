@@ -18,5 +18,8 @@ namespace DroolTool.EFModels.Entities
         [Required]
         [StringLength(20)]
         public string BackboneSegmentType { get; set; }
+        [Required]
+        [StringLength(5)]
+        public string InStream { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /src
 
 COPY ./DroolTool.Models ./DroolTool.Models
@@ -7,7 +7,7 @@ COPY ./DroolTool.API ./DroolTool.API
 
 RUN dotnet publish ./DroolTool.API/DroolTool.API.csproj -c Release -o /app
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0 AS runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
 WORKDIR /app
 COPY --from=build /app /app
 RUN ls -la

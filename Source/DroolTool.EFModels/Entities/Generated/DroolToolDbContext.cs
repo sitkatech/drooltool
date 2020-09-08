@@ -21,6 +21,7 @@ namespace DroolTool.EFModels.Entities
         public virtual DbSet<CustomRichText> CustomRichText { get; set; }
         public virtual DbSet<CustomRichTextType> CustomRichTextType { get; set; }
         public virtual DbSet<DatabaseMigration> DatabaseMigration { get; set; }
+        public virtual DbSet<Feedback> Feedback { get; set; }
         public virtual DbSet<FileResource> FileResource { get; set; }
         public virtual DbSet<FileResourceMimeType> FileResourceMimeType { get; set; }
         public virtual DbSet<Neighborhood> Neighborhood { get; set; }
@@ -131,6 +132,17 @@ namespace DroolTool.EFModels.Entities
                     .HasName("PK_DatabaseMigration_DatabaseMigrationNumber");
 
                 entity.Property(e => e.DatabaseMigrationNumber).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<Feedback>(entity =>
+            {
+                entity.Property(e => e.FeedbackContent).IsUnicode(false);
+
+                entity.Property(e => e.FeedbackEmail).IsUnicode(false);
+
+                entity.Property(e => e.FeedbackName).IsUnicode(false);
+
+                entity.Property(e => e.FeedbackPhoneNumber).IsUnicode(false);
             });
 
             modelBuilder.Entity<FileResource>(entity =>
@@ -311,6 +323,8 @@ namespace DroolTool.EFModels.Entities
                 entity.ToView("vGeoServerBackbone");
 
                 entity.Property(e => e.BackboneSegmentType).IsUnicode(false);
+
+                entity.Property(e => e.InStream).IsUnicode(false);
             });
 
             modelBuilder.Entity<vGeoServerNeighborhood>(entity =>
