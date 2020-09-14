@@ -168,13 +168,13 @@
 }
 
 .metric-value {
-    color: $drool-orange;
+    color: $drool-orange-text;
     font-size: 30px;
     font-weight: 800;
 }
 
 .metric-units {
-    color: $drool-orange;
+    color: $drool-orange-text;
 }
 
 .watershed-intro {
@@ -182,7 +182,7 @@
 }
 
 span.watershed-text {
-    color: $drool-orange;
+    color: $drool-orange-text;
     display: inline-block;
     font-family: "Poppins", sans-serif
 }
