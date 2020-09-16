@@ -10,6 +10,7 @@ $theme-colors: (
         "success": #00cc00,
         "warning": #ffff9f,
         "drool-orange": #ea842c,
+        "drool-orange-text": #B55E12,
         "header-nav-color": #00728d
 );
 
@@ -26,6 +27,7 @@ $text-muted: darken(#d3d3d3, 15%);
 $text-warning: darken($warning, 20%);
 
 $drool-orange: #ea842c;
+$drool-orange-text: #B55E12;
 $header-nav-color: #00728d;
 
 $font-family-sans-serif: 'Tahoma', sans-serif, 'Helvetica Neue', sans-serif;

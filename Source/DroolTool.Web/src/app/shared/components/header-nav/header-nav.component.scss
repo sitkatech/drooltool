@@ -1,3 +1,5 @@
+@import "~src/scss/_variables.scss";
+
 .navbarLogo {
     height: 80px;
   }
@@ -23,7 +25,7 @@
   }
 
   .header-outer {
-    background-color: #00728d;
+    background-color: $header-nav-color;
   }
 
   .navbar.navbar-drooltool a.nav-link,
@@ -38,7 +40,7 @@
   .navbar.navbar-drooltool a.nav-link:hover,
   .top-bar-nav-link:hover,
   .dropdown-item:hover {
-    color:#ea842c;
+    color:$drool-orange-text;
   }
 
   .dropdown-item:hover {

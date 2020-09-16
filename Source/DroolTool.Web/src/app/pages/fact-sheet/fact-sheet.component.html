@@ -19,7 +19,7 @@
     <hr>
     <div class="row">
         <div class="col text-center">
-            <p class="b1 drool-orange">{{searchedAddress}}</p>
+            <p class="b1 drool-orange-text">{{searchedAddress}}</p>
             <style>
                 .leaflet-interactive{
                     cursor: default;
@@ -39,7 +39,7 @@
                 <p class="b2" [innerHTML]="droolPerLandscapedAcreChangeOverLastYearStatement"></p>
             </div>
             <div class="col-12 text-center" *ngIf='droolChartData'>
-                <h3 class="drool-orange">ESTIMATED DROOL CREATION (PER LANDSCAPED ACRE)</h3>
+                <h3 class="drool-orange-text">ESTIMATED DROOL CREATION (PER LANDSCAPED ACRE)</h3>
 
                 <drooltool-drool-per-landscaped-acre-chart [droolChartData]='droolChartData'>
                 </drooltool-drool-per-landscaped-acre-chart>
@@ -76,7 +76,7 @@
             <div class="col-12">
                 <div class="row">
                     <div class="col-lg-6 text-center">
-                        <h3 class="drool-orange">NEIGHBORHOOD WATER CUSTOMERS</h3>
+                        <h3 class="drool-orange-text">NEIGHBORHOOD WATER CUSTOMERS</h3>
                         <drooltool-water-accounts-chart *ngIf="!refresh" [droolChartData]='waterAccountsChartData' [(smallScreen)]='smallScreen'>
                         </drooltool-water-accounts-chart>
                     </div>

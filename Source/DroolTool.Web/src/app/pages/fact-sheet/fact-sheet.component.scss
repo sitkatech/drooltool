@@ -41,8 +41,8 @@ hr {
     margin-bottom: 20px;
 }
 
-.drool-orange {
-    color: $drool-orange;
+.drool-orange-text {
+    color: $drool-orange-text;
 }
 
 .drool-border {
@@ -57,7 +57,7 @@ hr {
         content: "\25E6";
         --webkit-transform: scale(2);
         transform: scale(2);
-        color: $drool-orange;
+        color: $drool-orange-text;
         display: inline-block;
         width: 1em;
         margin-left: -1em;
