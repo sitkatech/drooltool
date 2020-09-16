@@ -9,7 +9,8 @@ import { BusyService } from './shared/services';
 import { AuthenticationService } from './services/authentication.service';
 import { Title } from '@angular/platform-browser';
 
-declare var require: any
+declare var require: any;
+declare let gtag: Function;
 
 @Component({
     selector: 'app-root',
@@ -31,6 +32,11 @@ export class AppComponent {
             } else if (event instanceof RouteConfigLoadEnd) { // lazy loaded route ended
                 this.busyService.setBusy(false);
             } else if (event instanceof NavigationEnd) {
+                gtag('config', 'UA-178256675-1', 
+                   {
+                     'page_path': event.urlAfterRedirects
+                   }
+                  );
                 window.scrollTo(0, 0);
             }
         });
