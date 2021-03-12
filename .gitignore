@@ -9,3 +9,4 @@ Source/DroolTool.Web/src/assets/config.json
 /Source/DroolTool.GeoServer/data_dir/security/*
 /Source/DroolTool.GeoServer/data_dir/logs/geoserver.log
 Source/DroolTool.API/appsecrets.json
+/Source/DroolTool.API/sitka.localhost.rootca.crt

@@ -33,7 +33,7 @@ const routes: Routes = [
   { path: "about", component: AboutComponent},
   { path: "help", component: HelpComponent},
   { path: "", component: HomeIndexComponent},
-  { path: "login-callback", component: LoginCallbackComponent },
+  { path: "signin-oidc", component: LoginCallbackComponent },
   { path: "create-user-callback", component: CreateUserCallbackComponent },
   { path: "not-found", component: NotFoundComponent },
   { path: 'subscription-insufficient', component: SubscriptionInsufficientComponent },

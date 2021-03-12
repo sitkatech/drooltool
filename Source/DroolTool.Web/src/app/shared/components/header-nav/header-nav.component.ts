@@ -36,7 +36,6 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
             this.currentUser = currentUser;
-
             // do not attempt any API hits if the user is known to be unassigned.
             if (currentUser && !this.isUnassignedOrDisabled()) {
 

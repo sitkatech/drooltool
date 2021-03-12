@@ -138,7 +138,9 @@ namespace DroolTool.Web
             SessionChecksEnabled = bool.Parse(configuration["Keystone_SessionCheckEnabled"]);
             LogoutUrl = configuration["Keystone_LogoutUrl"];
             PostLogoutRedirectUri = configuration["Keystone_PostLogoutRedirectUri"];
-            WaitForTokenInMsec = int.Parse(configuration["WaitForTokenInMsec"]);
+            WaitForTokenInMsec = int.Parse(configuration["Keystone_WaitForTokenInMsec"]);
+            ResponseType = configuration["Keystone_ResponseType"];
+            DisablePKCE = bool.Parse(configuration["Keystone_DisablePKCE"]);
         }
 
         [JsonProperty("clientId")]
@@ -157,5 +159,9 @@ namespace DroolTool.Web
         public string PostLogoutRedirectUri { get; set; }
         [JsonProperty("waitForTokenInMsec")]
         public int WaitForTokenInMsec { get; set; }
+        [JsonProperty("responseType")]
+        public string ResponseType {get; set;}
+        [JsonProperty("disablePKCE")]
+        public bool DisablePKCE {get; set;}
     }
 }
