@@ -2,6 +2,8 @@ version: '3.7'
 
 services:
   drooltool.api:
+    build:
+      dockerfile: DroolTool.API/LocalDockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - KEYSTONE_HOST=${KEYSTONE_HOST}
