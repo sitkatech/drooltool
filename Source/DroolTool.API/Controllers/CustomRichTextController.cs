@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using DroolTool.API.Services;
 using DroolTool.API.Services.Authorization;
 using DroolTool.EFModels.Entities;
 using DroolTool.Models.DataTransferObjects;
@@ -13,13 +12,11 @@ namespace DroolTool.API.Controllers
     {
         private readonly DroolToolDbContext _dbContext;
         private readonly ILogger<RoleController> _logger;
-        private readonly KeystoneService _keystoneService;
 
-        public CustomRichTextController(DroolToolDbContext dbContext, ILogger<RoleController> logger, KeystoneService keystoneService)
+        public CustomRichTextController(DroolToolDbContext dbContext, ILogger<RoleController> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
-            _keystoneService = keystoneService;
         }
 
 
@@ -47,8 +44,7 @@ namespace DroolTool.API.Controllers
                 return NotFound();
             }
 
-            CustomRichTextDto updatedCustomRichTextDto =
-                CustomRichText.UpdateCustomRichText(_dbContext, customRichTextTypeID, customRichTextUpdateDto);
+            var updatedCustomRichTextDto = CustomRichText.UpdateCustomRichText(_dbContext, customRichTextTypeID, customRichTextUpdateDto);
 
             return Ok(updatedCustomRichTextDto);
         }
