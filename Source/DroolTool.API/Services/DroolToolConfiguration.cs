@@ -3,7 +3,6 @@
     public class DroolToolConfiguration
     {
         public string KEYSTONE_HOST { get; set; }
-        public string KEYSTONE_HOST_OLD { get; set; }
         public string DB_CONNECTION_STRING { get; set; }
         public string SMTP_HOST { get; set; }
         public int SMTP_PORT { get; set; }

@@ -69,8 +69,7 @@ namespace DroolTool.API
             services.AddSingleton(Configuration);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            var keystoneHostOld = drooltoolConfiguration.KEYSTONE_HOST_OLD;
-            services.AddTransient(s => new KeystoneService(s.GetService<IHttpContextAccessor>(), keystoneHostOld.Replace("core", "")));
+            services.AddTransient(s => new KeystoneService(s.GetService<IHttpContextAccessor>(), keystoneHost));
 
             services.AddTransient(x => new SitkaSmtpClientService(drooltoolConfiguration));
 
