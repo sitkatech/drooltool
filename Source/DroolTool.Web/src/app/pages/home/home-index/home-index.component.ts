@@ -129,26 +129,6 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         return this.authenticationService.isUserAnAdministrator(this.currentUser);
     }
 
-    public isUserALandowner() {
-        return this.authenticationService.isUserALandOwner(this.currentUser);
-    }
-
-    public createAccount(): void {
-        this.authenticationService.createAccount();
-    }
-
-    public forgotPasswordUrl(): string {
-        return `${environment.keystoneSupportBaseUrl}/ForgotPassword`;
-    }
-
-    public forgotUsernameUrl(): string {
-        return `${environment.keystoneSupportBaseUrl}/ForgotUsername`;
-    }
-
-    public keystoneSupportUrl(): string {
-        return `${environment.keystoneSupportBaseUrl}/Support/20`;
-    }
-
     public platformLongName(): string {
         return environment.platformLongName;
     }

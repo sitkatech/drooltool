@@ -76,9 +76,7 @@ namespace DroolTool.Web
             Staging = bool.Parse(configuration["Staging"]);
             Dev = bool.Parse(configuration["Dev"]);
             ApiHostName = configuration["ApiHostName"];
-            CreateAccountUrl = configuration["CreateAccountUrl"];
             CreateAccountRedirectUrl = configuration["CreateAccountRedirectUrl"];
-            KeystoneSupportBaseUrl = configuration["KeystoneSupportBaseUrl"];
             GeoserverMapServiceUrl = configuration["GeoserverMapServiceUrl"];
             KeystoneAuthConfiguration = new KeystoneAuthConfigurationDto(configuration);
             PlatformLongName = configuration["PlatformLongName"];
@@ -99,12 +97,8 @@ namespace DroolTool.Web
         public bool Dev { get; set; }
         [JsonProperty("apiHostName")]
         public string ApiHostName { get; set; }
-        [JsonProperty("createAccountUrl")]
-        public string CreateAccountUrl { get; set; }
         [JsonProperty("createAccountRedirectUrl")]
         public string CreateAccountRedirectUrl { get; set; }
-        [JsonProperty("keystoneSupportBaseUrl")]
-        public string KeystoneSupportBaseUrl { get; set; }
         [JsonProperty("geoserverMapServiceUrl")]
         public string GeoserverMapServiceUrl { get; set; }
         [JsonProperty("keystoneAuthConfiguration")]

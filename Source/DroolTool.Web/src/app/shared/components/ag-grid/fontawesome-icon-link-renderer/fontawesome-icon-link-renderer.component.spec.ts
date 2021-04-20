@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FontAwesomeIconLinkRendererComponent } from './fontawesome-icon-link-renderer.component';
 
-describe('LandownerDashboardLinkRendererComponent', () => {
+describe('FontAwesomeIconLinkRendererComponent', () => {
   let component: FontAwesomeIconLinkRendererComponent;
   let fixture: ComponentFixture<FontAwesomeIconLinkRendererComponent>;
 
