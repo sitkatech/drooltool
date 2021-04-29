@@ -77,11 +77,6 @@ namespace DroolTool.API
         protected abstract void RunJobImplementation();
     }
 
-    public interface IBeehiveSyncJob
-    {
-        void RunJob(IJobCancellationToken token);
-    }
-
     public class ScheduledBackgroundJobException : Exception
     {
         public ScheduledBackgroundJobException(string jobName, Exception innerException)

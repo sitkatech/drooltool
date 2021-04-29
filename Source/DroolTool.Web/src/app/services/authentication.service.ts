@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { UserService } from './user/user.service';
-import { Subject, throwError, BehaviorSubject, Observable } from 'rxjs';
-import { catchError, map, filter } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { CookieStorageService } from '../shared/services/cookies/cookie-storage.service';
-import { isNullOrUndefined } from 'util';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { RoleEnum } from '../shared/models/enums/role.enum';
 import { AlertService } from '../shared/services/alert.service';
 import { Alert } from '../shared/models/alert';
 import { AlertContext } from '../shared/models/enums/alert-context.enum';
 import { UserCreateDto } from '../shared/models/user/user-create-dto';
-import { environment } from 'src/environments/environment';
 import { UserDto } from '../shared/models/user/user-dto';
 
 @Injectable({
@@ -71,16 +69,20 @@ export class AuthenticationService {
     this.router.events
       .pipe(filter(e => e instanceof NavigationStart))
       .subscribe((e: NavigationStart) => {
-        if (this.isAuthenticated() && !this.currentUser) {
-          var claims = this.oauthService.getIdentityClaims();
-          var globalID = claims["sub"];
-          console.log("Authenticated but no user found...")
-          this.getUserObservable = this.userService.getUserFromGlobalID(globalID).subscribe(user => {
-            this.currentUser = user;
-            this._currentUserSetSubject.next(this.currentUser);
-          });
-        }
+        this.checkAuthentication();
       })
+  }
+
+  public checkAuthentication() {
+    if (this.isAuthenticated() && !this.currentUser) {
+      var claims = this.oauthService.getIdentityClaims();
+      var globalID = claims["sub"];
+      console.log("Authenticated but no user found...");
+      this.getUserObservable = this.userService.getUserFromGlobalID(globalID).subscribe(user => {
+        this.currentUser = user;
+        this._currentUserSetSubject.next(this.currentUser);
+      });
+    }
   }
 
   private getUserCallback(user: UserDto) {
@@ -105,15 +107,8 @@ export class AuthenticationService {
   }
 
   public login() {
-    this.oauthService.initImplicitFlow();
+    this.oauthService.initCodeFlow();
   }
-
-  public createAccount() {
-    localStorage.setItem("loginOnReturn", "true");
-    const redirectUrl = encodeURIComponent(environment.createAccountRedirectUrl);
-    window.location.href = `${environment.createAccountUrl}${redirectUrl}`;
-  }
-
 
   public logout() {
     this.oauthService.logOut();
@@ -121,13 +116,6 @@ export class AuthenticationService {
     setTimeout(() => {
       this.cookieStorageService.removeAll();
     });
-  }
-
-  public isUserALandOwner(user: UserDto): boolean {
-    let role = user && user.Role
-      ? user.Role.RoleID
-      : null;
-    return role === RoleEnum.LandOwner;
   }
 
   public isUserAnAdministrator(user: UserDto): boolean {

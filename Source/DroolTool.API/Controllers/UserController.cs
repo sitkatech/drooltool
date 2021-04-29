@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DroolTool.API.Controllers
@@ -32,7 +33,7 @@ namespace DroolTool.API.Controllers
 
         [HttpPost("/users/invite")]
         [UserManageFeature]
-        public IActionResult InviteUser([FromBody] UserInviteDto inviteDto)
+        public async Task<IActionResult> InviteUser([FromBody] UserInviteDto inviteDto)
         {
             if (inviteDto.RoleID.HasValue)
             {
@@ -61,7 +62,7 @@ namespace DroolTool.API.Controllers
                 SupportBlock = "If you have any questions please drop us a line at support@sitkatech.com."
             };
 
-            var response = _keystoneService.Invite(inviteModel);
+            var response = await _keystoneService.Invite(inviteModel);
             if (response.StatusCode != HttpStatusCode.OK || response.Error != null)
             {
                 ModelState.AddModelError("Email", $"There was a problem inviting the user to Keystone: {response.Error.Message}.");
@@ -100,8 +101,7 @@ namespace DroolTool.API.Controllers
                 RoleID = inviteDto.RoleID.Value
             };
 
-            var user = EFModels.Entities.User.CreateNewUser(_dbContext, newUser, keystoneUser.LoginName,
-                keystoneUser.UserGuid);
+            var user = EFModels.Entities.User.CreateNewUser(_dbContext, newUser, keystoneUser.LoginName, keystoneUser.UserGuid);
             return Ok(user);
         }
 

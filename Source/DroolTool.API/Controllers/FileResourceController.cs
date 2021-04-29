@@ -16,13 +16,11 @@ namespace DroolTool.API.Controllers
     {
         private readonly DroolToolDbContext _dbContext;
         private readonly ILogger<RoleController> _logger;
-        private readonly KeystoneService _keystoneService;
 
-        public FileResourceController(DroolToolDbContext dbContext, ILogger<RoleController> logger, KeystoneService keystoneService)
+        public FileResourceController(DroolToolDbContext dbContext, ILogger<RoleController> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
-            _keystoneService = keystoneService;
         }
 
         [HttpPost("FileResource/CkEditorUpload")]

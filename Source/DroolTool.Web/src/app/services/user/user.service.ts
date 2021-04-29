@@ -48,11 +48,6 @@ export class UserService {
         return this.apiService.putToApi(route, userEditAccountsDto);
     }
 
-    getLandownerUsageReportByYear(year: number): Observable<UserDto[]> {
-        let route = `/landowner-usage-report/${year}`;
-        return this.apiService.getFromApi(route);
-    }
-
     getUnassignedUserReport(): Observable<UnassignedUserReportDto> {
         let route = `/users/unassigned-report`;
         return this.apiService.getFromApi(route);
