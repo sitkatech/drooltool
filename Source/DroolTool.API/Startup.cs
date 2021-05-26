@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -54,14 +56,30 @@ namespace DroolTool.API
             var drooltoolConfiguration = Configuration.Get<DroolToolConfiguration>();
 
             var keystoneHost = drooltoolConfiguration.KEYSTONE_HOST;
-            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme).AddIdentityServerAuthentication(options =>
-            {
-                options.Authority = keystoneHost;
-                options.RequireHttpsMetadata = false;
-                options.LegacyAudienceValidation = true;
-                options.EnableCaching = false;
-                options.SupportedTokens = SupportedTokens.Jwt;
-            });
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    if (_environment.IsDevelopment())
+                    {
+                        // NOTE: CG 3/22 - This allows the self-signed cert on Keystone to work locally.
+                        options.BackchannelHttpHandler = new HttpClientHandler()
+                        {
+                            ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true
+                        };
+                        //These allow the use of the container name and the url when developing.
+                        options.TokenValidationParameters.ValidateIssuer = false;
+                    }
+                    options.TokenValidationParameters.ValidateAudience = false;
+                    options.Authority = keystoneHost;
+                    options.RequireHttpsMetadata = false;
+                    options.SecurityTokenValidators.Clear();
+                    options.SecurityTokenValidators.Add(new JwtSecurityTokenHandler
+                    {
+                        MapInboundClaims = false
+                    });
+                    options.TokenValidationParameters.NameClaimType = "name";
+                    options.TokenValidationParameters.RoleClaimType = "role";
+                });
 
             var connectionString = drooltoolConfiguration.DB_CONNECTION_STRING;
             services.AddDbContext<DroolToolDbContext>(c => { c.UseSqlServer(connectionString, x => x.UseNetTopologySuite()); });
