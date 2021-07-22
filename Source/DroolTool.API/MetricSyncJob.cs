@@ -12,12 +12,12 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Hangfire;
 using static System.Int32;
 
 namespace DroolTool.API
 {
-    public class
-        MetricSyncJob : ScheduledBackgroundJobBase<MetricSyncJob>
+    public class MetricSyncJob : ScheduledBackgroundJobBase<MetricSyncJob>, IMetricSyncJob
     {
         public const string JobName = "Metric Sync";
         private readonly DroolToolConfiguration _droolToolConfiguration;
@@ -241,5 +241,10 @@ namespace DroolTool.API
         {
             throw new NotImplementedException();
         }
+    }
+
+    public interface IMetricSyncJob
+    {
+        void RunJob(IJobCancellationToken token);
     }
 }
