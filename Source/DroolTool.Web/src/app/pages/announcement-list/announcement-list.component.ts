@@ -38,7 +38,7 @@ export class AnnouncementListComponent implements OnInit {
     link: new FormControl('')
   });
 
-  private watchUserChangeSubscription: any;
+  
   private currentUser: UserDto;
 
   public gridOptions: GridOptions;
@@ -60,7 +60,7 @@ export class AnnouncementListComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document) { }
 
   ngOnInit() {
-    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.gridOptions = <GridOptions>{};
       this.currentUser = currentUser;
       let _datePipe = this.datePipe;
@@ -174,8 +174,8 @@ export class AnnouncementListComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.watchUserChangeSubscription.unsubscribe();
-    this.authenticationService.dispose();
+    
+    
     this.cdr.detach();
   }
 

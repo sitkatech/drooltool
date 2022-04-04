@@ -22,7 +22,7 @@ namespace DroolTool.API
         public const string JobName = "Metric Sync";
         private readonly DroolToolConfiguration _droolToolConfiguration;
 
-        public MetricSyncJob(IWebHostEnvironment webHostEnvironment, ILogger<MetricSyncJob> logger, DroolToolDbContext droolToolDbContext, IOptions<DroolToolConfiguration> droolToolConfigurationOptions) : base("Beehive Sync", logger, webHostEnvironment, droolToolDbContext)
+        public MetricSyncJob(IWebHostEnvironment webHostEnvironment, ILogger<MetricSyncJob> logger, DroolToolDbContext droolToolDbContext, IOptions<DroolToolConfiguration> droolToolConfigurationOptions) : base(JobName, logger, webHostEnvironment, droolToolDbContext)
         {
             _droolToolConfiguration = droolToolConfigurationOptions.Value;
         }

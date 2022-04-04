@@ -20,7 +20,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   @ViewChild('usersGrid') usersGrid: AgGridAngular;
   @ViewChild('unassignedUsersGrid') unassignedUsersGrid: AgGridAngular;
 
-  private watchUserChangeSubscription: any;
+  
 
   public rowData = [];
   columnDefs: ColDef[];
@@ -31,7 +31,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef, private authenticationService: AuthenticationService, private utilityFunctionsService: UtilityFunctionsService, private userService: UserService, private decimalPipe: DecimalPipe) { }
 
   ngOnInit() {
-    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.userService.getUsers().subscribe(users => {
         let _decimalPipe = this.decimalPipe;
 
@@ -83,8 +83,8 @@ export class UserListComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.watchUserChangeSubscription.unsubscribe();
-    this.authenticationService.dispose();
+    
+    
     this.cdr.detach();
   }
 
