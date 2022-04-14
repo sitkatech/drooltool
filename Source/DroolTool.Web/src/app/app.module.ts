@@ -4,7 +4,7 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
-import { OAuthModule } from 'angular-oauth2-oidc';
+import { OAuthModule, OAuthStorage } from 'angular-oauth2-oidc';
 import { CookieService } from 'ngx-cookie-service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './shared/interceptors/auth-interceptor';
@@ -50,6 +50,7 @@ import { FaIconLibrary } from "@fortawesome/angular-fontawesome";
 import { ProvideFeedbackComponent } from './pages/provide-feedback/provide-feedback.component'
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 import { environment } from 'src/environments/environment';
+import { CookieStorageService } from './shared/services/cookies/cookie-storage.service';
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -109,7 +110,11 @@ export function init_app(appLoadService: AppInitService) {
     { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppInitService], multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: RECAPTCHA_V3_SITE_KEY, useValue:environment.recaptchaV3SiteKey},
-    DecimalPipe, CurrencyPipe, DatePipe
+    DecimalPipe, CurrencyPipe, DatePipe,
+    {
+      provide: OAuthStorage,
+      useClass: CookieStorageService
+    }
   ],
   entryComponents: [LinkRendererComponent, FontAwesomeIconLinkRendererComponent, MultiLinkRendererComponent],
   bootstrap: [AppComponent]

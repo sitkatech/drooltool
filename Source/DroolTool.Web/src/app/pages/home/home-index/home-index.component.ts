@@ -15,7 +15,7 @@ import { AnnouncementService } from 'src/app/services/announcement/announcement.
     styleUrls: ['./home-index.component.scss']
 })
 export class HomeIndexComponent implements OnInit, OnDestroy {
-    public watchUserChangeSubscription: any;
+    
     public currentUser: UserDto;
     public node:any;
 
@@ -74,6 +74,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
     constructor(private authenticationService: AuthenticationService,
         @Inject(DOCUMENT) private document: Document,
         private router: Router,
+        private route: ActivatedRoute,
         private meta: Meta,
         private activatedRoute: ActivatedRoute,
         private location: Location,
@@ -81,12 +82,30 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        if (localStorage.getItem("loginOnReturn")) {
-            localStorage.removeItem("loginOnReturn");
-            this.authenticationService.login();
-        }
-        this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
-            this.currentUser = currentUser;
+        this.route.queryParams.subscribe(params => {
+            //We're logging in
+            if (params.hasOwnProperty("code")) {
+                this.router.navigate(["/signin-oidc"], { queryParams : params });
+                return;
+            }
+
+            if (localStorage.getItem("loginOnReturn")) {
+                localStorage.removeItem("loginOnReturn");
+                this.authenticationService.login();
+            }
+    
+            //We were forced to logout or were sent a link and just finished logging in
+            if (this.authenticationService.getAuthRedirectUrl()) {
+                this.router.navigateByUrl(this.authenticationService.getAuthRedirectUrl())
+                    .then(() => {
+                        this.authenticationService.clearAuthRedirectUrl();
+                    });
+            }
+    
+            this.authenticationService.getCurrentUser().subscribe(currentUser => {
+                this.currentUser = currentUser;
+            });
+
         });
 
         this.announcementService.getAnnouncementsForHomePage().subscribe(results => {
@@ -102,7 +121,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.watchUserChangeSubscription.unsubscribe();
+        
     }
 
     public showSlides(): boolean {

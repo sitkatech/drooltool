@@ -20,7 +20,7 @@ export class CustomRichTextComponent implements OnInit {
   public isLoading: boolean = true;
   public isEditing: boolean = false;
   public isEmptyContent: boolean = false;
-  public watchUserChangeSubscription: any;
+  
   public Editor = ClassicEditor;
   public editedContent: string;
   public editor;
@@ -35,7 +35,7 @@ export class CustomRichTextComponent implements OnInit {
     private alertService: AlertService) { }
 
   ngOnInit() {
-    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
     });
     //window.Editor = this.Editor;

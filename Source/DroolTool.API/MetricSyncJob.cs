@@ -12,17 +12,17 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Hangfire;
 using static System.Int32;
 
 namespace DroolTool.API
 {
-    public class
-        MetricSyncJob : ScheduledBackgroundJobBase<MetricSyncJob>
+    public class MetricSyncJob : ScheduledBackgroundJobBase<MetricSyncJob>, IMetricSyncJob
     {
         public const string JobName = "Metric Sync";
         private readonly DroolToolConfiguration _droolToolConfiguration;
 
-        public MetricSyncJob(IWebHostEnvironment webHostEnvironment, ILogger<MetricSyncJob> logger, DroolToolDbContext droolToolDbContext, IOptions<DroolToolConfiguration> droolToolConfigurationOptions) : base("Beehive Sync", logger, webHostEnvironment, droolToolDbContext)
+        public MetricSyncJob(IWebHostEnvironment webHostEnvironment, ILogger<MetricSyncJob> logger, DroolToolDbContext droolToolDbContext, IOptions<DroolToolConfiguration> droolToolConfigurationOptions) : base(JobName, logger, webHostEnvironment, droolToolDbContext)
         {
             _droolToolConfiguration = droolToolConfigurationOptions.Value;
         }
@@ -241,5 +241,10 @@ namespace DroolTool.API
         {
             throw new NotImplementedException();
         }
+    }
+
+    public interface IMetricSyncJob
+    {
+        void RunJob(IJobCancellationToken token);
     }
 }
