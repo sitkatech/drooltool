@@ -27,7 +27,7 @@ namespace DroolTool.API
             _droolToolConfiguration = droolToolConfigurationOptions.Value;
         }
 
-        public override List<RunEnvironment> RunEnvironments => new List<RunEnvironment> { RunEnvironment.Development, RunEnvironment.Staging, RunEnvironment.Production };
+        public override List<RunEnvironment> RunEnvironments => new List<RunEnvironment> { RunEnvironment.Production };
         protected override void RunJobImplementation()
         {
             var tempNeighborhoodFileName = DownloadLatestNeighborhoodFileToTempFileAndReturnTempFileName(_droolToolConfiguration.MetricsDatabaseFTPUrl, _droolToolConfiguration.MNWDFileTransferUsername, _droolToolConfiguration.MNWDFileTransferPassword);

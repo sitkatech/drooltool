@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using DroolTool.API.Services;
 using DroolTool.EFModels.Entities;
 using DroolTool.Models.DataTransferObjects;
-using DroolTool.Models.DataTransferObjects.User;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace DroolTool.API.Controllers
 {
