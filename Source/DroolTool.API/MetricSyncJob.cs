@@ -27,19 +27,19 @@ namespace DroolTool.API
             _droolToolConfiguration = droolToolConfigurationOptions.Value;
         }
 
-        public override List<RunEnvironment> RunEnvironments => new List<RunEnvironment> { RunEnvironment.Development, RunEnvironment.Staging, RunEnvironment.Production };
+        public override List<RunEnvironment> RunEnvironments => new List<RunEnvironment> { RunEnvironment.Production };
         protected override void RunJobImplementation()
         {
-            var tempNeighborhoodFileName = DownloadLatestNeighborhoodFileToTempFileAndReturnTempFileName(_droolToolConfiguration.MetricsDatabaseFTPUrl, _droolToolConfiguration.MNWDFileTransferUsername, _droolToolConfiguration.MNWDFileTransferPassword);
-            var tempMetricsFileName = DownloadLatestMetricFileToTempFileAndReturnTempFileName(_droolToolConfiguration.MetricsDatabaseFTPUrl, _droolToolConfiguration.MNWDFileTransferUsername, _droolToolConfiguration.MNWDFileTransferPassword);
+            //var tempNeighborhoodFileName = DownloadLatestNeighborhoodFileToTempFileAndReturnTempFileName(_droolToolConfiguration.MetricsDatabaseFTPUrl, _droolToolConfiguration.MNWDFileTransferUsername, _droolToolConfiguration.MNWDFileTransferPassword);
+            //var tempMetricsFileName = DownloadLatestMetricFileToTempFileAndReturnTempFileName(_droolToolConfiguration.MetricsDatabaseFTPUrl, _droolToolConfiguration.MNWDFileTransferUsername, _droolToolConfiguration.MNWDFileTransferPassword);
 
-            var metricsDataTable = LoadMetricsToDataTable(tempMetricsFileName);
+            //var metricsDataTable = LoadMetricsToDataTable(tempMetricsFileName);
 
-            StageNeighborhoods(tempNeighborhoodFileName);
-            StageData(metricsDataTable, _dbContext);
+            //StageNeighborhoods(tempNeighborhoodFileName);
+            //StageData(metricsDataTable, _dbContext);
 
-            _dbContext.Database.SetCommandTimeout(600);
-            _dbContext.Database.ExecuteSqlRaw("exec dbo.pWriteStagedMetricsAndNeighborhoodsToLiveTable");
+            //_dbContext.Database.SetCommandTimeout(600);
+            //_dbContext.Database.ExecuteSqlRaw("exec dbo.pWriteStagedMetricsAndNeighborhoodsToLiveTable");
         }
 
         private void StageNeighborhoods(string tempFilename)

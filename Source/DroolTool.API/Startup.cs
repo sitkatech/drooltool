@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using DroolTool.API.Services;
@@ -91,7 +90,7 @@ namespace DroolTool.API
 
             services.AddTransient(x => new SitkaSmtpClientService(drooltoolConfiguration));
 
-            services.AddScoped(s => s.GetService<IHttpContextAccessor>().HttpContext);
+            services.AddScoped(s => s.GetService<IHttpContextAccessor>()?.HttpContext);
             services.AddScoped(s => UserContext.GetUserFromHttpContext(s.GetService<DroolToolDbContext>(), s.GetService<IHttpContextAccessor>().HttpContext));
             services.AddScoped<IMetricSyncJob, MetricSyncJob>();
             // Add Hangfire services.
