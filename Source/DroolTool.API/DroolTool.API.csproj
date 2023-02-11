@@ -10,9 +10,9 @@
 
   <ItemGroup>
     <PackageReference Include="DotSpatial.Projections" Version="4.0.656" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.29" />
-    <PackageReference Include="HangFire.Core" Version="1.7.29" />
-    <PackageReference Include="HangFire.SqlServer" Version="1.7.29" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.33" />
+    <PackageReference Include="HangFire.Core" Version="1.7.33" />
+    <PackageReference Include="HangFire.SqlServer" Version="1.7.33" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
@@ -23,6 +23,7 @@
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="2.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
 
 
