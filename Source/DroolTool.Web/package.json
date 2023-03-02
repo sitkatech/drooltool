@@ -69,7 +69,7 @@
     "slick-carousel": "^1.8.1",
     "style-loader": "^1.2.1",
     "tslib": "^1.11.1",
-    "vega": "^5.12.3",
+    "vega": "^5.23.0",
     "vega-embed": "^6.8.0",
     "vega-lite": "^4.12.2",
     "zone.js": "~0.10.2"
