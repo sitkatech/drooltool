@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="DotSpatial.Projections" Version="4.0.656" />
+    <PackageReference Include="FluentFTP" Version="45.2.0" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.33" />
     <PackageReference Include="HangFire.Core" Version="1.7.33" />
     <PackageReference Include="HangFire.SqlServer" Version="1.7.33" />

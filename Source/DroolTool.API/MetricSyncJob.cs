@@ -12,6 +12,8 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Authentication;
+using FluentFTP;
 using Hangfire;
 using static System.Int32;
 
@@ -27,19 +29,19 @@ namespace DroolTool.API
             _droolToolConfiguration = droolToolConfigurationOptions.Value;
         }
 
-        public override List<RunEnvironment> RunEnvironments => new List<RunEnvironment> { RunEnvironment.Production };
+        public override List<RunEnvironment> RunEnvironments => new List<RunEnvironment> { RunEnvironment.Development, RunEnvironment.Production };
         protected override void RunJobImplementation()
         {
-            //var tempNeighborhoodFileName = DownloadLatestNeighborhoodFileToTempFileAndReturnTempFileName(_droolToolConfiguration.MetricsDatabaseFTPUrl, _droolToolConfiguration.MNWDFileTransferUsername, _droolToolConfiguration.MNWDFileTransferPassword);
-            //var tempMetricsFileName = DownloadLatestMetricFileToTempFileAndReturnTempFileName(_droolToolConfiguration.MetricsDatabaseFTPUrl, _droolToolConfiguration.MNWDFileTransferUsername, _droolToolConfiguration.MNWDFileTransferPassword);
+            var tempNeighborhoodFileName = DownloadLatestNeighborhoodFileToTempFileAndReturnTempFileName(_droolToolConfiguration.MetricsDatabaseFTPUrl, _droolToolConfiguration.MNWDFileTransferUsername, _droolToolConfiguration.MNWDFileTransferPassword);
+            var tempMetricsFileName = DownloadLatestMetricFileToTempFileAndReturnTempFileName(_droolToolConfiguration.MetricsDatabaseFTPUrl, _droolToolConfiguration.MNWDFileTransferUsername, _droolToolConfiguration.MNWDFileTransferPassword);
 
-            //var metricsDataTable = LoadMetricsToDataTable(tempMetricsFileName);
+            var metricsDataTable = LoadMetricsToDataTable(tempMetricsFileName);
 
-            //StageNeighborhoods(tempNeighborhoodFileName);
-            //StageData(metricsDataTable, _dbContext);
+            StageNeighborhoods(tempNeighborhoodFileName);
+            StageData(metricsDataTable, _dbContext);
 
-            //_dbContext.Database.SetCommandTimeout(600);
-            //_dbContext.Database.ExecuteSqlRaw("exec dbo.pWriteStagedMetricsAndNeighborhoodsToLiveTable");
+            _dbContext.Database.SetCommandTimeout(600);
+            _dbContext.Database.ExecuteSqlRaw("exec dbo.pWriteStagedMetricsAndNeighborhoodsToLiveTable");
         }
 
         private void StageNeighborhoods(string tempFilename)
@@ -180,53 +182,31 @@ namespace DroolTool.API
             return DownloadLatestFileToTempFileAndReturnTempFileName(url, username, password, "rsb_geo");
         }
 
-        private static string DownloadLatestFileToTempFileAndReturnTempFileName(string url, string username, string password, string filenameToSearchFor)
+        public static string DownloadLatestFileToTempFileAndReturnTempFileName(string url, string username, string password, string filenameToSearchFor)
         {
-            // Get the object used to communicate with the server.
-            var directoryRequest = (FtpWebRequest)WebRequest.Create(url);
-            directoryRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-            directoryRequest.Credentials = new NetworkCredential(username, password);
-            var lines = new List<string>();
-            using (var response = (FtpWebResponse)directoryRequest.GetResponse())
+
+            var client = new FtpClient(url, username, password); // or set Host & Credentials
+            client.Config.EncryptionMode = FtpEncryptionMode.Implicit;
+            client.Config.ValidateAnyCertificate = true;
+            client.Config.SslProtocols = SslProtocols.Tls12;
+            client.Connect();
+            
+            client.SetWorkingDirectory("DroolTool");
+            var lines = client.GetListing();
+
+            var ftpListItem = lines.Where(x => x.Name.StartsWith(filenameToSearchFor)).MaxBy(x => x.Modified);
+            if (ftpListItem == null)
             {
-                using var responseStream = response.GetResponseStream();
-                var reader = new StreamReader(responseStream);
-                while (!reader.EndOfStream)
-                {
-                    lines.Add(reader.ReadLine());
-                }
+                return null; // possibly throw here
             }
-
-            var filenames = lines.Select(x => x.Split(new[] {' ', '\t'}).Last());
-
-            // we're expecting filenames to be in the form {Name}_{YY}_{MM}_{DD}.{Extension},
-            // so do some parsing to get the most recent file.
-            // Goes without saying, but if they change their naming convention this will break.
-            var latestMetricFilename = filenames.Where(x => x.Contains(filenameToSearchFor)).Select(x =>
-            {
-                var split = x.Split(new[] { '.', '_' });
-                // Not trying to get political, but think it's a safe bet that we don't need to worry about year 2100+ for right now.
-                var year = 2000 + Parse(split[2]);
-                var month = Parse(split[3]);
-                var day = Parse(split[4]);
-                return new { Filename = x, Date = new DateTime(year, month, day) };
-            }).OrderByDescending(x=>x.Date).First().Filename;
-
-            var request = (FtpWebRequest)WebRequest.Create($"{url}{latestMetricFilename}");
-            request.Method = WebRequestMethods.Ftp.DownloadFile;
-            request.Credentials = new NetworkCredential(username,password);
 
             var tempFileName = Path.GetTempFileName();
-
-            using (var response = (FtpWebResponse)request.GetResponse())
-            using (var responseStream = response.GetResponseStream())
-            using (var reader = new StreamReader(responseStream ?? throw new InvalidOperationException("The ResponseStream from the FTP request was null.")))
-            using (var destination = new StreamWriter(tempFileName))
+            using var responseStream = new MemoryStream();
+            var success = client.DownloadFile(tempFileName, ftpListItem.FullName);
+            if (success != FtpStatus.Success)
             {
-                destination.Write(reader.ReadToEnd());
-                destination.Flush();
+                throw new Exception(); // TODO: Shannon
             }
-
             return tempFileName;
         }
     }
