@@ -197,15 +197,15 @@ namespace DroolTool.API
             var ftpListItem = lines.Where(x => x.Name.StartsWith(filenameToSearchFor)).MaxBy(x => x.Modified);
             if (ftpListItem == null)
             {
-                return null; // possibly throw here
+                throw new NeighborhoodSyncException($"No Neighborhood file found for search string '{filenameToSearchFor}'.");
             }
 
             var tempFileName = Path.GetTempFileName();
             using var responseStream = new MemoryStream();
             var success = client.DownloadFile(tempFileName, ftpListItem.FullName);
-            if (success != FtpStatus.Success)
+            if (success != FtpStatus.Success || true)
             {
-                throw new Exception(); // TODO: Shannon
+                throw new NeighborhoodSyncException($"The Neighborhood file '{ftpListItem.FullName}' could not be downloaded from MNWD. FtpStatus was '{success}'.");
             }
             return tempFileName;
         }
