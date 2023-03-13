@@ -105,9 +105,9 @@
                                 *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.TotalDrool">
                                 <p class="b3"><span
                                         class="metric-value">{{selectedNeighborhoodMetrics.TotalDrool | number:'1.0-0':'en-US'}}</span><span
-                                        class="metric-units"> gallons</span> of urban drool were created in
+                                        class="metric-units"> gallons</span> of urban drool may have been created in
                                     {{months[selectedNeighborhoodMetrics.MetricMonth - 1]}}</p>
-                                <p *ngIf="selectedNeighborhoodMetrics.TotalDrool > 20000" class="b4">This is
+                                <p *ngIf="selectedNeighborhoodMetrics.TotalDrool > 20000" class="b4">This would be 
                                     enough
                                     urban drool to fill
                                     {{selectedNeighborhoodMetrics.TotalDrool / 20000 | number:'1.0-0':'en-US'}}
