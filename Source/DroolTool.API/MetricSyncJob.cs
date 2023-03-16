@@ -203,7 +203,7 @@ namespace DroolTool.API
             var tempFileName = Path.GetTempFileName();
             using var responseStream = new MemoryStream();
             var success = client.DownloadFile(tempFileName, ftpListItem.FullName);
-            if (success != FtpStatus.Success || true)
+            if (success != FtpStatus.Success)
             {
                 throw new NeighborhoodSyncException($"The Neighborhood file '{ftpListItem.FullName}' could not be downloaded from MNWD. FtpStatus was '{success}'.");
             }
