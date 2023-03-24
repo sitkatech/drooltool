@@ -4,6 +4,6 @@ services:
   drooltool.web:
     environment:
       - DOTNET_USE_POLLING_FILE_WATCHER=1    
-    image: sitkacontainers.azurecr.io/drooltool/web
+    image: drooltool/web
     labels:
       - "com.microsoft.visualstudio.targetoperatingsystem=linux"

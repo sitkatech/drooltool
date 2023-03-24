@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   drooltool.web:
-    image: sitkacontainers.azurecr.io/drooltool/web
+    image: drooltool/web
     build:
       args:
         env: ${ENVIRONMENT}
