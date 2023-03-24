@@ -1,5 +1,5 @@
-<div class="container">
-
+<div *ngIf="currentUser">
+    <div class="container">
     <ngb-alert *ngIf="userIsUnassigned()" [type]="'info'" [dismissible]="false">
         <span>
             Welcome {{currentUser.FullName}}. You have successfully logged in to the {{platformLongName()}},
@@ -26,7 +26,7 @@
             <h1>Only rain down the drain</h1>
             <div>
                 <p class="b1">
-                    Runoff from overwatering and car washing picks up fertilizer, bacteria, and other contaminants on
+                        Water that discharges off your property due to overwatering landscape or car washing, picks up fertilizer, bacteria, and other contaminants on
                     its way to creeks and beaches.
                 </p>
                 <br/>
@@ -37,7 +37,7 @@
                 <p class="b1">
                     This “Urban Drool” contributes to more than <span class="d-inline-block"><strong>1 million gallons</strong></span>
                     of polluted discharge to
-                    Aliso Creek each day. But small changes in how you use water can eliminate drool and save you money. 
+                        Aliso Creek each day. But small changes in how you use outdoor water can help eliminate urban drool and save you money.
                 </p>
                 <br/>
                 <p class="b1">
@@ -49,16 +49,16 @@
             <img id="topImage" src="./assets/home/top-image.png">
         </div>
     </div>
-</div>
-<div id="mapImage" class="row homeSection h-100 pt-0">
+    </div>
+    <div id="mapImage" class="row homeSection h-100 pt-0">
     <div class="col-12 text-center my-auto">
         <h1 style="margin-bottom:30px">Do you add to urban drool?
         </h1>
         <div class="row" style="margin-bottom:30px">
             <div class="col-12 col-md-6 offset-md-3">
                 <p class="b1">
-                    Use these interactive tools to learn more about urban water usage
-                    and its effect on our watersheds.
+                        Use these interactive tools to learn more about urban outdoor water usage 
+                        and its potential effect on our watersheds.
                 </p>
             </div>
         </div>
@@ -67,7 +67,7 @@
                 <a routerLink="/neighborhood-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool"
                     style="margin-bottom:20px">Neighborhood Explorer</a>
                 <p class="b2">
-                    Find out how your neighborhood contributes to urban drool and
+                        Find out how your neighborhood may contribute to urban drool and 
                     what you can do.
                 </p>
             </div>
@@ -75,13 +75,13 @@
                 <a routerLink="/watershed-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool"
                     style="margin-bottom:20px">Watershed Explorer</a>
                 <p class="b2">
-                    Learn more about your watershed and the benefits of reducing urban drool
+                        Learn more about your watershed and the benefits of reducing urban drool.
                 </p>
             </div>
         </div>
     </div>
-</div>
-<div class="container">
+    </div>
+    <div class="container">
     <div class="row homeSection">
         <div class="col-12 col-lg-8 m-lg-auto order-lg-last">
             <div class='embed-container'>
@@ -92,9 +92,9 @@
             <div>
                 <h1>Take action in your community!</h1>
                 <p class="b2">
-                    Moulton Niguel Water District and the Municipal Water District
-                    of Orange County offer a variety of rebate programs you can participate
-                    in to reduce the amount of urban drool your household creates.
+                        Moulton Niguel Water District and the Municipal Water District 
+                        of Orange County offer a variety of rebate programs you can participate 
+                        in to reduce the amount of urban drool your household may create.
                 </p>
                 <p class="b2">
                     <a routerLink="/take-action" routerLinkActive="true">Check out rebate programs</a>
@@ -153,8 +153,8 @@
                     <h3 class="mt-1">New Rebate Option: <br>
                         Weather-Based Smart Sprinkler Timers
                     </h3>
-                    <p class="b3">Moulton Niguel offers a variety of rebate programs you can join
-                        to reduce the opportunities your household has to create
+                        <p class="b3">Moulton Niguel Water District offers a variety of rebate programs you can join 
+                            to reduce the opportunities your household has to create 
                         urban drool.</p>
                 </div>
             </div>
@@ -164,5 +164,12 @@
         <div class="col text-center mt-auto">
             <img id="waterPlantsImage" src="./assets/home/water-plants.png">
         </div>
+    </div>
+    </div>
+</div>
+<div *ngIf="!currentUser" class="container">
+    <div class="row" style="padding-top: 80px; justify-content: center; align-items: center;">
+        <img id="underConstruction" src="./assets/home/under-construction.png" style="max-height: 200px;">
+        <h1>Site Under Construction</h1>
     </div>
 </div>

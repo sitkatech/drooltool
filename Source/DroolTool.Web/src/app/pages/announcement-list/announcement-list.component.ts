@@ -64,7 +64,7 @@ export class AnnouncementListComponent implements OnInit {
       this.gridOptions = <GridOptions>{};
       this.currentUser = currentUser;
       let _datePipe = this.datePipe;
-      this.announcementGrid.api.showLoadingOverlay();
+      this.announcementGrid?.api.showLoadingOverlay();
       this.announcementService.getAnnouncements().subscribe(announcement => {
         this.announcements = announcement;
         this.announcementGrid.api.hideOverlay();
