@@ -18,3 +18,5 @@ DroolTool.Web/src/assets/config.json
 /DroolTool.GeoServer/data_dir/logs/geoserver.log
 DroolTool.API/appsecrets.json
 /DroolTool.API/sitka.localhost.rootca.crt
+Build/secrets.ini
+Build/temp/DroolToolDB.bacpac
