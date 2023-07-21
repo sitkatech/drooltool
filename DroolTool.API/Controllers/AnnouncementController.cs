@@ -60,7 +60,7 @@ namespace DroolTool.API.Controllers
         public ActionResult DeleteAnnouncementEntity([FromRoute] int announcementID)
         {
             var announcementDto =
-                _dbContext.Announcement.SingleOrDefault(x =>
+                _dbContext.Announcements.SingleOrDefault(x =>
                     x.AnnouncementID == announcementID);
             if (announcementDto == null)
             {
@@ -103,7 +103,7 @@ namespace DroolTool.API.Controllers
                 OriginalFileExtension = extension,
             };
 
-            _dbContext.FileResource.Add(fileResource);
+            _dbContext.FileResources.Add(fileResource);
             _dbContext.SaveChanges();
 
             return fileResource.FileResourceID;

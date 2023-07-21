@@ -62,7 +62,7 @@ namespace DroolTool.EFModels.Entities
                 CreateDate = DateTime.UtcNow,
             };
 
-            dbContext.User.Add(user);
+            dbContext.Users.Add(user);
             dbContext.SaveChanges();
             dbContext.Entry(user).Reload();
 
@@ -72,7 +72,7 @@ namespace DroolTool.EFModels.Entities
         public static IEnumerable<UserDetailedDto> List(DroolToolDbContext dbContext)
         {
             // right now we are assuming a parcel can only be associated to one user
-            var parcels = dbContext.User.Include(x => x.Role).OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ToList()
+            var parcels = dbContext.Users.OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ToList()
                 .Select(user =>
                 {
                     var userDetailedDto = new UserDetailedDto()
@@ -139,8 +139,7 @@ namespace DroolTool.EFModels.Entities
 
         private static IQueryable<User> GetUserImpl(DroolToolDbContext dbContext)
         {
-            return dbContext.User
-                .Include(x => x.Role)
+            return dbContext.Users
                 .AsNoTracking();
         }
 
@@ -157,8 +156,7 @@ namespace DroolTool.EFModels.Entities
                 return null;
             }
 
-            var user = dbContext.User
-                .Include(x => x.Role)
+            var user = dbContext.Users
                 .Single(x => x.UserID == userID);
 
             user.RoleID = userEditDto.RoleID.Value;
@@ -172,7 +170,7 @@ namespace DroolTool.EFModels.Entities
 
         public static UserDto UpdateUserGuid(DroolToolDbContext dbContext, int userID, Guid userGuid)
         {
-            var user = dbContext.User
+            var user = dbContext.Users
                 .Single(x => x.UserID == userID);
 
             user.UserGuid = userGuid;
@@ -196,7 +194,7 @@ namespace DroolTool.EFModels.Entities
 
         public static bool ValidateAllExist(DroolToolDbContext dbContext, List<int> userIDs)
         {
-            return dbContext.User.Count(x => userIDs.Contains(x.UserID)) == userIDs.Distinct().Count();
+            return dbContext.Users.Count(x => userIDs.Contains(x.UserID)) == userIDs.Distinct().Count();
         }
     }
 }

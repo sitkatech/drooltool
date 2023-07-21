@@ -12,7 +12,7 @@ namespace DroolTool.EFModels.Entities
     {
         public static List<AnnouncementDto> GetAnnouncements(DroolToolDbContext dbContext)
         {
-            return dbContext.Announcement
+            return dbContext.Announcements
                 .Include(x => x.LastUpdatedByUser)
                 .Include(x => x.FileResource)
                 .Select(x => x.AsDto()).ToList();
@@ -20,7 +20,7 @@ namespace DroolTool.EFModels.Entities
 
         public static List<AnnouncementDto> GetAnnouncementsByDate(DroolToolDbContext dbContext, int? numToTake = null)
         {
-            var query = dbContext.Announcement
+            var query = dbContext.Announcements
                 .Include(x => x.LastUpdatedByUser)
                 .Include(x => x.FileResource)
                 .OrderByDescending(x => x.AnnouncementDate);
@@ -46,13 +46,13 @@ namespace DroolTool.EFModels.Entities
                 FileResourceID = fileResourceID
             };
 
-            dbContext.Announcement.Add(announcement);
+            dbContext.Announcements.Add(announcement);
             dbContext.SaveChanges();
         }
 
         public static void UpdateAnnouncementEntity(DroolToolDbContext dbContext, AnnouncementUpsertDto upsertDto, int userID, int fileResourceID)
         {
-            var announcementEntity = dbContext.Announcement
+            var announcementEntity = dbContext.Announcements
                 .Single(x => x.AnnouncementID == upsertDto.AnnouncementID);
 
             announcementEntity.AnnouncementTitle = upsertDto.AnnouncementTitle;
@@ -63,11 +63,11 @@ namespace DroolTool.EFModels.Entities
             {
                 //Get old image
                 var oldFileResource =
-                    dbContext.FileResource.Single(x => x.FileResourceID == announcementEntity.FileResourceID);
+                    dbContext.FileResources.Single(x => x.FileResourceID == announcementEntity.FileResourceID);
                 //Change ref
                 announcementEntity.FileResourceID = fileResourceID;
                 //Delete image because now it's not referencing elsewhere
-                dbContext.FileResource.Remove(oldFileResource);
+                dbContext.FileResources.Remove(oldFileResource);
             }
 
             announcementEntity.LastUpdatedByUserID = userID;
@@ -78,12 +78,12 @@ namespace DroolTool.EFModels.Entities
 
         public static void Delete(DroolToolDbContext dbContext, int announcementID)
         {
-            var announcementEntity = dbContext.Announcement
+            var announcementEntity = dbContext.Announcements
                 .Single(x => x.AnnouncementID == announcementID);
             var fileResourceEntity =
-                dbContext.FileResource.Single(x => x.FileResourceID == announcementEntity.FileResourceID);
-            dbContext.Announcement.Remove(announcementEntity);
-            dbContext.FileResource.Remove(fileResourceEntity);
+                dbContext.FileResources.Single(x => x.FileResourceID == announcementEntity.FileResourceID);
+            dbContext.Announcements.Remove(announcementEntity);
+            dbContext.FileResources.Remove(fileResourceEntity);
             dbContext.SaveChanges();
         }
     }

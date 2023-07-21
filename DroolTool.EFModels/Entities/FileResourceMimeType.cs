@@ -9,7 +9,7 @@ namespace DroolTool.EFModels.Entities
     {
         public static FileResourceMimeType GetFileResourceMimeTypeByContentTypeName(DroolToolDbContext dbContext, string contentTypeName)
         {
-            return dbContext.FileResourceMimeType.Single(x => x.FileResourceMimeTypeContentTypeName == contentTypeName);
+            return FileResourceMimeType.All.Single(x => x.FileResourceMimeTypeContentTypeName == contentTypeName);
         }
     }
 }

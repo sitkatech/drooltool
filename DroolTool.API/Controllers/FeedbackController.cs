@@ -37,7 +37,7 @@ namespace DroolTool.API.Controllers
                 FeedbackPhoneNumber = feedbackDto.FeedbackPhoneNumber
             };
 
-            _dbContext.Feedback.Add(feedback);
+            _dbContext.Feedbacks.Add(feedback);
             _dbContext.SaveChanges();
 
             var smtpClient = HttpContext.RequestServices.GetRequiredService<SitkaSmtpClientService>();

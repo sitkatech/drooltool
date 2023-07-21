@@ -80,7 +80,7 @@ namespace DroolTool.API
                     "The Neighborhood file from MNWD contained invalid downstream catchment IDs");
             }
 
-            _dbContext.NeighborhoodStaging.AddRange(neighborhoodStagings);
+            _dbContext.NeighborhoodStagings.AddRange(neighborhoodStagings);
             _dbContext.SaveChanges();
         }
 

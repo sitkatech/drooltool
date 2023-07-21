@@ -56,7 +56,7 @@ namespace DroolTool.API.Controllers
                 OriginalFileExtension = extension,
             };
 
-            _dbContext.FileResource.Add(fileResource);
+            _dbContext.FileResources.Add(fileResource);
             _dbContext.SaveChanges();
 
 
@@ -71,7 +71,7 @@ namespace DroolTool.API.Controllers
             var isStringAGuid = Guid.TryParse(fileResourceGuidAsString, out fileResourceGuid);
             if (isStringAGuid)
             {
-                var fileResource = _dbContext.FileResource.Include(x => x.FileResourceMimeType).SingleOrDefault(x => x.FileResourceGUID == fileResourceGuid);
+                var fileResource = _dbContext.FileResources.SingleOrDefault(x => x.FileResourceGUID == fileResourceGuid);
 
                 return DisplayResourceImpl(fileResourceGuidAsString, fileResource);
             }

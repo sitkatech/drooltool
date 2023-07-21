@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DroolTool.EFModels.Entities
 {
+    [Table("CustomRichText")]
     public partial class CustomRichText
     {
         [Key]
         public int CustomRichTextID { get; set; }
         public int CustomRichTextTypeID { get; set; }
+        [Unicode(false)]
         public string CustomRichTextContent { get; set; }
-
-        [ForeignKey(nameof(CustomRichTextTypeID))]
-        [InverseProperty("CustomRichText")]
-        public virtual CustomRichTextType CustomRichTextType { get; set; }
     }
 }

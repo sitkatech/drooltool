@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using DroolTool.Models.DataTransferObjects;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DroolTool.API.Controllers
@@ -37,7 +38,7 @@ namespace DroolTool.API.Controllers
         {
             if (inviteDto.RoleID.HasValue)
             {
-                var role = Role.GetByRoleID(_dbContext, inviteDto.RoleID.Value);
+                var role = Role.AllLookupDictionary[inviteDto.RoleID.Value];
                 if (role == null)
                 {
                     return NotFound($"Could not find a Role with the ID {inviteDto.RoleID}");
@@ -146,7 +147,7 @@ namespace DroolTool.API.Controllers
         public ActionResult<UnassignedUserReportDto> GetUnassignedUserReport()
         {
             var report = new UnassignedUserReportDto
-                {Count = _dbContext.User.Count(x => x.RoleID == (int) RoleEnum.Unassigned)};
+                {Count = _dbContext.Users.Count(x => x.RoleID == (int) RoleEnum.Unassigned)};
             return Ok(report);
         }
 
@@ -201,7 +202,7 @@ namespace DroolTool.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var role = Role.GetByRoleID(_dbContext, userUpsertDto.RoleID.GetValueOrDefault());
+            var role = Role.AllLookupDictionary[userUpsertDto.RoleID.GetValueOrDefault()];
             if (role == null)
             {
                 return NotFound($"Could not find a System Role with the ID {userUpsertDto.RoleID}");

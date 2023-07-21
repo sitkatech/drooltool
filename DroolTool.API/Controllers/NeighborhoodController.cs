@@ -23,15 +23,15 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood/get-serviced-neighborhood-ids")]
         public ActionResult<List<int>> GetServicedNeighborhoodIds()
         {
-            return Ok(_dbContext.Neighborhood.Where(x => x.BackboneSegment.Any()).Select(x => x.NeighborhoodID).ToList());
+            return Ok(_dbContext.Neighborhoods.Where(x => x.BackboneSegments.Any()).Select(x => x.NeighborhoodID).ToList());
         }
 
         [HttpGet("neighborhood/get-neighborhoods-with-metrics-ids")]
         public ActionResult<List<int>> GetNeighborhoodsWithMetricsIds()
         {
-            var OCSurveyNeighborhoodIds = _dbContext.vNeighborhoodMetric.Select(x => x.OCSurveyCatchmentID).Distinct();
+            var OCSurveyNeighborhoodIds = _dbContext.vNeighborhoodMetrics.Select(x => x.OCSurveyCatchmentID).Distinct();
 
-            return Ok(_dbContext.Neighborhood.Where(x => OCSurveyNeighborhoodIds.Contains(x.OCSurveyNeighborhoodID)).Select(x => x.NeighborhoodID).ToList());
+            return Ok(_dbContext.Neighborhoods.Where(x => OCSurveyNeighborhoodIds.Contains(x.OCSurveyNeighborhoodID)).Select(x => x.NeighborhoodID).ToList());
         }
 
         [HttpGet("neighborhood/{neighborhoodID}/get-stormshed")]
@@ -39,7 +39,7 @@ namespace DroolTool.API.Controllers
         {
             var backboneAccumulated = new List<vBackboneWithoutGeometry>();
 
-            var allBackboneSegments = _dbContext.vBackboneWithoutGeometry
+            var allBackboneSegments = _dbContext.vBackboneWithoutGeometries
                 .Where(x => x.BackboneSegmentTypeID != (int)BackboneSegmentTypeEnum.Channel)
                 .ToList();
 
@@ -70,7 +70,7 @@ namespace DroolTool.API.Controllers
 
             var neighborhoodIDs = backboneAccumulated.Select(x => x.NeighborhoodID).Distinct();
             var neighborhoods =
-                _dbContext.Neighborhood.Where(x => neighborhoodIDs.Contains(x.NeighborhoodID)).ToList();
+                _dbContext.Neighborhoods.Where(x => neighborhoodIDs.Contains(x.NeighborhoodID)).ToList();
 
 
             var wholeStormshedFeature = new Feature()
@@ -99,7 +99,7 @@ namespace DroolTool.API.Controllers
         {
             var backboneAccumulated = new List<vBackboneWithoutGeometry>();
 
-            var allBackboneSegments = _dbContext.vBackboneWithoutGeometry
+            var allBackboneSegments = _dbContext.vBackboneWithoutGeometries
                 .ToList();
 
             var lookingAt = allBackboneSegments.Where(x => x.NeighborhoodID == neighborhoodID).ToList();
@@ -112,7 +112,7 @@ namespace DroolTool.API.Controllers
             }
             
             var backboneSegmentIDs = backboneAccumulated.Select(y => y.BackboneSegmentID).ToList();
-            var backboneSegments = _dbContext.BackboneSegment.Where(
+            var backboneSegments = _dbContext.BackboneSegments.Where(
                 x => backboneSegmentIDs.Contains(x.BackboneSegmentID)
             );
             
@@ -131,7 +131,7 @@ namespace DroolTool.API.Controllers
         {
             var backboneAccumulated = new List<vBackboneWithoutGeometry>();
 
-            var allBackboneSegments = _dbContext.vBackboneWithoutGeometry
+            var allBackboneSegments = _dbContext.vBackboneWithoutGeometries
                 .ToList();
 
             var lookingAt = allBackboneSegments.Where(x => x.NeighborhoodID == neighborhoodID).ToList();
@@ -144,7 +144,7 @@ namespace DroolTool.API.Controllers
             }
             
             var backboneSegmentIDs = backboneAccumulated.Select(y => y.BackboneSegmentID).ToList();
-            var backboneSegments = _dbContext.BackboneSegment
+            var backboneSegments = _dbContext.BackboneSegments
                 .Include(x => x.Neighborhood)
                 .Where(x => backboneSegmentIDs.Contains(x.BackboneSegmentID)
             ).ToList();
@@ -174,7 +174,7 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood/{OCSurveyNeighborhoodID}/{metricYear}/{metricMonth}/get-metrics/")]
         public ActionResult<NeighborhoodMetricDto> GetMetricsForYearAndMonth([FromRoute] int OCSurveyNeighborhoodID, [FromRoute] int metricYear, [FromRoute] int metricMonth)
         {
-            var neighborhoodMetric = _dbContext.vNeighborhoodMetric
+            var neighborhoodMetric = _dbContext.vNeighborhoodMetrics
                 .SingleOrDefault(x =>
                     x.OCSurveyCatchmentID == OCSurveyNeighborhoodID && x.MetricYear == metricYear &&
                     x.MetricMonth == metricMonth)
@@ -187,7 +187,7 @@ namespace DroolTool.API.Controllers
         public ActionResult<List<NeighborhoodMetricDto>> GetMetricsForYear([FromRoute] int OCSurveyNeighborhoodID, [FromRoute] int metricEndYear, [FromRoute] int metricEndMonth)
         {
             var desiredStartDate = new DateTime(metricEndYear - 1, metricEndMonth, 1);
-            var neighborhoodMetricsForYear = _dbContext.vNeighborhoodMetric
+            var neighborhoodMetricsForYear = _dbContext.vNeighborhoodMetrics
                 .Where(x => x.OCSurveyCatchmentID == OCSurveyNeighborhoodID &&
                             x.MetricDate >= desiredStartDate)
                 .OrderByDescending(x => x.MetricDate)
@@ -199,7 +199,7 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood/get-most-recent-metric/")]
         public ActionResult<NeighborhoodMetricDto> GetMostRecentMetric()
         {
-            return _dbContext.vNeighborhoodMetric
+            return _dbContext.vNeighborhoodMetrics
                 .OrderByDescending(x => x.MetricDate)
                 .FirstOrDefault()
                 .AsDto();
@@ -208,13 +208,13 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood/get-drool-per-landscaped-acre-chart/{neighborhoodID}")]
         public ActionResult<List<DroolPerLandscapedAcreChartDto>> GetDroolPerLandscapedAcreChart([FromRoute] int neighborhoodID)
         {
-            var neighborhood = _dbContext.Neighborhood.SingleOrDefault(x=>x.NeighborhoodID == neighborhoodID);
+            var neighborhood = _dbContext.Neighborhoods.SingleOrDefault(x=>x.NeighborhoodID == neighborhoodID);
             if (neighborhood == null)
             {
                 return NotFound();
             }
 
-            var droolPerLandscapedAcreChartDtos = _dbContext.vNeighborhoodMetric
+            var droolPerLandscapedAcreChartDtos = _dbContext.vNeighborhoodMetrics
                 .Where(x => x.OCSurveyCatchmentID == neighborhood.OCSurveyNeighborhoodID)
                 .OrderByDescending(x => x.MetricDate)
                 .Take(24).Select(x => new DroolPerLandscapedAcreChartDto
@@ -229,7 +229,7 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood/get-metric-timeline")]
         public ActionResult<List<NeighborhoodMetricAvailableDatesDto>> GetMetricTimeline()
         { 
-            return _dbContext.vNeighborhoodMetric
+            return _dbContext.vNeighborhoodMetrics
                 .ToList()
                 .GroupBy(
                     x => x.MetricYear,
@@ -244,8 +244,8 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood/get-serviced-neighborhoods-watershed-names")]
         public ActionResult<List<string>> GetServicedNeighborhoodWatershedNames()
         {
-            var watershedsInMask = _dbContext.WatershedMask;
-            return _dbContext.WatershedAlias
+            var watershedsInMask = _dbContext.WatershedMasks;
+            return _dbContext.WatershedAliases
                 .Where(x => watershedsInMask.Any(y => x.WatershedAliasName.Contains(y.WatershedMaskName)))
                 .Select(x => x.WatershedAliasName)
                 .ToList();
@@ -257,7 +257,7 @@ namespace DroolTool.API.Controllers
         [HttpGet("neighborhood/get-default-metric-display-date")]
         public ActionResult<MetricDateDto> GetDefaultMetricDisplayDate()
         {
-            var dateTime = _dbContext.vNeighborhoodMetric.Max(x => x.MetricDate);
+            var dateTime = _dbContext.vNeighborhoodMetrics.Max(x => x.MetricDate);
             return Ok(new MetricDateDto{Year = dateTime.Year, Month=dateTime.Month});
         }
 

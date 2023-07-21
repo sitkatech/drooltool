@@ -1,34 +1,11 @@
-﻿using DroolTool.Models.DataTransferObjects.User;
+﻿using DroolTool.Models.DataTransferObjects;
 
-namespace DroolTool.EFModels.Entities
+namespace DroolTool.EFModels.Entities;
+
+public static partial class UserExtensionMethods
 {
-    public static class UserExtensionMethods
+    static partial void DoCustomMappings(User user, UserDto userDto)
     {
-        public static UserDto AsDto(this User user)
-        {
-            return new UserDto()
-            {
-                UserID = user.UserID,
-                UserGuid = user.UserGuid,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Phone = user.Phone,
-                Role = user.Role?.AsDto(),
-                LoginName = user.LoginName,
-                ReceiveSupportEmails = user.ReceiveSupportEmails
-            };
-        }
-
-        public static UserSimpleDto AsSimpleDto(this User user)
-        {
-            return new UserSimpleDto()
-            {
-                UserID = user.UserID,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-            };
-        }
+        userDto.FullName = $"{user.FirstName} {user.LastName}";
     }
 }

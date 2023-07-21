@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DroolTool.EFModels.Entities
 {
+    [Table("FileResource")]
+    [Index("FileResourceGUID", Name = "AK_FileResource_FileResourceGUID", IsUnique = true)]
     public partial class FileResource
     {
         public FileResource()
         {
-            Announcement = new HashSet<Announcement>();
+            Announcements = new HashSet<Announcement>();
         }
 
         [Key]
@@ -17,9 +20,11 @@ namespace DroolTool.EFModels.Entities
         public int FileResourceMimeTypeID { get; set; }
         [Required]
         [StringLength(255)]
+        [Unicode(false)]
         public string OriginalBaseFilename { get; set; }
         [Required]
         [StringLength(255)]
+        [Unicode(false)]
         public string OriginalFileExtension { get; set; }
         public Guid FileResourceGUID { get; set; }
         [Required]
@@ -28,13 +33,10 @@ namespace DroolTool.EFModels.Entities
         [Column(TypeName = "datetime")]
         public DateTime CreateDate { get; set; }
 
-        [ForeignKey(nameof(CreateUserID))]
-        [InverseProperty(nameof(User.FileResource))]
+        [ForeignKey("CreateUserID")]
+        [InverseProperty("FileResources")]
         public virtual User CreateUser { get; set; }
-        [ForeignKey(nameof(FileResourceMimeTypeID))]
         [InverseProperty("FileResource")]
-        public virtual FileResourceMimeType FileResourceMimeType { get; set; }
-        [InverseProperty("FileResource")]
-        public virtual ICollection<Announcement> Announcement { get; set; }
+        public virtual ICollection<Announcement> Announcements { get; set; }
     }
 }

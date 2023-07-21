@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using DroolTool.EFModels.Entities;
+using DroolTool.Models.DataTransferObjects;
 using DroolTool.Models.DataTransferObjects.User;
 
 namespace DroolTool.API.Services

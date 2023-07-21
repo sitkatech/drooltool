@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 
 namespace DroolTool.EFModels.Entities
 {
+    [Table("BackboneSegment")]
     public partial class BackboneSegment
     {
         public BackboneSegment()
@@ -26,16 +28,13 @@ namespace DroolTool.EFModels.Entities
         public int? NeighborhoodID { get; set; }
         public bool InStream { get; set; }
 
-        [ForeignKey(nameof(BackboneSegmentTypeID))]
-        [InverseProperty("BackboneSegment")]
-        public virtual BackboneSegmentType BackboneSegmentType { get; set; }
-        [ForeignKey(nameof(DownstreamBackboneSegmentID))]
-        [InverseProperty(nameof(BackboneSegment.InverseDownstreamBackboneSegment))]
+        [ForeignKey("DownstreamBackboneSegmentID")]
+        [InverseProperty("InverseDownstreamBackboneSegment")]
         public virtual BackboneSegment DownstreamBackboneSegment { get; set; }
-        [ForeignKey(nameof(NeighborhoodID))]
-        [InverseProperty("BackboneSegment")]
+        [ForeignKey("NeighborhoodID")]
+        [InverseProperty("BackboneSegments")]
         public virtual Neighborhood Neighborhood { get; set; }
-        [InverseProperty(nameof(BackboneSegment.DownstreamBackboneSegment))]
+        [InverseProperty("DownstreamBackboneSegment")]
         public virtual ICollection<BackboneSegment> InverseDownstreamBackboneSegment { get; set; }
     }
 }
