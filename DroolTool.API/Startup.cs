@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
+using System.Text.Json.Serialization;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,21 +35,12 @@ namespace DroolTool.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson(opt =>
+            services.AddControllers().AddJsonOptions(opt =>
                 {
-                    if (!_environment.IsProduction())
-                    {
-                        opt.SerializerSettings.Formatting = Formatting.Indented;
-                    }
-                    opt.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                    var resolver = opt.SerializerSettings.ContractResolver;
-                    if (resolver != null)
-                    {
-                        if (resolver is DefaultContractResolver defaultResolver)
-                        {
-                            defaultResolver.NamingStrategy = null;
-                        }
-                    }
+                    opt.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
+                    opt.JsonSerializerOptions.PropertyNamingPolicy = null;
+                    opt.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals;
+                    opt.JsonSerializerOptions.WriteIndented = true;
                 });
 
             services.Configure<DroolToolConfiguration>(Configuration);
@@ -109,6 +101,13 @@ namespace DroolTool.API
 
 
             services.AddControllers();
+            #region Swagger
+            // Base swagger services
+            services.AddSwaggerGen(options =>
+            {
+                // extra options here if you wanted
+            });
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

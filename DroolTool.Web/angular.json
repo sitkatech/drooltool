@@ -8,7 +8,7 @@
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
-      "prefix": "drooltool",
+      "prefix": "",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
@@ -99,7 +99,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "DroolTool.Web:build"
+            "browserTarget": "DroolTool.Web:build",
+            "host" : "drooltool.localhost.sitkatech.com",
+            "port" : 7887
           },
           "configurations": {
             "production": {
@@ -174,5 +176,8 @@
       }
     }
   },
-  "defaultProject": "DroolTool.Web"
+  "defaultProject": "DroolTool.Web",
+  "cli": {
+    "analytics": false
+  }
 }
