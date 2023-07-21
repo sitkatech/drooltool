@@ -1,7 +1,3 @@
-
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[BackboneSegment](
 	[BackboneSegmentID] [int] IDENTITY(1,1) NOT NULL,
 	[BackboneSegmentGeometry] [geometry] NOT NULL,

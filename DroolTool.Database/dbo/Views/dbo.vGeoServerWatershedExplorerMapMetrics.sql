@@ -1,6 +1,3 @@
-Drop view if exists dbo.vGeoServerWatershedExplorerMapMetrics
-GO
-
 Create View dbo.vGeoServerWatershedExplorerMapMetrics As
 Select
 	d.OCSurveyNeighborhoodID as PrimaryKey,

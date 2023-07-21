@@ -1,7 +1,3 @@
-if exists (select * from dbo.sysobjects where id = object_id('dbo.vNeighborhoodMetric'))
-	drop view dbo.vNeighborhoodMetric
-go
-
 Create view [dbo].[vNeighborhoodMetric]
 as
 Select 

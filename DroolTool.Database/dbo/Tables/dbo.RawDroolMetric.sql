@@ -1,7 +1,3 @@
-
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[RawDroolMetric](
 	[RawDroolMetricID] [int] NOT NULL,
 	[MetricCatchIDN] [int] NOT NULL,

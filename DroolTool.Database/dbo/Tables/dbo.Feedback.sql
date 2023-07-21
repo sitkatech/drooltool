@@ -1,7 +1,3 @@
-
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[Feedback](
 	[FeedbackID] [int] IDENTITY(1,1) NOT NULL,
 	[FeedbackDate] [datetime] NOT NULL,

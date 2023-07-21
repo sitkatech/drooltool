@@ -1,7 +1,3 @@
-
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[Announcement](
 	[AnnouncementID] [int] IDENTITY(1,1) NOT NULL,
 	[AnnouncementDate] [datetime] NOT NULL,

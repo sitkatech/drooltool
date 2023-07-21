@@ -1,8 +1,4 @@
-﻿IF EXISTS(SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'dbo.pLandOwnerUsageReport'))
-    drop procedure dbo.pLandOwnerUsageReport
-go
-
-create procedure dbo.pLandOwnerUsageReport
+﻿create procedure dbo.pLandOwnerUsageReport
 (
     @year int
 )

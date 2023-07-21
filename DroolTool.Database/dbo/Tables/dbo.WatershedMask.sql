@@ -1,7 +1,3 @@
-
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[WatershedMask](
 	[WatershedMaskID] [int] IDENTITY(1,1) NOT NULL,
 	[WatershedMaskGeometry] [geometry] NULL,

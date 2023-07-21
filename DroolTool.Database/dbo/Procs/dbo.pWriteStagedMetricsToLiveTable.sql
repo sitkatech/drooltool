@@ -1,7 +1,3 @@
-IF EXISTS(SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'dbo.pWriteStagedMetricsAndNeighborhoodsToLiveTable'))
-    drop procedure dbo.pWriteStagedMetricsAndNeighborhoodsToLiveTable
-go
-
 create procedure dbo.pWriteStagedMetricsAndNeighborhoodsToLiveTable
 as
 begin

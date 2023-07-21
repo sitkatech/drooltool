@@ -1,6 +1,3 @@
-Drop View If exists dbo.vBackboneWithoutGeometry
-Go
-
 Create View dbo.vBackboneWithoutGeometry
 as
 Select

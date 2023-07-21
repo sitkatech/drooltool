@@ -1,6 +1,3 @@
-Drop view if exists dbo.vGeoServerNeighborhood
-GO
-
 Create View dbo.vGeoServerNeighborhood As
 Select
 	n.NeighborhoodID,

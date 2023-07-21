@@ -1,6 +1,3 @@
-Drop View If Exists dbo.vGeoServerWatershedMask
-Go
-
 Create View dbo.vGeoServerWatershedMask
 as
 Select
