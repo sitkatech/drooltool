@@ -1,15 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { UserService } from 'src/app/services/user/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { RoleService } from 'src/app/services/role/role.service';
-import { RoleDto } from 'src/app/shared/models/role/role-dto';
 import { forkJoin } from 'rxjs';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
+import { RoleDto, RoleService, UserDto, UserService } from 'src/app/shared/generated';
 import { UserUpdateDto } from 'src/app/shared/models/user/user-update-dto';
-import { UserDto } from 'src/app/shared/models/user/user-dto';
 
 
 @Component({
@@ -52,8 +49,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
       this.userID = parseInt(this.route.snapshot.paramMap.get("id"));
 
       forkJoin(
-        this.userService.getUserFromUserID(this.userID),
-        this.roleService.getRoles()
+        this.userService.usersUserIDGet(this.userID),
+        this.roleService.rolesGet()
       ).subscribe(([user, roles]) => {
         this.user = user instanceof Array
           ? null
@@ -85,7 +82,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   onSubmit(editUserForm: HTMLFormElement): void {
     this.isLoadingSubmit = true;
 
-    this.userService.updateUser(this.userID, this.model)
+    this.userService.usersUserIDPut(this.userID, this.model)
       .subscribe(response => {
         this.isLoadingSubmit = false;
         this.router.navigateByUrl("/users/" + this.userID).then(x => {

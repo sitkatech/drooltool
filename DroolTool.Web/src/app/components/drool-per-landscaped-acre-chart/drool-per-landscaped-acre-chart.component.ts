@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { DroolPerLandscapedAcreChartDto } from 'src/app/shared/models/drool-per-landscaped-acre-chart-dto';
+import { DroolPerLandscapedAcreChartDto } from 'src/app/shared/generated';
 
 declare var vegaEmbed: any;
 

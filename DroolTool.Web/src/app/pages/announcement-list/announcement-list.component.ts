@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, Inject } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
-import { UserDto } from 'src/app/shared/models/user/user-dto';
 import { GridOptions } from 'ag-grid-community';
-import { AnnouncementService } from 'src/app/services/announcement/announcement.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DatePipe, DOCUMENT } from '@angular/common';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -13,6 +11,7 @@ import { environment } from 'src/environments/environment';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { AnnouncementService, UserDto } from 'src/app/shared/generated';
 
 @Component({
   selector: 'drooltool-announcement-list',
@@ -65,7 +64,7 @@ export class AnnouncementListComponent implements OnInit {
       this.currentUser = currentUser;
       let _datePipe = this.datePipe;
       this.announcementGrid?.api.showLoadingOverlay();
-      this.announcementService.getAnnouncements().subscribe(announcement => {
+      this.announcementService.announcementGetAnnouncementsGet().subscribe(announcement => {
         this.announcements = announcement;
         this.announcementGrid.api.hideOverlay();
         this.cdr.detectChanges();
@@ -203,7 +202,7 @@ export class AnnouncementListComponent implements OnInit {
   }
 
   public updateGridData() {
-    this.announcementService.getAnnouncements().subscribe(result => {
+    this.announcementService.announcementGetAnnouncementsGet().subscribe(result => {
       this.announcementGrid.api.setRowData(result);
     });
   }
@@ -282,7 +281,7 @@ export class AnnouncementListComponent implements OnInit {
           AnnouncementLink: this.upsertForm.get('link').value
         });
       this.isPerformingAction = true;
-      this.announcementService.upsertAnnouncement(this.fileToUpload, upsertDto).subscribe(result => {
+      this.announcementService.announcementUpsertAnnouncementPost(upsertDto.AnnouncementID, upsertDto.AnnouncementTitle, upsertDto.AnnouncementDate.toDateString(), upsertDto.AnnouncementLink, this.fileToUpload.contentType, this.fileToUpload.contentDisposition, this.fileToUpload.length, this.fileToUpload.name, this.fileToUpload.fileName).subscribe(result => {
         this.modalReference.close();
         this.isPerformingAction = false;
         this.alertService.pushAlert(new Alert(`Successfully ${this.announcementID != -1 ? "updated" : "created"} post`, AlertContext.Success, true));
@@ -303,7 +302,7 @@ export class AnnouncementListComponent implements OnInit {
 
   public onDelete() {
     this.isPerformingAction = true;
-    this.announcementService.deleteAnnouncement(this.announcementID).subscribe(result => {
+    this.announcementService.announcementGetAnnouncementsForHomepageGet().subscribe(result => {
       this.modalReference.close();
       this.isPerformingAction = false;
       this.alertService.pushAlert(new Alert(`Successfully deleted post`, AlertContext.Success, true));

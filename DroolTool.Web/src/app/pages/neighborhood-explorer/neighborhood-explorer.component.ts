@@ -7,13 +7,13 @@ import '../../../../node_modules/leaflet.fullscreen/Control.FullScreen.js';
 import '../../../../node_modules/leaflet-loading/src/Control.Loading.js';
 import * as esri from 'esri-leaflet'
 import { CustomCompileService } from '../../shared/services/custom-compile.service';
-import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
 import { StaticFeatureService } from 'src/app/services/static-feature/static-feature.service';
 import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
-import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
 import { _ } from 'ag-grid-community';
+import { MetricDateDto, NeighborhoodMetricDto, NeighborhoodService } from 'src/app/shared/generated/index.js';
+import { AddressService } from 'src/app/services/address.service.js';
 
 declare var $: any;
 
@@ -62,7 +62,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public selectedNeighborhoodID: number;
   public selectedNeighborhoodWatershed: string;
   public selectedNeighborhoodWatershedMask: L.Layers;
-  public defaultSelectedMetricDate: {Year: number, Month: number};
+  public defaultSelectedMetricDate: MetricDateDto;
 
   public areMetricsCollapsed: boolean = true;
 
@@ -89,7 +89,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
     private neighborhoodService: NeighborhoodService,
     private staticFeatureService: StaticFeatureService,
     private nominatimService: NominatimService,
-    private wfsService: WfsService
+    private wfsService: WfsService,
+    private addressService: AddressService
   ) {
   }
 
@@ -152,7 +153,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     })
 
     
-    this.neighborhoodService.getDefaultMetricDate().subscribe(x=>{
+    this.neighborhoodService.neighborhoodGetDefaultMetricDisplayDateGet().subscribe(x=>{
 
       this.defaultSelectedMetricDate = x
       console.log(this.defaultSelectedMetricDate);
@@ -163,7 +164,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
   public ngAfterViewInit(): void {
 
-    this.neighborhoodService.getServicedNeighborhoodIds().subscribe(result => {
+    this.neighborhoodService.neighborhoodGetServicedNeighborhoodIdsGet().subscribe(result => {
       this.neighborhoodsWhereItIsOkayToClickIDs = result;
     })
 
@@ -339,17 +340,17 @@ export class NeighborhoodExplorerComponent implements OnInit {
         this.selectedNeighborhoodProperties = response.features[0].properties;
         this.selectedNeighborhoodID = this.selectedNeighborhoodProperties.NeighborhoodID;
         if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
-          this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID, this.defaultSelectedMetricDate.Year, this.defaultSelectedMetricDate.Month).subscribe(result => {
+          this.neighborhoodService.neighborhoodOCSurveyNeighborhoodIDMetricYearMetricMonthGetMetricsGet(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID, this.defaultSelectedMetricDate.Year, this.defaultSelectedMetricDate.Month).subscribe(result => {
             this.selectedNeighborhoodMetrics = result;
             this.map.invalidateSize();
           });
           this.displaySearchResults(response, latlng);
-          this.neighborhoodService.getStormshed(this.selectedNeighborhoodID).subscribe(
+          this.neighborhoodService.neighborhoodNeighborhoodIDGetStormshedGet(this.selectedNeighborhoodID).subscribe(
             response => this.displayStormshedAndBackboneDetail(response),
             null,
             () => this.setSearchingAndLoadScreen(false)
           );
-          this.neighborhoodService.updateSearchedAddress(this.searchAddress);
+          this.addressService.updateSearchedAddress(this.searchAddress);
         }
         else {
           this.searchAddressNotFoundOrNotServiced();
@@ -485,7 +486,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.clearLayer(this.traceLayer);
       this.deinitializeMapEvents();
       this.setSearchingAndLoadScreen(true);
-      this.neighborhoodService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
+      this.neighborhoodService.neighborhoodNeighborhoodIDGetDownstreamBackboneTraceGet(this.selectedNeighborhoodID).subscribe(response => {
         this.clearLayer(this.currentMask);
         this.selectedNeighborhoodWatershedMask.addTo(this.map);
         let baseLayer = L.geoJson(response,{
@@ -534,7 +535,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.activeSearchNotFound = false;
     this.traceActive = false;
     this.selectedNeighborhoodMetrics = null;
-    this.neighborhoodService.updateSearchedAddress(null);
+    this.addressService.updateSearchedAddress(null);
     this.removeCurrentSearchLayer();
   }
 

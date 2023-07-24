@@ -18,6 +18,8 @@ namespace DroolTool.EFModels.Entities
         public static readonly RoleAdmin Admin = DroolTool.EFModels.Entities.RoleAdmin.Instance;
         public static readonly RoleNormal Normal = DroolTool.EFModels.Entities.RoleNormal.Instance;
         public static readonly RoleUnassigned Unassigned = DroolTool.EFModels.Entities.RoleUnassigned.Instance;
+        public static readonly RoleLandowner Landowner = DroolTool.EFModels.Entities.RoleLandowner.Instance;
+        public static readonly RoleDisabled Disabled = DroolTool.EFModels.Entities.RoleDisabled.Instance;
 
         public static readonly List<Role> All;
         public static readonly List<RoleDto> AllAsDto;
@@ -29,8 +31,8 @@ namespace DroolTool.EFModels.Entities
         /// </summary>
         static Role()
         {
-            All = new List<Role> { Admin, Normal, Unassigned };
-            AllAsDto = new List<RoleDto> { Admin.AsDto(), Normal.AsDto(), Unassigned.AsDto() };
+            All = new List<Role> { Admin, Normal, Unassigned, Landowner, Disabled };
+            AllAsDto = new List<RoleDto> { Admin.AsDto(), Normal.AsDto(), Unassigned.AsDto(), Landowner.AsDto(), Disabled.AsDto() };
             AllLookupDictionary = new ReadOnlyDictionary<int, Role>(All.ToDictionary(x => x.RoleID));
             AllAsDtoLookupDictionary = new ReadOnlyDictionary<int, RoleDto>(AllAsDto.ToDictionary(x => x.RoleID));
         }
@@ -107,6 +109,10 @@ namespace DroolTool.EFModels.Entities
             {
                 case RoleEnum.Admin:
                     return Admin;
+                case RoleEnum.Disabled:
+                    return Disabled;
+                case RoleEnum.Landowner:
+                    return Landowner;
                 case RoleEnum.Normal:
                     return Normal;
                 case RoleEnum.Unassigned:
@@ -121,7 +127,9 @@ namespace DroolTool.EFModels.Entities
     {
         Admin = 1,
         Normal = 2,
-        Unassigned = 3
+        Unassigned = 3,
+        Landowner = 4,
+        Disabled = 5
     }
 
     public partial class RoleAdmin : Role
@@ -140,5 +148,17 @@ namespace DroolTool.EFModels.Entities
     {
         private RoleUnassigned(int roleID, string roleName, string roleDisplayName, string roleDescription, int sortOrder) : base(roleID, roleName, roleDisplayName, roleDescription, sortOrder) {}
         public static readonly RoleUnassigned Instance = new RoleUnassigned(3, @"Unassigned", @"Unassigned", @"", 10);
+    }
+
+    public partial class RoleLandowner : Role
+    {
+        private RoleLandowner(int roleID, string roleName, string roleDisplayName, string roleDescription, int sortOrder) : base(roleID, roleName, roleDisplayName, roleDescription, sortOrder) {}
+        public static readonly RoleLandowner Instance = new RoleLandowner(4, @"Landowner", @"Landowner", @"", 20);
+    }
+
+    public partial class RoleDisabled : Role
+    {
+        private RoleDisabled(int roleID, string roleName, string roleDisplayName, string roleDescription, int sortOrder) : base(roleID, roleName, roleDisplayName, roleDescription, sortOrder) {}
+        public static readonly RoleDisabled Instance = new RoleDisabled(5, @"Disabled", @"Disabled", @"", 0);
     }
 }

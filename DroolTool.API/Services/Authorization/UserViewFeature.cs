@@ -4,7 +4,7 @@ namespace DroolTool.API.Services.Authorization
 {
     public class UserViewFeature : BaseAuthorizationAttribute
     {
-        public UserViewFeature() : base(new []{RoleEnum.Admin, RoleEnum.Normal, RoleEnum.Unassigned})
+        public UserViewFeature() : base(new []{RoleEnum.Admin, RoleEnum.Landowner, RoleEnum.Unassigned})
         {
         }
     }

@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { UserService } from './user/user.service';
 import { Observable, race, Subject } from 'rxjs';
 import { filter, first, map } from 'rxjs/operators';
 import { CookieStorageService } from '../shared/services/cookies/cookie-storage.service';
 import { Router } from '@angular/router';
-import { RoleEnum } from '../shared/models/enums/role.enum';
 import { AlertService } from '../shared/services/alert.service';
 import { Alert } from '../shared/models/alert';
 import { AlertContext } from '../shared/models/enums/alert-context.enum';
-import { UserCreateDto } from '../shared/models/user/user-create-dto';
-import { UserDto } from '../shared/models/user/user-dto';
+import { RoleEnum } from '../shared/generated/enum/role-enum';
+import { UserCreateDto, UserDto, UserService } from '../shared/generated';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +19,13 @@ export class AuthenticationService {
   private _currentUserSetSubject = new Subject<UserDto>();
   public currentUserSetObservable = this._currentUserSetSubject.asObservable();
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private oauthService: OAuthService,
     private cookieStorageService: CookieStorageService,
     private userService: UserService,
-    private alertService: AlertService) {
+    private alertService: AlertService
+  ) {
       this.oauthService.events
       .pipe(filter(e => ['discovery_document_loaded'].includes(e.type)))
       .subscribe(e => { 
@@ -64,7 +64,7 @@ export class AuthenticationService {
   public getUser(claims: any) {
     var globalID = claims["sub"];
 
-    this.userService.getUserFromGlobalID(globalID).subscribe(
+    this.userService.userClaimsGlobalIDGet(globalID).subscribe(
       result => { this.updateUser(result); },
       error => { this.onGetUserError(error, claims) }
     );
@@ -84,7 +84,7 @@ export class AuthenticationService {
         UserGuid: claims["sub"],
       });
 
-      this.userService.createNewUser(newUser).subscribe(user => {
+      this.userService.usersPost(newUser).subscribe(user => {
         this.updateUser(user);
       })
     }

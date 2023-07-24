@@ -1,13 +1,11 @@
 import { Component, OnInit, OnDestroy, ElementRef, Inject, AfterViewInit, HostListener } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { RoleEnum } from 'src/app/shared/models/enums/role.enum';
 import { environment } from 'src/environments/environment';
-import { UserDto } from 'src/app/shared/models/user/user-dto';
-import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { DOCUMENT, Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Meta } from '@angular/platform-browser';
-import { AnnouncementService } from 'src/app/services/announcement/announcement.service';
+import { RoleEnum } from 'src/app/shared/generated/enum/role-enum';
+import { AnnouncementService, UserDto } from 'src/app/shared/generated';
 
 @Component({
     selector: 'app-home-index',
@@ -108,7 +106,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
 
         });
 
-        this.announcementService.getAnnouncementsForHomePage().subscribe(results => {
+        this.announcementService.announcementGetAnnouncementsForHomepageGet().subscribe(results => {
             this.slides = results.map((x) => {
                 return {
                     date: x.AnnouncementDate,

@@ -1,5 +1,3 @@
-import { WatershedExplorerComponent } from 'src/app/pages/watershed-explorer/watershed-explorer.component';
-
 export class WatershedExplorerMetric {
     static readonly DroolPerLandscapedAcre = new WatershedExplorerMetric(
         "Drool Per Landscaped Acre",

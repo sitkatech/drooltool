@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum'
+import { CustomRichTextTypeEnum } from 'src/app/shared/generated/enum/custom-rich-text-type-enum';
 
 @Component({
   selector: 'drooltool-take-action',
@@ -7,7 +7,7 @@ import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text
   styleUrls: ['./take-action.component.scss']
 })
 export class TakeActionComponent implements OnInit {
-  public richTextTypeID : number = CustomRichTextType.TakeAction;
+  public richTextTypeID : number = CustomRichTextTypeEnum.TakeAction;
   constructor() { }
 
   ngOnInit() {

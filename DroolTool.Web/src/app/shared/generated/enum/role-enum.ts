@@ -5,5 +5,7 @@
 export enum RoleEnum {
   Admin = 1,
   Normal = 2,
-  Unassigned = 3
+  Unassigned = 3,
+  Landowner = 4,
+  Disabled = 5
 }

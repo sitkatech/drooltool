@@ -119,7 +119,7 @@ export class ApiService {
         return response;
     }
 
-    private handleError(error: any, supressErrorMessage = false, clearBusyGlobally = true): Observable<any> {
+    public handleError(error: any, supressErrorMessage = false, clearBusyGlobally = true): Observable<any> {
         if (clearBusyGlobally) {
             this.busyService.setBusy(false);
         }

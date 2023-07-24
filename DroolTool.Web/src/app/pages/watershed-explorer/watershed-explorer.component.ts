@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ViewChildren, QueryList } from '@angular/core';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
-import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
 import { StaticFeatureService } from 'src/app/services/static-feature/static-feature.service';
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import { environment } from 'src/environments/environment';
@@ -10,13 +9,12 @@ import '../../../../node_modules/leaflet.snogylop/src/leaflet.snogylop.js';
 import '../../../../node_modules/leaflet-loading/src/Control.Loading.js';
 import * as esri from 'esri-leaflet'
 import { FeatureCollection } from 'geojson';
-import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto.js';
 import { WatershedExplorerMetric } from 'src/app/shared/models/watershed-explorer-metric.js';
 import { forkJoin } from 'rxjs';
-import { NeighborhoodMetricAvailableDatesDto } from 'src/app/shared/models/neighborhood-metric-available-dates-dto.js';
 import { Options } from 'ng5-slider';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap'
+import { NeighborhoodMetricAvailableDatesDto, NeighborhoodMetricDto, NeighborhoodService } from 'src/app/shared/generated/index.js';
 
 declare var $: any;
 
@@ -196,8 +194,8 @@ export class WatershedExplorerComponent implements OnInit {
     this.compileService.configure(this.appRef);
 
     forkJoin(
-      this.neighborhoodService.getMetricTimeline(),
-      this.neighborhoodService.getMostRecentMetric()
+      this.neighborhoodService.neighborhoodGetMetricTimelineGet(),
+      this.neighborhoodService.neighborhoodGetMostRecentMetricGet()
     ).subscribe(([metricTimeline, mostRecentMetric]) => {
       this.allYearsWithAvailableMetricMonths = metricTimeline;
 
@@ -210,14 +208,14 @@ export class WatershedExplorerComponent implements OnInit {
       this.spinner.hide();
     });
 
-    this.neighborhoodService.getServicedNeighborhoodsWatershedNames().subscribe(result => {
+    this.neighborhoodService.neighborhoodGetServicedNeighborhoodsWatershedNamesGet().subscribe(result => {
       this.watershedNames = this.watershedNames.concat(result);
     })
   }
 
   public ngAfterViewInit(): void {
 
-    this.neighborhoodService.getServicedNeighborhoodIds().subscribe(result => {
+    this.neighborhoodService.neighborhoodGetServicedNeighborhoodIdsGet().subscribe(result => {
       this.neighborhoodsWhereItIsOkayToClickIDs = result;
     });
 
@@ -358,7 +356,7 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public displaySearchResults(OCSurveyNeighborhoodID: number, latlng: Object): void {
-    this.neighborhoodService.getMetricsForYearAndMonth(OCSurveyNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(response => {
+    this.neighborhoodService.neighborhoodOCSurveyNeighborhoodIDMetricYearMetricMonthGetMetricsGet(OCSurveyNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(response => {
       this.metricsForCurrentSelection = response;
 
       let icon = L.divIcon({
@@ -394,7 +392,7 @@ export class WatershedExplorerComponent implements OnInit {
     this.clearLayer(this.stormshedLayer);
     if (!upstream) {
       this.clearLayer(this.downstreamTraceLayer);
-      this.neighborhoodService.getDownstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
+      this.neighborhoodService.neighborhoodNeighborhoodIDGetDownstreamBackboneTraceGet(this.selectedNeighborhoodID).subscribe(response => {
         let baseLayer = L.geoJson(response,{
           style: function () {
             return {
@@ -430,7 +428,7 @@ export class WatershedExplorerComponent implements OnInit {
     else {
       this.clearLayer(this.upstreamTraceLayer);
       this.clearLayer(this.stormshedLayer);
-      this.neighborhoodService.getUpstreamBackboneTrace(this.selectedNeighborhoodID).subscribe(response => {
+      this.neighborhoodService.neighborhoodNeighborhoodIDGetUpstreamBackboneTraceGet(this.selectedNeighborhoodID).subscribe(response => {
         let featureCollection = (response) as any as FeatureCollection;
         console.log(featureCollection);
         if (featureCollection.features.length === 0) {
@@ -498,7 +496,7 @@ export class WatershedExplorerComponent implements OnInit {
     this.map.invalidateSize();
     
     if (this.metricOverlayLayer == null) {
-      this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(result => {
+      this.neighborhoodService.neighborhoodOCSurveyNeighborhoodIDMetricYearMetricMonthGetMetricsGet(this.selectedNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(result => {
         this.metricsForCurrentSelection = result;
         this.displayNewMetric(false);
         this.addDisabledToAppropriateSliderMonths();
@@ -694,7 +692,7 @@ export class WatershedExplorerComponent implements OnInit {
       setTimeout(() => {this.experiment()}, 300);
     }
     else {
-      this.neighborhoodService.getMetricsForYearAndMonth(this.selectedNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(result => {
+      this.neighborhoodService.neighborhoodOCSurveyNeighborhoodIDMetricYearMetricMonthGetMetricsGet(this.selectedNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(result => {
         this.metricsForCurrentSelection = result;
         this.displayNewMetric(false);
         this.addDisabledToAppropriateSliderMonths();

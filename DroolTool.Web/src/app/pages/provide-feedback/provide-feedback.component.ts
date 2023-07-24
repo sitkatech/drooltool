@@ -4,10 +4,10 @@ import { FeedbackDto } from 'src/app/shared/models/feedback-dto';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import { FeedbackService } from 'src/app/services/feedback/feedback.service';
 import { ReCaptchaV3Service} from 'ng-recaptcha';
-import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 import { Router } from '@angular/router';
+import { CustomRichTextTypeEnum } from 'src/app/shared/generated/enum/custom-rich-text-type-enum';
+import { FeedbackService } from 'src/app/shared/generated';
 
 @Component({
   selector: 'drooltool-provide-feedback',
@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./provide-feedback.component.scss']
 })
 export class ProvideFeedbackComponent implements OnInit {
-  public customRichTextTypeID : number = CustomRichTextType.ProvideFeedback;
+  public customRichTextTypeID : number = CustomRichTextTypeEnum.ProvideFeedback;
 
   public feedbackForm = new FormGroup({
     name: new FormControl(''),
@@ -25,10 +25,12 @@ export class ProvideFeedbackComponent implements OnInit {
   });
   isPerformingAction: boolean;
 
-  constructor(private feedbackService: FeedbackService,
+  constructor(
+    private feedbackService: FeedbackService,
     private alertService: AlertService,
     private recaptchaV3Service: ReCaptchaV3Service,
-    private router: Router) { }
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
   }
@@ -43,12 +45,13 @@ export class ProvideFeedbackComponent implements OnInit {
         let feedbackDto = new FeedbackDto(
           {
             FeedbackName: this.feedbackForm.get('name').value,
+            FeedbackDate: Date.UTC.toString(),
             FeedbackEmail: this.feedbackForm.get('email').value,
             FeedbackPhoneNumber: this.feedbackForm.get('phone').value,
             FeedbackContent: this.feedbackForm.get('content').value
           });
         this.isPerformingAction = true;
-        this.feedbackService.provideFeedback(feedbackDto, token).subscribe(result => {
+        this.feedbackService.feedbackProvideFeedbackPost(0, feedbackDto.FeedbackDate, feedbackDto.FeedbackContent, feedbackDto.FeedbackName, feedbackDto.FeedbackEmail, feedbackDto.FeedbackPhoneNumber, token).subscribe(result => {
           this.isPerformingAction = false;
           this.router.navigateByUrl("/").then(x => {
             this.alertService.pushAlert(new Alert(`Feedback successfully submitted, thank you!`, AlertContext.Success, true));

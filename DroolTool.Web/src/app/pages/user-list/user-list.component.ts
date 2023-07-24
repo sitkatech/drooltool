@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
-import { UserService } from 'src/app/services/user/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ColDef } from 'ag-grid-community';
 import { LinkRendererComponent } from 'src/app/shared/components/ag-grid/link-renderer/link-renderer.component';
@@ -7,8 +6,8 @@ import { FontAwesomeIconLinkRendererComponent } from 'src/app/shared/components/
 import { DecimalPipe } from '@angular/common';
 import { AgGridAngular } from 'ag-grid-angular';
 import { UtilityFunctionsService } from 'src/app/services/utility-functions.service';
-import { RoleEnum } from 'src/app/shared/models/enums/role.enum';
-import { UserDetailedDto } from 'src/app/shared/models/user/user-detailed-dto';
+import { RoleEnum } from 'src/app/shared/generated/enum/role-enum';
+import { UserDetailedDto, UserService } from 'src/app/shared/generated';
 
 
 @Component({
@@ -28,11 +27,17 @@ export class UserListComponent implements OnInit, OnDestroy {
   users: UserDetailedDto[];
   unassignedUsers: UserDetailedDto[];
 
-  constructor(private cdr: ChangeDetectorRef, private authenticationService: AuthenticationService, private utilityFunctionsService: UtilityFunctionsService, private userService: UserService, private decimalPipe: DecimalPipe) { }
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private authenticationService: AuthenticationService,
+    private utilityFunctionsService: UtilityFunctionsService,
+    private userService: UserService,
+    private decimalPipe: DecimalPipe
+  ) { }
 
   ngOnInit() {
     this.authenticationService.getCurrentUser().subscribe(currentUser => {
-      this.userService.getUsers().subscribe(users => {
+      this.userService.usersGet().subscribe(users => {
         let _decimalPipe = this.decimalPipe;
 
         this.columnDefs = [

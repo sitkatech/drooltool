@@ -1,15 +1,13 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, HostListener, Inject } from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectorRef, HostListener, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
-import { UserDto } from 'src/app/shared/models/user/user-dto';
-import { NeighborhoodService } from 'src/app/services/neighborhood/neighborhood.service';
-import { NeighborhoodMetricDto } from 'src/app/shared/models/neighborhood-metric-dto';
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import * as L from 'leaflet';
-import { DroolPerLandscapedAcreChartDto } from 'src/app/shared/models/drool-per-landscaped-acre-chart-dto';
-import { WaterAccountsChartDto } from 'src/app/shared/models/water-accounts-chart-dto';
 import { DOCUMENT } from '@angular/common';
 import { Meta } from '@angular/platform-browser';
+import { DroolPerLandscapedAcreChartDto, MetricDateDto, NeighborhoodMetricDto, NeighborhoodService } from 'src/app/shared/generated';
+import { AddressService } from 'src/app/services/address.service';
+import { WaterAccountsChartDto } from 'src/app/shared/models/water-accounts-chart-dto';
 
 
 @Component({
@@ -24,7 +22,7 @@ export class FactSheetComponent implements AfterViewInit {
   public tileLayers: any;
   public searchedAddress: string = "My Selected Neighborhood";
   public metricsForYear: NeighborhoodMetricDto[];
-  public metricEndDate: {Year:number, Month: number};
+  public metricEndDate: MetricDateDto;
 
   public metricsForMostRecentMonth: NeighborhoodMetricDto;
   public metricsForMonthPriorToMostRecentMonth: NeighborhoodMetricDto;
@@ -75,12 +73,12 @@ export class FactSheetComponent implements AfterViewInit {
     private wfsService: WfsService,
     private cdr: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document,
-    private meta: Meta
-  ) {
-  }
+    private meta: Meta,
+    private addressService: AddressService
+  ) {}
 
   ngOnInit() {
-    this.neighborhoodSearchedSubscription = this.neighborhoodService.getSearchedAddress().subscribe(address => {
+    this.neighborhoodSearchedSubscription = this.addressService.getSearchedAddress().subscribe(address => {
       this.searchedAddress = address ?? "My Selected Neighborhood";
     })
 
@@ -103,12 +101,12 @@ export class FactSheetComponent implements AfterViewInit {
     if (id) {
       forkJoin(
         this.wfsService.geoserverNeighborhoodLookupWithID(id),
-        this.neighborhoodService.getDroolPerLandscapedAcreChart(id),
-        this.neighborhoodService.getDefaultMetricDate()
+        this.neighborhoodService.neighborhoodGetDroolPerLandscapedAcreChartNeighborhoodIDGet(id),
+        this.neighborhoodService.neighborhoodGetDefaultMetricDisplayDateGet()
       ).subscribe(([geoserverResponse,  droolChartResponse, yearAndMonth]) => {
         const OCSurveyNeighborhoodID = geoserverResponse.features[0].properties.OCSurveyNeighborhoodID;
         this.metricEndDate = yearAndMonth;
-        this.neighborhoodService.getMetricsForYear(OCSurveyNeighborhoodID, this.metricEndDate.Year, this.metricEndDate.Month).subscribe(metricResult => {
+        this.neighborhoodService.neighborhoodOCSurveyNeighborhoodIDMetricEndYearMetricEndMonthGetMetricsForYearGet(OCSurveyNeighborhoodID, this.metricEndDate.Year, this.metricEndDate.Month).subscribe(metricResult => {
           this.metricsForYear = metricResult;
           if (this.metricsForYear.length > 0) {
             this.setupMetricsAndGetStatements();

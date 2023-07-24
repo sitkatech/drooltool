@@ -4,13 +4,13 @@ import { HttpClient } from '@angular/common/http';
 
 
 import { AnnouncementService } from './api/announcement.service';
-import { CustomRichTextService } from './api/custom-rich-text.service';
 import { FeedbackService } from './api/feedback.service';
 import { FileResourceService } from './api/file-resource.service';
 import { NeighborhoodService } from './api/neighborhood.service';
 import { RoleService } from './api/role.service';
 import { UserService } from './api/user.service';
 import { WatershedMaskService } from './api/watershed-mask.service';
+import { CustomRichTextService } from './api/custom-rich-text.service';
 
 @NgModule({
   imports:      [],

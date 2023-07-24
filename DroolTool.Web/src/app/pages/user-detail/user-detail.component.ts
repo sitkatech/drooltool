@@ -1,9 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { UserDto } from 'src/app/shared/models/user/user-dto';
-import { UserService } from 'src/app/services/user/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { forkJoin } from 'rxjs';
+import { UserDto, UserService } from 'src/app/shared/generated';
 
 @Component({
     selector: 'template-user-detail',
@@ -34,7 +33,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
             const id = parseInt(this.route.snapshot.paramMap.get("id"));
             if (id) {
                 forkJoin(
-                    this.userService.getUserFromUserID(id)
+                    this.userService.usersUserIDGet(id)
                 ).subscribe(([user]) => {
                     this.user = user instanceof Array
                         ? null
