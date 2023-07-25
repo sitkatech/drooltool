@@ -11,7 +11,7 @@ namespace DroolTool.EFModels.Entities
     {
         public int PrimaryKey { get; set; }
         public int RawDroolMetricID { get; set; }
-        public int OCSurveyCatchmentID { get; set; }
+        public int? OCSurveyCatchmentID { get; set; }
         public int MetricYear { get; set; }
         public int MetricMonth { get; set; }
         [Column(TypeName = "datetime")]

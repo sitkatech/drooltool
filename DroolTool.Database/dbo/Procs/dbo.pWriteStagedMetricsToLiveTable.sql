@@ -34,7 +34,7 @@ begin
 	
 	INSERT INTO [dbo].[RawDroolMetric]
            ([RawDroolMetricID]
-           ,[MetricCatchIDN]
+           ,[OCSurveyNeighborhoodID]
            ,[MetricDate]
            ,[MetricYear]
            ,[MetricMonth]

@@ -11,7 +11,7 @@ namespace DroolTool.EFModels.Entities
     {
         [Key]
         public int RawDroolMetricID { get; set; }
-        public int MetricCatchIDN { get; set; }
+        public int? OCSurveyNeighborhoodID { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime MetricDate { get; set; }
         public int MetricYear { get; set; }
@@ -723,6 +723,6 @@ namespace DroolTool.EFModels.Entities
         public double? hoa_daily_total_budget_fraction_overall { get; set; }
         public double? hoa_daily_meter_budget_overage_fraction_overall { get; set; }
 
-        public virtual Neighborhood MetricCatchIDNNavigation { get; set; }
+        public virtual Neighborhood OCSurveyNeighborhood { get; set; }
     }
 }

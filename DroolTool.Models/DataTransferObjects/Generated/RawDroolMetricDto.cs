@@ -10,7 +10,7 @@ namespace DroolTool.Models.DataTransferObjects
     public partial class RawDroolMetricDto
     {
         public int RawDroolMetricID { get; set; }
-        public NeighborhoodDto Neighborhood { get; set; }
+        public NeighborhoodDto OCSurveyNeighborhood { get; set; }
         public DateTime MetricDate { get; set; }
         public int MetricYear { get; set; }
         public int MetricMonth { get; set; }
@@ -725,7 +725,7 @@ namespace DroolTool.Models.DataTransferObjects
     public partial class RawDroolMetricSimpleDto
     {
         public int RawDroolMetricID { get; set; }
-        public System.Int32 NeighborhoodID { get; set; }
+        public System.Int32? OCSurveyNeighborhoodID { get; set; }
         public DateTime MetricDate { get; set; }
         public int MetricYear { get; set; }
         public int MetricMonth { get; set; }

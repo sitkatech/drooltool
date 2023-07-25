@@ -82,12 +82,11 @@ namespace DroolTool.EFModels.Entities
             {
                 entity.Property(e => e.RawDroolMetricID).ValueGeneratedNever();
 
-                entity.HasOne(d => d.MetricCatchIDNNavigation)
+                entity.HasOne(d => d.OCSurveyNeighborhood)
                     .WithMany(p => p.RawDroolMetrics)
                     .HasPrincipalKey(p => p.OCSurveyNeighborhoodID)
-                    .HasForeignKey(d => d.MetricCatchIDN)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_RawDroolMetric_Neighborhood_CatchIDN_OCSurveyNeighborhoodID");
+                    .HasForeignKey(d => d.OCSurveyNeighborhoodID)
+                    .HasConstraintName("FK_RawDroolMetric_Neighborhood_OCSurveyNeighborhoodID_OCSurveyNeighborhoodID");
             });
 
             modelBuilder.Entity<RawDroolMetricStaging>(entity =>

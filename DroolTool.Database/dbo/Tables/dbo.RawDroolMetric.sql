@@ -1,6 +1,6 @@
 CREATE TABLE [dbo].[RawDroolMetric](
-	[RawDroolMetricID] [int] NOT NULL,
-	[MetricCatchIDN] [int] NOT NULL,
+	[RawDroolMetricID] [int] IDENTITY (1, 1) NOT NULL,
+	[OCSurveyNeighborhoodID] [int] NULL,
 	[MetricDate] [datetime] NOT NULL,
 	[MetricYear] [int] NOT NULL,
 	[MetricMonth] [int] NOT NULL,
@@ -717,7 +717,7 @@ CREATE TABLE [dbo].[RawDroolMetric](
 ) ON [PRIMARY]
 
 GO
-ALTER TABLE [dbo].[RawDroolMetric]  WITH CHECK ADD  CONSTRAINT [FK_RawDroolMetric_Neighborhood_CatchIDN_OCSurveyNeighborhoodID] FOREIGN KEY([MetricCatchIDN])
+ALTER TABLE [dbo].[RawDroolMetric]  WITH CHECK ADD  CONSTRAINT [FK_RawDroolMetric_Neighborhood_OCSurveyNeighborhoodID_OCSurveyNeighborhoodID] FOREIGN KEY([OCSurveyNeighborhoodID])
 REFERENCES [dbo].[Neighborhood] ([OCSurveyNeighborhoodID])
 GO
-ALTER TABLE [dbo].[RawDroolMetric] CHECK CONSTRAINT [FK_RawDroolMetric_Neighborhood_CatchIDN_OCSurveyNeighborhoodID]
+ALTER TABLE [dbo].[RawDroolMetric] CHECK CONSTRAINT [FK_RawDroolMetric_Neighborhood_OCSurveyNeighborhoodID_OCSurveyNeighborhoodID]

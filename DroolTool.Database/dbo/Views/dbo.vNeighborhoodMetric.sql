@@ -3,7 +3,7 @@ as
 Select 
 	[RawDroolMetricID] as PrimaryKey,
 	[RawDroolMetricID],
-	[MetricCatchIDN] as OCSurveyCatchmentID, 
+	[OCSurveyNeighborhoodID] as OCSurveyCatchmentID, 
 	[MetricYear] as MetricYear,
 	[MetricMonth] as MetricMonth,
 	MetricDate as MetricDate,

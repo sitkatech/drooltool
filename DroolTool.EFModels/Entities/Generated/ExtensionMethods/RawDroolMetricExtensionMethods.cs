@@ -14,7 +14,7 @@ namespace DroolTool.EFModels.Entities
             var rawDroolMetricDto = new RawDroolMetricDto()
             {
                 RawDroolMetricID = rawDroolMetric.RawDroolMetricID,
-                Neighborhood = rawDroolMetric.Neighborhood.AsDto(),
+                OCSurveyNeighborhood = rawDroolMetric.OCSurveyNeighborhood?.AsDto(),
                 MetricDate = rawDroolMetric.MetricDate,
                 MetricYear = rawDroolMetric.MetricYear,
                 MetricMonth = rawDroolMetric.MetricMonth,
@@ -736,7 +736,7 @@ namespace DroolTool.EFModels.Entities
             var rawDroolMetricSimpleDto = new RawDroolMetricSimpleDto()
             {
                 RawDroolMetricID = rawDroolMetric.RawDroolMetricID,
-                NeighborhoodID = rawDroolMetric.NeighborhoodID,
+                OCSurveyNeighborhoodID = rawDroolMetric.OCSurveyNeighborhoodID,
                 MetricDate = rawDroolMetric.MetricDate,
                 MetricYear = rawDroolMetric.MetricYear,
                 MetricMonth = rawDroolMetric.MetricMonth,
