@@ -7,13 +7,14 @@ import '../../../../node_modules/leaflet.fullscreen/Control.FullScreen.js';
 import '../../../../node_modules/leaflet-loading/src/Control.Loading.js';
 import * as esri from 'esri-leaflet'
 import { CustomCompileService } from '../../shared/services/custom-compile.service';
-import { StaticFeatureService } from 'src/app/services/static-feature/static-feature.service';
 import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
 import { _ } from 'ag-grid-community';
-import { MetricDateDto, NeighborhoodMetricDto, NeighborhoodService } from 'src/app/shared/generated/index.js';
+import { MetricDateDto, NeighborhoodMetricDto, NeighborhoodService, WatershedMaskService } from 'src/app/shared/generated/index.js';
 import { AddressService } from 'src/app/services/address.service.js';
+import { Observable, of } from 'rxjs';
+import { DistrictBoundary } from 'src/app/services/static-feature/DistrictBoundary.js';
 
 declare var $: any;
 
@@ -65,6 +66,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public defaultSelectedMetricDate: MetricDateDto;
 
   public areMetricsCollapsed: boolean = true;
+  public watershedName = "All Watersheds"
 
   public months = [
     "January",
@@ -87,10 +89,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
     private appRef: ApplicationRef,
     private compileService: CustomCompileService,
     private neighborhoodService: NeighborhoodService,
-    private staticFeatureService: StaticFeatureService,
     private nominatimService: NominatimService,
     private wfsService: WfsService,
-    private addressService: AddressService
+    private addressService: AddressService,
+    private waterShedMaskService: WatershedMaskService
   ) {
   }
 
@@ -189,7 +191,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.map = L.map(this.mapID, mapOptions);
     this.initializePanes();
     
-    this.staticFeatureService.getDistrictBoundary().subscribe(districtBoundaryFeature =>{
+    this.getDistrictBoundary().subscribe(districtBoundaryFeature =>{
       this.districtBoundaryLayer = L.geoJSON(districtBoundaryFeature,{
         invert:true,
         //pane:"droolToolOverlayPane",
@@ -214,7 +216,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.layerControl.addOverlay(this.districtBoundaryLayer, "District Boundary");
     });
 
-    this.staticFeatureService.getWatershedMask().subscribe(maskString => {
+    this.waterShedMaskService.watershedMaskWatershedAliasNameGetWatershedMaskGet(this.watershedName).subscribe(maskString => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
         style: function () {
@@ -340,6 +342,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
         this.selectedNeighborhoodProperties = response.features[0].properties;
         this.selectedNeighborhoodID = this.selectedNeighborhoodProperties.NeighborhoodID;
         if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
+          debugger;
           this.neighborhoodService.neighborhoodOCSurveyNeighborhoodIDMetricYearMetricMonthGetMetricsGet(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID, this.defaultSelectedMetricDate.Year, this.defaultSelectedMetricDate.Month).subscribe(result => {
             this.selectedNeighborhoodMetrics = result;
             this.map.invalidateSize();
@@ -405,7 +408,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
     setTimeout(() => { this.clickMarker.closePopup(); }, 5000);
     this.selectedNeighborhoodWatershed = this.selectedNeighborhoodProperties.Watershed;
-    this.staticFeatureService.getWatershedMask(this.selectedNeighborhoodWatershed).subscribe(maskString => {
+    this.waterShedMaskService.watershedMaskWatershedAliasNameGetWatershedMaskGet(this.selectedNeighborhoodWatershed).subscribe(maskString => {
       this.selectedNeighborhoodWatershedMask = this.getMaskGeoJsonLayer(maskString);
     })
     this.searchActive = true;
@@ -625,4 +628,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.districtBoundaryLayer.options.invert = true;
     this.districtBoundaryLayer.setStyle({fillOpacity: .4});
   }
+  getDistrictBoundary(): Observable<object> {
+    return of(DistrictBoundary);
+}
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ViewChildren, QueryList } from '@angular/core';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
-import { StaticFeatureService } from 'src/app/services/static-feature/static-feature.service';
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import { environment } from 'src/environments/environment';
 import * as L from 'leaflet';
@@ -10,11 +9,13 @@ import '../../../../node_modules/leaflet-loading/src/Control.Loading.js';
 import * as esri from 'esri-leaflet'
 import { FeatureCollection } from 'geojson';
 import { WatershedExplorerMetric } from 'src/app/shared/models/watershed-explorer-metric.js';
-import { forkJoin } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { Options } from 'ng5-slider';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap'
-import { NeighborhoodMetricAvailableDatesDto, NeighborhoodMetricDto, NeighborhoodService } from 'src/app/shared/generated/index.js';
+import { NeighborhoodMetricAvailableDatesDto, NeighborhoodMetricDto, NeighborhoodService, WatershedMaskService } from 'src/app/shared/generated/index.js';
+import { DistrictBoundary } from 'src/app/services/static-feature/DistrictBoundary.js';
+import { None } from 'vega';
 
 declare var $: any;
 
@@ -83,7 +84,7 @@ export class WatershedExplorerComponent implements OnInit {
   public noDataForTimeSelectedErrorCallToAction = "Select a different month, or select a different year and view months in that range."
   public noDataForTimeSelectedErrorSpecificIcon = "<span><i class='far fa-calendar-alt fa-3x'></i></span>";
   
-  public selectedNeighborhoodID: number;
+  public selectedNeighborhoodID: number = 1;
   public selectedMetricMonth: number;
   public selectedMetricYear: number;
   public selectedYearMinMonth: number;
@@ -91,6 +92,7 @@ export class WatershedExplorerComponent implements OnInit {
   public allYearsWithAvailableMetricMonths: NeighborhoodMetricAvailableDatesDto[];
 
   public areMetricsCollapsed: boolean = true;
+  public watershedName = "All Watersheds"
 
   public months = [
     "January",
@@ -128,8 +130,8 @@ export class WatershedExplorerComponent implements OnInit {
     private compileService: CustomCompileService,
     private neighborhoodService: NeighborhoodService,
     private wfsService: WfsService,
-    private staticFeatureService: StaticFeatureService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private waterShedMaskService: WatershedMaskService
   ) {
   }
 
@@ -240,7 +242,7 @@ export class WatershedExplorerComponent implements OnInit {
 
     this.initializePanes();
 
-    this.staticFeatureService.getDistrictBoundary().subscribe(districtBoundaryFeature =>{
+    this.getDistrictBoundary().subscribe(districtBoundaryFeature =>{
       this.districtBoundaryLayer = L.geoJSON(districtBoundaryFeature,{
         //pane:"droolToolOverlayPane",
         style: function (feature) {
@@ -260,7 +262,7 @@ export class WatershedExplorerComponent implements OnInit {
       this.layerControl.addOverlay(this.districtBoundaryLayer, "District Boundary");
     });
 
-    this.staticFeatureService.getWatershedMask().subscribe(maskString => {
+    this.waterShedMaskService.watershedMaskWatershedAliasNameGetWatershedMaskGet(this.watershedName).subscribe(maskString => {
       this.maskLayer = this.getMaskGeoJsonLayer(maskString);
       L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
@@ -629,7 +631,7 @@ export class WatershedExplorerComponent implements OnInit {
     this.map.removeLayer(this.maskLayer);
     this.maskLayer = null;
     this.map.fireEvent('dataloading');
-    this.staticFeatureService.getWatershedMask(this.selectedWatershed).subscribe(maskString => {
+    this.waterShedMaskService.watershedMaskWatershedAliasNameGetWatershedMaskGet(this.selectedWatershed).subscribe(maskString => {
       this.maskLayer = this.getMaskGeoJsonLayer(maskString);
       this.maskLayer.addTo(this.map);
       this.defaultFitBounds();     
@@ -739,5 +741,8 @@ export class WatershedExplorerComponent implements OnInit {
 
   public hideInstructionsToast(event: Event) {
     this.showInstructions = false;
+  }
+  getDistrictBoundary(): Observable<object> {
+    return of(DistrictBoundary);
   }
 }
