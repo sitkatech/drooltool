@@ -123,7 +123,6 @@ export function init_app(appLoadService: AppInitService) {
       useClass: CookieStorageService
     }
   ],
-  entryComponents: [LinkRendererComponent, FontAwesomeIconLinkRendererComponent, MultiLinkRendererComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { 

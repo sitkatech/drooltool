@@ -6,7 +6,7 @@ describe('CustomRichTextService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: CustomRichTextService = TestBed.get(CustomRichTextService);
+    const service: CustomRichTextService = TestBed.inject(CustomRichTextService);
     expect(service).toBeTruthy();
   });
 });

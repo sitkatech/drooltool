@@ -50,8 +50,6 @@ import { SwimmingPoolVisualizationComponent } from './swimming-pool-visualizatio
         CustomRichTextComponent,
         StylizedDropdownComponent,
         SwimmingPoolVisualizationComponent
-    ],
-    entryComponents:[
     ]
 })
 export class SharedModule {

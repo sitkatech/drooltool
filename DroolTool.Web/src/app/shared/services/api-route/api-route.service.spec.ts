@@ -6,7 +6,7 @@ describe('ApiRouteService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ApiRouteService = TestBed.get(ApiRouteService);
+    const service: ApiRouteService = TestBed.inject(ApiRouteService);
     expect(service).toBeTruthy();
   });
 });
