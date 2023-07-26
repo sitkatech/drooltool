@@ -23,7 +23,7 @@ h1 {
 }
 
 #mapImage {
-    background-image:url(~/assets/main/Map_Background.png); 
+    background-image:url(/assets/main/Map_Background.png); 
     background-size:cover;
     margin-top:80px;
 }
@@ -40,7 +40,7 @@ h1 {
     padding-top:100%;
     margin:auto;
     background-size:cover;
-    background-image:url(~/assets/home/resource-spotlight.jpg);
+    background-image:url(/assets/home/resource-spotlight.jpg);
 }
 
 #takeActionImage {
@@ -48,7 +48,7 @@ h1 {
     background-color:lightgrey;
     padding-top:100%;
     margin: 0 auto;
-    background-image:url(~/assets/home/take-action.jpg);
+    background-image:url(/assets/home/take-action.jpg);
     background-size:cover;
 }
 
