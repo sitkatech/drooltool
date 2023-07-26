@@ -217,7 +217,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     });
 
     this.waterShedMaskService.watershedMaskWatershedAliasNameGetWatershedMaskGet(this.watershedName).subscribe(maskString => {
-      this.maskLayer = L.geoJSON(maskString, {
+      this.maskLayer = L.geoJSON(JSON.parse(maskString), {
         invert: true,
         style: function () {
           return {
@@ -342,14 +342,13 @@ export class NeighborhoodExplorerComponent implements OnInit {
         this.selectedNeighborhoodProperties = response.features[0].properties;
         this.selectedNeighborhoodID = this.selectedNeighborhoodProperties.NeighborhoodID;
         if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
-          debugger;
           this.neighborhoodService.neighborhoodOCSurveyNeighborhoodIDMetricYearMetricMonthGetMetricsGet(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID, this.defaultSelectedMetricDate.Year, this.defaultSelectedMetricDate.Month).subscribe(result => {
             this.selectedNeighborhoodMetrics = result;
             this.map.invalidateSize();
           });
           this.displaySearchResults(response, latlng);
           this.neighborhoodService.neighborhoodNeighborhoodIDGetStormshedGet(this.selectedNeighborhoodID).subscribe(
-            response => this.displayStormshedAndBackboneDetail(response),
+            response => this.displayStormshedAndBackboneDetail(JSON.parse(response)),
             null,
             () => this.setSearchingAndLoadScreen(false)
           );
@@ -414,8 +413,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.searchActive = true;
   }
 
-  public displayStormshedAndBackboneDetail(response: string): void {
-    let featureCollection = (response) as any as FeatureCollection;
+  public displayStormshedAndBackboneDetail(featureCollection: FeatureCollection): void {
     if (featureCollection.features.length === 0) {
       return null;
     }
@@ -490,9 +488,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.deinitializeMapEvents();
       this.setSearchingAndLoadScreen(true);
       this.neighborhoodService.neighborhoodNeighborhoodIDGetDownstreamBackboneTraceGet(this.selectedNeighborhoodID).subscribe(response => {
+        let featureCollection = JSON.parse(response);
         this.clearLayer(this.currentMask);
         this.selectedNeighborhoodWatershedMask.addTo(this.map);
-        let baseLayer = L.geoJson(response,{
+        let baseLayer = L.geoJson(featureCollection,{
           style: function () {
             return {
               color: "#FFD400",
@@ -502,7 +501,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
           },
           pane: "droolToolOverlayPane"
         });
-        let dottedLayer = L.geoJson(response, {
+        let dottedLayer = L.geoJson(featureCollection, {
           style: function () {
             return {
               color: "#E713D4",
@@ -606,7 +605,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public getMaskGeoJsonLayer(maskString: string): L.geoJSON {
-    return L.geoJSON(maskString, {
+    return L.geoJSON(JSON.parse(maskString), {
       invert: true,
       style: function () {
         return {

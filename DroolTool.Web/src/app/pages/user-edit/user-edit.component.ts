@@ -5,8 +5,7 @@ import { forkJoin } from 'rxjs';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
-import { RoleDto, RoleService, UserDto, UserService } from 'src/app/shared/generated';
-import { UserUpdateDto } from 'src/app/shared/models/user/user-update-dto';
+import { RoleDto, RoleService, UserDto, UserService, UserUpsertDto } from 'src/app/shared/generated';
 
 
 @Component({
@@ -21,7 +20,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   public userID: number;
   public user: UserDto;
-  public model: UserUpdateDto;
+  public model: UserUpsertDto;
   public roles: Array<RoleDto>;
   public isLoadingSubmit: boolean = false;
 
@@ -64,7 +63,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
           return 0;
         });
 
-        this.model = new UserUpdateDto();
+        this.model = new UserUpsertDto();
         this.model.RoleID = user.Role.RoleID;
         this.model.ReceiveSupportEmails = user.ReceiveSupportEmails;
 
@@ -81,7 +80,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   onSubmit(editUserForm: HTMLFormElement): void {
     this.isLoadingSubmit = true;
-
     this.userService.usersUserIDPut(this.userID, this.model)
       .subscribe(response => {
         this.isLoadingSubmit = false;

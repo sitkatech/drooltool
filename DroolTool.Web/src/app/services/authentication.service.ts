@@ -53,7 +53,6 @@ export class AuthenticationService {
   }
 
   public checkAuthentication() {
-    debugger;
     if (this.isAuthenticated() && !this.currentUser) {
       console.log("Authenticated but no user found...");
       var claims = this.oauthService.getIdentityClaims();

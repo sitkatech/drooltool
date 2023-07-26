@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { AlertService } from '../../services/alert.service';
 import { Alert } from '../../models/alert';
@@ -28,10 +28,12 @@ export class CustomRichTextComponent implements OnInit {
 
   public ckConfig = {"removePlugins": ["MediaEmbed"]}
 
-  constructor(private customRichTextService: CustomRichTextService,
+  constructor(
+    private customRichTextService: CustomRichTextService,
     private authenticationService: AuthenticationService,
     private cdr: ChangeDetectorRef,
-    private alertService: AlertService) { }
+    private alertService: AlertService
+  ) { }
 
   ngOnInit() {
     this.authenticationService.getCurrentUser().subscribe(currentUser => {

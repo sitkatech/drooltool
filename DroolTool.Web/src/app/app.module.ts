@@ -51,6 +51,8 @@ import { ProvideFeedbackComponent } from './pages/provide-feedback/provide-feedb
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 import { environment } from 'src/environments/environment';
 import { CookieStorageService } from './shared/services/cookies/cookie-storage.service';
+import { ApiModule } from './shared/generated/api.module';
+import { Configuration } from './shared/generated';
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -102,7 +104,12 @@ export function init_app(appLoadService: AppInitService) {
     }),
     ShareIconsModule,
     ShareButtonsPopupModule,
-    RecaptchaV3Module
+    RecaptchaV3Module,
+    ApiModule.forRoot(() => {
+      return new Configuration({
+          basePath: `${environment.apiHostName}`,
+      });
+  })
   ],  
   providers: [
     CookieService,

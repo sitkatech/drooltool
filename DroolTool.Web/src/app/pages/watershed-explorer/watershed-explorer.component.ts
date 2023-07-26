@@ -84,7 +84,7 @@ export class WatershedExplorerComponent implements OnInit {
   public noDataForTimeSelectedErrorCallToAction = "Select a different month, or select a different year and view months in that range."
   public noDataForTimeSelectedErrorSpecificIcon = "<span><i class='far fa-calendar-alt fa-3x'></i></span>";
   
-  public selectedNeighborhoodID: number = 1;
+  public selectedNeighborhoodID: number;
   public selectedMetricMonth: number;
   public selectedMetricYear: number;
   public selectedYearMinMonth: number;
@@ -395,7 +395,8 @@ export class WatershedExplorerComponent implements OnInit {
     if (!upstream) {
       this.clearLayer(this.downstreamTraceLayer);
       this.neighborhoodService.neighborhoodNeighborhoodIDGetDownstreamBackboneTraceGet(this.selectedNeighborhoodID).subscribe(response => {
-        let baseLayer = L.geoJson(response,{
+        let featureCollection = JSON.parse(response);
+        let baseLayer = L.geoJson(featureCollection,{
           style: function () {
             return {
               color: "#FFD400",
@@ -405,7 +406,7 @@ export class WatershedExplorerComponent implements OnInit {
           },
           pane: "droolToolOverlayPane"
         });
-        let dottedLayer = L.geoJson(response, {
+        let dottedLayer = L.geoJson(featureCollection, {
           style: function () {
             return {
               color: "#E713D4",
@@ -431,8 +432,7 @@ export class WatershedExplorerComponent implements OnInit {
       this.clearLayer(this.upstreamTraceLayer);
       this.clearLayer(this.stormshedLayer);
       this.neighborhoodService.neighborhoodNeighborhoodIDGetUpstreamBackboneTraceGet(this.selectedNeighborhoodID).subscribe(response => {
-        let featureCollection = (response) as any as FeatureCollection;
-        console.log(featureCollection);
+        let featureCollection = JSON.parse(response);
         if (featureCollection.features.length === 0) {
           return null;
         }
@@ -497,12 +497,14 @@ export class WatershedExplorerComponent implements OnInit {
     this.clearErrors();
     this.map.invalidateSize();
     
-    if (this.metricOverlayLayer == null) {
+    if (this.metricOverlayLayer == null && this.selectedNeighborhoodID) {
+      
       this.neighborhoodService.neighborhoodOCSurveyNeighborhoodIDMetricYearMetricMonthGetMetricsGet(this.selectedNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(result => {
         this.metricsForCurrentSelection = result;
         this.displayNewMetric(false);
         this.addDisabledToAppropriateSliderMonths();
       });
+
     }
   }
 
@@ -608,7 +610,7 @@ export class WatershedExplorerComponent implements OnInit {
   }
 
   public getMaskGeoJsonLayer(maskString: string): L.geoJSON {
-    return L.geoJSON(maskString, {
+    return L.geoJSON(JSON.parse(maskString), {
       invert: true,
       style: function (feature) {
         return {
@@ -628,7 +630,9 @@ export class WatershedExplorerComponent implements OnInit {
 
     this.clearSearchResults();
     this.clearErrors();
-    this.map.removeLayer(this.maskLayer);
+    if (this.maskLayer != null && this.maskLayer != undefined){
+      this.map.removeLayer(this.maskLayer);
+    }
     this.maskLayer = null;
     this.map.fireEvent('dataloading');
     this.waterShedMaskService.watershedMaskWatershedAliasNameGetWatershedMaskGet(this.selectedWatershed).subscribe(maskString => {
@@ -694,11 +698,14 @@ export class WatershedExplorerComponent implements OnInit {
       setTimeout(() => {this.experiment()}, 300);
     }
     else {
-      this.neighborhoodService.neighborhoodOCSurveyNeighborhoodIDMetricYearMetricMonthGetMetricsGet(this.selectedNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(result => {
-        this.metricsForCurrentSelection = result;
-        this.displayNewMetric(false);
-        this.addDisabledToAppropriateSliderMonths();
-      });
+      if(this.selectedNeighborhoodID){
+        this.neighborhoodService.neighborhoodOCSurveyNeighborhoodIDMetricYearMetricMonthGetMetricsGet(this.selectedNeighborhoodID, this.selectedMetricYear, this.selectedMetricMonth).subscribe(result => {
+          this.metricsForCurrentSelection = result;
+          this.displayNewMetric(false);
+          this.addDisabledToAppropriateSliderMonths();
+        });
+      }
+      
     }
   }
 
