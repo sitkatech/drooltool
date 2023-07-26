@@ -11,10 +11,10 @@ import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
 import { _ } from 'ag-grid-community';
-import { MetricDateDto, NeighborhoodMetricDto, NeighborhoodService, WatershedMaskService } from 'src/app/shared/generated/index.js';
-import { AddressService } from 'src/app/services/address.service.js';
+import { MetricDateDto, NeighborhoodMetricDto, NeighborhoodService, WatershedMaskService } from 'src/app/shared/generated/index';
+import { AddressService } from 'src/app/services/address.service';
 import { Observable, of } from 'rxjs';
-import { DistrictBoundary } from 'src/app/services/static-feature/DistrictBoundary.js';
+import { DistrictBoundary } from 'src/app/services/static-feature/DistrictBoundary';
 
 declare var $: any;
 
