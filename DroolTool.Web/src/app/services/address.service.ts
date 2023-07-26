@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { isNullOrUndefined } from 'util';
 import { ApiService } from '../shared/services';
 
 @Injectable({
@@ -14,7 +13,7 @@ export class AddressService {
         let searchedAddressAsJson = window.localStorage.getItem('searchedAddress');
         let initialSearchedAddress = "My Selected Neighborhood";
 
-        if (!isNullOrUndefined(searchedAddressAsJson) && searchedAddressAsJson !== "undefined") {
+        if (searchedAddressAsJson != null && searchedAddressAsJson != undefined && searchedAddressAsJson !== "undefined") {
             // if the saved account is valid for this user, make it the current active account. Otherwise clear it from local storage.
             initialSearchedAddress = JSON.parse(searchedAddressAsJson);
         }
