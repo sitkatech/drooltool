@@ -7,7 +7,6 @@ import { GestureHandling } from "leaflet-gesture-handling";
 import '../../../../node_modules/leaflet.snogylop/src/leaflet.snogylop.js';
 import '../../../../node_modules/leaflet-loading/src/Control.Loading.js';
 import * as esri from 'esri-leaflet'
-import { FeatureCollection } from 'geojson';
 import { WatershedExplorerMetric } from 'src/app/shared/models/watershed-explorer-metric';
 import { Observable, forkJoin, of } from 'rxjs';
 import { Options } from 'ng5-slider';
@@ -15,7 +14,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap'
 import { NeighborhoodMetricAvailableDatesDto, NeighborhoodMetricDto, NeighborhoodService, WatershedMaskService } from 'src/app/shared/generated/index';
 import { DistrictBoundary } from 'src/app/services/static-feature/DistrictBoundary';
-import { None } from 'vega';
 
 declare var $: any;
 

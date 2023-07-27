@@ -158,7 +158,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.neighborhoodService.neighborhoodGetDefaultMetricDisplayDateGet().subscribe(x=>{
 
       this.defaultSelectedMetricDate = x
-      console.log(this.defaultSelectedMetricDate);
     });
 
     this.compileService.configure(this.appRef);

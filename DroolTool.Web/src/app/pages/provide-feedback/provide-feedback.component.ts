@@ -40,12 +40,13 @@ export class ProvideFeedbackComponent implements OnInit {
   }
 
   public onSubmit() {
+    var date = new Date;
     if (this.feedbackForm.valid) {
       this.recaptchaV3Service.execute('submitFeedback').subscribe(token => {
         let feedbackDto = new FeedbackDto(
           {
             FeedbackName: this.feedbackForm.get('name').value,
-            FeedbackDate: Date.UTC.toString(),
+            FeedbackDate: date.toUTCString(),
             FeedbackEmail: this.feedbackForm.get('email').value,
             FeedbackPhoneNumber: this.feedbackForm.get('phone').value,
             FeedbackContent: this.feedbackForm.get('content').value
