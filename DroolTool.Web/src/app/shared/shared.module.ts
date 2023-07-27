@@ -16,6 +16,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { CustomRichTextComponent } from './components/custom-rich-text/custom-rich-text.component'
 import { StylizedDropdownComponent } from './components/stylized-dropdown/stylized-dropdown.component';
 import { SwimmingPoolVisualizationComponent } from './swimming-pool-visualization/swimming-pool-visualization.component';
+import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 
 @NgModule({
     declarations: [
@@ -38,7 +39,8 @@ import { SwimmingPoolVisualizationComponent } from './swimming-pool-visualizatio
         NgProgressModule,
         RouterModule,
         SelectDropDownModule,
-        SlickCarouselModule
+        SlickCarouselModule,
+        EditorModule
     ],
     exports: [
         CommonModule,
@@ -47,7 +49,11 @@ import { SwimmingPoolVisualizationComponent } from './swimming-pool-visualizatio
         HeaderNavComponent,
         CustomRichTextComponent,
         StylizedDropdownComponent,
-        SwimmingPoolVisualizationComponent
+        SwimmingPoolVisualizationComponent,
+        EditorModule
+    ],
+    providers:[
+        { provide: TINYMCE_SCRIPT_SRC, useValue: 'assets/tinymce/tinymce.min.js' }
     ]
 })
 export class SharedModule {

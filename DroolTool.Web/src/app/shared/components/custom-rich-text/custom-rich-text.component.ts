@@ -30,8 +30,6 @@ export class CustomRichTextComponent implements OnInit, AfterViewChecked {
 
   currentUser: UserDto;
 
-  public ckConfig = {"removePlugins": ["MediaEmbed"]}
-
   constructor(
     private customRichTextService: CustomRichTextService,
     private authenticationService: AuthenticationService,
@@ -43,8 +41,6 @@ export class CustomRichTextComponent implements OnInit, AfterViewChecked {
     this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
     });
-    //window.Editor = this.Editor;
-
     this.customRichTextService.customRichTextCustomRichTextTypeIDGet(this.customRichTextTypeID).subscribe(x => {
       this.customRichTextContent = x.CustomRichTextContent;
       this.isEmptyContent = x.IsEmptyContent;
@@ -82,7 +78,6 @@ export class CustomRichTextComponent implements OnInit, AfterViewChecked {
     this.isEditing = false;
     this.isLoading = true;
     const updateDto = new CustomRichTextDto({ CustomRichTextContent: this.editedContent });
-    console.log(updateDto);
     this.customRichTextService.customRichTextCustomRichTextTypeIDPut(this.customRichTextTypeID, updateDto).subscribe(x => {
       this.customRichTextContent = x.CustomRichTextContent;
       this.isLoading = false;
@@ -90,6 +85,10 @@ export class CustomRichTextComponent implements OnInit, AfterViewChecked {
       this.isLoading = false;
       this.alertService.pushAlert(new Alert("There was an error updating the rich text content", AlertContext.Danger, true));
     });
+  }
+
+  ngOnDestroy() {
+    this.cdr.detach();
   }
 
 }
