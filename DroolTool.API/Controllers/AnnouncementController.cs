@@ -27,13 +27,13 @@ namespace DroolTool.API.Controllers
         [HttpGet("announcement/get-announcements")]
         public ActionResult<List<AnnouncementDto>> GetAnnouncements()
         {
-            return Ok(Announcement.GetAnnouncementsByDate(_dbContext));
+            return Ok(Announcements.GetAnnouncementsByDate(_dbContext));
         }
 
         [HttpGet("announcement/get-announcements-for-homepage")]
         public ActionResult<List<AnnouncementDto>> GetAnnouncementsForHomepage()
         {
-            return Ok(Announcement.GetAnnouncementsByDate(_dbContext, 2));
+            return Ok(Announcements.GetAnnouncementsByDate(_dbContext, 2));
         }
 
         [HttpPost("announcement/upsert-announcement")]
@@ -42,7 +42,7 @@ namespace DroolTool.API.Controllers
             var userDto = UserContext.GetUserFromHttpContext(_dbContext, HttpContext);
             if (upsertDto.AnnouncementID == -1)
             {
-                Announcement.CreateAnnouncementEntity(_dbContext, upsertDto, userDto.UserID, await UploadImage(image, userDto));
+                Announcements.CreateAnnouncementEntity(_dbContext, upsertDto, userDto.UserID, await UploadImage(image, userDto));
             }
             else
             {
@@ -50,7 +50,7 @@ namespace DroolTool.API.Controllers
                     ? await UploadImage(image, userDto)
                     : -1;
 
-                Announcement.UpdateAnnouncementEntity(_dbContext, upsertDto,
+                Announcements.UpdateAnnouncementEntity(_dbContext, upsertDto,
                     userDto.UserID, fileResourceID);
             }
             return Ok();
@@ -72,7 +72,7 @@ namespace DroolTool.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            Announcement.Delete(_dbContext, announcementID);
+            Announcements.Delete(_dbContext, announcementID);
             return Ok();
         }
 
@@ -86,7 +86,7 @@ namespace DroolTool.API.Controllers
                 bytes = ms.ToArray();
             }
 
-            var fileResourceMimeType = FileResourceMimeType.GetFileResourceMimeTypeByContentTypeName(_dbContext,
+            var fileResourceMimeType = FileResourceMimeTypes.GetFileResourceMimeTypeByContentTypeName(_dbContext,
                 file.ContentType);
 
             var clientFilename = file.FileName;

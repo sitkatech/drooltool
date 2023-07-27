@@ -16,7 +16,7 @@ namespace DroolTool.API.Services
             var userDto = UserContext.GetUserFromHttpContext(droolToolDbContext, httpContext);
             var queryCollection = httpRequest.Query;
 
-            var fileResourceMimeType = FileResourceMimeType.GetFileResourceMimeTypeByContentTypeName(droolToolDbContext,
+            var fileResourceMimeType = FileResourceMimeTypes.GetFileResourceMimeTypeByContentTypeName(droolToolDbContext,
                 queryCollection["mimeType"].ToString());
 
             var clientFilename = queryCollection["clientFilename"].ToString();

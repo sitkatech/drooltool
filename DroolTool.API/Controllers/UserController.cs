@@ -85,10 +85,10 @@ namespace DroolTool.API.Controllers
             }
 
             var keystoneUser = response.Payload.Claims;
-            var existingUser = EFModels.Entities.User.GetByEmail(_dbContext, inviteDto.Email);
+            var existingUser = EFModels.Entities.Users.GetByEmail(_dbContext, inviteDto.Email);
             if (existingUser != null)
             {
-                existingUser = EFModels.Entities.User.UpdateUserGuid(_dbContext, existingUser.UserID, keystoneUser.UserGuid);
+                existingUser = EFModels.Entities.Users.UpdateUserGuid(_dbContext, existingUser.UserID, keystoneUser.UserGuid);
                 return Ok(existingUser);
             }
 
@@ -102,7 +102,7 @@ namespace DroolTool.API.Controllers
                 RoleID = inviteDto.RoleID.Value
             };
 
-            var user = EFModels.Entities.User.CreateNewUser(_dbContext, newUser, keystoneUser.LoginName, keystoneUser.UserGuid);
+            var user = EFModels.Entities.Users.CreateNewUser(_dbContext, newUser, keystoneUser.LoginName, keystoneUser.UserGuid);
             return Ok(user);
         }
 
@@ -116,19 +116,19 @@ namespace DroolTool.API.Controllers
                 return BadRequest();
             }
 
-            var validationMessages = EFModels.Entities.User.ValidateCreateUnassignedUser(_dbContext, userCreateDto);
+            var validationMessages = EFModels.Entities.Users.ValidateCreateUnassignedUser(_dbContext, userCreateDto);
             validationMessages.ForEach(vm => { ModelState.AddModelError(vm.Type, vm.Message); });
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var user = EFModels.Entities.User.CreateUnassignedUser(_dbContext, userCreateDto);
+            var user = EFModels.Entities.Users.CreateUnassignedUser(_dbContext, userCreateDto);
 
             var smtpClient = HttpContext.RequestServices.GetRequiredService<SitkaSmtpClientService>();
             var mailMessage = GenerateUserCreatedEmail(_drooltoolConfiguration.DROOLTOOL_WEB_URL, user, _dbContext);
             SitkaSmtpClientService.AddCcRecipientsToEmail(mailMessage,
-                        EFModels.Entities.User.GetEmailAddressesForAdminsThatReceiveSupportEmails(_dbContext));
+                        EFModels.Entities.Users.GetEmailAddressesForAdminsThatReceiveSupportEmails(_dbContext));
             SendEmailMessage(smtpClient, mailMessage);
 
             return Ok(user);
@@ -138,7 +138,7 @@ namespace DroolTool.API.Controllers
         [UserManageFeature]
         public ActionResult<IEnumerable<UserDetailedDto>> List()
         {
-            var userDtos = EFModels.Entities.User.List(_dbContext);
+            var userDtos = EFModels.Entities.Users.List(_dbContext);
             return Ok(userDtos);
         }
 
@@ -155,7 +155,7 @@ namespace DroolTool.API.Controllers
         [UserViewFeature]
         public ActionResult<UserDto> GetByUserID([FromRoute] int userID)
         {
-            var userDto = EFModels.Entities.User.GetByUserID(_dbContext, userID);
+            var userDto = EFModels.Entities.Users.GetByUserID(_dbContext, userID);
             if (userDto == null)
             {
                 return NotFound();
@@ -173,7 +173,7 @@ namespace DroolTool.API.Controllers
                 return BadRequest();
             }
 
-            var userDto = DroolTool.EFModels.Entities.User.GetByUserGuid(_dbContext, globalIDAsGuid);
+            var userDto = DroolTool.EFModels.Entities.Users.GetByUserGuid(_dbContext, globalIDAsGuid);
             if (userDto == null)
             {
                 return NotFound();
@@ -186,13 +186,13 @@ namespace DroolTool.API.Controllers
         [UserManageFeature]
         public ActionResult<UserDto> UpdateUser([FromRoute] int userID, [FromBody] UserUpsertDto userUpsertDto)
         {
-            var userDto = EFModels.Entities.User.GetByUserID(_dbContext, userID);
+            var userDto = EFModels.Entities.Users.GetByUserID(_dbContext, userID);
             if (userDto == null)
             {
                 return NotFound();
             }
 
-            var validationMessages = DroolTool.EFModels.Entities.User.ValidateUpdate(_dbContext, userUpsertDto, userDto.UserID);
+            var validationMessages = DroolTool.EFModels.Entities.Users.ValidateUpdate(_dbContext, userUpsertDto, userDto.UserID);
             validationMessages.ForEach(vm => {
                 ModelState.AddModelError(vm.Type, vm.Message);
             });
@@ -208,7 +208,7 @@ namespace DroolTool.API.Controllers
                 return NotFound($"Could not find a System Role with the ID {userUpsertDto.RoleID}");
             }
 
-            var updatedUserDto = DroolTool.EFModels.Entities.User.UpdateUserEntity(_dbContext, userID, userUpsertDto);
+            var updatedUserDto = DroolTool.EFModels.Entities.Users.UpdateUserEntity(_dbContext, userID, userUpsertDto);
             return Ok(updatedUserDto);
         }
 

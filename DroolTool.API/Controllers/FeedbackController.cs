@@ -43,7 +43,7 @@ namespace DroolTool.API.Controllers
             var smtpClient = HttpContext.RequestServices.GetRequiredService<SitkaSmtpClientService>();
             var mailMessage = GenerateFeedbackProvidedEmail(_drooltoolConfiguration.DROOLTOOL_WEB_URL, feedback, _dbContext);
             SitkaSmtpClientService.AddCcRecipientsToEmail(mailMessage,
-                EFModels.Entities.User.GetEmailAddressesForAdminsThatReceiveSupportEmails(_dbContext));
+                EFModels.Entities.Users.GetEmailAddressesForAdminsThatReceiveSupportEmails(_dbContext));
             SendEmailMessage(smtpClient, mailMessage);
 
             return Ok();

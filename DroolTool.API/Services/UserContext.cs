@@ -26,7 +26,7 @@ namespace DroolTool.API.Services
             }
 
             var userGuid = Guid.Parse(claimsPrincipal.Claims.Single(c => c.Type == "sub").Value);
-            var keystoneUser = DroolTool.EFModels.Entities.User.GetByUserGuid(dbContext, userGuid);
+            var keystoneUser = DroolTool.EFModels.Entities.Users.GetByUserGuid(dbContext, userGuid);
             return keystoneUser;
         }
     }

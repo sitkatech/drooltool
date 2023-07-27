@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DroolTool.EFModels.Entities
 {
-    public partial class Announcement
+    public class Announcements
     {
         public static List<AnnouncementDto> GetAnnouncements(DroolToolDbContext dbContext)
         {

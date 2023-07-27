@@ -24,7 +24,7 @@ namespace DroolTool.API.Controllers
         [HttpGet("customRichText/{customRichTextTypeID}")]
         public ActionResult<CustomRichTextDto> GetCustomRichText([FromRoute] int customRichTextTypeID)
         {
-            var customRichTextDto = CustomRichText.GetByCustomRichTextTypeID(_dbContext, customRichTextTypeID);
+            var customRichTextDto = CustomRichTexts.GetByCustomRichTextTypeID(_dbContext, customRichTextTypeID);
             if (customRichTextDto == null)
             {
                 return NotFound();
@@ -38,13 +38,13 @@ namespace DroolTool.API.Controllers
         public ActionResult<CustomRichTextDto> UpdateCustomRichText([FromRoute] int customRichTextTypeID,
             [FromBody] CustomRichTextDto customRichTextUpdateDto)
         {
-            var customRichTextDto = CustomRichText.GetByCustomRichTextTypeID(_dbContext, customRichTextTypeID);
+            var customRichTextDto = CustomRichTexts.GetByCustomRichTextTypeID(_dbContext, customRichTextTypeID);
             if (customRichTextDto == null)
             {
                 return NotFound();
             }
 
-            var updatedCustomRichTextDto = CustomRichText.UpdateCustomRichText(_dbContext, customRichTextTypeID, customRichTextUpdateDto);
+            var updatedCustomRichTextDto = CustomRichTexts.UpdateCustomRichText(_dbContext, customRichTextTypeID, customRichTextUpdateDto);
 
             return Ok(updatedCustomRichTextDto);
         }

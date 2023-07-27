@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DroolTool.EFModels.Entities
 {
-    public partial class FileResourceMimeType
+    public class FileResourceMimeTypes
     {
         public static FileResourceMimeType GetFileResourceMimeTypeByContentTypeName(DroolToolDbContext dbContext, string contentTypeName)
         {

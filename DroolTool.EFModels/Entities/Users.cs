@@ -8,7 +8,7 @@ using DroolTool.Models.DataTransferObjects.User;
 
 namespace DroolTool.EFModels.Entities
 {
-    public partial class User
+    public class Users
     {
         public static UserDto CreateUnassignedUser(DroolToolDbContext dbContext, UserCreateDto userCreateDto)
         {

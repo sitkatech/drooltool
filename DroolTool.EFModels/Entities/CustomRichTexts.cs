@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DroolTool.EFModels.Entities
 {
-    public partial class CustomRichText
+    public class CustomRichTexts
     {
-
-
         public static CustomRichTextDto GetByCustomRichTextTypeID(DroolToolDbContext dbContext, int customRichTextTypeID)
         {
             var customRichText = dbContext.CustomRichTexts
