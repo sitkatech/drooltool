@@ -16,4 +16,5 @@ data:
   APPINSIGHTS_INSTRUMENTATIONKEY: "{{ .Values.global.env.appInsightsInstrumentationKey }}"
   KEYSTONE_HOST: "https://identity.sitkatech.com"
   KEYSTONE_REDIRECT_URL: "https://{{ .Values.global.domains.web }}/create-user-callback"
+  MapquestApiUrlWithNominatimApiKey: ""
 {{ end }}

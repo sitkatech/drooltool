@@ -19,6 +19,7 @@ global:
     apiSqlPassword: "passwordhere"
     sendGridApiKey: "sendgridapikeyhere"
     hangfirePassword: "passwordhere"
+    recaptchaV3SiteKey: "recaptchaKeyHere"
 
 api:
   replicaCount: 1

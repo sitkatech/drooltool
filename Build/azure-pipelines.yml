@@ -563,4 +563,5 @@ stages:
                 api.image.repository="$(containerRegistry)/drooltool/api"
                 web.image.repository="$(containerRegistry)/drooltool/web"
                 global.secrets.hangfirePassword="$(HANGFIRE_PASSWORD)"
+                global.secrets.recaptchaV3SiteKey="$(recaptchaV3SiteKey)"
               force: false
