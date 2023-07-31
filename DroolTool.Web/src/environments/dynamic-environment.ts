@@ -52,11 +52,7 @@ export class DynamicEnvironment {
     public get platformShortName(){
         return window.config.platformShortName;
     }
-
-    public get leadOrganizationLongName(){
-        return window.config.leadOrganizationLongName;
-    }
-
+    
     public get leadOrganizationShortName(){
         return window.config.leadOrganizationShortName;
     }

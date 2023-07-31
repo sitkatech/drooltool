@@ -7,18 +7,17 @@ data:
   SECRET_PATH: "/app/secrets/drooltoolApiSecrets"
   DOCKER_BUILD_SOURCE: "."
   ASPNETCORE_ENVIRONMENT: "Staging"
+  Production: false
+  Staging: true
+  Dev: false
   SITKA_EMAIL_REDIRECT: "notifications-qa@sitkatech.com"
   WEB_URL: "https://{{ .Values.global.domains.web }}"
-  PlatformLongName: "UBBNRD Water Accounting Platform"
-  LeadOrganizationLongName: "Upper Big Blue Natural Resources District"
-  LeadOrganizationShortName: "UBB"
-  LeadOrganizationHomeUrl: "https://www.upperbigblue.org/"
-  LeadOrganizationEmail: ""
+  PlatformLongName: "Orange County Urban Drool Tool"
+  PlatformShortName: "Urban Drool Tool"
+  LeadOrganizationShortName: "OC"
+  LeadOrganizationHomeUrl: "https://orangecounty.gov/"
+  LeadOrganizationLogoFilename: "udt_color_logo.png",
   APPINSIGHTS_INSTRUMENTATIONKEY: "{{ .Values.global.env.appInsightsInstrumentationKey }}"
-  Ogr2OgrExecutable: "/usr/bin/ogr2ogr"
-  OgrInfoExecutable: "/usr/bin/ogrinfo"
   KEYSTONE_HOST: "https://identity-qa.sitkatech.com"
   KEYSTONE_REDIRECT_URL: "https://{{ .Values.global.domains.web }}/create-user-callback"
-  BeehiveAPIBaseUrl: "https://public311.azure-api.net/sitka/"
-  VEGA_RENDER_URL: "http://{{ .Values.global.domains.vegarenderservice }}"
 {{ end }}
