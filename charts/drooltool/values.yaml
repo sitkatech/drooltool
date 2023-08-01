@@ -20,6 +20,8 @@ global:
     sendGridApiKey: "sendgridapikeyhere"
     hangfirePassword: "passwordhere"
     recaptchaV3SiteKey: "recaptchaKeyHere"
+    mnwdFileTransferUsername: "username"
+    mnwdFileTransferPassword: "password"
 
 api:
   replicaCount: 1
