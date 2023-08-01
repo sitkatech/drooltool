@@ -146,22 +146,6 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         return this.authenticationService.isUserAnAdministrator(this.currentUser);
     }
 
-    public platformLongName(): string {
-        return environment.platformLongName;
-    }
-
-    public platformShortName(): string {
-        return environment.platformShortName;
-    }
-
-    public leadOrganizationShortName(): string {
-        return environment.leadOrganizationShortName;
-    }
-
-    public leadOrganizationHomeUrl(): string {
-        return environment.leadOrganizationHomeUrl;
-    }
-
     slickInit(e) {
         console.log('slick initialized');
     }

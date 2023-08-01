@@ -43,7 +43,7 @@ export class AppComponent {
             }
         });
 
-        this.titleService.setTitle(`${environment.leadOrganizationShortName} ${environment.platformShortName}`)
+        this.titleService.setTitle(`OC Urban Drool Tool`)
     }
 
     private configureOAuthService() {

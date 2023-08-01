@@ -90,18 +90,6 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
         });
     }
 
-    public platformShortName(): string {
-        return environment.platformShortName;
-    }
-
-    public leadOrganizationHomeUrl(): string {
-        return environment.leadOrganizationHomeUrl;
-    }
-
-    public leadOrganizationLogoFilename(): string {
-        return environment.leadOrganizationLogoFilename;
-    }
-
     public getExpandNavClass(): string {
         return this.isAuthenticated() ? 'navbar-expand-xl' : 'navbar-expand-lg';
     }

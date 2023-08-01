@@ -97,8 +97,4 @@ export class UserInviteComponent implements OnInit, OnDestroy {
     public currentUserIsAdmin(): boolean {
         return this.authenticationService.isUserAnAdministrator(this.currentUser);
     }
-
-    public platformShortName():string{
-        return environment.platformShortName;
-    }
 }

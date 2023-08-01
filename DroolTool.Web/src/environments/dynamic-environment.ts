@@ -45,26 +45,6 @@ export class DynamicEnvironment {
         return window.config.keystoneAuthConfiguration;
     }
 
-    public get platformLongName(){
-        return window.config.platformLongName;
-    }
-
-    public get platformShortName(){
-        return window.config.platformShortName;
-    }
-    
-    public get leadOrganizationShortName(){
-        return window.config.leadOrganizationShortName;
-    }
-
-    public get leadOrganizationHomeUrl(){
-        return window.config.leadOrganizationHomeUrl;
-    }
-
-    public get leadOrganizationLogoFilename() {
-        return window.config.leadOrganizationLogoFilename;
-    }
-
     public get mapquestApiUrlWithNominatimApiKey() {
         return window.config.mapquestApiUrlWithNominatimApiKey;
     }

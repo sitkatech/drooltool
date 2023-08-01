@@ -79,11 +79,6 @@ namespace DroolTool.Web
             CreateAccountRedirectUrl = configuration["CreateAccountRedirectUrl"];
             GeoserverMapServiceUrl = configuration["GeoserverMapServiceUrl"];
             KeystoneAuthConfiguration = new KeystoneAuthConfigurationDto(configuration);
-            PlatformLongName = configuration["PlatformLongName"];
-            PlatformShortName = configuration["PlatformShortName"];
-            LeadOrganizationShortName = configuration["LeadOrganizationShortName"];
-            LeadOrganizationHomeUrl = configuration["LeadOrganizationHomeUrl"];
-            LeadOrganizationLogoFilename = configuration["LeadOrganizationLogoFilename"];
             MapquestApiUrlWithNominatimApiKey = configuration["MapquestApiUrlWithNominatimApiKey"];
         }
 
@@ -101,16 +96,6 @@ namespace DroolTool.Web
         public string GeoserverMapServiceUrl { get; set; }
         [JsonProperty("keystoneAuthConfiguration")]
         public KeystoneAuthConfigurationDto KeystoneAuthConfiguration { get; set; }
-        [JsonProperty("platformLongName")]
-        public string PlatformLongName { get; set; }
-        [JsonProperty("platformShortName")]
-        public string PlatformShortName { get; set; }
-        [JsonProperty("leadOrganizationShortName")]
-        public string LeadOrganizationShortName { get; set; }
-        [JsonProperty("leadOrganizationHomeUrl")]
-        public string LeadOrganizationHomeUrl { get; set; }
-        [JsonProperty("leadOrganizationLogoFilename")]
-        public string LeadOrganizationLogoFilename { get; set;}
         [JsonProperty("mapquestApiUrlWithNominatimApiKey")]
         public string MapquestApiUrlWithNominatimApiKey { get; set;}
     }
