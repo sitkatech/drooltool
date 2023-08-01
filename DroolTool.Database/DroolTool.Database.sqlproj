@@ -130,7 +130,6 @@
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\Script.PostDeployment.sql" />
-    <None Include="Scripts\ReleaseScripts\0001 - Move data back into RawDroolMetrics.sql" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="Scripts\Script.PreDeployment.sql" />
