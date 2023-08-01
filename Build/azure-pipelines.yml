@@ -323,7 +323,7 @@ stages:
           - task: DownloadPipelineArtifact@2
             inputs:
               source: 'specific'
-              project: 'DroolTool'
+              project: 'Neptune'
               pipeline: 'DroolToolDB Backup Job'
               runVersion: 'latest'
               artifact: bacpac  
