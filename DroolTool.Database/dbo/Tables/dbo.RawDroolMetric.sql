@@ -1,5 +1,5 @@
 CREATE TABLE [dbo].[RawDroolMetric](
-	[RawDroolMetricID] [int] IDENTITY (1, 1) NOT NULL,
+	[RawDroolMetricID] [int] NOT NULL,
 	[OCSurveyNeighborhoodID] [int] NULL,
 	[MetricDate] [datetime] NOT NULL,
 	[MetricYear] [int] NOT NULL,
