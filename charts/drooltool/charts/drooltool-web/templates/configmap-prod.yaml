@@ -22,11 +22,4 @@ data:
   keystone_waitForTokenInMsec: "500"
   keystone_responseType: "code"
   keystone_disablePKCE: "false"
-  platformLongName: "UBBNRD Water Accounting Platform"
-  platformShortName: "Water Accounting Platform"
-  leadOrganizationShortName: "UBB"
-  leadOrganizationLongName: "Upper Big Blue Natural Resources District"
-  leadOrganizationHomeUrl: "https://www.upperbigblue.org/"
-  faviconFilename: "favicon.ico"
-  leadOrganizationLogoFilename: "ubbnrd_logo_191_191.png"
 {{ end }}
