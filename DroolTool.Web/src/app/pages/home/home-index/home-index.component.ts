@@ -111,7 +111,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
                 return {
                     date: x.AnnouncementDate,
                     title: x.AnnouncementTitle,
-                    image: `https://${environment.apiHostName}/FileResource/${x.FileResourceGUIDAsString}`,
+                    image: `https://${environment.mainAppApiUrl}/FileResource/${x.FileResourceGUIDAsString}`,
                     link: x.AnnouncementLink
                 }
             })

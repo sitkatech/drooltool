@@ -105,7 +105,7 @@ export function init_app(appLoadService: AppInitService) {
     RecaptchaV3Module,
     ApiModule.forRoot(() => {
       return new Configuration({
-          basePath: `${environment.apiHostName}`,
+          basePath: `${environment.mainAppApiUrl}`,
       });
   })
   ],  

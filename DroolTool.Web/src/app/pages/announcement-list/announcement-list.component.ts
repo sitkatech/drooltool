@@ -232,7 +232,7 @@ export class AnnouncementListComponent implements OnInit {
     this.announcementTitle = data.AnnouncementTitle;
     this.announcementDate = data.AnnouncementDate;
     this.announcementLink = data.AnnouncementLink;
-    this.imageSrc = `https://${environment.apiHostName}/FileResource/${data.FileResourceGUIDAsString}`;
+    this.imageSrc = `https://${environment.mainAppApiUrl}/FileResource/${data.FileResourceGUIDAsString}`;
     this.announcementID = data.AnnouncementID;
 
     if (event.column.colId == "0") {
