@@ -22,4 +22,6 @@ data:
   keystone_waitForTokenInMsec: "500"
   keystone_responseType: "code"
   keystone_disablePKCE: "false"
+  mapquestApiKey: "{{ .Values.global.secrets.mapquestApiKey }}"
+  mapquestApiUrl: "https://www.mapquestapi.com/geocoding/v1/address"
 {{ end }}
