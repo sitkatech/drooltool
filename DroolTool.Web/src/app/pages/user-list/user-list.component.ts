@@ -43,7 +43,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.columnDefs = [
           {
             headerName: '', field: 'UserID', cellRendererFramework: FontAwesomeIconLinkRendererComponent,
-            cellRendererParams: { inRouterLink: "/user-detail", fontawesomeIconName: 'tasks' },
+            cellRendererParams: { inRouterLink: "/users/", fontawesomeIconName: 'tasks' },
             sortable: false, filter: false, width: 40
           },
           {
