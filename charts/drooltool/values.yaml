@@ -20,6 +20,8 @@ global:
     hangfirePassword: "passwordhere"
     recaptchaV3SiteKey: "recaptchaKeyHere"
     mapquestApiKey: "mapquestApiKeyHere"
+    mnwdFileTransferUsername: "username"
+    mnwdFileTransferPassword: "password"
 
 api:
   replicaCount: 1
