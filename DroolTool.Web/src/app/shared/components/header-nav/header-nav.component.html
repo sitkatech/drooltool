@@ -1,0 +1,90 @@
+<div *ngIf="isAuthenticated()">
+    <div class="header-outer">
+        <div class="container-fluid">
+            <div class="row" style="z-index:1">
+                <div class="col-12">
+                    <nav class="navbar navbar-drooltool navbar-dark navbar-expand-xl stroke nav-fill">
+                        <a routerLink="/" routerLinkActive="active" class="navbar-brand">
+                            <img src="assets/main/logos/udt_color_logo.png" class="navbarLogo">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse b4" id="navbarNav">
+                            <ul class="navbar-nav w-100">
+                                <li class="nav-item" routerLinkActive="active">
+                                    <a class="nav-link" routerLink="/about" routerLinkActive="active">
+                                        About
+                                    </a>
+                                </li>
+                                <div class="dropdown-divider"></div>
+                                <li class="nav-item" routerLinkActive="active">
+                                    <a class="nav-link" routerLink="/neighborhood-explorer" routerLinkActive="active">
+                                        Neighborhood Explorer
+                                    </a>
+                                </li>
+                                <div class="dropdown-divider"></div>
+                                <li class="nav-item" routerLinkActive="active">
+                                    <a class="nav-link" routerLink="/watershed-explorer" routerLinkActive="active">
+                                        Watershed Explorer
+                                    </a>
+                                </li>
+                                <div class="dropdown-divider"></div>
+                                <li class="nav-item" routerLinkActive="active">
+                                    <a class="nav-link" routerLink="/take-action" routerLinkActive="active">
+                                        Take Action
+                                    </a>
+                                </li>
+                                <div class="dropdown-divider"></div>
+                                <li class="nav-item" routerLinkActive="active">
+                                    <a class="nav-link" routerLink="/feedback" routerLinkActive="active">
+                                        Provide Feedback
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="dropdown-divider"></div>
+                            <ul *ngIf="isAuthenticated()" class="navbar-nav flex-column">
+                                <li class="nav-item dropdown welcomeUser text-center" routerLinkActive="active">
+                                    <a href="#" class="nav-link dropdown-toggle pr-3" role="button" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        Account
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
+                                        <a routerLink="/help" class="dropdown-item">
+                                            Get Help
+                                        </a>
+                                        <a *ngIf="isAdministrator()" routerLink="/users" class="dropdown-item">
+                                            View all Users
+                                        </a>
+                                        <a *ngIf="isAdministrator()" routerLink="/news-and-announcements"
+                                            class="dropdown-item">
+                                            Manage News And Announcements
+                                        </a>
+                                        <a href="javascript:void(0);" (click)="logout()" class="dropdown-item">Sign Out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="!isAuthenticated()">
+    <div class="header-outer">
+        <div class="container-fluid">
+            <div class="row" style="z-index:1">
+                <div class="col-12">
+                    <nav class="navbar navbar-drooltool navbar-dark navbar-expand-xl stroke nav-fill">
+                        <a routerLink="/" routerLinkActive="active" class="navbar-brand">
+                            <img src="assets/main/logos/udt_color_logo.png" class="navbarLogo">
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

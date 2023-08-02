@@ -1,1 +1,0 @@
-Drop view if exists dbo.vDroolWatershedMetric
