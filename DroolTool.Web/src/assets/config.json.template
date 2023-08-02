@@ -10,7 +10,8 @@
 
     "geoserverMapServiceUrl": [TODO],
 
-    "mapquestApiUrlWithNominatimApiKey" : [TODO],
+    "mapquestApiUrl" : [TODO],
+    "mapquestApiKey" : [TODO],
   
     "keystoneAuthConfiguration": {
       "clientId": [TODO],

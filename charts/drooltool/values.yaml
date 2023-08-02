@@ -7,10 +7,9 @@ global:
     sqlGeoserverUsername: "DroolToolGeo"
     appInsightsInstrumentationKey: "00000000-0000-0000-0000-000000000000"
   domains:
-    api: "internalapi-drooltool.aks-qa.sitkatech.com"
-    web: "drooltool.aks-qa.sitkatech.com"
-    geoserver: "geoserver-drooltool.aks-qa.sitkatech.com"
-    vegarenderservice: "drooltool-vegarenderservice" 
+    api: "api-qa.drooltool.app"
+    web: "qa.drooltool.app"
+    geoserver: "mapserver-qa.drooltool.app/geoserver/DroolTool"
   secrets:
     geoserverSqlServerPassword: "passwordhere"
     geoserverAdminPassword: "geomaster"
@@ -20,8 +19,7 @@ global:
     sendGridApiKey: "sendgridapikeyhere"
     hangfirePassword: "passwordhere"
     recaptchaV3SiteKey: "recaptchaKeyHere"
-    mnwdFileTransferUsername: "username"
-    mnwdFileTransferPassword: "password"
+    mapquestApiKey: "mapquestApiKeyHere"
 
 api:
   replicaCount: 1

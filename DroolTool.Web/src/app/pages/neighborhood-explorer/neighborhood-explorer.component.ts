@@ -316,8 +316,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
           return null;
         }
 
-        let lat = +response[0].lat;
-        let lng = +response[0].lon;
+        let lat = response.results[0].locations[0].latLng.lat;
+        let lng = response.results[0].locations[0].latLng.lng;
         let latlng = { 'lat': lat, 'lng': lng };
 
         this.getNeighborhoodFromLatLong(latlng, false);

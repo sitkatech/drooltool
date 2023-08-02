@@ -79,7 +79,8 @@ namespace DroolTool.Web
             CreateAccountRedirectUrl = configuration["CreateAccountRedirectUrl"];
             GeoserverMapServiceUrl = configuration["GeoserverMapServiceUrl"];
             KeystoneAuthConfiguration = new KeystoneAuthConfigurationDto(configuration);
-            MapquestApiUrlWithNominatimApiKey = configuration["MapquestApiUrlWithNominatimApiKey"];
+            MapquestApiUrl = configuration["MapquestApiUrl"];
+            MapquestApiKey = configuration["MapquestApiKey"];
         }
 
         [JsonProperty("production")]
@@ -96,8 +97,10 @@ namespace DroolTool.Web
         public string GeoserverMapServiceUrl { get; set; }
         [JsonProperty("keystoneAuthConfiguration")]
         public KeystoneAuthConfigurationDto KeystoneAuthConfiguration { get; set; }
-        [JsonProperty("mapquestApiUrlWithNominatimApiKey")]
-        public string MapquestApiUrlWithNominatimApiKey { get; set;}
+        [JsonProperty("mapquestApiUrl")]
+        public string MapquestApiUrl { get; set;}
+        [JsonProperty("mapquestApiKey")]
+        public string MapquestApiKey { get; set;}
     }
 
     public class KeystoneAuthConfigurationDto

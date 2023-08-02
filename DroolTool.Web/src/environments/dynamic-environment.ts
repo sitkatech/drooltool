@@ -45,8 +45,12 @@ export class DynamicEnvironment {
         return window.config.keystoneAuthConfiguration;
     }
 
-    public get mapquestApiUrlWithNominatimApiKey() {
-        return window.config.mapquestApiUrlWithNominatimApiKey;
+    public get mapquestApiUrl() {
+        return window.config.mapquestApiUrl;
+    }
+
+    public get mapquestApiKey() {
+        return window.config.mapquestApiKey;
     }
 
     public get recaptchaV3SiteKey() {
