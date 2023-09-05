@@ -30,6 +30,9 @@ spec:
     - secretName: drooltool-web-tls
       hosts:
         - {{ .Values.global.domains.web }}
+  {{ if eq .Values.global.env.name "prod" }}
+        - drooltool.app
+  {{- end }}
   rules:
     - host: {{ .Values.global.domains.web }}
       http:
