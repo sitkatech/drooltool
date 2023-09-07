@@ -76,7 +76,7 @@
     "style-loader": "^1.2.1",
     "tinymce": "^6.4.2",
     "tslib": "^2.0.0",
-    "vega": "^5.12.3",
+    "vega": "^5.25.0",
     "vega-embed": "^6.8.0",
     "vega-lite": "^4.12.2",
     "zone.js": "~0.11.4"
