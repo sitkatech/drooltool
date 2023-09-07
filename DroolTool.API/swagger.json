@@ -106,30 +106,9 @@
                   "AnnouncementLink": {
                     "type": "string"
                   },
-                  "ContentType": {
-                    "type": "string"
-                  },
-                  "ContentDisposition": {
-                    "type": "string"
-                  },
-                  "Headers": {
-                    "type": "object",
-                    "additionalProperties": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "Length": {
-                    "type": "integer",
-                    "format": "int64"
-                  },
-                  "Name": {
-                    "type": "string"
-                  },
-                  "FileName": {
-                    "type": "string"
+                  "ImageFile": {
+                    "type": "string",
+                    "format": "binary"
                   }
                 }
               },
@@ -146,22 +125,7 @@
                 "AnnouncementLink": {
                   "style": "form"
                 },
-                "ContentType": {
-                  "style": "form"
-                },
-                "ContentDisposition": {
-                  "style": "form"
-                },
-                "Headers": {
-                  "style": "form"
-                },
-                "Length": {
-                  "style": "form"
-                },
-                "Name": {
-                  "style": "form"
-                },
-                "FileName": {
+                "ImageFile": {
                   "style": "form"
                 }
               }

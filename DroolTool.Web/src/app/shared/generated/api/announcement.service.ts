@@ -184,22 +184,14 @@ export class AnnouncementService {
      * @param announcementTitle 
      * @param announcementDate 
      * @param announcementLink 
-     * @param contentType 
-     * @param contentDisposition 
-     * @param length 
-     * @param name 
-     * @param fileName 
+     * @param imageFile 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public announcementUpsertAnnouncementPost(announcementID?: number, announcementTitle?: string, announcementDate?: string, announcementLink?: string, contentType?: string, contentDisposition?: string, length?: number, name?: string, fileName?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public announcementUpsertAnnouncementPost(announcementID?: number, announcementTitle?: string, announcementDate?: string, announcementLink?: string, contentType?: string, contentDisposition?: string, length?: number, name?: string, fileName?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public announcementUpsertAnnouncementPost(announcementID?: number, announcementTitle?: string, announcementDate?: string, announcementLink?: string, contentType?: string, contentDisposition?: string, length?: number, name?: string, fileName?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public announcementUpsertAnnouncementPost(announcementID?: number, announcementTitle?: string, announcementDate?: string, announcementLink?: string, contentType?: string, contentDisposition?: string, length?: number, name?: string, fileName?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-
-
-
+    public announcementUpsertAnnouncementPost(announcementID?: number, announcementTitle?: string, announcementDate?: string, announcementLink?: string, imageFile?: Blob, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public announcementUpsertAnnouncementPost(announcementID?: number, announcementTitle?: string, announcementDate?: string, announcementLink?: string, imageFile?: Blob, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public announcementUpsertAnnouncementPost(announcementID?: number, announcementTitle?: string, announcementDate?: string, announcementLink?: string, imageFile?: Blob, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public announcementUpsertAnnouncementPost(announcementID?: number, announcementTitle?: string, announcementDate?: string, announcementLink?: string, imageFile?: Blob, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
 
@@ -226,6 +218,9 @@ export class AnnouncementService {
         let formParams: { append(param: string, value: any): void | HttpParams; };
         let useForm = false;
         let convertFormParamsToString = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        // see https://stackoverflow.com/questions/4007969/application-x-www-form-urlencoded-or-multipart-form-data
+        useForm = canConsumeForm;
         if (useForm) {
             formParams = new FormData();
         } else {
@@ -244,20 +239,8 @@ export class AnnouncementService {
         if (announcementLink !== undefined) {
             formParams = formParams.append('AnnouncementLink', <any>announcementLink) || formParams;
         }
-        if (contentType !== undefined) {
-            formParams = formParams.append('ContentType', <any>contentType) || formParams;
-        }
-        if (contentDisposition !== undefined) {
-            formParams = formParams.append('ContentDisposition', <any>contentDisposition) || formParams;
-        }
-        if (length !== undefined) {
-            formParams = formParams.append('Length', <any>length) || formParams;
-        }
-        if (name !== undefined) {
-            formParams = formParams.append('Name', <any>name) || formParams;
-        }
-        if (fileName !== undefined) {
-            formParams = formParams.append('FileName', <any>fileName) || formParams;
+        if (imageFile !== undefined) {
+            formParams = formParams.append('ImageFile', <any>imageFile) || formParams;
         }
 
         return this.httpClient.post<any>(`${this.basePath}/announcement/upsert-announcement`,
