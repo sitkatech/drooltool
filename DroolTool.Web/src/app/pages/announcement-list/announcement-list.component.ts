@@ -185,7 +185,6 @@ export class AnnouncementListComponent implements OnInit {
       let incorrectFileType = !this.allowableFileTypes.some(x => `image/${x}` == file.type);
       //returns bytes, but I'd rather not handle a constant that's a huge value
       let exceedsMaximumSize = (file.size / 1024 / 1024) > this.maximumFileSizeMB;
-      debugger;
       this.fileToUpload = event.target.files.item(0);
 
       if (!incorrectFileType && !exceedsMaximumSize) {
@@ -234,7 +233,6 @@ export class AnnouncementListComponent implements OnInit {
     this.announcementDate = data.AnnouncementDate;
     this.announcementLink = data.AnnouncementLink;
     this.imageSrc = `${environment.mainAppApiUrl}/FileResource/${data.FileResourceGUIDAsString}`;
-    console.log(this.imageSrc)
     this.announcementID = data.AnnouncementID;
 
     if (event.column.colId == "0") {
