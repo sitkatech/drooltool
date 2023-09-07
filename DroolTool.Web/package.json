@@ -56,7 +56,7 @@
     "esri-leaflet": "^3.0.0",
     "font-awesome": "^4.7.0",
     "google-palette": "^1.1.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "leaflet": "^1.6.0",
     "leaflet-gesture-handling": "^1.1.8",
     "leaflet-loading": "^0.1.24",
