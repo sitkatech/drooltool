@@ -232,7 +232,7 @@ export class AnnouncementListComponent implements OnInit {
     this.announcementTitle = data.AnnouncementTitle;
     this.announcementDate = data.AnnouncementDate;
     this.announcementLink = data.AnnouncementLink;
-    this.imageSrc = `https://${environment.mainAppApiUrl}/FileResource/${data.FileResourceGUIDAsString}`;
+    this.imageSrc = `${environment.mainAppApiUrl}/FileResource/${data.FileResourceGUIDAsString}`;
     this.announcementID = data.AnnouncementID;
 
     if (event.column.colId == "0") {
@@ -281,7 +281,7 @@ export class AnnouncementListComponent implements OnInit {
           AnnouncementLink: this.upsertForm.get('link').value
         });
       this.isPerformingAction = true;
-      this.announcementService.announcementUpsertAnnouncementPost(upsertDto.AnnouncementID, upsertDto.AnnouncementTitle, upsertDto.AnnouncementDate.toDateString(), upsertDto.AnnouncementLink, this.fileToUpload.contentType, this.fileToUpload.contentDisposition, this.fileToUpload.length, this.fileToUpload.name, this.fileToUpload.fileName).subscribe(result => {
+      this.announcementService.announcementUpsertAnnouncementPost(upsertDto.AnnouncementID, upsertDto.AnnouncementTitle, upsertDto.AnnouncementDate.toString(), upsertDto.AnnouncementLink, this.fileToUpload).subscribe(result => {
         this.modalReference.close();
         this.isPerformingAction = false;
         this.alertService.pushAlert(new Alert(`Successfully ${this.announcementID != -1 ? "updated" : "created"} post`, AlertContext.Success, true));

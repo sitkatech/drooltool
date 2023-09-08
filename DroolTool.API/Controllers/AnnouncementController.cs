@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DroolTool.API.Models;
 using DroolTool.API.Services;
 using DroolTool.EFModels.Entities;
 using DroolTool.Models.DataTransferObjects;
@@ -37,17 +38,17 @@ namespace DroolTool.API.Controllers
         }
 
         [HttpPost("announcement/upsert-announcement")]
-        public async Task<ActionResult> UpsertAnnouncement([FromForm]AnnouncementUpsertDto upsertDto, [FromForm] IFormFile image)
+        public async Task<ActionResult> UpsertAnnouncement([FromForm]AnnouncementUpsertDto upsertDto, [FromForm] ImageDto image)
         {
             var userDto = UserContext.GetUserFromHttpContext(_dbContext, HttpContext);
             if (upsertDto.AnnouncementID == -1)
             {
-                Announcements.CreateAnnouncementEntity(_dbContext, upsertDto, userDto.UserID, await UploadImage(image, userDto));
+                Announcements.CreateAnnouncementEntity(_dbContext, upsertDto, userDto.UserID, await UploadImage(image.ImageFile, userDto));
             }
             else
             {
-                var fileResourceID = image != null
-                    ? await UploadImage(image, userDto)
+                var fileResourceID = image.ImageFile != null
+                    ? await UploadImage(image.ImageFile, userDto)
                     : -1;
 
                 Announcements.UpdateAnnouncementEntity(_dbContext, upsertDto,
