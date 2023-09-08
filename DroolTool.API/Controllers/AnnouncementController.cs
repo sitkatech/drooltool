@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DroolTool.API.Models;
 using DroolTool.API.Services;
 using DroolTool.EFModels.Entities;
 using DroolTool.Models.DataTransferObjects;

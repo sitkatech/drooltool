@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace DroolTool.Models.DataTransferObjects.Announcement;
+namespace DroolTool.API.Models;
 
 public class ImageDto
 {
