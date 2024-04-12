@@ -109,7 +109,7 @@ namespace DroolTool.API
             });
             #endregion
 
-            services.AddHealthChecks();
+            services.AddHealthChecks().AddDbContextCheck<DroolToolDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -144,7 +144,7 @@ namespace DroolTool.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/");
+                endpoints.MapHealthChecks("/healthz");
             });
 
             app.UseHangfireDashboard("/hangfire", new DashboardOptions()
