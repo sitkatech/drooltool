@@ -5,7 +5,6 @@ global:
     databaseName: "DroolToolDB"
     sqlUsername: "SqlAdministrator"
     sqlGeoserverUsername: "DroolToolGeo"
-    appInsightsInstrumentationKey: "00000000-0000-0000-0000-000000000000"
   domains:
     api: "api-qa.drooltool.app"
     web: "qa.drooltool.app"
