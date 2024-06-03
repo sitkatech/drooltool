@@ -10,7 +10,6 @@ variables:
   spokeKeyVaultName: 'aks-spoke-kv-esa-$(Environment)'
 
   resourceGroupName: 'drooltool-$(Environment)'
-  appInsightsName: 'drooltool-$(Environment)-insights'
   keyVaultName: 'drooltool-keyvault-$(Environment)'
   storageAccountName: 'drooltoolapp$(Environment)'
 
@@ -173,7 +172,6 @@ stages:
         WorkingDirectory: './'
         TerraformCommand: plan
         TerraformCommandOptions: |
-          -var "appInsightsName=$(appInsightsName)" 
           -var "keyVaultName=$(keyVaultName)" 
           -var "storageAccountName=$(storageAccountName)" 
           -var "resourceGroupName=$(resourceGroupName)" 
@@ -515,7 +513,6 @@ stages:
               chartPath: '$(Pipeline.Workspace)/ChartArtifacts/chart'
               releaseName: 'drooltool'
               overrideValues: |
-                global.env.appInsightsInstrumentationKey="$(INSTRUMENTATION_KEY)"
                 global.domains.api="$(domainApi)"
                 global.domains.web="$(domainWeb)"
                 global.domains.geoserver="$(domainGeoserver)"
