@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 
@@ -37,7 +38,6 @@ namespace DroolTool.API
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             var hostBuilder = Host.CreateDefaultBuilder(args)
-                .UseSerilog()
                 .ConfigureAppConfiguration((hostContext, config) =>
                 {
                     var configurationRoot = config.Build();
@@ -46,6 +46,13 @@ namespace DroolTool.API
                     {
                         config.AddJsonFile(secretPath);
                     }
+                })
+                .ConfigureLogging(logging => { logging.ClearProviders(); })
+                .UseSerilog((context, services, configuration) =>
+                {
+                    configuration
+                        .Enrich.FromLogContext()
+                        .ReadFrom.Configuration(context.Configuration);
                 }).ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
             return hostBuilder;
         }
