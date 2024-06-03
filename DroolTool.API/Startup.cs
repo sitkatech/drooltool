@@ -2,6 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 using System.Text.Json.Serialization;
+using DroolTool.API.Logging;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -109,7 +110,7 @@ namespace DroolTool.API
             });
             #endregion
 
-            services.AddHealthChecks();
+            services.AddHealthChecks().AddDbContextCheck<DroolToolDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -126,7 +127,11 @@ namespace DroolTool.API
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-            app.UseSerilogRequestLogging();
+            app.UseSerilogRequestLogging(opts =>
+            {
+                opts.EnrichDiagnosticContext = LogHelper.EnrichFromRequest;
+                opts.GetLevel = LogHelper.CustomGetLevel;
+            });
 
             app.UseRouting();
             app.UseCors(policy =>
@@ -140,11 +145,12 @@ namespace DroolTool.API
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<LogHelper>();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/");
+                endpoints.MapHealthChecks("/healthz");
             });
 
             app.UseHangfireDashboard("/hangfire", new DashboardOptions()
