@@ -20,9 +20,9 @@ variables:
   sqlApiUsername: 'DroolToolWeb'
   sqlGeoserverUsername: 'DroolToolGeo'
 
-  domainApi: 'api-drooltool.esa-$(Environment).sitkatech.com'
-  domainWeb: 'drooltool.esa-$(Environment).sitkatech.com'
-  domainGeoserver: 'geoserver-drooltool.esa-$(Environment).sitkatech.com'
+  # domainApi: 'api-drooltool.esa-$(Environment).sitkatech.com'
+  # domainWeb: 'drooltool.esa-$(Environment).sitkatech.com'
+  # domainGeoserver: 'geoserver-drooltool.esa-$(Environment).sitkatech.com'
 
 
 resources:
