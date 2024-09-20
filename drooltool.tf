@@ -38,6 +38,10 @@ variable "aspNetEnvironment" {
 	type = string
 }
 
+variable "environment" {
+  type = string
+}
+
 variable "azureClusterResourceGroup" {
   type = string
 }
@@ -133,7 +137,7 @@ data "azurerm_client_config" "current" {}
 locals {
   tags = {
     "managed"     = "terraformed"
-    "environment" = var.aspNetEnvironment
+    "environment" = var.environment
     "team" = var.team
     "projectNumber" = var.projectNumber
   }
@@ -160,11 +164,6 @@ resource "azurerm_storage_account" "web" {
 output "application_storage_account_key" {
   sensitive = true
   value = azurerm_storage_account.web.primary_access_key
-}
-
-output "application_storage_account_connection_string" {
-  sensitive = true
-  value = azurerm_storage_account.web.primary_connection_string
 }
 
 # the SAS token which is needed for the geoserver file transfer
@@ -197,8 +196,8 @@ data "azurerm_storage_account_sas" "web" {
     create  = true
     update  = true
     process = true
-    filter  = false
     tag     = false
+    filter  = false
   }
 }
 
@@ -236,6 +235,7 @@ resource "azurerm_mssql_database" "database" {
   sku_name        = var.databaseTier
   zone_redundant  = false
   elastic_pool_id = data.azurerm_mssql_elasticpool.spoke.id
+  enclave_type = "VBS"
 
   long_term_retention_policy {
     weekly_retention  = "P3M"
@@ -276,7 +276,8 @@ output "sql_api_password" {
     random_password.sqlApiPassword
   ]
 }
-  
+
+
 ### END API Sql user/login ###
 
 
@@ -491,7 +492,7 @@ resource "azurerm_key_vault_secret" "hangfirePassword" {
   ]
 }
 
-resource "datadog_synthetics_test" "api_test" {
+resource "datadog_synthetics_test" "test_api" {
   type    = "api"
   subtype = "http"
   request_definition {
@@ -519,16 +520,14 @@ resource "datadog_synthetics_test" "api_test" {
       renotify_interval = 120
     }
   }
-  #email subject, attach url in place of var.domainApi
-  name    = "${var.aspNetEnvironment} - https://${var.domainApi}/healthz API test"
-  #email body
-  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}"
-  tags    = ["env:${var.aspNetEnvironment}", "managed:terraformed", "team:${var.team}"]
+  name    = "${var.environment} - ${var.domainApi} API test"
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}${var.environment == "qa" ? "-qa" : ""}"
+  tags    = ["env:${var.environment}", "managed:terraformed", "team:${var.team}"]
 
   status = "live"
 }
 
-resource "datadog_synthetics_test" "web_test" {
+resource "datadog_synthetics_test" "test_web" {
   type    = "api"
   subtype = "http"
   request_definition {
@@ -556,16 +555,14 @@ resource "datadog_synthetics_test" "web_test" {
       renotify_interval = 120
     }
   }
-  #email subject, attach url in place of var.domainWeb
-  name    = "${var.aspNetEnvironment} - https://${var.domainWeb} Web test"
-  #email body
-  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}"
-  tags    = ["env:${var.aspNetEnvironment}", "managed:terraformed", "team:${var.team}"]
+  name    = "${var.environment} - ${var.domainWeb} Web test"
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}${var.environment == "qa" ? "-qa" : ""}"
+  tags    = ["env:${var.environment}", "managed:terraformed", "team:${var.team}"]
 
   status = "live"
 }
 
-resource "datadog_synthetics_test" "geoserver_test" {
+resource "datadog_synthetics_test" "test_geoserver" {
   type    = "api"
   subtype = "http"
   request_definition {
@@ -593,11 +590,9 @@ resource "datadog_synthetics_test" "geoserver_test" {
       renotify_interval = 120
     }
   }
-  #email subject, attach url in place of var.domainGeoserver
-  name    = "${var.aspNetEnvironment} - https://${var.domainWeb} Geoserver test"
-  #email body
-  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}"
-  tags    = ["env:${var.aspNetEnvironment}", "managed:terraformed", "team:${var.team}"]
+  name    = "${var.environment} - ${var.domainGeoserver} Geoserver test"
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com  @team-${var.team}${var.environment == "qa" ? "-qa" : ""}"
+  tags    = ["env:${var.environment}", "managed:terraformed", "team:${var.team}"]
 
   status = "live"
 }
