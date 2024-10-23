@@ -146,9 +146,9 @@ geoserver:
   namespace: h2o
   resources: 
     limits:
-      memory: "512Mi"
+      memory: "1G"
     requests:
-      memory: "512Mi"
+      memory: "1G"
   serviceAccount:
     # Specifies whether a service account should be created
     create: true
