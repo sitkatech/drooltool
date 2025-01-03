@@ -1,10 +1,10 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 80
+EXPOSE 8080
+EXPOSE 8081
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 COPY DroolTool.Web/.nvmrc                        ./DroolTool.Web/.nvmrc
@@ -18,7 +18,6 @@ RUN NODE_VERSION=$(cat DroolTool.Web/.nvmrc) \
     && tar -xzf "nodejs.tar.gz" -C /usr/local --strip-components=1 \
     && rm nodejs.tar.gz SHASUMS256.txt sha-sum.txt \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
-
     
 COPY DroolTool.Web/                        ./DroolTool.Web
 
@@ -29,8 +28,8 @@ WORKDIR /src/DroolTool.Web/
 
 RUN npm cache clean --force
 RUN npm uninstall   -g angular-cli
-RUN npm install     -g @angular/cli@13.3.11
-RUN npm ci
+RUN npm install     -g @angular/cli@17.3.6
+RUN npm install
 
 ARG env
 RUN npm run build-${env}
