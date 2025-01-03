@@ -159,7 +159,6 @@
       }
     }
   },
-  "defaultProject": "DroolTool.Web",
   "cli": {
     "analytics": false
   }

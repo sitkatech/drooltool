@@ -4,7 +4,7 @@ import { GridOptions } from 'ag-grid-community';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DatePipe, DOCUMENT } from '@angular/common';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { AnnouncementUpsertDto } from 'src/app/shared/models/announcement/announcement-upsert-dto';
 import { FontAwesomeIconLinkRendererComponent } from 'src/app/shared/components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
 import { environment } from 'src/environments/environment';
@@ -30,11 +30,11 @@ export class AnnouncementListComponent implements OnInit {
   public announcementLink: string;
   public announcementID: number = -1;
   public imageSrc: string;
-  public upsertForm = new FormGroup({
-    title: new FormControl('', [Validators.required]),
-    date: new FormControl('', [Validators.required]),
-    image: new FormControl('', [Validators.required]),
-    link: new FormControl('')
+  public upsertForm = new UntypedFormGroup({
+    title: new UntypedFormControl('', [Validators.required]),
+    date: new UntypedFormControl('', [Validators.required]),
+    image: new UntypedFormControl('', [Validators.required]),
+    link: new UntypedFormControl('')
   });
 
   
