@@ -1,8 +1,8 @@
 @import "scss/_variables.scss";
 
 // import Bootstrap AFTER variables
-@import "~bootstrap/scss/bootstrap";
-@import "~font-awesome/css/font-awesome.css";
+@import "/node_modules/bootstrap/scss/bootstrap";
+@import "/node_modules/font-awesome/css/font-awesome.css";
 
 @import "scss/_grids.scss";
 @import "~leaflet/dist/leaflet.css";
@@ -12,8 +12,8 @@
 @import "scss/_forms.scss";
 @import "scss/_custom-bootstrap.scss";
 
-@import '~ngx-sharebuttons/themes/default/default-theme';
-@import '~ngx-sharebuttons/themes/circles/circles-dark-theme';
+// @import "~ngx-sharebuttons/themes/default/default-theme";
+// @import "~ngx-sharebuttons/themes/circles/circles-dark-theme";
 
 // begin ag-grid settings
 $grid-size: 4px;
@@ -37,305 +37,302 @@ $ag-range-selected-color-2: darken($ag-range-selected-color-1, 10%);
 $ag-range-selected-color-3: darken($ag-range-selected-color-1, 20%);
 $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
 
-@import "~ag-grid-community/src/styles/ag-grid.scss";
-@import "~ag-grid-community/src/styles/ag-theme-balham/sass/legacy/ag-theme-balham-v22-compat.scss";
-
 .ag-theme-balham {
-  font-family: "Poppins";
+    font-family: "Poppins";
 }
 
 .ag-paging-panel .ag-icon {
-  color: rgba(0, 0, 0, 0.54);
+    color: rgba(0, 0, 0, 0.54);
 }
 
 .ag-theme-balham .ag-header {
-  background-color: $header-nav-color;
+    background-color: $header-nav-color;
 }
 // end ag-grid settings
 
 //ckeditor css
 
 .image {
-  display: table;
-  clear: both;
-  text-align: center;
-  margin: 1em auto;
+    display: table;
+    clear: both;
+    text-align: center;
+    margin: 1em auto;
 }
 
 .image > img {
-  display: block;
-  margin: 0 auto;
-  max-width: 100%;
-  min-width: 50px;
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    min-width: 50px;
 }
 
 .image-style-side,
 .image-style-align-left,
 .image-style-align-center,
 .image-style-align-right {
-  max-width: 50%;
+    max-width: 50%;
 }
 
 .image-style-side {
-  float: right;
-  margin-left: var(--ck-image-style-spacing);
+    float: right;
+    margin-left: var(--ck-image-style-spacing);
 }
 
 .image-style-align-left {
-  float: left;
-  margin-right: var(--ck-image-style-spacing);
+    float: left;
+    margin-right: var(--ck-image-style-spacing);
 }
 
 .image-style-align-center {
-  margin-left: auto;
-  margin-right: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .image-style-align-right {
-  float: right;
-  margin-left: var(--ck-image-style-spacing);
+    float: right;
+    margin-left: var(--ck-image-style-spacing);
 }
 
 blockquote {
-  overflow: hidden;
-  padding-right: 1.5em;
-  padding-left: 1.5em;
-  margin-left: 0;
-  margin-right: 0;
-  font-style: italic;
-  border-left: 5px solid #ccc;
+    overflow: hidden;
+    padding-right: 1.5em;
+    padding-left: 1.5em;
+    margin-left: 0;
+    margin-right: 0;
+    font-style: italic;
+    border-left: 5px solid #ccc;
 }
 
 //end ckeditor css
 .switch {
-  position: relative;
-  display: inline-block;
-  width: 98px;
-  height: 21px;
-  padding: 0;
-  margin: 0;
+    position: relative;
+    display: inline-block;
+    width: 98px;
+    height: 21px;
+    padding: 0;
+    margin: 0;
 }
 
 .switch input {
-  display: none;
+    display: none;
 }
 
 .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #6b6b6b;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #6b6b6b;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 
 .slider:before {
-  position: absolute;
-  content: "";
-  height: 17px;
-  width: 17px;
-  left: 2px;
-  bottom: 2px;
-  background-color: white;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: #196004;
+    background-color: #196004;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #196004;
+    box-shadow: 0 0 1px #196004;
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(77px);
-  -ms-transform: translateX(7px);
-  transform: translateX(77px);
+    -webkit-transform: translateX(77px);
+    -ms-transform: translateX(7px);
+    transform: translateX(77px);
 }
 
 /*------ ADDED CSS ---------*/
 .on {
-  display: none;
+    display: none;
 }
 
 .on,
 .off {
-  color: white;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-  font-size: 10px;
+    color: white;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    font-size: 10px;
 }
 
 input:checked + .slider .on {
-  display: block;
+    display: block;
 }
 
 input:checked + .slider .off {
-  display: none;
+    display: none;
 }
 
 /*--------- END --------*/
 
 /* Rounded sliders */
 .slider.round {
-  border-radius: 34px;
+    border-radius: 34px;
 }
 
 .slider.round:before {
-  border-radius: 50%;
+    border-radius: 50%;
 }
 
 body {
-  font-family: "Nunito", sans-serif;
-  color: #555555;
-  line-height: 1.25;
+    font-family: "Nunito", sans-serif;
+    color: #555555;
+    line-height: 1.25;
 }
 
 .b1,
 .b2,
 .b3,
 .b4 {
-  font-weight: 400;
-  text-align: center;
-  font-family: "Nunito", sans-serif;
-  color: #555555;
+    font-weight: 400;
+    text-align: center;
+    font-family: "Nunito", sans-serif;
+    color: #555555;
 }
 
 //Large field values
 .b1 {
-  font-size: 28px;
+    font-size: 28px;
 }
 
 //Regular sized field values
 .b2 {
-  font-size: 24px;
+    font-size: 24px;
 }
 
 //Field Title Descriptions
 .b3 {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 .b4 {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 h1,
 h2,
 h3,
 h4 {
-  color: $drool-orange-text;
-  font-family: "Poppins", sans-serif;
+    color: $drool-orange-text;
+    font-family: "Poppins", sans-serif;
 }
 
 h1 {
-  font-size: 40px;
+    font-size: 40px;
 }
 
 //H2 elements should be camel cased
 h2 {
-  font-size: 28px;
-  font-weight: 600; //semibold
+    font-size: 28px;
+    font-weight: 600; //semibold
 }
 
 h3 {
-  font-size: 22px;
+    font-size: 22px;
 }
 
 h4 {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 //Begin ngx-slick-carousel styles
 .prev,
 .next {
-  z-index: 1;
-  position: absolute;
-  display: block;
-  height: 20px;
-  width: 20px;
-  line-height: 0px;
-  font-size: 55px;
-  cursor: pointer;
-  background: transparent;
-  color: #555;
-  top: 40%;
-  -webkit-transform: translate(0, -50%);
-  transform: translate(0, -50%);
-  padding: 0;
-  border: none;
-  outline: none;
+    z-index: 1;
+    position: absolute;
+    display: block;
+    height: 20px;
+    width: 20px;
+    line-height: 0px;
+    font-size: 55px;
+    cursor: pointer;
+    background: transparent;
+    color: #555;
+    top: 40%;
+    -webkit-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    padding: 0;
+    border: none;
+    outline: none;
 }
 
 .prev:focus,
 .next:focus {
-  outline: none;
+    outline: none;
 }
 
 .prev {
-  left: -10px;
+    left: -10px;
 }
 
 .next {
-  right: 5px;
+    right: 5px;
 }
 
 .slide-background {
-  display: inline-block;
-  height: 327px;
-  width: 438px;
-  background-color: #FAFAFA;
-  margin-bottom: 23px;
-  background-size: contain;
-  background-repeat:   no-repeat;
-  background-position: center center;
+    display: inline-block;
+    height: 327px;
+    width: 438px;
+    background-color: #fafafa;
+    margin-bottom: 23px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
 .slide-module-accent {
-  width: 230px;
-  background-color: #89bf40;
-  position: relative;
-  top: 313px;
-  display: inline-block;
+    width: 230px;
+    background-color: #89bf40;
+    position: relative;
+    top: 313px;
+    display: inline-block;
 }
 
-@media only screen and (max-width:520px) {
-  .slide-background {
-  width:100%;
-  height:327px;
-  }
+@media only screen and (max-width: 520px) {
+    .slide-background {
+        width: 100%;
+        height: 327px;
+    }
 
-  .slide-module-accent {
-    width:80%;
-  }
+    .slide-module-accent {
+        width: 80%;
+    }
 }
 
 .slide-module-accent > p {
-  margin: 0 auto;
-  width: 173px;
+    margin: 0 auto;
+    width: 173px;
 }
 
 .slide-link-text {
-  width: 230px;
-  margin-top: 20px;
-  margin-left: auto;
-  margin-right: auto;
+    width: 230px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .slide-container {
-  width: 100%;
-  text-align: center;
+    width: 100%;
+    text-align: center;
 }
 
 .slide:active {
-  outline:none;
+    outline: none;
 }
 
 // @media only screen and (max-width: 359px) {
@@ -354,75 +351,74 @@ h4 {
 //end ngx-slick-carousel styles
 
 #vg-tooltip-element.vg-tooltip.custom-theme {
-  font-size: 14px;
-  border-radius: 10px;
-  font-family: "Nunito" h2 {
-    font-size: 16px;
-  }
+    font-size: 14px;
+    border-radius: 10px;
+    font-family: "Nunito" h2 {
+        font-size: 16px;
+    }
 }
 
 share-buttons {
-  position: fixed;
-    z-index:100;
-    
-  
-    @media only screen and (min-width:768px) {   
-      left: 0;
-      text-align:left;
-    }
-  
-    @media only screen and (max-width:767px) {
-      right: 10px;
-      bottom: 10px;
-      text-align:right;
+    position: fixed;
+    z-index: 100;
+
+    @media only screen and (min-width: 768px) {
+        left: 0;
+        text-align: left;
     }
 
-    .sb-group, .sb-button {
-      display:block;
+    @media only screen and (max-width: 767px) {
+        right: 10px;
+        bottom: 10px;
+        text-align: right;
+    }
+
+    .sb-group,
+    .sb-button {
+        display: block;
     }
 
     //https://github.com/MurhafSousli/ngx-sharebuttons/issues/399
     .sb-button .sb-content {
-      position:relative
+        position: relative;
     }
-  
+
     share-button {
-      display:block;
-      :focus {
-        outline:none;
-      }
+        display: block;
+        :focus {
+            outline: none;
+        }
     }
 
     expand-button {
-      :focus {
-        outline:none;
-      }
+        :focus {
+            outline: none;
+        }
     }
 }
 
 ngb-toast {
+    .toast-header {
+        background-color: $header-background-color;
+        color: #fff;
+        font-size: 16px;
+        font-family: "Poppins";
 
-  .toast-header {
-    background-color:$header-background-color;
-    color: #FFF;
-    font-size:16px;
-    font-family:"Poppins";
-
-    > strong {
-      font-weight:600;
+        > strong {
+            font-weight: 600;
+        }
     }
-  }
 
-  .close {
-    color: #FFF;
-  }
+    .close {
+        color: #fff;
+    }
 
-  .toast-body {
-    font-size:16px;
-    font-family:"Nunito";
-  }
+    .toast-body {
+        font-size: 16px;
+        font-family: "Nunito";
+    }
 }
 
-.leaflet-interactive{
-  cursor: default !important;
+.leaflet-interactive {
+    cursor: default !important;
 }

@@ -1,72 +1,70 @@
-@import "~src/scss/_variables.scss";
+@use "/src/scss/variables" as *;
 
 .navbarLogo {
     height: 80px;
-  }
-  
-  .footerLogo {
+}
+
+.footerLogo {
     height: 50px;
     float: right;
     margin: 5px 0;
-  }
-  
-  a.signOut {
+}
+
+a.signOut {
     cursor: pointer;
-  }
-  
-  .dropdown-menu {
+}
+
+.dropdown-menu {
     z-index: 1021;
-    background-color: #23AECF;
-  }
-  
-  .navbar.navbar-drooltool
-  {
+    background-color: #23aecf;
+}
+
+.navbar.navbar-drooltool {
     font-family: Nunito;
-  }
+}
 
-  .header-outer {
+.header-outer {
     background-color: $header-nav-color;
-  }
+}
 
-  .navbar.navbar-drooltool a.nav-link,
-  .navbar.navbar-drooltool a.nav-link::before,
-  .navbar.navbar-drooltool a.nav-link::after,
-  .top-bar-nav-link,
-  .top-bar-nav-link::before,
-  .top-bar-nav-link::after,
-  .dropdown-item {
-    transition: all .5s;
-  }
-  .navbar.navbar-drooltool a.nav-link:hover,
-  .top-bar-nav-link:hover,
-  .dropdown-item:hover {
-    color:$drool-orange-text;
-  }
+.navbar.navbar-drooltool a.nav-link,
+.navbar.navbar-drooltool a.nav-link::before,
+.navbar.navbar-drooltool a.nav-link::after,
+.top-bar-nav-link,
+.top-bar-nav-link::before,
+.top-bar-nav-link::after,
+.dropdown-item {
+    transition: all 0.5s;
+}
+.navbar.navbar-drooltool a.nav-link:hover,
+.top-bar-nav-link:hover,
+.dropdown-item:hover {
+    color: $drool-orange-text;
+}
 
-  .dropdown-item:hover {
-    background-color: #23AECF;
-  }
+.dropdown-item:hover {
+    background-color: #23aecf;
+}
 
-  .navbar.navbar-drooltool a.nav-link,
-  .top-bar-nav-link,
-  .dropdown-item
-  {
+.navbar.navbar-drooltool a.nav-link,
+.top-bar-nav-link,
+.dropdown-item {
     color: #fff;
-  }
+}
 
-  .welcomeUser{
-    @media screen and (min-width: 991px){
-      text-align:right;
+.welcomeUser {
+    @media screen and (min-width: 991px) {
+        text-align: right;
     }
-    @media screen and (max-width: 990px){
-      text-align:left;
+    @media screen and (max-width: 990px) {
+        text-align: left;
     }
-  }
+}
 
-  .nav-link.active{
+.nav-link.active {
     font-weight: 750;
-  }
+}
 
-  .navbar.navbar-drooltool a.nav-link{
+.navbar.navbar-drooltool a.nav-link {
     font-size: 19px;
-  }
+}

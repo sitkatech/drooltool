@@ -1,4 +1,4 @@
-@import "~src/scss/_variables.scss";
+@use "/src/scss/variables" as *;
 
 .homeSection {
     padding-top: 80px;
@@ -6,50 +6,50 @@
 }
 
 h1 {
-    color:$drool-orange-text;
-    margin-bottom:30px;
+    color: $drool-orange-text;
+    margin-bottom: 30px;
 }
 
 .neighborhood-button {
-    margin-bottom: 20px
+    margin-bottom: 20px;
 }
 
 .container-fluid {
-    padding:20px;
+    padding: 20px;
 }
 
 #topImage {
-    width:100%;
+    width: 100%;
 }
 
 #mapImage {
-    background-image:url(/assets/main/Map_Background.png); 
-    background-size:cover;
-    margin-top:80px;
+    background-image: url(/assets/main/Map_Background.png);
+    background-size: cover;
+    margin-top: 80px;
 }
 
 #waterPlantsImage {
-    max-width:300px;
-    width:100%;
+    max-width: 300px;
+    width: 100%;
 }
 
 #resourceImage {
     max-width: 500px;
-    width:100%;
+    width: 100%;
     background-color: lightgrey;
-    padding-top:100%;
-    margin:auto;
-    background-size:cover;
-    background-image:url(/assets/home/resource-spotlight.jpg);
+    padding-top: 100%;
+    margin: auto;
+    background-size: cover;
+    background-image: url(/assets/home/resource-spotlight.jpg);
 }
 
 #takeActionImage {
-    width:100%;
-    background-color:lightgrey;
-    padding-top:100%;
+    width: 100%;
+    background-color: lightgrey;
+    padding-top: 100%;
     margin: 0 auto;
-    background-image:url(/assets/home/take-action.jpg);
-    background-size:cover;
+    background-image: url(/assets/home/take-action.jpg);
+    background-size: cover;
 }
 
 .embed-container {
@@ -71,43 +71,42 @@ h1 {
 }
 
 .row {
-    margin:0;
+    margin: 0;
 }
 
-.neighborhood-button > p, .watershed-button > p {
+.neighborhood-button > p,
+.watershed-button > p {
     max-width: 281px;
     margin-left: auto;
     margin-right: auto;
 }
 
-
-@media only screen and (min-width:576px)
-{
+@media only screen and (min-width: 576px) {
     .container-fluid {
         padding: 30px;
     }
 
     .neighborhood-button {
-        text-align:center;
+        text-align: center;
     }
 
     .watershed-button {
-        text-align:center;
+        text-align: center;
     }
 
-    #takeActionImage, #resourceImage {
-        height:475px;
-        padding-top:0;
+    #takeActionImage,
+    #resourceImage {
+        height: 475px;
+        padding-top: 0;
     }
 }
 
-@media only screen and (min-width:768px) {
-    
+@media only screen and (min-width: 768px) {
 }
 
-@media only screen and (min-width:992px) {
+@media only screen and (min-width: 992px) {
     .neighborhood-button {
-        margin-left:17%;
+        margin-left: 17%;
     }
 
     .text-overlay {
@@ -117,10 +116,10 @@ h1 {
     }
 
     .inner-text-overlay {
-        width:82%; 
-        position:relative; 
-        z-index:2; 
-        margin:auto;
+        width: 82%;
+        position: relative;
+        z-index: 2;
+        margin: auto;
         text-align: center;
     }
 
@@ -130,15 +129,15 @@ h1 {
     }
 
     #topImage {
-        width:125%;
+        width: 125%;
         margin-left: -77px;
     }
 }
 
-@media only screen and (min-width:1200px) {
+@media only screen and (min-width: 1200px) {
     #topImage {
-        width:105%;
-        margin-top:-16px;
+        width: 105%;
+        margin-top: -16px;
         margin-left: -40px;
     }
 }

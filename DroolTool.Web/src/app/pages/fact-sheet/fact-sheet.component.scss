@@ -1,4 +1,4 @@
-@import "~src/scss/_variables.scss";
+@use "/src/scss/variables" as *;
 
 @media only screen and (min-width: 1200px) {
 }

@@ -1,14 +1,17 @@
 <div class="container">
-    <drooltool-social-media-sharing></drooltool-social-media-sharing>
-    <div class="row ">
+    <!-- <drooltool-social-media-sharing></drooltool-social-media-sharing> -->
+    <div class="row">
         <div class="col text-center top-section">
             <h1 class="mx-auto mt-3">Does my neighborhood mind the gutter?</h1>
             <br />
             <p class="b2 mx-auto">
-                Urban drool is made up of water from outdoor overwatering and car washing that picks up fertilizer, bacteria, and other contaminants on its way to creeks and beaches.                
+                Urban drool is made up of water from outdoor overwatering and
+                car washing that picks up fertilizer, bacteria, and other
+                contaminants on its way to creeks and beaches.
                 <br />
                 <br />
-                This review contains helpful estimates about your neighborhood's potential urban drool impact and ways you can help to make a 
+                This review contains helpful estimates about your neighborhood's
+                potential urban drool impact and ways you can help to make a
                 difference.
                 <br />
                 <br />
@@ -16,57 +19,84 @@
             </p>
         </div>
     </div>
-    <hr>
+    <hr />
     <div class="row">
         <div class="col text-center">
-            <p class="b1 drool-orange-text">{{searchedAddress}}</p>
+            <p class="b1 drool-orange-text">{{ searchedAddress }}</p>
             <style>
-                .leaflet-interactive{
+                .leaflet-interactive {
                     cursor: default;
                 }
             </style>
-            <div #mapDiv id={{mapID}} class="location-card mx-auto" [style.min-height]="mapHeight"></div>
+            <div
+                #mapDiv
+                id="{{ mapID }}"
+                class="location-card mx-auto"
+                [style.min-height]="mapHeight"
+            ></div>
         </div>
     </div>
     <ng-container *ngIf="metricsForYear && metricsForYear.length > 0">
-        <hr/>
+        <hr />
         <div class="row">
             <div class="col-12 text-center">
                 <h2>DROOL TRENDS OVER TIME</h2>
-                <p *ngIf="metricsForMostRecentMonth && metricsForMonthPriorToMostRecentMonth" class="b2">
-                    {{droolChangeOverLastTwoMonthsStatement}}
+                <p
+                    *ngIf="
+                        metricsForMostRecentMonth &&
+                        metricsForMonthPriorToMostRecentMonth
+                    "
+                    class="b2"
+                >
+                    {{ droolChangeOverLastTwoMonthsStatement }}
                 </p>
-                <p class="b2" [innerHTML]="droolPerLandscapedAcreChangeOverLastYearStatement"></p>
+                <p
+                    class="b2"
+                    [innerHTML]="
+                        droolPerLandscapedAcreChangeOverLastYearStatement
+                    "
+                ></p>
             </div>
-            <div class="col-12 text-center" *ngIf='droolChartData'>
-                <h3 class="drool-orange-text">ESTIMATED DROOL CREATION (PER LANDSCAPED ACRE)</h3>
+            <div class="col-12 text-center" *ngIf="droolChartData">
+                <h3 class="drool-orange-text">
+                    ESTIMATED DROOL CREATION (PER LANDSCAPED ACRE)
+                </h3>
 
-                <drooltool-drool-per-landscaped-acre-chart [droolChartData]='droolChartData'>
+                <drooltool-drool-per-landscaped-acre-chart
+                    [droolChartData]="droolChartData"
+                >
                 </drooltool-drool-per-landscaped-acre-chart>
             </div>
             <div class="col-12">
-                <p class="b2" *ngIf="lineOfEncouragement">{{lineOfEncouragement}}</p>
+                <p class="b2" *ngIf="lineOfEncouragement">
+                    {{ lineOfEncouragement }}
+                </p>
                 <ul class="list-of-actions">
                     <li class="b2">Check your system for leaks</li>
-                    <li class="b2">Align your sprinkler heads and fix broken ones</li>
+                    <li class="b2">
+                        Align your sprinkler heads and fix broken ones
+                    </li>
                     <li class="b2">Adjust your watering schedule</li>
                 </ul>
             </div>
         </div>
-        <hr>
+        <hr />
         <div class="row drool-drain-section">
             <div class="col-12 text-center">
                 <h2 class="text-center">WHERE DOES OUR DROOL GO?</h2>
             </div>
-            
+
             <div class="col-12 col-sm-8">
-                <p class="b2 text-left" style="margin-top:12%;">Your neighborhood drains to {{drainsToText}} and the Pacific Ocean!</p>
+                <p class="b2 text-left" style="margin-top: 12%">
+                    Your neighborhood drains to {{ drainsToText }} and the
+                    Pacific Ocean!
+                </p>
             </div>
             <div class="col-12 col-sm-4">
-                <img src={{watershedImage}} class="watershed-image">
+                <img src="{{ watershedImage }}" class="watershed-image" />
             </div>
         </div>
-        <hr/>
+        <hr />
         <div class="row text-center">
             <div class="col mb-2">
                 <h2>DO MY NEIGHBORS TAKE ACTION?</h2>
@@ -76,23 +106,47 @@
             <div class="col-12">
                 <div class="row">
                     <div class="col-lg-6 text-center">
-                        <h3 class="drool-orange-text">NEIGHBORHOOD WATER CUSTOMERS</h3>
-                        <drooltool-water-accounts-chart *ngIf="!refresh" [droolChartData]='waterAccountsChartData' [(smallScreen)]='smallScreen'>
+                        <h3 class="drool-orange-text">
+                            NEIGHBORHOOD WATER CUSTOMERS
+                        </h3>
+                        <drooltool-water-accounts-chart
+                            *ngIf="!refresh"
+                            [droolChartData]="waterAccountsChartData"
+                            [(smallScreen)]="smallScreen"
+                        >
                         </drooltool-water-accounts-chart>
                     </div>
                     <div class="col-lg-6">
-                        <p class="b2">There are {{metricsForMostRecentMonth.TotalWaterAccounts}} water accounts in your
-                            neighborhood.</p>
-                        <p class="b2"><strong>{{metricsForMostRecentMonth.OverallParticipation}}</strong> of your neighbors have
-                            participated in outdoor water conservation rebate programs.
+                        <p class="b2">
+                            There are
+                            {{
+                                metricsForMostRecentMonth.TotalWaterAccounts
+                            }}
+                            water accounts in your neighborhood.
                         </p>
-                        <p class="b2">{{neighborhoodsParticipatingChangeStatement}}</p>
-                        <p class="b2" *ngIf="showHoaIrrigationMessage()">HOAs accounted for an estimated {{getHoaIrrigationPercentage() | number: "1.0-0"}}% of irrigation in your neighborhood last year. Please share these resources with your local HOA Board.</p>
+                        <p class="b2">
+                            <strong>{{
+                                metricsForMostRecentMonth.OverallParticipation
+                            }}</strong>
+                            of your neighbors have participated in outdoor water
+                            conservation rebate programs.
+                        </p>
+                        <p class="b2">
+                            {{ neighborhoodsParticipatingChangeStatement }}
+                        </p>
+                        <p class="b2" *ngIf="showHoaIrrigationMessage()">
+                            HOAs accounted for an estimated
+                            {{
+                                getHoaIrrigationPercentage() | number : "1.0-0"
+                            }}% of irrigation in your neighborhood last year.
+                            Please share these resources with your local HOA
+                            Board.
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-        <hr>
+        <hr />
         <div class="row text-center">
             <div class="col mb-2">
                 <h2>WHAT DOES OUR WATER USAGE LOOK LIKE?</h2>
@@ -100,32 +154,69 @@
         </div>
         <div class="row">
             <div class="col-md-6 col-sm-12">
-                <p class="b2">An estimated <strong>{{totalIrrigationWaterUsed | number:'1.0-0':'en-US'}}
-                        gallons</strong> has been used over the last year to irrigate
-                    {{metricsForMostRecentMonth.TotalIrrigatedArea | number:'1.0-0':'en-US'}} acres of landscaping.
+                <p class="b2">
+                    An estimated
+                    <strong
+                        >{{
+                            totalIrrigationWaterUsed
+                                | number : "1.0-0" : "en-US"
+                        }}
+                        gallons</strong
+                    >
+                    has been used over the last year to irrigate
+                    {{
+                        metricsForMostRecentMonth.TotalIrrigatedArea
+                            | number : "1.0-0" : "en-US"
+                    }}
+                    acres of landscaping.
                 </p>
-                <p class="b2" *ngIf="showDroughtTolerantIrrigationEquivalent()">This would be enough to irrigate {{totalIrrigationWaterUsed / 350000 | number:'1.0-0':'en-US'}}
-                    acres of drought tolerant landscaping.</p>
+                <p class="b2" *ngIf="showDroughtTolerantIrrigationEquivalent()">
+                    This would be enough to irrigate
+                    {{
+                        totalIrrigationWaterUsed / 350000
+                            | number : "1.0-0" : "en-US"
+                    }}
+                    acres of drought tolerant landscaping.
+                </p>
                 <div class="row">
-                    <div class="col-3 text-center justify-content-center align-self-center">
-                        <img src="/assets/fact-sheet/OlympicPool-21fc9e.png" style="width:80%; margin: auto;"/>
+                    <div
+                        class="col-3 text-center justify-content-center align-self-center"
+                    >
+                        <img
+                            src="/assets/fact-sheet/OlympicPool-21fc9e.png"
+                            style="width: 80%; margin: auto"
+                        />
                     </div>
-                    <div class="col-9 text-center justify-content-center align-self-center">
-                        <p>An Olympic swimming pool holds about 660,000 gallons of water.</p>
+                    <div
+                        class="col-9 text-center justify-content-center align-self-center"
+                    >
+                        <p>
+                            An Olympic swimming pool holds about 660,000 gallons
+                            of water.
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 col-sm-12">
-                <drooltool-swimming-pool-visualization [numberOfPools]="totalIrrigationWaterUsed / 660000"></drooltool-swimming-pool-visualization>
+                <drooltool-swimming-pool-visualization
+                    [numberOfPools]="totalIrrigationWaterUsed / 660000"
+                ></drooltool-swimming-pool-visualization>
             </div>
         </div>
-        <hr>
+        <hr />
         <div class="row">
             <div class="col">
-                <p class="b2">Mindful, simple changes to everyday outdoor water tasks can help lower the amount of urban drool your
-                   neighborhood produces!</p>
-                <p class="b2">Check out the many outdoor water use rebate programs available at:<br /> <a
-                        href="https://www.mnwd.com/rebates" target="_blank"><strong>www.mnwd.com/rebates</strong></a>
+                <p class="b2">
+                    Mindful, simple changes to everyday outdoor water tasks can
+                    help lower the amount of urban drool your neighborhood
+                    produces!
+                </p>
+                <p class="b2">
+                    Check out the many outdoor water use rebate programs
+                    available at:<br />
+                    <a href="https://www.mnwd.com/rebates" target="_blank"
+                        ><strong>www.mnwd.com/rebates</strong></a
+                    >
                 </p>
             </div>
         </div>
@@ -141,10 +232,13 @@
         <div class="row">
             <div class="col text-center">
                 <h2>No stats to show</h2>
-                <p class="b2">Unfortunately it looks like we have no data to show for this neighborhood at this time.
-                    Please try again or check back at a later date.</p>
+                <p class="b2">
+                    Unfortunately it looks like we have no data to show for this
+                    neighborhood at this time. Please try again or check back at
+                    a later date.
+                </p>
             </div>
         </div>
     </ng-container>
-    <div class="d-sm-none" style="height:40px"></div>
+    <div class="d-sm-none" style="height: 40px"></div>
 </div>
