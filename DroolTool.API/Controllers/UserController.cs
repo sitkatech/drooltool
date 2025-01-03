@@ -22,13 +22,16 @@ namespace DroolTool.API.Controllers
         private readonly DroolToolDbContext _dbContext;
         private readonly ILogger<UserController> _logger;
         private readonly KeystoneService _keystoneService;
+        private readonly SitkaSmtpClientService _sitkaSmtpClientService;
         private readonly DroolToolConfiguration _drooltoolConfiguration;
 
-        public UserController(DroolToolDbContext dbContext, ILogger<UserController> logger, KeystoneService keystoneService, IOptions<DroolToolConfiguration> drooltoolConfigurationOptions)
+        public UserController(DroolToolDbContext dbContext, ILogger<UserController> logger, KeystoneService keystoneService, IOptions<DroolToolConfiguration> drooltoolConfigurationOptions,
+            SitkaSmtpClientService sitkaSmtpClientService)
         {
             _dbContext = dbContext;
             _logger = logger;
             _keystoneService = keystoneService;
+            _sitkaSmtpClientService = sitkaSmtpClientService;
             _drooltoolConfiguration = drooltoolConfigurationOptions.Value;
         }
 
@@ -102,13 +105,13 @@ namespace DroolTool.API.Controllers
                 RoleID = inviteDto.RoleID.Value
             };
 
-            var user = EFModels.Entities.Users.CreateNewUser(_dbContext, newUser, keystoneUser.LoginName, keystoneUser.UserGuid);
+            var user = Users.CreateNewUser(_dbContext, newUser, keystoneUser.LoginName, keystoneUser.UserGuid);
             return Ok(user);
         }
 
         [HttpPost("users")]
         [LoggedInUnclassifiedFeature]
-        public ActionResult<UserDto> CreateUser([FromBody] UserCreateDto userCreateDto)
+        public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserCreateDto userCreateDto)
         {
             // Validate request body; all fields required in Dto except Org Name and Phone
             if (userCreateDto == null)
@@ -123,13 +126,22 @@ namespace DroolTool.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var user = EFModels.Entities.Users.CreateUnassignedUser(_dbContext, userCreateDto);
+            var user = Users.CreateUnassignedUser(_dbContext, userCreateDto);
 
-            var smtpClient = HttpContext.RequestServices.GetRequiredService<SitkaSmtpClientService>();
-            var mailMessage = GenerateUserCreatedEmail(_drooltoolConfiguration.DROOLTOOL_WEB_URL, user, _dbContext);
+            var messageBody = $@"A new user has signed up to the Urban Drool Tool: <br/><br/>
+ {user.FullName} ({user.Email}) <br/><br/>
+As an administrator of the Urban Drool Tool, you can assign them a role by following <a href='{_drooltoolConfiguration.DROOLTOOL_WEB_URL}/users/{user.UserID}'>this link</a>. <br/><br/>
+{_sitkaSmtpClientService.GetSupportNotificationEmailSignature()}";
+
+            var mailMessage = new MailMessage
+            {
+                Subject = $"New User in Urban Drool Tool",
+                Body = $"Hello,<br /><br />{messageBody}",
+            };
+            mailMessage.To.Add(_sitkaSmtpClientService.GetDefaultEmailFrom());
             SitkaSmtpClientService.AddCcRecipientsToEmail(mailMessage,
-                        EFModels.Entities.Users.GetEmailAddressesForAdminsThatReceiveSupportEmails(_dbContext));
-            SendEmailMessage(smtpClient, mailMessage);
+                        Users.GetEmailAddressesForAdminsThatReceiveSupportEmails(_dbContext));
+            await _sitkaSmtpClientService.Send(mailMessage);
 
             return Ok(user);
         }
@@ -192,7 +204,7 @@ namespace DroolTool.API.Controllers
                 return NotFound();
             }
 
-            var validationMessages = DroolTool.EFModels.Entities.Users.ValidateUpdate(_dbContext, userUpsertDto, userDto.UserID);
+            var validationMessages = Users.ValidateUpdate(_dbContext, userUpsertDto, userDto.UserID);
             validationMessages.ForEach(vm => {
                 ModelState.AddModelError(vm.Type, vm.Message);
             });
@@ -210,31 +222,6 @@ namespace DroolTool.API.Controllers
 
             var updatedUserDto = DroolTool.EFModels.Entities.Users.UpdateUserEntity(_dbContext, userID, userUpsertDto);
             return Ok(updatedUserDto);
-        }
-
-        private static MailMessage GenerateUserCreatedEmail(string drooltoolUrl, UserDto user, DroolToolDbContext dbContext)
-        {
-            var messageBody = $@"A new user has signed up to the Urban Drool Tool: <br/><br/>
- {user.FullName} ({user.Email}) <br/><br/>
-As an administrator of the Urban Drool Tool, you can assign them a role by following <a href='{drooltoolUrl}/users/{user.UserID}'>this link</a>. <br/><br/>
-{SitkaSmtpClientService.GetSupportNotificationEmailSignature()}";
-
-            var mailMessage = new MailMessage
-            {
-                Subject = $"New User in Urban Drool Tool",
-                Body = $"Hello,<br /><br />{messageBody}",
-            };
-
-            mailMessage.To.Add(SitkaSmtpClientService.GetDefaultEmailFrom());
-            return mailMessage;
-        }
-
-        private void SendEmailMessage(SitkaSmtpClientService smtpClient, MailMessage mailMessage)
-        {
-            mailMessage.IsBodyHtml = true;
-            mailMessage.From = SitkaSmtpClientService.GetDefaultEmailFrom();
-            SitkaSmtpClientService.AddReplyToEmail(mailMessage);
-            smtpClient.Send(mailMessage);
         }
     }
 }

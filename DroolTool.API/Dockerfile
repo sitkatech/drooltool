@@ -1,14 +1,26 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
-WORKDIR /src
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-COPY ./DroolTool.Models ./DroolTool.Models
-COPY ./DroolTool.EFModels ./DroolTool.EFModels
-COPY ./DroolTool.API ./DroolTool.API
-
-RUN dotnet publish ./DroolTool.API/DroolTool.API.csproj -c Release -o /app
-
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
 WORKDIR /app
-COPY --from=build-env /app /app
-EXPOSE 80
-ENTRYPOINT ["dotnet", "DroolTool.API.dll"]
+EXPOSE 8080
+EXPOSE 8081
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["DroolTool.API/DroolTool.API.csproj" , "DroolTool.API/"]
+
+RUN dotnet restore "./DroolTool.API/./DroolTool.API.csproj"
+COPY . .
+WORKDIR "/src/DroolTool.API"
+RUN dotnet build "./DroolTool.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./DroolTool.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "DroolTool.API.dll"]	
