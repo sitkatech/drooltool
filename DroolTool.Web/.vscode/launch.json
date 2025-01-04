@@ -8,7 +8,7 @@
            "type": "chrome",
            "request": "launch",
            "name": "Launch Chrome",
-           "url": "http://dev.drooltool.org:7887",
+           "url": "https://drooltool.localhost.sitkatech.com:7887",
            "webRoot": "${workspaceFolder}/src"
        },
         {
