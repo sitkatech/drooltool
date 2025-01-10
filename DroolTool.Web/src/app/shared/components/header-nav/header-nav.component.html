@@ -13,21 +13,10 @@
                         </button>
                         <div class="collapse navbar-collapse b4" id="navbarNav">
                             <ul class="navbar-nav w-100">
-                                <li class="nav-item" routerLinkActive="active">
-                                    <a class="nav-link" routerLink="/about" routerLinkActive="active">
-                                        About
-                                    </a>
-                                </li>
                                 <div class="dropdown-divider"></div>
                                 <li class="nav-item" routerLinkActive="active">
                                     <a class="nav-link" routerLink="/neighborhood-explorer" routerLinkActive="active">
                                         Neighborhood Explorer
-                                    </a>
-                                </li>
-                                <div class="dropdown-divider"></div>
-                                <li class="nav-item" routerLinkActive="active">
-                                    <a class="nav-link" routerLink="/watershed-explorer" routerLinkActive="active">
-                                        Watershed Explorer
                                     </a>
                                 </li>
                                 <div class="dropdown-divider"></div>
@@ -57,10 +46,6 @@
                                         </a>
                                         <a *ngIf="isAdministrator()" routerLink="/users" class="dropdown-item">
                                             View all Users
-                                        </a>
-                                        <a *ngIf="isAdministrator()" routerLink="/news-and-announcements"
-                                            class="dropdown-item">
-                                            Manage News And Announcements
                                         </a>
                                         <a href="javascript:void(0);" (click)="logout()" class="dropdown-item">Sign Out</a>
                                     </div>
