@@ -85,7 +85,6 @@ namespace DroolTool.API
 
             services.AddScoped(s => s.GetService<IHttpContextAccessor>()?.HttpContext);
             services.AddScoped(s => UserContext.GetUserFromHttpContext(s.GetService<DroolToolDbContext>(), s.GetService<IHttpContextAccessor>().HttpContext));
-            services.AddScoped<IMetricSyncJob, MetricSyncJob>();
 
             // Add Hangfire services.
             services.AddHangfire(configuration => configuration
@@ -164,8 +163,6 @@ namespace DroolTool.API
                 WorkerCount = 1
             });
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
-
-            HangfireJobScheduler.ScheduleRecurringJobs();
         }
     }
 }
