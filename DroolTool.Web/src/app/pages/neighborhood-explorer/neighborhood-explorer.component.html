@@ -99,46 +99,6 @@
                             <p class="b3 watershed-intro mt-2 mb-0">This neighborhood drains to <span
                                     class="watershed-text">{{selectedNeighborhoodWatershed}}</span></p>
                         </div>
-                        <div class="p-lg-4" style="background-color:#F2FBFD">
-                            <h2 class="metric-heading">How much does your neighborhood drool?</h2>
-                            <ng-container
-                                *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.TotalDrool">
-                                <p class="b3"><span
-                                        class="metric-value">{{selectedNeighborhoodMetrics.TotalDrool | number:'1.0-0':'en-US'}}</span><span
-                                        class="metric-units"> gallons</span> of urban drool may have been created in
-                                    {{months[selectedNeighborhoodMetrics.MetricMonth - 1]}}</p>
-                                <p *ngIf="selectedNeighborhoodMetrics.TotalDrool > 20000" class="b4">This would be 
-                                    enough
-                                    urban drool to fill
-                                    {{selectedNeighborhoodMetrics.TotalDrool / 20000 | number:'1.0-0':'en-US'}}
-                                    swimming {{((selectedNeighborhoodMetrics.TotalDrool / 20000) | number:'1.0-0') == 1 ? "pool" : "pools"}}!</p>
-                            </ng-container>
-                            <ng-container
-                                *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.TotalDrool">
-                                <p class="b3">Hmm, looks like we can't find anything for this metric at this time. Try
-                                    selecting another neighborhood!</p>
-                            </ng-container>
-                        </div>
-                        <div class="p-lg-4">
-                            <h2 class="metric-heading">Does your neighborhood take action?</h2>
-                            <ng-container
-                                *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.OverallParticipation">
-                                <p class="b3"><span
-                                        class="metric-value">{{selectedNeighborhoodMetrics.OverallParticipation === 0 ? "None" : selectedNeighborhoodMetrics.OverallParticipation}}</span><span
-                                        class="metric-units"> of your neighbors</span> participate in Moulton Niguel's
-                                    rebate
-                                    programs.</p>
-                            </ng-container>
-                            <ng-container
-                                *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.OverallParticipation">
-                                <p class="b3">Hmm, looks like we can't find anything for this metric at this time. Try
-                                    selecting another neighborhood!</p>
-                            </ng-container>
-                            <p class="b4">Participation in rebate programs, like weather based smart sprinkler timers or
-                                rotating
-                                sprinkler nozzles, helps mitigate your home's creation of urban drool</p>
-
-                        </div>
                     </div>
                 </div>
                 <div class="col-12 d-none d-lg-block">

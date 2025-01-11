@@ -59,7 +59,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public currentlySearching: boolean = false;
 
   public selectedNeighborhoodProperties: any;
-  public selectedNeighborhoodMetrics: NeighborhoodMetricDto;
   public selectedNeighborhoodID: number;
   public selectedNeighborhoodWatershed: string;
   public selectedNeighborhoodWatershedMask: L.Layers;
@@ -154,12 +153,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
       "<span>Stormwater Network <br/> <img src='../../assets/neighborhood-explorer/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({ url: "https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/" })
     })
 
-    
-    this.neighborhoodService.neighborhoodGetDefaultMetricDisplayDateGet().subscribe(x=>{
-
-      this.defaultSelectedMetricDate = x
-    });
-
     this.compileService.configure(this.appRef);
   }
 
@@ -173,7 +166,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public initializeMap(): void {
-    
+
     const mapOptions: L.MapOptions = {
       minZoom: 6,
       maxZoom: 22,
@@ -189,7 +182,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
     this.map = L.map(this.mapID, mapOptions);
     this.initializePanes();
-    
+
     this.getDistrictBoundary().subscribe(districtBoundaryFeature =>{
       this.districtBoundaryLayer = L.geoJSON(districtBoundaryFeature,{
         invert:true,
@@ -341,10 +334,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
         this.selectedNeighborhoodProperties = response.features[0].properties;
         this.selectedNeighborhoodID = this.selectedNeighborhoodProperties.NeighborhoodID;
         if (this.neighborhoodsWhereItIsOkayToClickIDs.includes(this.selectedNeighborhoodID)) {
-          this.neighborhoodService.neighborhoodOCSurveyNeighborhoodIDMetricYearMetricMonthGetMetricsGet(this.selectedNeighborhoodProperties.OCSurveyNeighborhoodID, this.defaultSelectedMetricDate.Year, this.defaultSelectedMetricDate.Month).subscribe(result => {
-            this.selectedNeighborhoodMetrics = result;
-            this.map.invalidateSize();
-          });
           this.displaySearchResults(response, latlng);
           this.neighborhoodService.neighborhoodNeighborhoodIDGetStormshedGet(this.selectedNeighborhoodID).subscribe(
             response => this.displayStormshedAndBackboneDetail(JSON.parse(response)),
@@ -423,7 +412,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.stormshedLayer = L.geoJson(stormshedMinusNeighborhoodFeature, {
       style: function () {
         return {
-          fillColor: "#34FFCC", 
+          fillColor: "#34FFCC",
           fill: true,
           fillOpacity: 0.3,
           color: "#00b386",
@@ -508,11 +497,11 @@ export class NeighborhoodExplorerComponent implements OnInit {
               stroke: true,
               dashArray: '2, 4'
             }
-          },        
+          },
           pane: "droolToolOverlayPane"
         });
         this.traceLayer = L.layerGroup([baseLayer, dottedLayer]);
-          
+
         this.traceLayer.addTo(this.map);
 
         this.traceActive = true;
@@ -535,7 +524,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.searchActive = false;
     this.activeSearchNotFound = false;
     this.traceActive = false;
-    this.selectedNeighborhoodMetrics = null;
     this.addressService.updateSearchedAddress(null);
     this.removeCurrentSearchLayer();
   }
@@ -574,8 +562,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   //fitBounds will use it's default zoom level over what is sent in
-  //if it determines that its max zoom is further away. This can make the 
-  //map zoom out to inappropriate levels sometimes, and then setZoom 
+  //if it determines that its max zoom is further away. This can make the
+  //map zoom out to inappropriate levels sometimes, and then setZoom
   //won't be honored because it's in the middle of a zoom. So we'll manipulate
   //it a bit.
   public defaultFitBounds(): void {
@@ -616,7 +604,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
       }
     });
   }
-  
+
   public hideDistrictBoundaryMask(): void {
     this.districtBoundaryLayer.options.invert = false;
     this.districtBoundaryLayer.setStyle({fillOpacity: 0});
