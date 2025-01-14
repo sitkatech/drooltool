@@ -1,7 +1,7 @@
 
 
-"Restore DroolTool"
+"Restore Qanat"
 & "$PSScriptRoot\DatabaseRestore.ps1"  -iniFile "./build.ini"
 
-"Build DroolTool"
+"Build Qanat"
 & "$PSScriptRoot\DatabaseBuild.ps1" -iniFile "./build.ini"
