@@ -5,7 +5,6 @@ import { WfsService } from 'src/app/shared/services/wfs.service';
 import * as L from 'leaflet';
 import { DOCUMENT } from '@angular/common';
 import { Meta } from '@angular/platform-browser';
-import { DroolPerLandscapedAcreChartDto, MetricDateDto, NeighborhoodMetricDto, NeighborhoodService } from 'src/app/shared/generated';
 import { AddressService } from 'src/app/services/address.service';
 import { WaterAccountsChartDto } from 'src/app/shared/models/water-accounts-chart-dto';
 
@@ -51,7 +50,6 @@ export class FactSheetComponent implements AfterViewInit {
   }
   neighborhoodSearchedSubscription: Subscription;
 
-  droolChartData: DroolPerLandscapedAcreChartDto[];
   waterAccountsChartData: WaterAccountsChartDto;
   innerWidth: number;
   smallScreen: boolean;
@@ -60,9 +58,7 @@ export class FactSheetComponent implements AfterViewInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private wfsService: WfsService,
-    private cdr: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document,
     private meta: Meta,
     private addressService: AddressService

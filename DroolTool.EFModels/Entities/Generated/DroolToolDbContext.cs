@@ -11,8 +11,6 @@ public partial class DroolToolDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Announcement> Announcements { get; set; }
-
     public virtual DbSet<BackboneSegment> BackboneSegments { get; set; }
 
     public virtual DbSet<CustomRichText> CustomRichTexts { get; set; }
@@ -41,17 +39,6 @@ public partial class DroolToolDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Announcement>(entity =>
-        {
-            entity.HasKey(e => e.AnnouncementID).HasName("PK_Announcement_AnnouncementID");
-
-            entity.HasOne(d => d.FileResource).WithMany(p => p.Announcements).OnDelete(DeleteBehavior.ClientSetNull);
-
-            entity.HasOne(d => d.LastUpdatedByUser).WithMany(p => p.Announcements)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Announcement_User_LastUpdatedByUserID_UserID");
-        });
-
         modelBuilder.Entity<BackboneSegment>(entity =>
         {
             entity.HasKey(e => e.BackboneSegmentID).HasName("PK_BackboneSegment_BackboneSegmentID");

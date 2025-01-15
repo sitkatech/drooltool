@@ -30,7 +30,6 @@ import { NeighborhoodExplorerComponent } from "./pages/neighborhood-explorer/nei
 import { TakeActionComponent } from "./pages/take-action/take-action.component";
 import { FactSheetComponent } from "./pages/fact-sheet/fact-sheet.component";
 import { NgxSpinnerModule } from "ngx-spinner";
-import { DroolPerLandscapedAcreChartComponent } from "./components/drool-per-landscaped-acre-chart/drool-per-landscaped-acre-chart.component";
 import { WaterAccountsChartComponent } from "./components/water-accounts-chart/water-accounts-chart.component";
 import { SocialMediaSharingComponent } from "./components/social-media-sharing/social-media-sharing.component";
 import { fas } from "@fortawesome/free-solid-svg-icons";
@@ -61,7 +60,6 @@ export function init_app(appLoadService: AppInitService) {
         NeighborhoodExplorerComponent,
         TakeActionComponent,
         FactSheetComponent,
-        DroolPerLandscapedAcreChartComponent,
         WaterAccountsChartComponent,
         SocialMediaSharingComponent,
         ProvideFeedbackComponent,

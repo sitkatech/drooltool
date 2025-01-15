@@ -87,7 +87,6 @@
     <None Include="Scripts\Utility\Script.PostDeployment.Utility.sql" />
     <Build Include="dbo\Tables\dbo.FileResourceMimeType.sql" />
     <None Include="Scripts\LookupTables\dbo.FileResourceMimeType.sql" />
-    <Build Include="dbo\Tables\dbo.Announcement.sql" />
     <Build Include="dbo\Tables\dbo.BackboneSegment.sql" />
     <Build Include="dbo\Tables\dbo.BackboneSegmentType.sql" />
     <Build Include="dbo\Tables\dbo.Feedback.sql" />

@@ -1,5 +1,3 @@
-export * from './announcement.service';
-import { AnnouncementService } from './announcement.service';
 export * from './custom-rich-text.service';
 import { CustomRichTextService } from './custom-rich-text.service';
 export * from './feedback.service';
@@ -10,8 +8,10 @@ export * from './neighborhood.service';
 import { NeighborhoodService } from './neighborhood.service';
 export * from './role.service';
 import { RoleService } from './role.service';
+export * from './system-info.service';
+import { SystemInfoService } from './system-info.service';
 export * from './user.service';
 import { UserService } from './user.service';
 export * from './watershed-mask.service';
 import { WatershedMaskService } from './watershed-mask.service';
-export const APIS = [AnnouncementService, CustomRichTextService, FeedbackService, FileResourceService, NeighborhoodService, RoleService, UserService, WatershedMaskService];
+export const APIS = [CustomRichTextService, FeedbackService, FileResourceService, NeighborhoodService, RoleService, SystemInfoService, UserService, WatershedMaskService];

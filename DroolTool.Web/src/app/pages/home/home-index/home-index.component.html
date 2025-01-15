@@ -40,44 +40,10 @@
                         Aliso Creek each day. But small changes in how you use outdoor water can help eliminate urban drool and save you money.
                     </p>
                     <br/>
-                    <p class="b1">
-                        <a routerLink="/about" routerLinkActive="true">Learn more about Urban Drool</a>
-                    </p>
                 </div>
             </div>
             <div class="col-12 col-lg-5 order-lg-first text-over-picture">
                 <img id="topImage" src="./assets/home/top-image.png">
-            </div>
-        </div>
-    </div>
-    <div id="mapImage" class="row homeSection h-100 pt-0">
-        <div class="col-12 text-center my-auto">
-            <h1 style="margin-bottom:30px">Do you add to urban drool?
-            </h1>
-            <div class="row" style="margin-bottom:30px">
-                <div class="col-12 col-md-6 offset-md-3">
-                    <p class="b1">
-                        Use these interactive tools to learn more about urban outdoor water usage 
-                        and its potential effect on our watersheds.
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6 col-lg-4 neighborhood-button">
-                    <a routerLink="/neighborhood-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool"
-                        style="margin-bottom:20px">Neighborhood Explorer</a>
-                    <p class="b2">
-                        Find out how your neighborhood may contribute to urban drool and 
-                        what you can do.
-                    </p>
-                </div>
-                <div class="col-6 col-lg-4 watershed-button">
-                    <a routerLink="/watershed-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool"
-                        style="margin-bottom:20px">Watershed Explorer</a>
-                    <p class="b2">
-                        Learn more about your watershed and the benefits of reducing urban drool.
-                    </p>
-                </div>
             </div>
         </div>
     </div>
@@ -92,8 +58,8 @@
                 <div>
                     <h1>Take action in your community!</h1>
                     <p class="b2">
-                        Moulton Niguel Water District and the Municipal Water District 
-                        of Orange County offer a variety of rebate programs you can participate 
+                        Moulton Niguel Water District and the Municipal Water District
+                        of Orange County offer a variety of rebate programs you can participate
                         in to reduce the amount of urban drool your household may create.
                     </p>
                     <p class="b2">
@@ -101,37 +67,6 @@
                     </p>
                 </div>
 
-            </div>
-        </div>
-        <div class="row homeSection">
-            <div class="col-12 text-center">
-                <div class="row">
-                    <div class="col-12">
-                        <h1>News & Updates</h1>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <ngx-slick-carousel *ngIf="showSlides()" class="carousel" #slickModal="slick-carousel" [config]="slideConfig"
-                            (init)="slickInit($event)" (breakpoint)="breakpoint($event)" (afterChange)="afterChange($event)"
-                            (beforeChange)="beforeChange($event)" style="padding-top:40px">
-                            <div ngxSlickItem *ngFor="let slide of slides" class="slide">
-                                <div class="slide-container">
-                                    <div class="slide-background" style="background-image:url({{slide.image}})">
-                                        <div class="slide-module-accent">
-                                            <p class="b3" style="color:#FFF">{{slide.date | date:'EEEE'}} <br/> {{slide.date | date:'longDate'}}</p>
-                                        </div>
-                                    </div>
-                                    <p class="b3 slide-link-text">
-                                        <a href="{{slide.link}}" *ngIf="slide.link" target="_blank">{{slide.title}}</a>
-                                        <span *ngIf="!slide.link">{{slide.title}}</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </ngx-slick-carousel>
-                        <p class="b3" *ngIf="!showSlides()">Nothing yet, stay tuned!</p>
-                    </div>
-                </div>
             </div>
         </div>
         <div class="row homeSection">
@@ -153,8 +88,8 @@
                         <h3 class="mt-1">New Rebate Option: <br>
                             Weather-Based Smart Sprinkler Timers
                         </h3>
-                        <p class="b3">Moulton Niguel Water District offers a variety of rebate programs you can join 
-                            to reduce the opportunities your household has to create 
+                        <p class="b3">Moulton Niguel Water District offers a variety of rebate programs you can join
+                            to reduce the opportunities your household has to create
                             urban drool.</p>
                     </div>
                 </div>

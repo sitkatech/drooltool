@@ -11,7 +11,7 @@ import { NominatimService } from '../../shared/services/nominatim.service';
 import { WfsService } from '../../shared/services/wfs.service';
 import { FeatureCollection } from 'geojson';
 import { _ } from 'ag-grid-community';
-import { MetricDateDto, NeighborhoodMetricDto, NeighborhoodService, WatershedMaskService } from 'src/app/shared/generated/index';
+import { NeighborhoodService, WatershedMaskService } from 'src/app/shared/generated/index';
 import { AddressService } from 'src/app/services/address.service';
 import { Observable, of } from 'rxjs';
 import { DistrictBoundary } from 'src/app/services/static-feature/DistrictBoundary';
@@ -62,7 +62,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public selectedNeighborhoodID: number;
   public selectedNeighborhoodWatershed: string;
   public selectedNeighborhoodWatershedMask: L.Layers;
-  public defaultSelectedMetricDate: MetricDateDto;
 
   public areMetricsCollapsed: boolean = true;
   public watershedName = "All Watersheds"
