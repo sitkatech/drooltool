@@ -5,7 +5,7 @@ import { DOCUMENT, Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Meta } from '@angular/platform-browser';
 import { RoleEnum } from 'src/app/shared/generated/enum/role-enum';
-import { AnnouncementService, UserDto } from 'src/app/shared/generated';
+import { UserDto } from 'src/app/shared/generated';
 
 @Component({
     selector: 'app-home-index',
@@ -13,7 +13,7 @@ import { AnnouncementService, UserDto } from 'src/app/shared/generated';
     styleUrls: ['./home-index.component.scss']
 })
 export class HomeIndexComponent implements OnInit, OnDestroy {
-    
+
     public currentUser: UserDto;
     public node:any;
 
@@ -75,8 +75,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private meta: Meta,
         private activatedRoute: ActivatedRoute,
-        private location: Location,
-        private announcementService: AnnouncementService) {
+        private location: Location) {
     }
 
     public ngOnInit(): void {
@@ -91,7 +90,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
                 localStorage.removeItem("loginOnReturn");
                 this.authenticationService.login();
             }
-    
+
             //We were forced to logout or were sent a link and just finished logging in
             if (this.authenticationService.getAuthRedirectUrl()) {
                 this.router.navigateByUrl(this.authenticationService.getAuthRedirectUrl())
@@ -99,27 +98,16 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
                         this.authenticationService.clearAuthRedirectUrl();
                     });
             }
-    
+
             this.authenticationService.getCurrentUser().subscribe(currentUser => {
                 this.currentUser = currentUser;
             });
 
         });
-
-        this.announcementService.announcementGetAnnouncementsForHomepageGet().subscribe(results => {
-            this.slides = results.map((x) => {
-                return {
-                    date: x.AnnouncementDate,
-                    title: x.AnnouncementTitle,
-                    image: `${environment.mainAppApiUrl}/FileResource/${x.FileResourceGUIDAsString}`,
-                    link: x.AnnouncementLink
-                }
-            })
-        })
     }
 
     ngOnDestroy(): void {
-        
+
     }
 
     public showSlides(): boolean {

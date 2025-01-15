@@ -10,9 +10,14 @@
  * Do not edit the class manually.
  */
 
-export class MetricDateDto { 
-    Year?: number;
-    Month?: number;
+export class SystemInfoDto { 
+    Environment?: string;
+    CurrentTimeUTC?: string;
+    readonly Application?: string;
+    FullInformationalVersion?: string;
+    PodName?: string;
+    Version?: string;
+    CompilationDateTime?: string;
     constructor(obj?: any) {
         Object.assign(this, obj);
     }

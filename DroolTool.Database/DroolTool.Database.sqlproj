@@ -70,8 +70,6 @@
     <Folder Include="Scripts\Utility" />
     <Folder Include="dbo\Procs" />
     <Folder Include="dbo\Functions" />
-    <Folder Include="HangFire" />
-    <Folder Include="HangFire\Tables" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\dbo.CustomRichText.sql" />
@@ -87,31 +85,12 @@
     <None Include="Scripts\PreReleaseScripts\Script.PreDeployment.ReleaseScripts.sql" />
     <None Include="Scripts\ReleaseScripts\Script.PostDeployment.ReleaseScripts.sql" />
     <None Include="Scripts\Utility\Script.PostDeployment.Utility.sql" />
-    <Build Include="HangFire\Tables\HangFire.AggregatedCounter.sql" />
-    <Build Include="HangFire\Tables\HangFire.Counter.sql" />
-    <Build Include="HangFire\Tables\HangFire.Hash.sql" />
-    <Build Include="HangFire\Tables\HangFire.Job.sql" />
-    <Build Include="HangFire\Tables\HangFire.JobParameter.sql" />
-    <Build Include="HangFire\Tables\HangFire.JobQueue.sql" />
-    <Build Include="HangFire\Tables\HangFire.List.sql" />
-    <Build Include="HangFire\Tables\HangFire.Schema.sql" />
-    <Build Include="HangFire\Tables\HangFire.Server.sql" />
-    <Build Include="HangFire\Tables\HangFire.Set.sql" />
-    <Build Include="HangFire\Tables\HangFire.State.sql" />
-    <Build Include="HangFire\HangFire.sql" />
     <Build Include="dbo\Tables\dbo.FileResourceMimeType.sql" />
     <None Include="Scripts\LookupTables\dbo.FileResourceMimeType.sql" />
-    <Build Include="dbo\Procs\dbo.pLandOwnerUsageReport.sql" />
-    <Build Include="dbo\Procs\dbo.pParcelAllocationAndUsage.sql" />
-    <Build Include="dbo\Procs\dbo.pWriteStagedMetricsToLiveTable.sql" />
-    <Build Include="dbo\Tables\dbo.Announcement.sql" />
     <Build Include="dbo\Tables\dbo.BackboneSegment.sql" />
     <Build Include="dbo\Tables\dbo.BackboneSegmentType.sql" />
     <Build Include="dbo\Tables\dbo.Feedback.sql" />
     <Build Include="dbo\Tables\dbo.Neighborhood.sql" />
-    <Build Include="dbo\Tables\dbo.NeighborhoodStaging.sql" />
-    <Build Include="dbo\Tables\dbo.RawDroolMetric.sql" />
-    <Build Include="dbo\Tables\dbo.RawDroolMetricStaging.sql" />
     <Build Include="dbo\Tables\dbo.RegionalSubbasin.sql" />
     <Build Include="dbo\Tables\dbo.WatershedAlias.sql" />
     <Build Include="dbo\Tables\dbo.WatershedMask.sql" />
@@ -119,9 +98,7 @@
     <Build Include="dbo\Views\dbo.vBackboneWithoutGeometry.sql" />
     <Build Include="dbo\Views\dbo.vGeoServerBackbone.sql" />
     <Build Include="dbo\Views\dbo.vGeoServerNeighborhood.sql" />
-    <Build Include="dbo\Views\dbo.vGeoServerWatershedExplorerMapMetrics.sql" />
     <Build Include="dbo\Views\dbo.vGeoServerWatershedMask.sql" />
-    <Build Include="dbo\Views\dbo.vNeighborhoodMetric.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DroolTool.Database.publish.xml" />

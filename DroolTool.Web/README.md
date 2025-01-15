@@ -115,6 +115,16 @@ If the project doesn't work after not working on it for a while, try the followi
 3. **Update Environment Variables:**  
    Get the latest `.env`, `appsecrets.json`, `build.ini` files from a colleague as there may be environment variables added since the last time you ran the project.
 
-4. **Reach out to a colleague:**  
+4. **Update SqlPackage**
+   If you're encountering an issue with deployment when attempting to run the build commands in the Build folder, you may have to update SqlPackage. In Powershell, enter one of the following commands to either install or update:
+   
+   ```
+   # install
+   dotnet tool install -g microsoft.sqlpackage
+   # update
+   dotnet tool update -g microsoft.sqlpackage
+   ```
+
+5. **Reach out to a colleague:**  
    If you’re stuck, ask another developer who has recently worked on the project for help.
 

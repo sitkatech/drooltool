@@ -25,17 +25,13 @@ import { SlickCarouselModule } from "ngx-slick-carousel";
 import { LoginCallbackComponent } from "./pages/login-callback/login-callback.component";
 import { HelpComponent } from "./pages/help/help.component";
 import { CreateUserCallbackComponent } from "./pages/create-user-callback/create-user-callback.component";
-import { AboutComponent } from "./pages/about/about.component";
 import { AppInitService } from "./app.init";
 import { NeighborhoodExplorerComponent } from "./pages/neighborhood-explorer/neighborhood-explorer.component";
 import { TakeActionComponent } from "./pages/take-action/take-action.component";
-import { WatershedExplorerComponent } from "./pages/watershed-explorer/watershed-explorer.component";
 import { FactSheetComponent } from "./pages/fact-sheet/fact-sheet.component";
 import { NgxSpinnerModule } from "ngx-spinner";
-import { DroolPerLandscapedAcreChartComponent } from "./components/drool-per-landscaped-acre-chart/drool-per-landscaped-acre-chart.component";
 import { WaterAccountsChartComponent } from "./components/water-accounts-chart/water-accounts-chart.component";
 import { SocialMediaSharingComponent } from "./components/social-media-sharing/social-media-sharing.component";
-import { AnnouncementListComponent } from "./pages/announcement-list/announcement-list.component";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { FaIconLibrary } from "@fortawesome/angular-fontawesome";
 import { ProvideFeedbackComponent } from "./pages/provide-feedback/provide-feedback.component";
@@ -61,15 +57,11 @@ export function init_app(appLoadService: AppInitService) {
         LoginCallbackComponent,
         HelpComponent,
         CreateUserCallbackComponent,
-        AboutComponent,
         NeighborhoodExplorerComponent,
         TakeActionComponent,
-        WatershedExplorerComponent,
         FactSheetComponent,
-        DroolPerLandscapedAcreChartComponent,
         WaterAccountsChartComponent,
         SocialMediaSharingComponent,
-        AnnouncementListComponent,
         ProvideFeedbackComponent,
     ],
     imports: [
