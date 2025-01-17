@@ -187,6 +187,21 @@ span.watershed-text {
     font-family: "Poppins", sans-serif;
 }
 
+.neighborhood-drain-text {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.neighborhood-watershed-wrapper {
+    display: flex;
+    align-items: end;
+}
+.neighborhood-watershed-image {
+    width: 100%;
+    height: auto;
+}
+
 //Allows the metrics to collapse
 .metrics-collapse {
     position: absolute;
