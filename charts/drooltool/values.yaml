@@ -139,14 +139,12 @@ geoserver:
   image:
     repository: kartoza/geoserver
     pullPolicy: Always
-    tag: "2.16.2"
+    tag: "2.25.2"
     # Overrides the image tag whose default is the chart appVersion.
   nameOverride: ""
   fullnameOverride: ""
   namespace: h2o
   resources: 
-    limits:
-      memory: "1G"
     requests:
       memory: "1G"
   serviceAccount:
