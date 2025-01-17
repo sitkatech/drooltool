@@ -13,7 +13,6 @@ import { UserInviteComponent } from './pages/user-invite/user-invite.component';
 import { NeighborhoodExplorerComponent } from './pages/neighborhood-explorer/neighborhood-explorer.component';
 import { TakeActionComponent } from './pages/take-action/take-action.component';
 import { HelpComponent } from './pages/help/help.component';
-import { FactSheetComponent } from './pages/fact-sheet/fact-sheet.component';
 import { ProvideFeedbackComponent } from './pages/provide-feedback/provide-feedback.component';
 
 const routes: Routes = [
@@ -23,7 +22,6 @@ const routes: Routes = [
   { path: "invite-user", component: UserInviteComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard] },
   { path: "feedback", component:ProvideFeedbackComponent, canActivate: [UnauthenticatedAccessGuard] },
   { path: "neighborhood-explorer", component: NeighborhoodExplorerComponent, canActivate: [UnauthenticatedAccessGuard] },
-  { path: ":id/fact-sheet", component: FactSheetComponent, canActivate: [UnauthenticatedAccessGuard] },
   { path: "take-action", component: TakeActionComponent, canActivate: [UnauthenticatedAccessGuard] },
   { path: "help", component: HelpComponent, canActivate: [UnauthenticatedAccessGuard] },
   { path: "", component: HomeIndexComponent },
