@@ -10,7 +10,6 @@ import { RouterModule } from "@angular/router";
 import { LinkRendererComponent } from "./components/ag-grid/link-renderer/link-renderer.component";
 import { FontAwesomeIconLinkRendererComponent } from "./components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component";
 import { MultiLinkRendererComponent } from "./components/ag-grid/multi-link-renderer/multi-link-renderer.component";
-import { SlickCarouselModule } from "ngx-slick-carousel";
 import { CustomRichTextComponent } from "./components/custom-rich-text/custom-rich-text.component";
 import { StylizedDropdownComponent } from "./components/stylized-dropdown/stylized-dropdown.component";
 import { SwimmingPoolVisualizationComponent } from "./swimming-pool-visualization/swimming-pool-visualization.component";
@@ -35,7 +34,6 @@ import { EditorModule, TINYMCE_SCRIPT_SRC } from "@tinymce/tinymce-angular";
         HttpClientModule,
         HttpClientJsonpModule,
         RouterModule,
-        SlickCarouselModule,
         EditorModule,
     ],
     exports: [

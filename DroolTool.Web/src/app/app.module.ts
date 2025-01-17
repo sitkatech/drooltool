@@ -21,7 +21,6 @@ import { DecimalPipe, CurrencyPipe, DatePipe } from "@angular/common";
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgxChartsModule } from "@swimlane/ngx-charts";
-import { SlickCarouselModule } from "ngx-slick-carousel";
 import { LoginCallbackComponent } from "./pages/login-callback/login-callback.component";
 import { HelpComponent } from "./pages/help/help.component";
 import { CreateUserCallbackComponent } from "./pages/create-user-callback/create-user-callback.component";
@@ -29,7 +28,6 @@ import { AppInitService } from "./app.init";
 import { NeighborhoodExplorerComponent } from "./pages/neighborhood-explorer/neighborhood-explorer.component";
 import { TakeActionComponent } from "./pages/take-action/take-action.component";
 import { FactSheetComponent } from "./pages/fact-sheet/fact-sheet.component";
-import { NgxSpinnerModule } from "ngx-spinner";
 import { WaterAccountsChartComponent } from "./components/water-accounts-chart/water-accounts-chart.component";
 import { SocialMediaSharingComponent } from "./components/social-media-sharing/social-media-sharing.component";
 import { fas } from "@fortawesome/free-solid-svg-icons";
@@ -77,8 +75,6 @@ export function init_app(appLoadService: AppInitService) {
         NgxChartsModule,
         BrowserAnimationsModule,
         AgGridModule,
-        SlickCarouselModule,
-        NgxSpinnerModule,
         RecaptchaV3Module,
         ApiModule.forRoot(() => {
             return new Configuration({
