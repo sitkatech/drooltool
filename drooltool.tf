@@ -34,10 +34,6 @@ variable "databaseTier" {
   type = string
 }
 
-variable "aspNetEnvironment" {
-	type = string
-}
-
 variable "environment" {
   type = string
 }
@@ -51,6 +47,10 @@ variable "databaseResourceGroup" {
 }
 
 variable "sqlApiUsername" {
+  type = string
+}
+
+variable "sqlGeoserverUsername" {
   type = string
 }
 
@@ -76,11 +76,7 @@ variable "domainGeoserver" {
   type = string
 }
 
-variable "elasticPoolName" {
-  type = string
-}
-
-variable "sqlGeoserverUsername" {
+variable "projectNumber" {
   type = string
 }
 
@@ -88,7 +84,7 @@ variable "team" {
   type = string
 }
 
-variable "projectNumber" {
+variable "elasticPoolName" {
   type = string
 }
 
@@ -350,16 +346,17 @@ output "hangfire_password" {
 }
 ### END Hangfire password ###
 
-
 #key vault was created prior to terraform run
 resource "azurerm_key_vault" "web" {
   name                         = var.keyVaultName
 	location                     = azurerm_resource_group.web.location
+ 
   resource_group_name          = azurerm_resource_group.web.name
 	soft_delete_retention_days   = 7
   purge_protection_enabled     = false
   tenant_id                    = data.azurerm_client_config.current.tenant_id
   tags                         = local.tags
+
   sku_name = "standard"
 }
 
@@ -387,7 +384,6 @@ resource "azurerm_key_vault_secret" "sqlAdminPass" {
   key_vault_id                 = azurerm_key_vault.web.id
 
   tags                         = local.tags
-
   depends_on = [
     azurerm_key_vault_access_policy.thisPipeline
   ]
@@ -403,7 +399,7 @@ resource "azurerm_key_vault_secret" "sqlAdminUser" {
     azurerm_key_vault_access_policy.thisPipeline
   ]
 }
-
+ 
 resource "azurerm_key_vault_secret" "sqlApiUsername" {
   name                         = "sqlApiUsername"
   value                        = var.sqlApiUsername
@@ -411,8 +407,8 @@ resource "azurerm_key_vault_secret" "sqlApiUsername" {
 
   tags                         = local.tags
   depends_on = [
-  azurerm_key_vault_access_policy.thisPipeline
-]
+    azurerm_key_vault_access_policy.thisPipeline
+  ]
 }
 
 resource "azurerm_key_vault_secret" "sqlApiPassword" {
@@ -567,7 +563,7 @@ resource "datadog_synthetics_test" "test_geoserver" {
   subtype = "http"
   request_definition {
     method = "GET"
-    url    = "https://${var.domainGeoserver}/geoserver/web/"
+    url    = "https://${var.domainGeoserver}/geoserver/web/wicket/resource/org.geoserver.web.GeoServerBasePage/img/logo.png"
   }
   request_headers = {
     Content-Type   = "application/json"

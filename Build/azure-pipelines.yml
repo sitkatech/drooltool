@@ -23,7 +23,6 @@ variables:
   # domainWeb: 'drooltool.esa-$(Environment).sitkatech.com'
   # domainGeoserver: 'geoserver-drooltool.esa-$(Environment).sitkatech.com'
 
-
 resources:
   repositories:
   - repository: self
@@ -33,8 +32,7 @@ resources:
     type: github
     name: sitkatech/BuildTemplates
     endpoint: "sitkatech"
-
-    
+   
 stages:
 - stage: BuildDB
   displayName: Build DB
@@ -47,9 +45,6 @@ stages:
       additionalArgs: '/p:DSP=Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider'
       publishPath: 'DroolTool.Database/bin/Debug/DroolTool.Database.dacpac'
       artifactName: 'Database'
-
-
-
 
 - stage: Test
   displayName: Test All
@@ -93,7 +88,7 @@ stages:
     steps:
     - checkout: self
       fetchDepth: 0
-    
+
     - task: AzureKeyVault@2
       inputs:
         azureSubscription: "$(azureSubscription)"
@@ -111,7 +106,6 @@ stages:
         additionalImageTags: |
           $(Build.BuildNumber)-$(environment)
         includeLatestTag: true
-    
 
 
   - job: BuildWeb
@@ -162,7 +156,7 @@ stages:
         KeyVaultName: '$(spokeKeyVaultName)'
         SecretsFilter: '*'
         RunAsPreJob: true
-    
+
     - template: azure-pipelines/templates/terraform/terraform.yml@BuildTemplates 
       parameters: 
         ServiceConnectionName: "$(azureSubscription)"
@@ -176,7 +170,6 @@ stages:
           -var "storageAccountName=$(storageAccountName)" 
           -var "resourceGroupName=$(resourceGroupName)" 
           -var "dbServerName=$(kv-dbServerName)" 
-          -var "aspNetEnvironment=$(aspNetEnvironment)" 
           -var "datadogApiKey=$(kv-datadogApiKey)" 
           -var "datadogAppKey=$(kv-datadogAppKey)" 
           -var "domainApi=$(domainApi)" 
@@ -215,7 +208,6 @@ stages:
         pathtoPublish: 'DroolTool.GeoServer/data_dir'
       condition: and(succeeded(), eq(variables['deploy'], 'true'))
 
-
 - stage: DeployTerraform
   displayName: Deploy Terraform (with Approval)
   dependsOn: 
@@ -242,29 +234,27 @@ stages:
       runOnce:
         deploy:
           steps:
-          - checkout: self
-            fetchDepth: 0
+            - checkout: self
+              fetchDepth: 0
+                  
+            - template: azure-pipelines/templates/terraform/terraform.yml@BuildTemplates 
+              parameters: 
+                ServiceConnectionName: "$(azureSubscription)"
+                TfStateStorageAccountName: "$(tfStateStorageAccountName)"
+                TfStateStorageAccountContainerName: "$(TfStateStorageAccountContainerName)"
+                TfStateStorageAccountResourceGroup: "$(azureApplicationTfStateResourceGroup)"
+                WorkingDirectory: './'
+                TerraformCommand: apply
 
-
-          - template: azure-pipelines/templates/terraform/terraform.yml@BuildTemplates 
-            parameters: 
-              ServiceConnectionName: "$(azureSubscription)"
-              TfStateStorageAccountName: "$(tfStateStorageAccountName)"
-              TfStateStorageAccountContainerName: "$(TfStateStorageAccountContainerName)"
-              TfStateStorageAccountResourceGroup: "$(azureApplicationTfStateResourceGroup)"
-              WorkingDirectory: './'
-              TerraformCommand: apply
-          
-          - bash: |
-              echo "##vso[task.setvariable variable=STORAGE_ACCOUNT_SAS_KEY;isOutput=true;issecret=true]$(TF_OUT_STORAGE_ACCOUNT_SAS_KEY)"
-              echo "##vso[task.setvariable variable=APPLICATION_STORAGE_ACCOUNT_KEY;isOutput=true;issecret=true]$(TF_OUT_APPLICATION_STORAGE_ACCOUNT_KEY)"
-              echo "##vso[task.setvariable variable=INSTRUMENTATION_KEY;isOutput=true]$(TF_OUT_INSTRUMENTATION_KEY)"
-              echo "##vso[task.setvariable variable=SQL_API_PASSWORD;isOutput=true;issecret=true]$(TF_OUT_SQL_API_PASSWORD)"
-              echo "##vso[task.setvariable variable=SQL_GEOSERVER_PASSWORD;isOutput=true;issecret=true]$(TF_OUT_SQL_GEOSERVER_PASSWORD)"
-              echo "##vso[task.setvariable variable=GEOSERVER_ADMIN_PASSWORD;isOutput=true;issecret=true]$(TF_OUT_GEOSERVER_ADMIN_PASSWORD)"
-              echo "##vso[task.setvariable variable=HANGFIRE_PASSWORD;isOutput=true;issecret=true]$(TF_OUT_HANGFIRE_PASSWORD)"
-              echo "##vso[task.setvariable variable=DATABASE_ID;isOutput=true;issecret=true]$(TF_OUT_DATABASE_ID)"
-          - bash: 'env | sort'
+            - bash: |
+                echo "##vso[task.setvariable variable=STORAGE_ACCOUNT_SAS_KEY;isOutput=true;issecret=true]$(TF_OUT_STORAGE_ACCOUNT_SAS_KEY)"
+                echo "##vso[task.setvariable variable=APPLICATION_STORAGE_ACCOUNT_KEY;isOutput=true;issecret=true]$(TF_OUT_APPLICATION_STORAGE_ACCOUNT_KEY)"
+                echo "##vso[task.setvariable variable=SQL_API_PASSWORD;isOutput=true;issecret=true]$(TF_OUT_SQL_API_PASSWORD)"
+                echo "##vso[task.setvariable variable=SQL_GEOSERVER_PASSWORD;isOutput=true;issecret=true]$(TF_OUT_SQL_GEOSERVER_PASSWORD)"
+                echo "##vso[task.setvariable variable=GEOSERVER_ADMIN_PASSWORD;isOutput=true;issecret=true]$(TF_OUT_GEOSERVER_ADMIN_PASSWORD)"
+                echo "##vso[task.setvariable variable=HANGFIRE_PASSWORD;isOutput=true;issecret=true]$(TF_OUT_HANGFIRE_PASSWORD)"
+                echo "##vso[task.setvariable variable=DATABASE_ID;isOutput=true;issecret=true]$(TF_OUT_DATABASE_ID)"
+            - bash: 'env | sort'
 
 - stage: DeployDB
   displayName: Deploy Database 
@@ -402,7 +392,6 @@ stages:
       vmImage: 'ubuntu-latest'
     variables: 
       APPLICATION_STORAGE_ACCOUNT_KEY: $[ stageDependencies.DeployTerraform.Terraform.outputs['Terraform.Bash.APPLICATION_STORAGE_ACCOUNT_KEY'] ]
-      INSTRUMENTATION_KEY: $[ stageDependencies.DeployTerraform.Terraform.outputs['Terraform.Bash.INSTRUMENTATION_KEY'] ]
       SQL_API_PASSWORD: $[ stageDependencies.DeployTerraform.Terraform.outputs['Terraform.Bash.SQL_API_PASSWORD'] ]
       SQL_GEOSERVER_PASSWORD: $[ stageDependencies.DeployTerraform.Terraform.outputs['Terraform.Bash.SQL_GEOSERVER_PASSWORD'] ]
       GEOSERVER_ADMIN_PASSWORD: $[ stageDependencies.DeployTerraform.Terraform.outputs['Terraform.Bash.GEOSERVER_ADMIN_PASSWORD'] ]
