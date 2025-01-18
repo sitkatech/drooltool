@@ -91,16 +91,24 @@
                         </h3>
                     </div>
                 </div>
-                <div *ngIf="!activeSearchNotFound && searchActive"
-                    class="col-12 section-stats d-none d-lg-flex p-lg-0 flex-fill">
-                    <div class="h-100">
-                        <div class="text-center p-lg-4">
-                            <a routerLink="/{{selectedNeighborhoodID}}/fact-sheet" class="btn btn-drooltool text-center">View All The Facts!</a>
-                            <p class="b3 watershed-intro mt-2 mb-0">This neighborhood drains to <span
-                                    class="watershed-text">{{selectedNeighborhoodWatershed}}</span></p>
+                <ng-container *ngIf="!activeSearchNotFound && searchActive">
+                    <div class="col-12 section-stats d-none d-lg-flex p-lg-0 flex-fill">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="h-100 neighborhood-drain-text">
+                                    <div class="text-center p-lg-4">
+                                        <h2 class="text-center">WHERE DOES OUR DROOL GO?</h2>
+                                        <p class="b3 watershed-intro mt-2 mb-0">This neighborhood drains to <span
+                                                class="watershed-text">{{selectedNeighborhoodWatershed}}</span> and the Pacific Ocean!</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 neighborhood-watershed-wrapper">
+                                <img src="{{ watershedImage }}" class="neighborhood-watershed-image" />
+                            </div>
                         </div>
                     </div>
-                </div>
+                </ng-container>
                 <div class="col-12 d-none d-lg-block">
                     <div class="row">
                         <div class="col-6 section-rebates text-center">
@@ -148,46 +156,22 @@
                     class="section-stats mt-2 collapse mobile-stats metrics-collapse d-lg-none"
                     [ngbCollapse]="areMetricsCollapsed" (click)="$event.stopPropagation();">
                     <div class="text-center p-2 p-md-4 metrics-panel-transparency">
-                        <a routerLink="/{{selectedNeighborhoodID}}/fact-sheet" class="btn btn-drooltool text-center">View All The Facts!</a>
-                        <p class="b3 watershed-intro mt-2 mb-0">This neighborhood drains to <span
-                                class="watershed-text">{{selectedNeighborhoodWatershed}}</span></p>
-                    </div>
-                    <div class="p-2 p-md-4 metrics-panel-transparency-special">
-                        <h2 class="metric-heading">How much does your neighborhood drool?</h2>
-                        <ng-container
-                            *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.TotalDrool">
-                            <p class="b3"><span
-                                    class="metric-value">{{selectedNeighborhoodMetrics.TotalDrool | number:'1.0-0':'en-US'}}</span><span
-                                    class="metric-units"> gallons</span> of urban drool were created in
-                                {{months[selectedNeighborhoodMetrics.MetricMonth - 1]}}</p>
-                            <p *ngIf="selectedNeighborhoodMetrics.TotalDrool > 20000" class="b4">This is enough
-                                urban
-                                drool to fill
-                                {{(selectedNeighborhoodMetrics.TotalDrool / 20000) | number:'1.0-0':'en-US'}}
-                                swimming
-                                {{((selectedNeighborhoodMetrics.TotalDrool / 20000) | number:'1.0-0') == 1 ? "pool" : "pools"}}!</p>
-                        </ng-container>
-                        <ng-container
-                            *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.TotalDrool">
-                            <p class="b3">Hmm, looks like we can't find anything for this metric at this time. Try
-                                selecting another neighborhood!</p>
-                        </ng-container>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="h-100 neighborhood-drain-text">
+                                    <div class="text-center p-lg-4">
+                                        <h2 class="text-center">WHERE DOES OUR DROOL GO?</h2>
+                                        <p class="b3 watershed-intro mt-2 mb-0">This neighborhood drains to <span
+                                                class="watershed-text">{{selectedNeighborhoodWatershed}}</span> and the Pacific Ocean!</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 neighborhood-watershed-wrapper">
+                                <img src="{{ watershedImage }}" class="neighborhood-watershed-image" />
+                            </div>
+                        </div>
                     </div>
                     <div class="p-2 p-md-4 metrics-panel-transparency">
-                        <h2 class="metric-heading">Does your neighborhood take action?</h2>
-                        <ng-container
-                            *ngIf="selectedNeighborhoodMetrics && selectedNeighborhoodMetrics.OverallParticipation">
-                            <p class="b3"><span
-                                    class="metric-value">{{selectedNeighborhoodMetrics.OverallParticipation === 0 ? "None" : selectedNeighborhoodMetrics.OverallParticipation}}</span><span
-                                    class="metric-units"> of your neighbors</span> participate in outdoor water use
-                                rebate
-                                programs.</p>
-                        </ng-container>
-                        <ng-container
-                            *ngIf="!selectedNeighborhoodMetrics || !selectedNeighborhoodMetrics.OverallParticipation">
-                            <p class="b3">Hmm, looks like we can't find anything for this metric at this time. Try
-                                selecting another neighborhood!</p>
-                        </ng-container>
                         <p class="b4">Participation in rebate programs, like weather based smart sprinkler timers or
                             rotating
                             sprinkler nozzles, helps mitigate your home's creation of urban drool</p>

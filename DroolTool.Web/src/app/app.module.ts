@@ -27,7 +27,6 @@ import { CreateUserCallbackComponent } from "./pages/create-user-callback/create
 import { AppInitService } from "./app.init";
 import { NeighborhoodExplorerComponent } from "./pages/neighborhood-explorer/neighborhood-explorer.component";
 import { TakeActionComponent } from "./pages/take-action/take-action.component";
-import { FactSheetComponent } from "./pages/fact-sheet/fact-sheet.component";
 import { WaterAccountsChartComponent } from "./components/water-accounts-chart/water-accounts-chart.component";
 import { SocialMediaSharingComponent } from "./components/social-media-sharing/social-media-sharing.component";
 import { fas } from "@fortawesome/free-solid-svg-icons";
@@ -57,7 +56,6 @@ export function init_app(appLoadService: AppInitService) {
         CreateUserCallbackComponent,
         NeighborhoodExplorerComponent,
         TakeActionComponent,
-        FactSheetComponent,
         WaterAccountsChartComponent,
         SocialMediaSharingComponent,
         ProvideFeedbackComponent,

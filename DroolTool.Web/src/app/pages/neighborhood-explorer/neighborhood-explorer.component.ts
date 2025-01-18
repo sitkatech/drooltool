@@ -61,6 +61,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public selectedNeighborhoodProperties: any;
   public selectedNeighborhoodID: number;
   public selectedNeighborhoodWatershed: string;
+  public watershedImage: string;
   public selectedNeighborhoodWatershedMask: L.Layers;
 
   public areMetricsCollapsed: boolean = true;
@@ -82,6 +83,13 @@ export class NeighborhoodExplorerComponent implements OnInit {
   ]
   districtBoundaryLayer: any;
   hasStormshed: boolean;
+
+  public watershedImages = {
+    "Salt Creek": "./assets/main/watershed-images/Salt_Creek.png",
+    "Laguna Canyon": "./assets/main/watershed-images/Laguna_Canyon.jpg",
+    "Aliso Creek": "./assets/main/watershed-images/Aliso_Creek.jpg",
+    "San Juan Creek": "./assets/main/watershed-images/San_Juan_Creek.jpg"
+  }
 
   constructor(
     private appRef: ApplicationRef,
@@ -394,6 +402,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
     setTimeout(() => { this.clickMarker.closePopup(); }, 5000);
     this.selectedNeighborhoodWatershed = this.selectedNeighborhoodProperties.Watershed;
+    let keyForWatershed = Object.keys(this.watershedImages).filter(x => this.selectedNeighborhoodWatershed.includes(x))[0];
+    this.watershedImage = this.watershedImages[keyForWatershed];
     this.waterShedMaskService.watershedMaskWatershedAliasNameGetWatershedMaskGet(this.selectedNeighborhoodWatershed).subscribe(maskString => {
       this.selectedNeighborhoodWatershedMask = this.getMaskGeoJsonLayer(maskString);
     })
