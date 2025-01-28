@@ -1,0 +1,52 @@
+@use "/src/scss/abstracts/" as *;
+
+.btn {
+    display: inline-block;
+    background-color: transparent;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border-radius: 0.25rem;
+    border: none;
+    font-family: $dm-sans;
+    font-size: $type-size-200;
+    font-weight: 400;
+    letter-spacing: 0.045em;
+    line-height: 1;
+    padding: 0.875rem 1.25rem 0.675rem;
+    transition: all 300ms ease;
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.05);
+
+    &:focus,
+    &.focus {
+        outline: 0;
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &-orange {
+        color: $white;
+        background-color: $orange;
+        border: 1px solid $gold;
+
+
+        &:hover {
+            color: $white;
+            background: darken($orange, 10%);
+            border: 1px solid darken($gold, 10%);
+        }
+
+        &-white-outline {
+            color: $white;
+            border: 1px solid $white;
+
+            &:hover {
+                background: darken($orange, 10%);
+            }
+        }
+    }
+}

@@ -1,16 +1,30 @@
-@import "scss/_variables.scss";
+// Abstracts
+@use "scss/abstracts";
+
+// Base
+@use "scss/base";
+
+// Components
+@use "scss/components";
+
+// Utilities
+@use "scss/utilities";
+
+// replaced by above
+// @import "scss/_variables.scss";
+
 
 // import Bootstrap AFTER variables
-@import "/node_modules/bootstrap/scss/bootstrap";
-@import "/node_modules/font-awesome/css/font-awesome.css";
+// @import "/node_modules/bootstrap/scss/bootstrap";
+// @import "/node_modules/font-awesome/css/font-awesome.css";
 
-@import "scss/_grids.scss";
+// @import "scss/_grids.scss";
 @import "~leaflet/dist/leaflet.css";
 //@import "~leaflet-draw/dist/leaflet.draw.css";
 
-@import "scss/_sticky_footer.scss";
-@import "scss/_forms.scss";
-@import "scss/_custom-bootstrap.scss";
+// @import "scss/_sticky_footer.scss";
+// @import "scss/_forms.scss";
+// @import "scss/_custom-bootstrap.scss";
 
 // @import "~ngx-sharebuttons/themes/default/default-theme";
 // @import "~ngx-sharebuttons/themes/circles/circles-dark-theme";
@@ -46,7 +60,6 @@ $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
 }
 
 .ag-theme-balham .ag-header {
-    background-color: $header-nav-color;
 }
 // end ag-grid settings
 
@@ -189,11 +202,11 @@ input:checked + .slider .off {
     border-radius: 50%;
 }
 
-body {
-    font-family: "Nunito", sans-serif;
-    color: #555555;
-    line-height: 1.25;
-}
+// body {
+//     font-family: "Nunito", sans-serif;
+//     color: #555555;
+//     line-height: 1.25;
+// }
 
 .b1,
 .b2,
@@ -201,7 +214,7 @@ body {
 .b4 {
     font-weight: 400;
     text-align: center;
-    font-family: "Nunito", sans-serif;
+    // font-family: "Nunito", sans-serif;
     color: #555555;
 }
 
@@ -228,7 +241,7 @@ h1,
 h2,
 h3,
 h4 {
-    color: $drool-orange-text;
+    // color: $drool-orange-text;
     font-family: "Poppins", sans-serif;
 }
 
