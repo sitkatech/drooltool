@@ -1,4 +1,4 @@
-<div *ngIf="isAuthenticated()">
+<!-- <div *ngIf="isAuthenticated()">
     <div class="header-outer">
         <div class="container-fluid">
             <div class="row" style="z-index:1">
@@ -72,4 +72,30 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
+
+<header>
+    <nav class="site-nav">
+        <a routerLink="/" routerLinkActive="active">
+            <img src="assets/main/logos/udt_color_logo.png" class="navbar-logo">
+        </a>
+
+        <div class="site-nav__wrapper">
+            <a routerLink="/" routerLinkActive="active">
+                <img src="assets/main/logos/udt_color_logo.png" class="navbar-logo-mobile">
+            </a>
+
+            <ul class="site-nav__links site-nav__main">
+                <li class="nav-item">
+                    <a [routerLink]="['/environmental-impacts']" class="nav-link" role="button" routerLinkActive="active">
+                        <span class="nav-link__label">Environmental Impacts</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <button type="button" class="btn btn-orange">Take Action</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
