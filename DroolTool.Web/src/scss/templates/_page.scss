@@ -1,0 +1,96 @@
+@use "/src/scss/abstracts" as *;
+
+
+.underline {
+    color: $white;
+    text-decoration-line: underline;
+    text-decoration-color: $orange;
+    text-decoration-thickness: 6px;
+}
+
+
+.page {
+    font-family: $dm-sans;
+    color: $blue-dark;
+
+    &-content {
+        margin: 2rem 5rem;
+        @include desktop-medium {
+            width: 80%;
+        }
+    }
+
+    &-title {
+        font-family: $koulen;
+        font-size: $type-size-1000;
+
+        &-hr {
+            border-top: 1px solid white;
+            opacity: .6;
+        }
+    }
+
+    &-info {
+        font-size: $type-size-300;
+        line-height: 1.25;
+    }
+
+    &-highlight {
+        display: inline-block;
+        color: $white;
+        background-color: $orange;
+        font-size: $type-size-200;
+        padding: 10px 8px 8px 8px;
+        border-radius: 4px;
+    }
+
+    &-section {
+        line-height: 25px;
+        margin-bottom: 2rem;
+        &-title {
+            font-family: $koulen;
+            font-size: $type-size-800;
+            color: $white;
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+    }
+}
+
+
+.width-80 {
+    width: auto;
+    @include desktop-medium {
+        width: 80%;
+    }
+}
+
+.width-70 {
+    width: auto;
+    @include desktop-medium {
+        width: 70%;
+    }
+}
+
+.width-60 {
+    width: auto;
+    @include desktop-medium {
+        width: 60%;
+    }
+}
+
+.width-40 {
+    width: auto;
+    @include desktop-medium {
+        width: 40%;
+    }
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
