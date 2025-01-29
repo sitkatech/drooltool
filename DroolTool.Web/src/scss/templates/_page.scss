@@ -47,12 +47,30 @@
     &-section {
         line-height: 25px;
         margin-bottom: 2rem;
+        &.small {
+            font-size: $type-size-200
+        }
+
         &-title {
             font-family: $koulen;
             font-size: $type-size-800;
             color: $white;
             margin-top: 4px;
             margin-bottom: 12px;
+
+            &.small {
+                font-size: $type-size-600;
+            }
+        }
+
+        &-light {
+            display: inline-flex;
+            padding: 32px;
+            align-items: center;
+            border-radius: 8px;
+            border: 1px solid rgba(43, 100, 114, 0.10);
+            background: rgba(255, 255, 255, 0.20);
+            box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.10) inset;
         }
     }
 }
@@ -94,3 +112,7 @@
     text-align: right;
 }
 
+
+.bold-hr {
+    border-top: 2px solid white;
+}
