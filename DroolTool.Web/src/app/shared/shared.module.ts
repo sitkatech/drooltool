@@ -15,6 +15,8 @@ import { StylizedDropdownComponent } from "./components/stylized-dropdown/styliz
 import { SwimmingPoolVisualizationComponent } from "./swimming-pool-visualization/swimming-pool-visualization.component";
 import { EditorModule, TINYMCE_SCRIPT_SRC } from "@tinymce/tinymce-angular";
 import { FooterNavComponent } from './components/footer-nav/footer-nav.component';
+import { DropdownToggleDirective } from "./directives/dropdown-toggle.directive";
+import { DropdownToggleCloseDirective } from "./directives/dropdown-toggle-close.directive";
 
 @NgModule({
     declarations: [
@@ -29,6 +31,8 @@ import { FooterNavComponent } from './components/footer-nav/footer-nav.component
         StylizedDropdownComponent,
         SwimmingPoolVisualizationComponent,
         FooterNavComponent,
+        DropdownToggleDirective,
+        DropdownToggleCloseDirective
     ],
     imports: [
         CommonModule,
