@@ -1,17 +1,22 @@
 @use "/src/scss/abstracts/" as *;
 
 .site-footer {
+    font-family: $dm-sans;
     background-color: $blue-dark;
     font-size: $type-size-200;
     color: $white;
-    padding: 6rem 8rem;
+    padding: 5rem 3.75rem 3rem;
+
+    @include desktop-medium {
+        padding: 6rem 8rem;
+    }
 
     li {
         padding-bottom: 1rem;
     }
 
     a {
-        font-weight:200;
+        font-weight:400;
         letter-spacing: 0.02em;
     }
 }
@@ -36,28 +41,46 @@
     }
 
     &-copy {
-        font-weight: 100;
+        font-weight: 200;
         font-style: italic;
         font-size: $type-size-150;
+        line-height: normal;
 
         a {
             text-decoration: underline;
         }
     }
 
-    &-take-action {
+    &-action {
+        border: 1px solid $gold;
+        box-shadow: 0px 105px 29px 0px rgba(0, 0, 0, 0.00), 0px 67px 27px 0px rgba(0, 0, 0, 0.01), 0px 38px 23px 0px rgba(0, 0, 0, 0.05), 0px 17px 17px 0px rgba(0, 0, 0, 0.09), 0px 4px 9px 0px rgba(0, 0, 0, 0.10);
         background: $orange;
         color: $white;
+        font-size: $type-size-100;
+        line-height: 1.25;
         width: 75%;
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-        font-family: $koulen;
-        font-size: $type-size-700;
         padding: 3rem;
         position: relative;
         z-index: 1;
         left: 12.5%;
         top: 4rem;
+
+        &-title {
+            font-family: $koulen;
+            font-size: $type-size-700;
+        }
+
+        &__btn-wrapper {
+            @include desktop-medium-max {
+                display:block;
+            }
+
+            @include desktop-medium {
+                display:flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%
+            }
+        }
     }
 }

@@ -13,24 +13,9 @@
 // Templates
 @use "scss/templates";
 
-// replaced by above
-// @import "scss/_variables.scss";
+@import "/node_modules/font-awesome/css/font-awesome.css";
 
-
-// import Bootstrap AFTER variables
-// @import "/node_modules/bootstrap/scss/bootstrap";
-// @import "/node_modules/font-awesome/css/font-awesome.css";
-
-// @import "scss/_grids.scss";
 @import "~leaflet/dist/leaflet.css";
-//@import "~leaflet-draw/dist/leaflet.draw.css";
-
-// @import "scss/_sticky_footer.scss";
-// @import "scss/_forms.scss";
-// @import "scss/_custom-bootstrap.scss";
-
-// @import "~ngx-sharebuttons/themes/default/default-theme";
-// @import "~ngx-sharebuttons/themes/circles/circles-dark-theme";
 
 // begin ag-grid settings
 $grid-size: 4px;

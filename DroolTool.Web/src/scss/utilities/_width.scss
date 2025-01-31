@@ -1,0 +1,34 @@
+@use "/src/scss/abstracts" as *;
+
+.width {
+    &-100 {
+        width: auto;
+        @include desktop-medium {
+            width: 100%;
+        }
+    }
+    &-80 {
+        width: auto;
+        @include desktop-medium {
+            width: 80%;
+        }
+    }
+    &-70 {
+        width: auto;
+        @include desktop-medium {
+            width: 70%;
+        }
+    }
+    &-60 {
+        width: auto;
+        @include desktop-medium {
+            width: 60%;
+        }
+    }
+    &-40 {
+        width: auto;
+        @include desktop-medium {
+            width: 40%;
+        }
+    }
+}

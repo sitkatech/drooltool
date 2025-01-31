@@ -31,7 +31,6 @@ app-root {
 
         @include desktop-small {
             max-width: 120rem;
-            width: calc(100% - 4rem);
         }
 
         & > *:not(router-outlet) {
