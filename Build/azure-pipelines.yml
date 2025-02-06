@@ -517,6 +517,7 @@ stages:
                 web.image.tag="$(Build.BuildNumber)-$(environment)"
                 api.image.repository="$(kv-containerRegistry)/drooltool/api"
                 web.image.repository="$(kv-containerRegistry)/drooltool/web"
+                geoserver.image.repository="$(kv-containerRegistry)/kartoza/geoserver"
                 global.secrets.hangfirePassword="$(HANGFIRE_PASSWORD)"
                 global.secrets.recaptchaV3SiteKey="$(recaptchaV3SiteKey)"
                 global.secrets.mapquestApiKey="$(mapquestApiKey)"
