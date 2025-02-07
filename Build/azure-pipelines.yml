@@ -520,7 +520,4 @@ stages:
                 geoserver.image.repository="$(kv-containerRegistry)/kartoza/geoserver"
                 global.secrets.hangfirePassword="$(HANGFIRE_PASSWORD)"
                 global.secrets.recaptchaV3SiteKey="$(recaptchaV3SiteKey)"
-                global.secrets.mapquestApiKey="$(mapquestApiKey)"
-                global.secrets.mnwdFileTransferUsername="$(mnwdFileTransferUsername)"
-                global.secrets.mnwdFileTransferPassword="$(mnwdFileTransferPassword)"
               force: false

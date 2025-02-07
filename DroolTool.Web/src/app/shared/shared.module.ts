@@ -14,6 +14,9 @@ import { CustomRichTextComponent } from "./components/custom-rich-text/custom-ri
 import { StylizedDropdownComponent } from "./components/stylized-dropdown/stylized-dropdown.component";
 import { SwimmingPoolVisualizationComponent } from "./swimming-pool-visualization/swimming-pool-visualization.component";
 import { EditorModule, TINYMCE_SCRIPT_SRC } from "@tinymce/tinymce-angular";
+import { FooterNavComponent } from './components/footer-nav/footer-nav.component';
+import { DropdownToggleDirective } from "./directives/dropdown-toggle.directive";
+import { DropdownToggleCloseDirective } from "./directives/dropdown-toggle-close.directive";
 
 @NgModule({
     declarations: [
@@ -27,6 +30,9 @@ import { EditorModule, TINYMCE_SCRIPT_SRC } from "@tinymce/tinymce-angular";
         CustomRichTextComponent,
         StylizedDropdownComponent,
         SwimmingPoolVisualizationComponent,
+        FooterNavComponent,
+        DropdownToggleDirective,
+        DropdownToggleCloseDirective
     ],
     imports: [
         CommonModule,
@@ -45,6 +51,7 @@ import { EditorModule, TINYMCE_SCRIPT_SRC } from "@tinymce/tinymce-angular";
         StylizedDropdownComponent,
         SwimmingPoolVisualizationComponent,
         EditorModule,
+        FooterNavComponent
     ],
     providers: [
         {

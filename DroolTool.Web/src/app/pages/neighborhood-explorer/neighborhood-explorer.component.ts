@@ -25,6 +25,7 @@ declare var $: any;
 })
 export class NeighborhoodExplorerComponent implements OnInit {
   @ViewChild("mapDiv") mapElement: ElementRef;
+  @ViewChild("searchElement") searchElement: ElementRef;
 
   public defaultMapZoom = 12;
   public afterSetControl = new EventEmitter();
@@ -67,6 +68,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public areMetricsCollapsed: boolean = true;
   public watershedName = "All Watersheds"
 
+  currentMapCenter;
+
   public months = [
     "January",
     "February",
@@ -90,6 +93,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
     "Aliso Creek": "./assets/main/watershed-images/Aliso_Creek.jpg",
     "San Juan Creek": "./assets/main/watershed-images/San_Juan_Creek.jpg"
   }
+
+  // flags used to control visibility of map buttons so they only show after the tracing path of water or zooming to a neighborhood
+  isTraceFitBounds = false;
+  showMapButtons = false;
 
   constructor(
     private appRef: ApplicationRef,
@@ -233,10 +240,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
       L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
       this.maskLayer.addTo(this.map);
-
-      if (window.innerWidth > 991) {
-        this.mapElement.nativeElement.scrollIntoView();
-      }
     });
   }
 
@@ -279,6 +282,10 @@ export class NeighborhoodExplorerComponent implements OnInit {
     });
     this.map.on("moveend", (event: L.LeafletEvent) => {
       this.onMapMoveEnd.emit(event);
+      if (this.isTraceFitBounds){
+        this.showMapButtons = true;
+        this.isTraceFitBounds = false;
+      }
     });
 
     let dblClickTimer = null;
@@ -310,14 +317,17 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.setSearchingAndLoadScreen(true);
       this.clearSearchResults();
       this.searchAddress = searchText.value;
+      const element = document.getElementById('searchElement');
+      const y = element.getBoundingClientRect().top;
+      window.scrollTo({top: y, behavior: 'smooth'});
       this.nominatimService.makeNominatimRequest(this.searchAddress).subscribe(response => {
         if (response.length === 0) {
           this.searchAddressNotFoundOrNotServiced();
           return null;
         }
 
-        let lat = response.results[0].locations[0].latLng.lat;
-        let lng = response.results[0].locations[0].latLng.lng;
+        let lat = Number(response[0]['lat']);
+        let lng = Number(response[0]['lon']);
         let latlng = { 'lat': lat, 'lng': lng };
 
         this.getNeighborhoodFromLatLong(latlng, false);
@@ -328,6 +338,8 @@ export class NeighborhoodExplorerComponent implements OnInit {
 
   public getNeighborhoodFromLatLong(latlng: Object, mapClick: boolean): void {
     if (!this.currentlySearching || !mapClick) {
+      this.showMapButtons = false;
+      this.areMetricsCollapsed = true;
       if (mapClick) {
         this.setSearchingAndLoadScreen(true);
         this.clearSearchResults();
@@ -345,7 +357,7 @@ export class NeighborhoodExplorerComponent implements OnInit {
           this.neighborhoodService.neighborhoodNeighborhoodIDGetStormshedGet(this.selectedNeighborhoodID).subscribe(
             response => this.displayStormshedAndBackboneDetail(JSON.parse(response)),
             null,
-            () => this.setSearchingAndLoadScreen(false)
+            () => console.log("complete")
           );
           this.addressService.updateSearchedAddress(this.searchAddress);
         }
@@ -468,22 +480,17 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.backboneDetailLayer.addTo(this.map);
     this.backboneDetailLayer.bringToFront();
 
-    if (stormshedMinusNeighborhoodFeature.geometry) {
-      this.hasStormshed = true;
-      this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.stormshedLayer]));
-    } else{
-      this.hasStormshed = false;
-      this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([this.clickMarker, this.currentSearchLayer]));
-    }
+    this.hasStormshed = !!stormshedMinusNeighborhoodFeature.geometry;
+    this.displayTraceOrZoomToNeighborhood(null, false);
   }
 
-  public displayTraceOrZoomToNeighborhood(event: Event): void {
+  public displayTraceOrZoomToNeighborhood(event: Event, startLoadingScreen = true): void {
     //Button lies on top of map, so we don't to be selecting a new area
-    event.stopPropagation();
+    event?.stopPropagation();
     if (!this.traceActive) {
       this.clearLayer(this.traceLayer);
       this.deinitializeMapEvents();
-      this.setSearchingAndLoadScreen(true);
+      if (startLoadingScreen) this.setSearchingAndLoadScreen(true);
       this.neighborhoodService.neighborhoodNeighborhoodIDGetDownstreamBackboneTraceGet(this.selectedNeighborhoodID).subscribe(response => {
         let featureCollection = JSON.parse(response);
         this.clearLayer(this.currentMask);
@@ -510,13 +517,12 @@ export class NeighborhoodExplorerComponent implements OnInit {
           pane: "droolToolOverlayPane"
         });
         this.traceLayer = L.layerGroup([baseLayer, dottedLayer]);
-
         this.traceLayer.addTo(this.map);
-
         this.traceActive = true;
         this.fitBoundsWithPaddingAndFeatureGroup(new L.featureGroup([baseLayer, this.clickMarker, this.stormshedLayer]));
         this.setSearchingAndLoadScreen(false);
         this.initializeMapEvents();
+        this.areMetricsCollapsed = false;
       })
     }
     else {
@@ -525,7 +531,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.clearLayer(this.selectedNeighborhoodWatershedMask);
       this.currentMask.addTo(this.map);
       this.traceActive = false;
+      this.areMetricsCollapsed = true;
     }
+    this.isTraceFitBounds = true;
   }
 
   public clearSearchResults(): void {
@@ -581,12 +589,11 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public fitBoundsWithPaddingAndFeatureGroup(featureGroup: L.featureGroup): void {
-    let paddingHeight = $("#buttonDiv").innerHeight();
+    let paddingHeight = $("#buttonDiv").innerHeight() || 0;
     let popupContent = $(".search-popup");
     if (popupContent !== null && popupContent !== undefined && popupContent.length == 1) {
       paddingHeight += popupContent.innerHeight();
     }
-
     this.map.fitBounds(featureGroup.getBounds(), { padding: [paddingHeight, paddingHeight] });
   }
 
@@ -625,5 +632,5 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
   getDistrictBoundary(): Observable<object> {
     return of(DistrictBoundary);
-}
+  }
 }

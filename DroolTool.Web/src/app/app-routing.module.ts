@@ -1,3 +1,4 @@
+import { EnvironmentalImpactsComponent } from './pages/environmental-impacts/environmental-impacts.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { NotFoundComponent, UnauthenticatedComponent, SubscriptionInsufficientComponent } from './shared/pages';
@@ -21,8 +22,9 @@ const routes: Routes = [
   { path: "users/:id/edit", component: UserEditComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard] },
   { path: "invite-user", component: UserInviteComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard] },
   { path: "feedback", component:ProvideFeedbackComponent, canActivate: [UnauthenticatedAccessGuard] },
-  { path: "neighborhood-explorer", component: NeighborhoodExplorerComponent, canActivate: [UnauthenticatedAccessGuard] },
+  { path: "map-explorer", component: NeighborhoodExplorerComponent, canActivate: [UnauthenticatedAccessGuard] },
   { path: "take-action", component: TakeActionComponent, canActivate: [UnauthenticatedAccessGuard] },
+  { path: "environmental-impacts", component: EnvironmentalImpactsComponent, canActivate: [UnauthenticatedAccessGuard]  },
   { path: "help", component: HelpComponent, canActivate: [UnauthenticatedAccessGuard] },
   { path: "", component: HomeIndexComponent },
   { path: "signin-oidc", component: LoginCallbackComponent },
