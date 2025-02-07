@@ -5,7 +5,7 @@
             <p>Lorem ipsum dolor sit amet consectetur. Mauris feugiat sit porta egestas ut nullam commodo. Amet aenean turpis aenean rhoncus. Ut feugiat tortor aliquam elementum in malesuada ut.</p>
         </div>
         <div class="g-col-2 footer-action__btn-wrapper">
-            <button class="btn btn-orange-white-outline">Take Action</button>
+            <a [routerLink]="['/take-action']" class="btn btn-orange-white-outline">Take Action</a>
         </div>
     </div>
     <div class="site-footer grid-12">
@@ -22,13 +22,13 @@
                     <a routerLink="/" routerLinkActive="active">Home</a>
                 </li>
                 <li>
-                    <a routerLink="/map-explorer" routerLinkActive="active">Map Explorer</a>
+                    <a [routerLink]="['/map-explorer']" routerLinkActive="active">Map Explorer</a>
                 </li>
                 <li>
-                    <a routerLink="/environmental-impacts" routerLinkActive="active">Environmental Impacts</a>
+                    <a [routerLink]="['/environmental-impacts']" routerLinkActive="active">Environmental Impacts</a>
                 </li>
                 <li>
-                    <a routerLink="/take-actiion" routerLinkActive="active">Take Action</a>
+                    <a [routerLink]="['/take-action']" routerLinkActive="active">Take Action</a>
                 </li>
             </ul>
         </div>
@@ -61,7 +61,7 @@
                         The program is free software; you can redistribute it and/or modify it under the terms of the <a href="https://www.gnu.org/licenses/agpl-3.0.en.html">GNU Affero
                         General Public License</a>.<br>
                         Source code is available on <a href="https://github.com/sitkatech/drooltool" target="_blank">GitHub</a>.
-                        Implementation & Hosting by <a href="http://sitkatech.com">ESA</a>
+                        Implementation & Hosting by <a href="https://esassoc.com">ESA</a>
                     </p>
                 </div>
             </div>
