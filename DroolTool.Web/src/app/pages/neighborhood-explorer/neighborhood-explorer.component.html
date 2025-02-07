@@ -48,13 +48,15 @@
             </div>
         </div>
         <div #mapDiv id={{mapID}} class="explorer-map location-card">
-            <div id="buttonDiv" *ngIf="searchActive && areMetricsCollapsed" [class]="layerControlOpen ? 'shifted' : ''">
-                <button class="btn btn-orange mb-1 w-100" [attr.aria-expanded]="!areMetricsCollapsed"
-                    aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
-                    (click)="showMetrics($event)"><span>Drool Stats</span></button>
-                <br class="d-lg-none"/>
+            <div [hidden]="!searchActive || !showMapButtons" id="buttonDiv" [class]="layerControlOpen ? 'shifted' : ''">
                 <button id="traceButton" (click)="displayTraceOrZoomToNeighborhood($event)"
                     class="btn btn-orange">{{traceActive ? "Zoom to my Neighborhood" : "Where does my water go?"}}</button>
+                <br/>
+                <button *ngIf="areMetricsCollapsed && traceActive" class="btn btn-orange mt-1" [attr.aria-expanded]="!areMetricsCollapsed"
+                    aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
+                    (click)="showMetrics($event)">
+                    <span>Drool Stats</span>
+                </button>
             </div>
         </div>
     </div>
