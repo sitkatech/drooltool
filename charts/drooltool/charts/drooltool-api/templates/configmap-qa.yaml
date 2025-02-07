@@ -11,5 +11,4 @@ data:
   WEB_URL: "https://{{ .Values.global.domains.web }}"
   KEYSTONE_HOST: "https://identity-qa.sitkatech.com"
   KEYSTONE_REDIRECT_URL: "https://{{ .Values.global.domains.web }}/create-user-callback"
-  MapquestApiUrlWithNominatimApiKey: ""
 {{ end }}
