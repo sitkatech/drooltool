@@ -16,13 +16,13 @@
         color: $blue-dark;
         font-size: $type-size-900;
         line-height: 1;
-    }
 
-    &-img-section {
-        display:flex;
-        align-items: end;
-        justify-content: end;
-        flex-wrap: wrap;
+        &.squashed {
+            width: auto;
+            @include desktop-large {
+                width: 40%;
+            }
+        }
     }
 
     &-image-text {
@@ -42,6 +42,24 @@
         position: relative;
         z-index: 3;
 
+        &-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        &-img {
+            display: flex;
+            flex-direction: column;
+        }
+
+        &-spacer {
+            display: none;
+            flex: 1 0 0;
+            @include desktop-large {
+                display: block;
+            }
+        }
+
         &-copy {
             font-family: $dm-sans;
             font-size: $type-size-400;
@@ -58,7 +76,13 @@
         &.start {
             align-items: start;
             justify-content: start;
-            padding-top: 9rem;
+            @include desktop-medium {
+                padding-top: 4rem;
+            }
+
+            @include desktop-large {
+                padding-top: 9rem;
+            }
         }
     }
 }
