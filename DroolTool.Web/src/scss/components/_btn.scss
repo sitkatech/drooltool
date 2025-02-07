@@ -55,4 +55,15 @@
         padding: 8px 16px;
         line-height: 1;
     }
+
+    &__close {
+        background: transparent;
+        border: none;
+        color: $blue-dark;
+        font-size: $type-size-400;
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 1rem;
+    }
 }

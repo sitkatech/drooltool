@@ -1,216 +1,60 @@
-<div class="row ml-0 mr-0">
-    <div class="col-lg-3 pl-0 pr-0">
-        <div class="container-lg d-inline d-lg-flex flex-column min-vh-100 p-0">
-            <div class="row ml-0 mr-0 flex-fill flex-column">
-                <div class="col-12 p-4 section-search">
-                    <div class="container p-0">
-                        <div class="row">
-                            <div class="col-12 mx-auto mx-lg-0">
-                                <h3 style="color:white">How is my neighborhood doing? <span class="d-lg-none"><a
-                                            class="search-close" (click)="showInstructions = true"><i
-                                                class="far fa-question-circle"></i></a></span></h3>
-                                <div class="input-group mx-auto mx-lg-0" style="max-width:353px">
-                                    <input #searchText type="text" class="form-control b4 text-left"
-                                        placeholder="Enter address or zip code"
-                                        (keyUp.enter)="makeNominatimRequest(searchText)">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-drooltool search" type="button"
-                                            (click)="makeNominatimRequest(searchText)">
-                                            <i class="fas fa-search" style="color:white"></i>
-                                        </button>
-                                    </div>
-                                </div>
+<div class="page topo-layer-no-gradient">
+    <div class="flex-center">
+        <div class="page-content topo-layer-above">
+            <div class="grid-12">
+                <div class="g-col-12">
+                    <span class="page-title">Map <span class="underline">Explorer</span></span>
+                    <hr class="page-title-hr"/>
+                    <p class="page-info width-60">Lorem ipsum dolor sit amet consectetur. Mauris feugiat sit porta egestas ut nullam commodo. Amet aenean turpis aenean rhoncus. Ut feugiat tortor aliquam elementum in malesuada ut. Netus sagittis mi nunc rhoncus aenean duis congue. Praesent etiam commodo tortor felis.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="topo-layer-above">
+        <div class="explorer-search">
+            <div #searchElement id="searchElement" class="search-wrapper" style="display:flex; gap: 12px">
+                <img src="/assets/neighborhood-explorer/icons/search.svg">
+                <input name="search" #searchText type="text" class="search-input"
+                placeholder="Search for an address"
+                (keyUp.enter)="makeNominatimRequest(searchText)">
+            </div>
+        </div>
+        <div class="mobile-stats-containing-div">
+            <div id="collapsePanel"
+                class="mobile-stats metrics-collapse"
+                [ngbCollapse]="areMetricsCollapsed" (click)="$event.stopPropagation();">
+                <div class="explorer-info">
+                    <div class="explorer-info-wrapper">
+                        <div style="display:flex; gap: 8px;">
+                            <div style="flex: 0 0 auto;">
+                                <img style="width: 200px;" src="{{ watershedImage }}"/>
+                            </div>
+                            <div class="explorer-info-block">
+                                <button  *ngIf="searchActive" class="btn__close" style="padding:0" type="button" [attr.aria-expanded]="!areMetricsCollapsed" aria-expanded="false" aria-controls="collapsePanel"
+                                aria-label="Toggle navigation" (click)="showMetrics($event)" >
+                                    <i class="fas fa-times-circle"></i>
+                                </button>
+                                <p class="mt-4">Where does our drool go?</p>
+                                <p class="mt-2">This neighborhood drains to <strong>{{selectedNeighborhoodWatershed}}</strong> and the Pacific Ocean!</p>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div *ngIf="showInstructions" class="col-12 d-lg-none">
-                    <div class="row">
-                        <div class="col-12 text-right">
-                            <span><a class="search-close" (click)="showInstructions = false"><i
-                                        class="fas fa-close"></i></a></span>
-                        </div>
-                    </div>
-                    <div class="row section-stats">
-                        <div class="col-12 text-center mb-3">
-                            <h3 class="mb-0 pl-2 pr-2">
-                                Click the exposed areas of the map to explore different neighborhood metrics or
-                                enter your address in the search bar for your own detailed urban drool snapshot
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-                <div *ngIf="searchActive" class="col-12 align-middle text-center p-2 section-active-search">
-                    <p class="b4 d-inline" style="font-weight:800">{{searchAddress || "My Selected Neighborhood"}}<span
-                            style="margin-left:4px"><a class="search-close" (click)="returnToDefault()"><i
-                                    class="fas fa-close"></i></a></span></p>
-                </div>
-                <div *ngIf="activeSearchNotFound" class="col-12 p-lg-4 flex-fill">
-                    <div class="row">
-                        <div class="col-12 text-right">
-                            <span><a class="search-close" (click)="returnToDefault()"><i
-                                        class="fas fa-close"></i></a></span>
-                        </div>
-                    </div>
-                    <div class="row section-search-not-found">
-                        <div class="col-2 text-center">
-                            <span><i class="fas fa-exclamation fa-3x"></i></span>
-                        </div>
-                        <div class="col-10">
-                            <h3>Sorry, the area you selected is not within the
-                                Urban Drool Tool service area.
-                            </h3>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row section-search-not-found">
-                        <div class="col-2 text-center">
-                            <span><i class="fas fa-map-marker-alt fa-3x"></i></span>
-                        </div>
-                        <div class="col-10">
-                            <h3>
-                                Select an area within the highlighted service
-                                boundary or enter an address in the search
-                                bar above to view results.
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-                <div *ngIf="!activeSearchNotFound && !searchActive"
-                    class="col-12 section-stats d-none d-lg-flex p-lg-4 flex-fill">
-                    <div class="h-100 mt-auto mb-auto">
-                        <h3>
-                            Learn about how your neighborhood is conserving water and protecting our streams and beaches
-                        </h3>
-                        <h3 class="text-center">
-                            <span><i class="fas fa-tint fa-2x"></i></span>
-                        </h3>
-                        <h3>
-                            Click the exposed areas of the map to explore different neighborhood metrics or
-                            enter your address in the search bar for your own detailed urban drool snapshot
-                        </h3>
-                    </div>
-                </div>
-                <ng-container *ngIf="!activeSearchNotFound && searchActive">
-                    <div class="col-12 section-stats d-none d-lg-flex p-lg-0 flex-fill">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="h-100 neighborhood-drain-text">
-                                    <div class="text-center p-lg-4">
-                                        <h2 class="text-center">WHERE DOES OUR DROOL GO?</h2>
-                                        <p class="b3 watershed-intro mt-2 mb-0">This neighborhood drains to <span
-                                                class="watershed-text">{{selectedNeighborhoodWatershed}}</span> and the Pacific Ocean!</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 neighborhood-watershed-wrapper">
-                                <img src="{{ watershedImage }}" class="neighborhood-watershed-image" />
-                            </div>
-                        </div>
-                    </div>
-                </ng-container>
-                <div class="col-12 d-none d-lg-block">
-                    <div class="row">
-                        <div class="col-6 section-rebates text-center">
-                            <div class="row h-100">
-                                <div class="col my-auto py-3">
-                                    <a href="https://www.mnwd.com/rebates/" target="_blank">
-                                        <p class="b3 mx-auto">
-                                            View Rebates and learn more about water efficiency
-                                        </p>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6 section-water-bill">
-                            <div class="row h-100">
-                                <div class="col my-auto py-3">
-                                    <a href="https://www.mnwd.com/payment/" target="_blank">
-                                        <p class="b3 mx-auto">
-                                            Access my <br /> water bill
-                                        </p>
-                                        <p class="b4 mx-auto">
-                                            Via <br /> Moulton Niguel Water District
-                                        </p>
-                                    </a>
-                                </div>
-                            </div>
+                        <div class="dark-panel mt-4">
+                            <p>View Rebates and learn more about water efficiency</p>
+                            <a href="https://www.mnwd.com/rebates/" target="_blank" class="btn btn-orange btn-sm">Rebate Programs</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-lg-9 pl-0 pr-0">
-        <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight" style="height:100%">
+        <div #mapDiv id={{mapID}} class="explorer-map location-card">
             <div id="buttonDiv" *ngIf="searchActive && areMetricsCollapsed" [class]="layerControlOpen ? 'shifted' : ''">
-                <button class="btn btn-drooltool d-lg-none mb-1 w-100" [attr.aria-expanded]="!areMetricsCollapsed"
+                <button class="btn btn-orange mb-1 w-100" [attr.aria-expanded]="!areMetricsCollapsed"
                     aria-expanded="false" aria-controls="collapsePanel" aria-label="Toggle navigation"
                     (click)="showMetrics($event)"><span>Drool Stats</span></button>
                 <br class="d-lg-none"/>
                 <button id="traceButton" (click)="displayTraceOrZoomToNeighborhood($event)"
-                    class="btn btn-drooltool">{{traceActive ? "Zoom to my Neighborhood" : "Where does my water go?"}}</button>
-            </div>
-            <div class="mobile-stats-containing-div">
-                <div *ngIf="searchActive" id="collapsePanel"
-                    class="section-stats mt-2 collapse mobile-stats metrics-collapse d-lg-none"
-                    [ngbCollapse]="areMetricsCollapsed" (click)="$event.stopPropagation();">
-                    <div class="text-center p-2 p-md-4 metrics-panel-transparency">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="h-100 neighborhood-drain-text">
-                                    <div class="text-center p-lg-4">
-                                        <h2 class="text-center">WHERE DOES OUR DROOL GO?</h2>
-                                        <p class="b3 watershed-intro mt-2 mb-0">This neighborhood drains to <span
-                                                class="watershed-text">{{selectedNeighborhoodWatershed}}</span> and the Pacific Ocean!</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 neighborhood-watershed-wrapper">
-                                <img src="{{ watershedImage }}" class="neighborhood-watershed-image" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-2 p-md-4 metrics-panel-transparency">
-                        <p class="b4">Participation in rebate programs, like weather based smart sprinkler timers or
-                            rotating
-                            sprinkler nozzles, helps mitigate your home's creation of urban drool</p>
-                    </div>
-                    <button *ngIf="searchActive" class="btn btn-drooltool metrics-button-panel-expanded"
-                        [attr.aria-expanded]="!areMetricsCollapsed" aria-expanded="false" aria-controls="collapsePanel"
-                        aria-label="Toggle navigation" (click)="showMetrics($event)"><span><a class="search-close"><i
-                                    class="fas fa-close"></i></a></span></button>
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 d-lg-none">
-        <div class="row">
-            <div class="col-6 section-rebates text-center">
-                <div class="row h-100">
-                    <div class="col my-auto py-3">
-                        <a href="https://www.mnwd.com/rebates/" target="_blank">
-                            <p class="b3 mx-auto">
-                                View Rebates and learn more about water efficiency
-                            </p>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 section-water-bill">
-                <div class="row h-100">
-                    <div class="col my-auto py-3">
-                        <a href="https://www.mnwd.com/payment/" target="_blank">
-                            <p class="b3 mx-auto">
-                                Access my <br /> water bill
-                            </p>
-                            <p class="b4 mx-auto">
-                                Via <br /> Moulton Niguel Water District
-                            </p>
-                        </a>
-                    </div>
-                </div>
+                    class="btn btn-orange">{{traceActive ? "Zoom to my Neighborhood" : "Where does my water go?"}}</button>
             </div>
         </div>
     </div>

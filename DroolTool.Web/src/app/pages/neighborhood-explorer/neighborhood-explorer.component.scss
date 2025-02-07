@@ -1,6 +1,34 @@
-@use "/src/scss/variables" as *;
+@use "/src/scss/abstracts" as *;
 
 @import "~leaflet.fullscreen/Control.FullScreen.css";
+
+.search-wrapper {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    border: 1px solid $blue-dark;
+    padding: 16px 24px;
+    background: $white;
+    height: 60px;
+}
+
+.search-input {
+    width: 100%;
+    border: 0;
+    font-family: $dm-sans;
+    font-weight: 600;
+    font-size: $type-size-300;
+    color: $blue-dark;
+    &:focus {
+        outline: none;
+    }
+}
+
+
+.search-label {
+    font-weight: 600;
+    font-size: $type-size-300;
+    color: $white;
+}
 
 @media only screen and (max-width: 991px) {
     .section-search {
@@ -113,8 +141,8 @@
 }
 
 .search {
-    background-color: $drool-orange;
-    border-color: $drool-orange;
+    background-color: $orange;
+    border-color: $orange;
 }
 
 .search:focus {
@@ -129,7 +157,7 @@
 //These need to be the same so the metrics slide doesn't jump around the width of the map
 .mobile-stats,
 .mobile-stats-containing-div {
-    max-width: 463px;
+    max-width: 450px;
 }
 
 .mobile-stats {
@@ -168,13 +196,12 @@
 }
 
 .metric-value {
-    color: $drool-orange-text;
     font-size: 30px;
     font-weight: 800;
 }
 
 .metric-units {
-    color: $drool-orange-text;
+    color: $orange;
 }
 
 .watershed-intro {
@@ -182,7 +209,7 @@
 }
 
 span.watershed-text {
-    color: $drool-orange-text;
+    color: $orange;
     display: inline-block;
     font-family: "Poppins", sans-serif;
 }
@@ -205,9 +232,13 @@ span.watershed-text {
 //Allows the metrics to collapse
 .metrics-collapse {
     position: absolute;
-    right: 100%;
+    left: -675px;
     transition: all 0.3s ease;
     display: block;
+
+    @include desktop-small {
+        left: -610px;
+    }
 }
 .metrics-collapse.collapsing {
     height: auto !important;

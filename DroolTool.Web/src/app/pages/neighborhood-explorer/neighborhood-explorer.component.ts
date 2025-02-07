@@ -25,6 +25,7 @@ declare var $: any;
 })
 export class NeighborhoodExplorerComponent implements OnInit {
   @ViewChild("mapDiv") mapElement: ElementRef;
+  @ViewChild("searchElement") searchElement: ElementRef;
 
   public defaultMapZoom = 12;
   public afterSetControl = new EventEmitter();
@@ -233,10 +234,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
       L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
       this.maskLayer.addTo(this.map);
-
-      if (window.innerWidth > 991) {
-        this.mapElement.nativeElement.scrollIntoView();
-      }
     });
   }
 
@@ -310,14 +307,17 @@ export class NeighborhoodExplorerComponent implements OnInit {
       this.setSearchingAndLoadScreen(true);
       this.clearSearchResults();
       this.searchAddress = searchText.value;
+      const element = document.getElementById('searchElement');
+      const y = element.getBoundingClientRect().top;
+      window.scrollTo({top: y, behavior: 'smooth'});
       this.nominatimService.makeNominatimRequest(this.searchAddress).subscribe(response => {
         if (response.length === 0) {
           this.searchAddressNotFoundOrNotServiced();
           return null;
         }
 
-        let lat = response.results[0].locations[0].latLng.lat;
-        let lng = response.results[0].locations[0].latLng.lng;
+        let lat = Number(response[0]['lat']);
+        let lng = Number(response[0]['lon']);
         let latlng = { 'lat': lat, 'lng': lng };
 
         this.getNeighborhoodFromLatLong(latlng, false);

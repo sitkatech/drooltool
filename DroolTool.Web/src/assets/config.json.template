@@ -5,14 +5,12 @@
     "mainAppApiUrl": [TODO],
     "createAccountUrl": [TODO],
     "createAccountRedirectUrl": [TODO],
-  
+
     "keystoneSupportBaseUrl": [TODO],
 
     "geoserverMapServiceUrl": [TODO],
+    "openstreetmapApiUrl" : [TODO],
 
-    "mapquestApiUrl" : [TODO],
-    "mapquestApiKey" : [TODO],
-  
     "keystoneAuthConfiguration": {
       "clientId": [TODO],
       "issuer": [TODO],
