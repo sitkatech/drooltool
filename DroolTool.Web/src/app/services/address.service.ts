@@ -8,7 +8,7 @@ import { ApiService } from '../shared/services';
 export class AddressService {
 
   private _searchedAddressSubject: BehaviorSubject<string>;
-      
+
     constructor(private apiService: ApiService) {
         let searchedAddressAsJson = window.localStorage.getItem('searchedAddress');
         let initialSearchedAddress = "My Selected Neighborhood";
@@ -19,11 +19,7 @@ export class AddressService {
         }
 
         this._searchedAddressSubject = new BehaviorSubject<string>(initialSearchedAddress);
-     } 
-
-    getSearchedAddress(): Observable<string> {
-        return this._searchedAddressSubject.asObservable();
-    }
+     }
 
     updateSearchedAddress(address: string) {
         window.localStorage.setItem('searchedAddress', JSON.stringify(address));

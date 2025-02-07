@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { FeedbackDto } from 'src/app/shared/models/feedback-dto';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
@@ -17,11 +17,11 @@ import { FeedbackService } from 'src/app/shared/generated';
 export class ProvideFeedbackComponent implements OnInit {
   public customRichTextTypeID : number = CustomRichTextTypeEnum.ProvideFeedback;
 
-  public feedbackForm = new FormGroup({
-    name: new FormControl(''),
-    email: new FormControl('', [Validators.email]),
-    phone: new FormControl('', [Validators.maxLength(20)]),
-    content: new FormControl('', [Validators.required])
+  public feedbackForm = new UntypedFormGroup({
+    name: new UntypedFormControl(''),
+    email: new UntypedFormControl('', [Validators.email]),
+    phone: new UntypedFormControl('', [Validators.maxLength(20)]),
+    content: new UntypedFormControl('', [Validators.required])
   });
   isPerformingAction: boolean;
 

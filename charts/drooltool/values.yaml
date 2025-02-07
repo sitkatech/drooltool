@@ -18,9 +18,6 @@ global:
     sendGridApiKey: "sendgridapikeyhere"
     hangfirePassword: "passwordhere"
     recaptchaV3SiteKey: "recaptchaKeyHere"
-    mapquestApiKey: "mapquestApiKeyHere"
-    mnwdFileTransferUsername: "username"
-    mnwdFileTransferPassword: "password"
 
 api:
   replicaCount: 1
@@ -31,8 +28,10 @@ api:
   fullnameOverride: ""
   namespace: h2o
   resources: 
+    limits:
+      memory: "256Mi"
     requests:
-      memory: "512Mi"
+      memory: "256Mi"
   serviceAccount:
     # Specifies whether a service account should be created
     create: true
@@ -85,6 +84,8 @@ web:
   fullnameOverride: ""
   namespace: h2o
   resources: 
+    limits:
+      memory: "256Mi"
     requests:
       memory: "256Mi"
   serviceAccount:
@@ -135,7 +136,7 @@ geoserver:
   image:
     repository: kartoza/geoserver
     pullPolicy: Always
-    tag: "2.16.2"
+    tag: "2.25.2"
     # Overrides the image tag whose default is the chart appVersion.
   nameOverride: ""
   fullnameOverride: ""

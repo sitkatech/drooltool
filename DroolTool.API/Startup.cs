@@ -11,14 +11,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using DroolTool.API.Services;
 using DroolTool.API.Services.Authorization;
 using DroolTool.EFModels.Entities;
-using Hangfire;
-using Hangfire.SqlServer;
 using Serilog;
+using SendGrid.Extensions.DependencyInjection;
 
 namespace DroolTool.API
 {
@@ -81,27 +78,15 @@ namespace DroolTool.API
 
             services.AddTransient(s => new KeystoneService(s.GetService<IHttpContextAccessor>(), keystoneHost));
 
-            services.AddTransient(x => new SitkaSmtpClientService(drooltoolConfiguration));
+            services.AddSendGrid(options => { options.ApiKey = drooltoolConfiguration.SendGridApiKey; });
+            services.AddSingleton<SitkaSmtpClientService>();
 
             services.AddScoped(s => s.GetService<IHttpContextAccessor>()?.HttpContext);
             services.AddScoped(s => UserContext.GetUserFromHttpContext(s.GetService<DroolToolDbContext>(), s.GetService<IHttpContextAccessor>().HttpContext));
-            services.AddScoped<IMetricSyncJob, MetricSyncJob>();
-            // Add Hangfire services.
-            services.AddHangfire(configuration => configuration
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(connectionString, new SqlServerStorageOptions
-                {
-                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                    QueuePollInterval = TimeSpan.Zero,
-                    UseRecommendedIsolationLevel = true,
-                    DisableGlobalLocks = true
-                }));
 
 
             services.AddControllers();
+
             #region Swagger
             // Base swagger services
             services.AddSwaggerGen(options =>
@@ -153,17 +138,6 @@ namespace DroolTool.API
                 endpoints.MapHealthChecks("/healthz");
             });
 
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions()
-            {
-                Authorization = new[] { new HangfireAuthorizationFilter(Configuration) }
-            });
-            app.UseHangfireServer(new BackgroundJobServerOptions()
-            {
-                WorkerCount = 1
-            });
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
-
-            HangfireJobScheduler.ScheduleRecurringJobs();
         }
     }
 }

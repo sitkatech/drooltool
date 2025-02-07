@@ -3,12 +3,12 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 
-import { AnnouncementService } from './api/announcement.service';
 import { CustomRichTextService } from './api/custom-rich-text.service';
 import { FeedbackService } from './api/feedback.service';
 import { FileResourceService } from './api/file-resource.service';
 import { NeighborhoodService } from './api/neighborhood.service';
 import { RoleService } from './api/role.service';
+import { SystemInfoService } from './api/system-info.service';
 import { UserService } from './api/user.service';
 import { WatershedMaskService } from './api/watershed-mask.service';
 
@@ -17,12 +17,12 @@ import { WatershedMaskService } from './api/watershed-mask.service';
   declarations: [],
   exports:      [],
   providers: [
-    AnnouncementService,
     CustomRichTextService,
     FeedbackService,
     FileResourceService,
     NeighborhoodService,
     RoleService,
+    SystemInfoService,
     UserService,
     WatershedMaskService,
      ]

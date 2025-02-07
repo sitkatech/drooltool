@@ -1,5 +1,4 @@
-@import "~src/scss/_variables.scss";
-
+@use "/src/scss/variables" as *;
 
 h1,
 h2,
@@ -9,7 +8,8 @@ p {
     color: $header-nav-color;
 }
 
-@media (max-width: 576px){
-.swimmingPool{
-    max-height: 140px;
-}}
+@media (max-width: 576px) {
+    .swimmingPool {
+        max-height: 140px;
+    }
+}

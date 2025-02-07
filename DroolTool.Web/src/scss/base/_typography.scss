@@ -1,0 +1,9 @@
+@use "src/scss/abstracts" as *;
+
+body {
+    font-family: $dm-sans;
+}
+
+a {
+    color: $primary;
+}

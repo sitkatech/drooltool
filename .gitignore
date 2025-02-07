@@ -20,3 +20,4 @@ DroolTool.API/appsecrets.json
 /DroolTool.API/sitka.localhost.rootca.crt
 Build/secrets.ini
 Build/temp/DroolToolDB.bacpac
+/DroolTool.GeoServer/data_dir/gwc/diskquota_page_store_hsql

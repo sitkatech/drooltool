@@ -1,175 +1,69 @@
-<div *ngIf="currentUser">
-    <div class="container">
-        <ngb-alert *ngIf="userIsUnassigned()" [type]="'info'" [dismissible]="false">
-            <span>
-                Welcome {{currentUser.FullName}}. You have successfully logged in to the Orange County Urban Drool Tool,
-                but your
-                account is not yet configured. You will receive an email from the OC
-                Administrators when your account is
-                ready to
-                use. You may <a routerLink="/help">Request Support</a> to contact the Administrators with any questions or
-                comments.
-            </span>
-        </ngb-alert>
-
-        <ngb-alert *ngIf="userRoleIsDisabled()" [type]="'info'" [dismissible]="false">
-            <span>
-                Your account is currently disabled. Please <a routerLink="/help">Request Support</a> if you would like to
-                activate your account.
-            </span>
-        </ngb-alert>
-
-        <app-alert-display></app-alert-display>
-        <drooltool-social-media-sharing></drooltool-social-media-sharing>
-        <div class="row homeSection">
-            <div class="col-12 col-lg-7 text-center order-lg-last">
-                <h1>Only rain down the drain</h1>
-                <div>
-                    <p class="b1">
-                        Water that discharges off your property due to overwatering landscape or car washing, picks up fertilizer, bacteria, and other contaminants on
-                        its way to creeks and beaches.
-                    </p>
-                    <br/>
-                    <p class="b1">
-                        <strong>This is Urban Drool. And it starts in a gutter near you...</strong>
-                    </p>
-                    <br/>
-                    <p class="b1">
-                        This “Urban Drool” contributes to more than <span class="d-inline-block"><strong>1 million gallons</strong></span>
-                        of polluted discharge to
-                        Aliso Creek each day. But small changes in how you use outdoor water can help eliminate urban drool and save you money.
-                    </p>
-                    <br/>
-                    <p class="b1">
-                        <a routerLink="/about" routerLinkActive="true">Learn more about Urban Drool</a>
-                    </p>
+<ng-container *ngIf="currentUser">
+    <div class="home topo-layer">
+        <div class="home-content topo-layer-above">
+            <div class="grid-12">
+                <div class="home-section g-col-7">
+                    <p class="home-title">Urban drool contributes to over more than <span class="underline">1 million gallons of polluted discharge</span> to Aliso Creek each day.</p>
+                </div>
+                <div class="g-col-5">
+                    <div class="home-section-container">
+                        <div class="home-section-img">
+                            <img src="./assets/home/image_1.jpg">
+                            <p class="home-image-text mt-1 width-100">Aliso Creek</p>
+                        </div>
+                        <div class="home-section-spacer"></div>
+                    </div>
+                </div>
+                <div class="home-section g-col-12 mt-4">
+                    <p class="home-title"><span class="underline">What</span> is urban drool?</p>
+                    <p class="home-section-copy mt-2 text-center width-70" >Urban drool is water that discharges off your property due to overwatering landscape or car washing, picks up fertilizer, bacteria, and other contaminants on its way to creeks and beaches.</p>
+                </div>
+                <div class="g-col-12 grid-12">
+                    <div class="g-col-4 flex-center">
+                        <img src="./assets/home/image_3.jpg">
+                    </div>
+                    <div class="g-col-4 flex-center">
+                        <img src="./assets/home/image_2.jpg">
+                    </div>
+                    <div class="g-col-4 flex-center">
+                        <img src="./assets/home/image_4.png">
+                    </div>
+                </div>
+                <div class="home-section g-col-12 mt-6 mb-4">
+                    <p class="home-title squashed text-center"><span class="underline">Where</span> does urban drool in our community go?</p>
+                </div>
+                <div class="g-col-7">
+                    <img class="img-shadow" src="./assets/home/image_5.jpg">
+                </div>
+                <div class="home-section start g-col-5">
+                        <p class="home-section-copy">Lorem ipsum dolor sit amet consectetur. Mauris feugiat sit porta egestas ut nullam commodo. Amet aenean turpis aenean rhoncus. Ut feugiat tortor aliquam elementum in malesuada ut. Netus sagittis mi nunc rhoncus aenean duis congue. Praesent etiam commodo tortor felis.</p>
+                    <a [routerLink]="['/map-explorer']" class="btn btn-orange mt-4">View the Map Explorer</a>
                 </div>
             </div>
-            <div class="col-12 col-lg-5 order-lg-first text-over-picture">
-                <img id="topImage" src="./assets/home/top-image.png">
-            </div>
-        </div>
-    </div>
-    <div id="mapImage" class="row homeSection h-100 pt-0">
-        <div class="col-12 text-center my-auto">
-            <h1 style="margin-bottom:30px">Do you add to urban drool?
-            </h1>
-            <div class="row" style="margin-bottom:30px">
-                <div class="col-12 col-md-6 offset-md-3">
-                    <p class="b1">
-                        Use these interactive tools to learn more about urban outdoor water usage 
-                        and its potential effect on our watersheds.
-                    </p>
+            <div class="grid-12 mt-6">
+                <div class="g-col-6 flex-end" style="height: 100%;">
+                    <div>
+                        <p class="home-title"><span class="underline">How</span> does urban drool impact the environment?</p>
+                        <p class="home-section-copy home-section-copy-dark mt-4">Urban drool is water that discharges off your property due to overwatering landscape or car washing, picks up fertilizer, bacteria, and other contaminants on its way to creeks and beaches.</p>
+                        <a [routerLink]="['/environmental-impacts']" class="btn btn-orange mt-4">Discover the impacts</a>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-6 col-lg-4 neighborhood-button">
-                    <a routerLink="/neighborhood-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool"
-                        style="margin-bottom:20px">Neighborhood Explorer</a>
-                    <p class="b2">
-                        Find out how your neighborhood may contribute to urban drool and 
-                        what you can do.
-                    </p>
-                </div>
-                <div class="col-6 col-lg-4 watershed-button">
-                    <a routerLink="/watershed-explorer" routerLinkActive="true" class="btn btn-lg btn-drooltool"
-                        style="margin-bottom:20px">Watershed Explorer</a>
-                    <p class="b2">
-                        Learn more about your watershed and the benefits of reducing urban drool.
-                    </p>
+                <div class="g-col-6">
+                    <img src="./assets/home/image_6.png">
                 </div>
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="row homeSection">
-            <div class="col-12 col-lg-8 m-lg-auto order-lg-last">
-                <div class='embed-container'>
-                    <iframe src='https://www.youtube.com/embed/kohqy9jmZY0' frameborder='0' allowfullscreen></iframe>
+</ng-container>
+<ng-container *ngIf="!currentUser">
+    <div class="home">
+        <div  class="home-content">
+            <div class="grid-12">
+                <div class="g-col-12 flex-center width-100">
+                    <img id="underConstruction" src="./assets/home/under-construction.png" style="max-height: 200px;">
+                    <h1 class="page-title text-center">Site <span class="underline">Under Construction</span></h1>
                 </div>
-            </div>
-            <div class="col-12 col-lg-4 m-lg-auto text-center order-lg-first" style="z-index:2">
-                <div>
-                    <h1>Take action in your community!</h1>
-                    <p class="b2">
-                        Moulton Niguel Water District and the Municipal Water District 
-                        of Orange County offer a variety of rebate programs you can participate 
-                        in to reduce the amount of urban drool your household may create.
-                    </p>
-                    <p class="b2">
-                        <a routerLink="/take-action" routerLinkActive="true">Check out rebate programs</a>
-                    </p>
-                </div>
-
-            </div>
-        </div>
-        <div class="row homeSection">
-            <div class="col-12 text-center">
-                <div class="row">
-                    <div class="col-12">
-                        <h1>News & Updates</h1>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <ngx-slick-carousel *ngIf="showSlides()" class="carousel" #slickModal="slick-carousel" [config]="slideConfig"
-                            (init)="slickInit($event)" (breakpoint)="breakpoint($event)" (afterChange)="afterChange($event)"
-                            (beforeChange)="beforeChange($event)" style="padding-top:40px">
-                            <div ngxSlickItem *ngFor="let slide of slides" class="slide">
-                                <div class="slide-container">
-                                    <div class="slide-background" style="background-image:url({{slide.image}})">
-                                        <div class="slide-module-accent">
-                                            <p class="b3" style="color:#FFF">{{slide.date | date:'EEEE'}} <br/> {{slide.date | date:'longDate'}}</p>
-                                        </div>
-                                    </div>
-                                    <p class="b3 slide-link-text">
-                                        <a href="{{slide.link}}" *ngIf="slide.link" target="_blank">{{slide.title}}</a>
-                                        <span *ngIf="!slide.link">{{slide.title}}</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </ngx-slick-carousel>
-                        <p class="b3" *ngIf="!showSlides()">Nothing yet, stay tuned!</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row homeSection">
-            <div class="col-12 text-center">
-                <div class="row">
-                    <div class="col-12">
-                        <h1>Resource Spotlight</h1>
-                        <p class="b2" style="margin-bottom:0"><a routerLink="/take-action" routerLinkActive="true">Explore
-                                more Resources</a></p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div id="resourceImage" style="margin: 30px auto"></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-md-6 offset-md-3">
-                        <h3 class="mt-1">New Rebate Option: <br>
-                            Weather-Based Smart Sprinkler Timers
-                        </h3>
-                        <p class="b3">Moulton Niguel Water District offers a variety of rebate programs you can join 
-                            to reduce the opportunities your household has to create 
-                            urban drool.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center" style="margin-top:80px">
-            <div class="col text-center mt-auto">
-                <img id="waterPlantsImage" src="./assets/home/water-plants.png">
             </div>
         </div>
     </div>
-</div>
-<div *ngIf="!currentUser" class="container">
-    <div class="row" style="padding-top: 80px; justify-content: center; align-items: center;">
-        <img id="underConstruction" src="./assets/home/under-construction.png" style="max-height: 200px;">
-        <h1>Site Under Construction</h1>
-    </div>
-</div>
+</ng-container>

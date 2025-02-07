@@ -51,8 +51,7 @@ export class AppComponent {
         this.oauthService.tokenValidationHandler = new JwksValidationHandler();
     }
 
-    public login(event: Event): void {
-        event.preventDefault();
+    public login(): void {
         this.authenticationService.login();
     }
 }

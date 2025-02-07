@@ -5,163 +5,6 @@
     "version": "1.0"
   },
   "paths": {
-    "/announcement/get-announcements": {
-      "get": {
-        "tags": [
-          "Announcement"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AnnouncementDto"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AnnouncementDto"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AnnouncementDto"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/announcement/get-announcements-for-homepage": {
-      "get": {
-        "tags": [
-          "Announcement"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AnnouncementDto"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AnnouncementDto"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AnnouncementDto"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/announcement/upsert-announcement": {
-      "post": {
-        "tags": [
-          "Announcement"
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "AnnouncementID": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "AnnouncementTitle": {
-                    "type": "string"
-                  },
-                  "AnnouncementDate": {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  "AnnouncementLink": {
-                    "type": "string"
-                  },
-                  "ImageFile": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "AnnouncementID": {
-                  "style": "form"
-                },
-                "AnnouncementTitle": {
-                  "style": "form"
-                },
-                "AnnouncementDate": {
-                  "style": "form"
-                },
-                "AnnouncementLink": {
-                  "style": "form"
-                },
-                "ImageFile": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/announcement/{announcementID}/delete": {
-      "delete": {
-        "tags": [
-          "Announcement"
-        ],
-        "parameters": [
-          {
-            "name": "announcementID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
     "/customRichText/{customRichTextTypeID}": {
       "get": {
         "tags": [
@@ -180,7 +23,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -237,7 +80,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -323,7 +166,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -345,7 +188,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -357,48 +200,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/neighborhood/get-neighborhoods-with-metrics-ids": {
-      "get": {
-        "tags": [
-          "Neighborhood"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -450,7 +252,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -490,7 +292,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -530,7 +332,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -545,247 +347,6 @@
               "text/json": {
                 "schema": {
                   "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/neighborhood/{OCSurveyNeighborhoodID}/{metricYear}/{metricMonth}/get-metrics": {
-      "get": {
-        "tags": [
-          "Neighborhood"
-        ],
-        "parameters": [
-          {
-            "name": "OCSurveyNeighborhoodID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "metricYear",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "metricMonth",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/NeighborhoodMetricDto"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NeighborhoodMetricDto"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NeighborhoodMetricDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/neighborhood/{OCSurveyNeighborhoodID}/{metricEndYear}/{metricEndMonth}/get-metrics-for-year": {
-      "get": {
-        "tags": [
-          "Neighborhood"
-        ],
-        "parameters": [
-          {
-            "name": "OCSurveyNeighborhoodID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "metricEndYear",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "metricEndMonth",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/NeighborhoodMetricDto"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/NeighborhoodMetricDto"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/NeighborhoodMetricDto"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/neighborhood/get-most-recent-metric": {
-      "get": {
-        "tags": [
-          "Neighborhood"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/NeighborhoodMetricDto"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NeighborhoodMetricDto"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NeighborhoodMetricDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/neighborhood/get-drool-per-landscaped-acre-chart/{neighborhoodID}": {
-      "get": {
-        "tags": [
-          "Neighborhood"
-        ],
-        "parameters": [
-          {
-            "name": "neighborhoodID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DroolPerLandscapedAcreChartDto"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DroolPerLandscapedAcreChartDto"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DroolPerLandscapedAcreChartDto"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/neighborhood/get-metric-timeline": {
-      "get": {
-        "tags": [
-          "Neighborhood"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/NeighborhoodMetricAvailableDatesDto"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/NeighborhoodMetricAvailableDatesDto"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/NeighborhoodMetricAvailableDatesDto"
-                  }
                 }
               }
             }
@@ -800,7 +361,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -824,35 +385,6 @@
                   "items": {
                     "type": "string"
                   }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/neighborhood/get-default-metric-display-date": {
-      "get": {
-        "tags": [
-          "Neighborhood"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/MetricDateDto"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MetricDateDto"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MetricDateDto"
                 }
               }
             }
@@ -867,7 +399,37 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [
+          "SystemInfo"
+        ],
+        "operationId": "GetSystemInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemInfoDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemInfoDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemInfoDto"
+                }
+              }
+            }
           }
         }
       }
@@ -898,7 +460,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -929,7 +491,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -956,7 +518,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -994,7 +556,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1034,7 +596,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1091,7 +653,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1130,7 +692,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1169,7 +731,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1194,42 +756,6 @@
   },
   "components": {
     "schemas": {
-      "AnnouncementDto": {
-        "type": "object",
-        "properties": {
-          "FileResourceGUIDAsString": {
-            "type": "string",
-            "nullable": true
-          },
-          "AnnouncementID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "AnnouncementDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "AnnouncementTitle": {
-            "type": "string",
-            "nullable": true
-          },
-          "AnnouncementLink": {
-            "type": "string",
-            "nullable": true
-          },
-          "FileResource": {
-            "$ref": "#/components/schemas/FileResourceDto"
-          },
-          "LastUpdatedByUser": {
-            "$ref": "#/components/schemas/UserDto"
-          },
-          "LastUpdatedDate": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
       "CustomRichTextDto": {
         "type": "object",
         "properties": {
@@ -1268,203 +794,6 @@
         },
         "additionalProperties": false
       },
-      "DroolPerLandscapedAcreChartDto": {
-        "type": "object",
-        "properties": {
-          "MetricMonth": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "DroolPerLandscapedAcre": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "MetricYear": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "FileResourceDto": {
-        "type": "object",
-        "properties": {
-          "FileResourceID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "FileResourceMimeType": {
-            "$ref": "#/components/schemas/FileResourceMimeTypeDto"
-          },
-          "OriginalBaseFilename": {
-            "type": "string",
-            "nullable": true
-          },
-          "OriginalFileExtension": {
-            "type": "string",
-            "nullable": true
-          },
-          "FileResourceGUID": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "FileResourceData": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
-          "CreateUser": {
-            "$ref": "#/components/schemas/UserDto"
-          },
-          "CreateDate": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "FileResourceMimeTypeDto": {
-        "type": "object",
-        "properties": {
-          "FileResourceMimeTypeID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "FileResourceMimeTypeName": {
-            "type": "string",
-            "nullable": true
-          },
-          "FileResourceMimeTypeDisplayName": {
-            "type": "string",
-            "nullable": true
-          },
-          "FileResourceMimeTypeContentTypeName": {
-            "type": "string",
-            "nullable": true
-          },
-          "FileResourceMimeTypeIconSmallFilename": {
-            "type": "string",
-            "nullable": true
-          },
-          "FileResourceMimeTypeIconNormalFilename": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "MetricDateDto": {
-        "type": "object",
-        "properties": {
-          "Year": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "Month": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "NeighborhoodMetricAvailableDatesDto": {
-        "type": "object",
-        "properties": {
-          "MetricYear": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "AvailableMonths": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "NeighborhoodMetricDto": {
-        "type": "object",
-        "properties": {
-          "MetricYear": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "MetricMonth": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "TotalDrool": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "OverallParticipation": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "PercentParticipation": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "DroolPerLandscapedAcre": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "TotalWaterAccounts": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "ResidentialWaterAccounts": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "HOAWaterAccounts": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "CommercialWaterAccounts": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "MunicipalWaterAccounts": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "TotalIrrigatedArea": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "TotalWaterUsedForIrrigation": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "HoaWaterUsedForIrrigation": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "DroolPerLandscapedAcreYearlyPercentDifference": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "RoleDto": {
         "type": "object",
         "properties": {
@@ -1487,6 +816,41 @@
           "SortOrder": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SystemInfoDto": {
+        "type": "object",
+        "properties": {
+          "Environment": {
+            "type": "string",
+            "nullable": true
+          },
+          "CurrentTimeUTC": {
+            "type": "string",
+            "nullable": true
+          },
+          "Application": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "FullInformationalVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "PodName": {
+            "type": "string",
+            "nullable": true
+          },
+          "Version": {
+            "type": "string",
+            "nullable": true
+          },
+          "CompilationDateTime": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

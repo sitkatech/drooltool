@@ -1,22 +1,22 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
-import { NotFoundComponent } from './pages';
-import { HeaderNavComponent } from './components';
-import { UnauthenticatedComponent } from './pages/unauthenticated/unauthenticated.component';
-import { SubscriptionInsufficientComponent } from './pages/subscription-insufficient/subscription-insufficient.component';
-import { NgProgressModule } from '@ngx-progressbar/core';
-import { RouterModule } from '@angular/router';
-import { LinkRendererComponent } from './components/ag-grid/link-renderer/link-renderer.component';
-import { FontAwesomeIconLinkRendererComponent } from './components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
-import { MultiLinkRendererComponent } from './components/ag-grid/multi-link-renderer/multi-link-renderer.component';
-import { SelectDropDownModule } from 'ngx-select-dropdown';
-import { SlickCarouselModule } from 'ngx-slick-carousel';
-import { CustomRichTextComponent } from './components/custom-rich-text/custom-rich-text.component'
-import { StylizedDropdownComponent } from './components/stylized-dropdown/stylized-dropdown.component';
-import { SwimmingPoolVisualizationComponent } from './swimming-pool-visualization/swimming-pool-visualization.component';
-import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
+import { NgModule, ModuleWithProviders } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { HttpClientModule, HttpClientJsonpModule } from "@angular/common/http";
+import { NotFoundComponent } from "./pages";
+import { HeaderNavComponent } from "./components";
+import { UnauthenticatedComponent } from "./pages/unauthenticated/unauthenticated.component";
+import { SubscriptionInsufficientComponent } from "./pages/subscription-insufficient/subscription-insufficient.component";
+import { RouterModule } from "@angular/router";
+import { LinkRendererComponent } from "./components/ag-grid/link-renderer/link-renderer.component";
+import { FontAwesomeIconLinkRendererComponent } from "./components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component";
+import { MultiLinkRendererComponent } from "./components/ag-grid/multi-link-renderer/multi-link-renderer.component";
+import { CustomRichTextComponent } from "./components/custom-rich-text/custom-rich-text.component";
+import { StylizedDropdownComponent } from "./components/stylized-dropdown/stylized-dropdown.component";
+import { SwimmingPoolVisualizationComponent } from "./swimming-pool-visualization/swimming-pool-visualization.component";
+import { EditorModule, TINYMCE_SCRIPT_SRC } from "@tinymce/tinymce-angular";
+import { FooterNavComponent } from './components/footer-nav/footer-nav.component';
+import { DropdownToggleDirective } from "./directives/dropdown-toggle.directive";
+import { DropdownToggleCloseDirective } from "./directives/dropdown-toggle-close.directive";
 
 @NgModule({
     declarations: [
@@ -29,18 +29,18 @@ import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
         MultiLinkRendererComponent,
         CustomRichTextComponent,
         StylizedDropdownComponent,
-        SwimmingPoolVisualizationComponent
+        SwimmingPoolVisualizationComponent,
+        FooterNavComponent,
+        DropdownToggleDirective,
+        DropdownToggleCloseDirective
     ],
     imports: [
         CommonModule,
         FormsModule,
         HttpClientModule,
         HttpClientJsonpModule,
-        NgProgressModule,
         RouterModule,
-        SelectDropDownModule,
-        SlickCarouselModule,
-        EditorModule
+        EditorModule,
     ],
     exports: [
         CommonModule,
@@ -50,24 +50,28 @@ import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
         CustomRichTextComponent,
         StylizedDropdownComponent,
         SwimmingPoolVisualizationComponent,
-        EditorModule
+        EditorModule,
+        FooterNavComponent
     ],
-    providers:[
-        { provide: TINYMCE_SCRIPT_SRC, useValue: 'assets/tinymce/tinymce.min.js' }
-    ]
+    providers: [
+        {
+            provide: TINYMCE_SCRIPT_SRC,
+            useValue: "assets/tinymce/tinymce.min.js",
+        },
+    ],
 })
 export class SharedModule {
     static forRoot(): ModuleWithProviders<SharedModule> {
-    return {
-        ngModule: SharedModule,
-        providers: []
-    };
-}
+        return {
+            ngModule: SharedModule,
+            providers: [],
+        };
+    }
 
     static forChild(): ModuleWithProviders<SharedModule> {
-    return {
-        ngModule: SharedModule,
-        providers: []
-    };
-}
+        return {
+            ngModule: SharedModule,
+            providers: [],
+        };
+    }
 }

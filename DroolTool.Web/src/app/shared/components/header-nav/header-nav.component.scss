@@ -1,72 +1,183 @@
-@import "~src/scss/_variables.scss";
+@use "/src/scss/abstracts" as *;
 
-.navbarLogo {
-    height: 80px;
-  }
-  
-  .footerLogo {
-    height: 50px;
-    float: right;
-    margin: 5px 0;
-  }
-  
-  a.signOut {
-    cursor: pointer;
-  }
-  
-  .dropdown-menu {
-    z-index: 1021;
-    background-color: #23AECF;
-  }
-  
-  .navbar.navbar-drooltool
-  {
-    font-family: Nunito;
-  }
+.site-nav {
+    font-family: $dm-sans;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.40);
+    background: $blue-dark;
+    box-shadow: 0px 150px 42px 0px rgba(0, 0, 0, 0.00), 0px 96px 39px 0px rgba(0, 0, 0, 0.01), 0px 54px 33px 0px rgba(0, 0, 0, 0.05), 0px 24px 24px 0px rgba(0, 0, 0, 0.09), 0px 6px 13px 0px rgba(0, 0, 0, 0.10);    color: white;
+    height: 6.75rem;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-  .header-outer {
-    background-color: $header-nav-color;
-  }
+    &__wrapper {
+        @include desktop-medium-max {
+            padding: 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 7777;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            max-width: 30rem;
+            background-color: $blue-dark;
+            outline: 0;
+            transform: translateX(-30rem);
+            transition: transform 0.3s ease-in-out;
+            visibility: hidden;
 
-  .navbar.navbar-drooltool a.nav-link,
-  .navbar.navbar-drooltool a.nav-link::before,
-  .navbar.navbar-drooltool a.nav-link::after,
-  .top-bar-nav-link,
-  .top-bar-nav-link::before,
-  .top-bar-nav-link::after,
-  .dropdown-item {
-    transition: all .5s;
-  }
-  .navbar.navbar-drooltool a.nav-link:hover,
-  .top-bar-nav-link:hover,
-  .dropdown-item:hover {
-    color:$drool-orange-text;
-  }
+            &.active {
+                visibility: visible;
+                transform: translateX(0);
+            }
+        }
 
-  .dropdown-item:hover {
-    background-color: #23AECF;
-  }
+        @include desktop-medium {
+            padding-top: 0.5rem;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: end;
 
-  .navbar.navbar-drooltool a.nav-link,
-  .top-bar-nav-link,
-  .dropdown-item
-  {
-    color: #fff;
-  }
 
-  .welcomeUser{
-    @media screen and (min-width: 991px){
-      text-align:right;
+        }
     }
-    @media screen and (max-width: 990px){
-      text-align:left;
+
+    &__close {
+        background: transparent;
+        border: none;
+        color: $white;
+        font-size: $type-size-400;
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 1rem;
+
+        @include desktop-medium {
+            display: none;
+        }
     }
-  }
 
-  .nav-link.active{
-    font-weight: 750;
-  }
+    &__links {
+        @include desktop-medium-max {
+            margin: 8px 0 0 8px;
+        }
+        @include desktop-medium {
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+    }
+}
 
-  .navbar.navbar-drooltool a.nav-link{
-    font-size: 19px;
-  }
+.navbar-logo {
+    height: 60px;
+
+    &-mobile {
+        height: 60px;
+
+        @include desktop-medium {
+            display: none;
+        }
+    }
+}
+
+.hamburger-btn {
+    padding: 0;
+    margin-left: auto;
+    background: transparent;
+    margin: 0;
+    border: none;
+    display: block;
+
+    @include desktop-medium {
+        display: none;
+    }
+
+    svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        max-width: 2rem;
+        max-height: 2rem;
+        fill: white;
+    }
+}
+
+.nav {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+
+    &-item {
+        & + .nav-item {
+            margin-top: 1rem;
+            border-top: 2px solid rgba(white, 0.05);
+            padding-top: 1.5rem;
+
+            @include desktop-medium {
+                margin-top: 0;
+                margin-left: 3rem;
+                border-top: none;
+                padding-top: 0;
+            }
+        }
+    }
+
+    &-link {
+        display: flex;
+        gap: $spacing-200;
+        align-items: center;
+        color: $white;
+        font-size: $type-size-200;
+        line-height: 1em;
+
+        &__label {
+            display: inline-block;
+            transition: all 200ms ease;
+            position: relative;
+
+            &::after {
+                transition: all 200ms ease;
+                content: "";
+                display: block;
+                width: 100%;
+                height: 2px;
+                background: transparent;
+                position: absolute;
+                left: 0;
+                bottom: -4px;
+            }
+        }
+
+        &.active {
+            .nav-link__label {
+                &::after {
+                    background: $orange;
+                }
+            }
+        }
+
+        &:hover {
+            color: $white;
+            text-decoration: none;
+
+            .nav-link__label {
+                &::after {
+                    background: $orange;
+                }
+            }
+        }
+
+        &.disabled {
+            pointer-events: none;
+            cursor: default;
+            color: lightgray;
+        }
+    }
+}

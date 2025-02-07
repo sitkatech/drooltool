@@ -4,33 +4,44 @@ using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
-using DroolTool.Models.DataTransferObjects.User;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace DroolTool.API.Services
 {
     public class SitkaSmtpClientService
     {
-        private readonly DroolToolConfiguration _drooltoolConfiguration;
-        //private static readonly ILog _logger = LogManager.GetLogger(typeof(SitkaSmtpClient));
+        private readonly ISendGridClient _sendGridClient;
+        private readonly DroolToolConfiguration _droolToolConfiguration;
 
-        public SitkaSmtpClientService(DroolToolConfiguration drooltoolConfiguration)
+        private readonly ILogger<SitkaSmtpClientService> _logger;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public SitkaSmtpClientService(ISendGridClient sendGridClient, IOptions<DroolToolConfiguration> droolToolConfiguration, IWebHostEnvironment webHostEnvironment, ILogger<SitkaSmtpClientService> logger)
         {
-            _drooltoolConfiguration = drooltoolConfiguration;
+            _sendGridClient = sendGridClient;
+            _droolToolConfiguration = droolToolConfiguration.Value;
+            _logger = logger;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         /// <summary>
-        /// Sends an email including mock mode and address redirection  <see cref="DroolToolConfiguration.SITKA_EMAIL_REDIRECT"/>, then calls onward to <see cref="SendDirectly"/>
+        /// Sends an email including mock mode and address redirection  <see cref="SplashConfiguration.SITKA_EMAIL_REDIRECT"/>, then calls onward to <see cref="SendDirectly"/>
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="linkedResources"></param>
-        public void Send(MailMessage message, IEnumerable<LinkedResource> linkedResources = null)
+        public async Task Send(MailMessage message)
         {
             var messageWithAnyAlterations = AlterMessageIfInRedirectMode(message);
-            var messageAfterAlterationsAndCreatingAlternateViews = CreateAlternateViewsIfNeeded(messageWithAnyAlterations, linkedResources);
-            SendDirectly(messageAfterAlterationsAndCreatingAlternateViews);
+            var messageAfterAlterationsAndCreatingAlternateViews = CreateAlternateViewsIfNeeded(messageWithAnyAlterations);
+            await SendDirectly(messageAfterAlterationsAndCreatingAlternateViews);
         }
 
-        private static MailMessage CreateAlternateViewsIfNeeded(MailMessage message, IEnumerable<LinkedResource> linkedResources)
+        private static MailMessage CreateAlternateViewsIfNeeded(MailMessage message)
         {
             if (!message.IsBodyHtml)
             {
@@ -50,14 +61,6 @@ namespace DroolTool.API.Services
             var htmlBody = message.Body;
 
             var htmlView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
-
-            if (linkedResources != null)
-            {
-                foreach (var linkedResource in linkedResources)
-                {
-                    htmlView.LinkedResources.Add(linkedResource);
-                }
-            }
             message.AlternateViews.Add(htmlView);
 
 
@@ -66,31 +69,54 @@ namespace DroolTool.API.Services
 
 
         /// <summary>
-        /// Sends an email message at a lower level than <see cref="Send"/>, skipping mock mode and address redirection  <see cref="DroolToolConfiguration.SITKA_EMAIL_REDIRECT"/>
+        /// Sends an email message at a lower level than <see cref="Send"/>, skipping mock mode and address redirection  <see cref="SplashConfiguration.SITKA_EMAIL_REDIRECT"/>
         /// </summary>
         /// <param name="mailMessage"></param>
-        public void SendDirectly(MailMessage mailMessage)
+        public async Task SendDirectly(MailMessage mailMessage)
         {
-            //if (!string.IsNullOrWhiteSpace(DroolToolConfiguration.MailLogBcc))
-            //{
-            //    mailMessage.Bcc.Add(SitkaWebConfiguration.MailLogBcc);
-            //}
-            var humanReadableDisplayOfMessage = GetHumanReadableDisplayOfMessage(mailMessage);
-            var smtpClient = new SmtpClient(_drooltoolConfiguration.SMTP_HOST, _drooltoolConfiguration.SMTP_PORT);
-            smtpClient.Send(mailMessage);
-            //_logger.Info($"Email sent to SMTP server \"{smtpClient.Host}\", Details:\r\n{humanReadableDisplayOfMessage}");
+            var defaultEmailFrom = GetDefaultEmailFrom();
+            var sendGridMessage = new SendGridMessage()
+            {
+                From = new EmailAddress(defaultEmailFrom.Address, defaultEmailFrom.DisplayName),
+                ReplyTo = new EmailAddress("support@sitkatech.com"),
+                Subject = mailMessage.Subject,
+                PlainTextContent = mailMessage.Body,
+                HtmlContent = mailMessage.IsBodyHtml ? mailMessage.Body : null
+            };
+            sendGridMessage.AddTos(mailMessage.To.Select(x => new EmailAddress(x.Address, x.DisplayName)).ToList());
+            if (mailMessage.CC.Any())
+            {
+                sendGridMessage.AddCcs(mailMessage.CC.Select(x => new EmailAddress(x.Address, x.DisplayName)).ToList());
+            }
+
+            if (mailMessage.Bcc.Any())
+            {
+                sendGridMessage.AddBccs(mailMessage.Bcc.Select(x => new EmailAddress(x.Address, x.DisplayName)).ToList());
+            }
+
+            if (_webHostEnvironment.IsDevelopment())
+            {
+                sendGridMessage.SetSandBoxMode(true);
+            }
+
+            var response = await _sendGridClient.SendEmailAsync(sendGridMessage);
+            _logger.LogInformation($"Email sent to SendGrid, Details:\r\n{sendGridMessage.PlainTextContent}");
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError($"Error sending email sent to SendGrid, Details:\r\n{response.Body}");
+            }
         }
 
         /// <summary>
-        /// Alter message TO, CC, BCC if the setting <see cref="DroolToolConfiguration.SITKA_EMAIL_REDIRECT"/> is set
+        /// Alter message TO, CC, BCC if the setting <see cref="SplashConfiguration.SITKA_EMAIL_REDIRECT"/> is set
         /// Appends the real to the body
         /// </summary>
         /// <param name="realMailMessage"></param>
         /// <returns></returns>
         private MailMessage AlterMessageIfInRedirectMode(MailMessage realMailMessage)
         {
-            var redirectEmail = _drooltoolConfiguration.SITKA_EMAIL_REDIRECT;
-            var isInRedirectMode = !String.IsNullOrWhiteSpace(redirectEmail);
+            var redirectEmail = _droolToolConfiguration.SITKA_EMAIL_REDIRECT;
+            var isInRedirectMode = !string.IsNullOrWhiteSpace(redirectEmail);
 
             if (!isInRedirectMode)
             {
@@ -136,49 +162,10 @@ namespace DroolTool.API.Services
             addresses.Clear();
         }
 
-        private static string GetHumanReadableDisplayOfMessage(MailMessage mm)
+        public string GetSupportNotificationEmailSignature()
         {
-            var currentDateFormattedForEmail = DateTime.Now.ToString("ddd dd MMM yyyy HH:mm:ss zzz");
-            var messageString = $@"Date: {currentDateFormattedForEmail}
-From: {mm.From}
-To: {FlattenMailAddresses(mm.To)}
-Reply-To: {FlattenMailAddresses(mm.ReplyToList)}
-CC: {FlattenMailAddresses(mm.CC)}
-Bcc: {FlattenMailAddresses(mm.Bcc)}
-Subject: {mm.Subject}
-
-{mm.Body}";
-
-            return messageString;
-        }
-
-        private static string FlattenMailAddresses(IEnumerable<MailAddress> addresses)
-        {
-            return String.Join("; ", addresses.Select(x => x.ToString()));
-        }
-
-        public static void AddReplyToEmail(MailMessage mailMessage)
-        {
-            mailMessage.ReplyToList.Add("support@sitkatech.com");
-        }
-
-        public static string GetDefaultEmailSignature()
-        {
-            const string defaultEmailSignature = @"<br /><br />
-Respectfully, the Urban Drool Tool team
-<br /><br />
-***
-<br /><br />
-You have received this email because you are a registered user of the Urban Drool Tool. 
-<br /><br />
-<a href=""mailto:support@sitkatech.com"">support@sitkatech.com</a>";
-            return defaultEmailSignature;
-        }
-
-        public static string GetSupportNotificationEmailSignature()
-        {
-            const string supportNotificationEmailSignature = @"<br /><br />
-Respectfully, the Urban Drool Tool team
+            string supportNotificationEmailSignature = $@"<br /><br />
+Respectfully, the Smart Watershed Network Platform team
 <br /><br />
 ***
 <br /><br />
@@ -188,17 +175,9 @@ You have received this email because you are assigned to receive support notific
             return supportNotificationEmailSignature;
         }
 
-        public static MailAddress GetDefaultEmailFrom()
+        public MailAddress GetDefaultEmailFrom()
         {
-            return new MailAddress("donotreply@sitkatech.com", "Urban Drool Tool");
-        }
-
-        public static void AddBccRecipientsToEmail(MailMessage mailMessage, IEnumerable<string> recipients)
-        {
-            foreach (var recipient in recipients)
-            {
-                mailMessage.Bcc.Add(recipient);
-            }
+            return new MailAddress("donotreply@sitkatech.net", $"Smart Watershed Network Platform");
         }
 
         public static void AddCcRecipientsToEmail(MailMessage mailMessage, IEnumerable<string> recipients)
