@@ -22,7 +22,7 @@ global:
 api:
   replicaCount: 1
   image:
-    repository: esacontainers.azurecr.io/drooltool/api
+    repository: containersesaqa.azurecr.io/drooltool/api
     pullPolicy: Always
   nameOverride: ""
   fullnameOverride: ""
@@ -78,7 +78,7 @@ api:
 web:
   replicaCount: 1
   image:
-    repository: esacontainers.azurecr.io/drooltool/web
+    repository: containersesaqa.azurecr.io/drooltool/web
     pullPolicy: Always
   nameOverride: ""
   fullnameOverride: ""
