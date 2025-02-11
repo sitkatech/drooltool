@@ -34,17 +34,9 @@
     .section-search {
         text-align: center;
     }
-
-    #buttonDiv {
-        left: 10px;
-    }
 }
 
 @media only screen and (min-width: 992px) {
-    #buttonDiv {
-        right: 65px;
-    }
-
     #traceButton {
         height: 45px;
     }
@@ -58,6 +50,7 @@
     position: absolute;
     z-index: 10000;
     top: 11px;
+    right: 65px;
 }
 
 .section-stats * p.b3 {
@@ -235,9 +228,10 @@ span.watershed-text {
     left: -675px;
     transition: all 0.3s ease;
     display: block;
+    opacity: 0;
 
     @include desktop-small {
-        left: -610px;
+        left: -575px;
     }
 }
 .metrics-collapse.collapsing {
@@ -248,6 +242,7 @@ span.watershed-text {
 .metrics-collapse.show {
     left: 0;
     right: 0;
+    opacity: 1;
 }
 //End of metrics collapse
 
