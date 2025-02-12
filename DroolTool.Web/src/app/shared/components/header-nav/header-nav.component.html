@@ -4,7 +4,7 @@
             <img src="assets/main/logos/udt_color_logo.png" class="navbar-logo">
         </a>
 
-        <ng-container *ngIf="isAuthenticated()">
+        <ng-container *ngIf="isAuthenticated() && isAssigned()">
             <button
                 class="hamburger-btn"
                 [dropdownToggle]="mobileMenuToggle"

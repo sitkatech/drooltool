@@ -15,6 +15,7 @@ import { NeighborhoodExplorerComponent } from './pages/neighborhood-explorer/nei
 import { TakeActionComponent } from './pages/take-action/take-action.component';
 import { HelpComponent } from './pages/help/help.component';
 import { ProvideFeedbackComponent } from './pages/provide-feedback/provide-feedback.component';
+import { UnassignedAccessGuard } from './shared/guards/unauthenticated-access/unassigned-access.guard';
 
 const routes: Routes = [
   { path: "users", component: UserListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard]},
@@ -22,9 +23,9 @@ const routes: Routes = [
   { path: "users/:id/edit", component: UserEditComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard] },
   { path: "invite-user", component: UserInviteComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard] },
   { path: "feedback", component:ProvideFeedbackComponent, canActivate: [UnauthenticatedAccessGuard] },
-  { path: "map-explorer", component: NeighborhoodExplorerComponent, canActivate: [UnauthenticatedAccessGuard] },
-  { path: "take-action", component: TakeActionComponent, canActivate: [UnauthenticatedAccessGuard] },
-  { path: "environmental-impacts", component: EnvironmentalImpactsComponent, canActivate: [UnauthenticatedAccessGuard]  },
+  { path: "map-explorer", component: NeighborhoodExplorerComponent, canActivate: [UnauthenticatedAccessGuard, UnassignedAccessGuard] },
+  { path: "take-action", component: TakeActionComponent, canActivate: [UnauthenticatedAccessGuard, UnassignedAccessGuard] },
+  { path: "environmental-impacts", component: EnvironmentalImpactsComponent, canActivate: [UnauthenticatedAccessGuard, UnassignedAccessGuard]  },
   { path: "help", component: HelpComponent, canActivate: [UnauthenticatedAccessGuard] },
   { path: "", component: HomeIndexComponent },
   { path: "signin-oidc", component: LoginCallbackComponent },

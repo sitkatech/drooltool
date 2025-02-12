@@ -3,6 +3,6 @@
         <button class="close" type="button" (click)="closeAlert(alert)">
             <i class="fas fa-times-circle"></i>
         </button>
-        <span [innerHTML]="alert.message"></span>
+        <span [ngClass]="{'button-layout': useButtonLayout}" [innerHTML]="alert.message"></span>
     </div>
 </div>

@@ -335,5 +335,22 @@ width: 100%;
         top: 0;
         padding: 1rem;
     }
+
+    & .button-layout {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        color: $white;
+    }
+
+    & .btn {
+        margin: 16px 0;
+
+        @include desktop-small {
+            margin: 0 16px;
+        }
+    }
 }
 // end alert styles
