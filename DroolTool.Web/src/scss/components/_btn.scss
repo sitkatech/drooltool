@@ -50,6 +50,18 @@
         }
     }
 
+    &-secondary {
+        color: $white;
+        background-color: $blue-medium;
+        border: 1px solid darken($blue-medium, 5%);
+
+
+        &:hover {
+            color: $white;
+            background: darken($blue-medium, 10%);
+        }
+    }
+
     &-sm {
         font-size: 0.875rem;
         padding: 8px 16px;
@@ -65,5 +77,12 @@
         right: 0;
         top: 0;
         padding: 1rem;
+    }
+
+    &.disabled {
+        pointer-events: none;
+        cursor: default;
+        background-color: lightgray;
+        border: 1px solid transparent;
     }
 }

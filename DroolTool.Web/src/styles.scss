@@ -15,6 +15,9 @@
 
 @import "/node_modules/font-awesome/css/font-awesome.css";
 
+@import "~ag-grid-community/styles/ag-grid.css";
+@import "~ag-grid-community/styles/ag-theme-balham.css";
+
 @import "~leaflet/dist/leaflet.css";
 
 // begin ag-grid settings
@@ -48,6 +51,12 @@ $ag-range-selected-color-4: darken($ag-range-selected-color-1, 30%);
 }
 
 .ag-theme-balham .ag-header {
+}
+
+.ag-cell {
+    & a {
+        color: #2B6472;
+    }
 }
 // end ag-grid settings
 
