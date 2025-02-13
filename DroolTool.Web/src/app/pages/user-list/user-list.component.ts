@@ -82,20 +82,21 @@ export class UserListComponent implements OnInit, OnDestroy {
                         },
                         sortable: true,
                         filter: true,
-                        width: 170,
+                        flex: 1
                     },
                     {
                         headerName: "Email",
                         field: "Email",
                         sortable: true,
                         filter: true,
+                        flex: 1
                     },
                     {
                         headerName: "Role",
                         field: "RoleDisplayName",
                         sortable: true,
                         filter: true,
-                        width: 100,
+                        flex: 1
                     },
                     {
                         headerName: "Receives System Communications?",
@@ -107,6 +108,7 @@ export class UserListComponent implements OnInit, OnDestroy {
                         },
                         sortable: true,
                         filter: true,
+                        flex: 1
                     },
                 ];
 

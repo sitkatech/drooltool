@@ -28,13 +28,13 @@ export class AuthenticationService {
   ) {
       this.oauthService.events
       .pipe(filter(e => ['discovery_document_loaded'].includes(e.type)))
-      .subscribe(e => { 
+      .subscribe(e => {
         this.checkAuthentication();
       });
 
     this.oauthService.events
       .pipe(filter(e => ['token_received'].includes(e.type)))
-      .subscribe(e => { 
+      .subscribe(e => {
         this.checkAuthentication();
         this.oauthService.loadUserProfile();
       });
@@ -59,7 +59,7 @@ export class AuthenticationService {
       this.getUser(claims);
     }
   }
-  
+
   public getUser(claims: any) {
     var globalID = claims["sub"];
 
@@ -165,6 +165,10 @@ export class AuthenticationService {
     return this.isUserAnAdministrator(this.currentUser);
   }
 
+  public isCurrentUserUnassigned(): boolean {
+    return this.isUserUnassigned(this.currentUser);
+  }
+
   public isUserUnassigned(user: UserDto): boolean {
     const role = user && user.Role
       ? user.Role.RoleID
@@ -177,6 +181,13 @@ export class AuthenticationService {
       ? user.Role.RoleID
       : null;
     return role === RoleEnum.Disabled;
+  }
+
+  public isUserRoleNormal(user: UserDto): boolean {
+    const role = user && user.Role
+      ? user.Role.RoleID
+      : null;
+    return role === RoleEnum.Normal;
   }
 
   public isCurrentUserNullOrUndefined(): boolean {

@@ -85,6 +85,16 @@
             box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.10) inset;
         }
     }
+
+    &.user {
+        @include desktop-medium {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem 0.5rem;
+        }
+    }
 }
 
 .text-center {
@@ -173,7 +183,174 @@
     gap: 8px;
 }
 
+// The normalize stylesheet overwrites this rule as relative, which causes positioning issues with the map controls.
+// Revert to static to prevent.
 .leaflet-control-container {
     position:static;
 }
 
+.breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    padding: .75rem 0rem;
+    margin-bottom: 1rem;
+    list-style: none;
+}
+
+.breadcrumb-item+.breadcrumb-item {
+    padding-left: .5rem;
+    color: $blue-dark;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+    float: left;
+    padding-right: .5rem;
+    color: $blue-dark;
+    content: "/";
+}
+
+.drool-link {
+    display: flex;
+    gap: $spacing-200;
+    align-items: center;
+    color: $white;
+    font-size: $type-size-200;
+    line-height: 1em;
+    display: inline-block;
+    transition: all 200ms ease;
+    position: relative;
+
+    &::after {
+        transition: all 200ms ease;
+        content: "";
+        display: block;
+        width: 100%;
+        height: 2px;
+        background: transparent;
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+    }
+
+    &.active {
+        &::after {
+            background: $orange;
+        }
+    }
+
+    &:hover {
+        color: $white;
+        text-decoration: none;
+        &::after {
+            background: $orange;
+        }
+    }
+
+    &.disabled {
+        pointer-events: none;
+        cursor: default;
+        color: lightgray;
+    }
+}
+
+// form styles begin
+.drool-card {
+    color: #2B6472;
+    padding: 16px;
+    border-radius: 4px;
+    background: #FFF;
+    box-shadow: 0px 58px 16px 0px rgba(0, 0, 0, 0), 0px 37px 15px 0px rgba(0, 0, 0, 0.01), 0px 21px 13px 0px rgba(0, 0, 0, 0.05), 0px 9px 9px 0px rgba(0, 0, 0, 0.09), 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
+
+    &-header {
+        color: $white;
+        background: $blue-dark;
+        border-radius: 4px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    &-title {
+        font-weight:900;
+        font-size: $type-size-300;
+    }
+
+    & dt {
+        font-weight: 600;
+
+        @include desktop-large {
+            text-align: right;
+        }
+    }
+}
+
+.drool-input {
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid $blue-dark;
+    padding: 16px;
+    background: $white;
+
+    & select {
+        background: transparent;
+        border: none;
+        width: 100%;
+
+        &:focus {
+            outline-offset: 16px;
+
+        }
+    }
+}
+
+.required:after{
+    content: '\f0e7';
+    font-weight:900;
+    margin-left:5px;
+    font-size:10px;
+    font-family: 'Font Awesome 5 Free';
+    vertical-align: top;
+  }
+// end form styles
+
+// begin alert styles
+.alert-panel {
+color: black;
+background: #F3AA1C;
+border-radius: 4px;
+border: 1px solid #CBA150;
+padding: 16px;
+padding-right: 3rem;
+margin: 12px 0;
+width: 100%;
+
+    & .close {
+        background: transparent;
+        border: none;
+        color: #fff;
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 1rem;
+    }
+
+    & .button-layout {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        color: $white;
+    }
+
+    & .btn {
+        margin: 16px 0;
+
+        @include desktop-small {
+            margin: 0 16px;
+        }
+    }
+}
+// end alert styles

@@ -6,6 +6,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { RoleDto, RoleService, UserDto, UserService, UserUpsertDto } from 'src/app/shared/generated';
+import { RoleEnum } from 'src/app/shared/generated/enum/role-enum';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { RoleDto, RoleService, UserDto, UserService, UserUpsertDto } from 'src/a
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserEditComponent implements OnInit, OnDestroy {
-  
+
   private currentUser: UserDto;
 
   public userID: number;
@@ -55,7 +56,9 @@ export class UserEditComponent implements OnInit, OnDestroy {
           ? null
           : user as UserDto;
 
-        this.roles = roles.sort((a: RoleDto, b: RoleDto) => {
+        this.roles = roles
+        .filter((x: RoleDto) => ![RoleEnum.Disabled, RoleEnum.Landowner].includes(x.RoleID))
+        .sort((a: RoleDto, b: RoleDto) => {
           if (a.RoleDisplayName > b.RoleDisplayName)
             return 1;
           if (a.RoleDisplayName < b.RoleDisplayName)
@@ -73,8 +76,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    
-    
+
+
     this.cdr.detach();
   }
 
