@@ -41,10 +41,15 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
             }
 
 
+            if (currentUser && this.isUnassigned()) {
+                this.alertService.pushAlert(new Alert(`Your account has not yet been assigned a role, and therefore has limited access. Please contact an admin to receive your role assignment.`, AlertContext.Info, true, AlertService.USERS_AWAITING_CONFIGURATION));
+            }
+
+
             if (currentUser && this.isAdministrator()) {
                 this.userService.usersUnassignedReportGet().subscribe(report => {
                     if (report.Count > 0) {
-                        this.alertService.pushAlert(new Alert(`There are ${report.Count} users who are waiting for you to configure their account. <a href='/users'>Manage Users</a>.`, AlertContext.Info, true, AlertService.USERS_AWAITING_CONFIGURATION));
+                        this.alertService.pushAlert(new Alert(`There are ${report.Count} users who are waiting for you to configure their account. <a class="btn btn-orange-white-outline btn-sm" href='/users'>Manage Users.</a>`, AlertContext.Info, true, AlertService.USERS_AWAITING_CONFIGURATION));
                     }
                 })
             }
@@ -66,6 +71,10 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
 
     public isUnassigned(): boolean {
         return this.authenticationService.isUserUnassigned(this.currentUser);
+    }
+
+    public isAssigned(): boolean {
+        return this.authenticationService.isUserAnAdministrator(this.currentUser) || this.authenticationService.isUserRoleNormal(this.currentUser);
     }
 
     public isUnassignedOrDisabled(): boolean {

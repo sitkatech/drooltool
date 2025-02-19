@@ -1,7 +1,8 @@
-<ng-container *ngIf="currentUser">
+<ng-container *ngIf="currentUser && !userIsUnassigned()">
     <div class="home topo-layer">
         <div class="home-content topo-layer-above">
             <div class="grid-12">
+                <app-alert-display></app-alert-display>
                 <div class="home-section g-col-7">
                     <p class="home-title">Urban drool contributes to over more than <span class="underline">1 million gallons of polluted discharge</span> to Aliso Creek each day.</p>
                 </div>
@@ -36,7 +37,7 @@
                     <img class="img-shadow" src="./assets/home/image_5.jpg">
                 </div>
                 <div class="home-section start g-col-5">
-                        <p class="home-section-copy">Lorem ipsum dolor sit amet consectetur. Mauris feugiat sit porta egestas ut nullam commodo. Amet aenean turpis aenean rhoncus. Ut feugiat tortor aliquam elementum in malesuada ut. Netus sagittis mi nunc rhoncus aenean duis congue. Praesent etiam commodo tortor felis.</p>
+                        <p class="home-section-copy">Use the Map Explorer to see where urban drool from your neighborhood ends up. Follow a drop of drool from where it originates, through the creeks and streams, down to the Pacific Ocean. Click you neighborhood on a map or search by address.</p>
                     <a [routerLink]="['/map-explorer']" class="btn btn-orange mt-4">View the Map Explorer</a>
                 </div>
             </div>
@@ -55,10 +56,11 @@
         </div>
     </div>
 </ng-container>
-<ng-container *ngIf="!currentUser">
+<ng-container *ngIf="!currentUser || userIsUnassigned()">
     <div class="home">
         <div  class="home-content">
             <div class="grid-12">
+                <app-alert-display></app-alert-display>
                 <div class="g-col-12 flex-center width-100">
                     <img id="underConstruction" src="./assets/home/under-construction.png" style="max-height: 200px;">
                     <h1 class="page-title text-center">Site <span class="underline">Under Construction</span></h1>

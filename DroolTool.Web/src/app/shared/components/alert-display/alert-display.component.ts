@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AlertService} from '../../services/alert.service';
 import {Alert} from '../../models/alert';
 
@@ -10,6 +10,7 @@ import {Alert} from '../../models/alert';
 export class AlertDisplayComponent implements OnInit, OnDestroy {
 
     public alerts: Alert[] = [];
+    @Input() useButtonLayout: boolean = true;
 
     constructor(
         private alertService: AlertService,

@@ -4,7 +4,7 @@
             <img src="assets/main/logos/udt_color_logo.png" class="navbar-logo">
         </a>
 
-        <ng-container *ngIf="isAuthenticated()">
+        <ng-container *ngIf="isAuthenticated() && isAssigned()">
             <button
                 class="hamburger-btn"
                 [dropdownToggle]="mobileMenuToggle"
@@ -40,7 +40,14 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a [routerLink]="['/take-action']" class="btn btn-orange" role="button" routerLinkActive="active">Take Action</a>
+                        <a [routerLink]="['/take-action']" class="nav-link" role="button" routerLinkActive="active">
+                            <span class="nav-link__label">Take Action</span>
+                        </a>
+                    </li>
+                    <li *ngIf="isAdministrator()" class="nav-item">
+                        <a [routerLink]="['/users']" class="nav-link" role="button" routerLinkActive="active">
+                            <span class="nav-link__label">Manage Users</span>
+                        </a>
                     </li>
                 </ul>
             </div>
