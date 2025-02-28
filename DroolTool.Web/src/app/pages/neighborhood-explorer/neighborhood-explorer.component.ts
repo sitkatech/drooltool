@@ -13,15 +13,16 @@ import { FeatureCollection } from 'geojson';
 import { _ } from 'ag-grid-community';
 import { NeighborhoodService, WatershedMaskService } from 'src/app/shared/generated/index';
 import { AddressService } from 'src/app/services/address.service';
-import { Observable, of } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { DistrictBoundary } from 'src/app/services/static-feature/DistrictBoundary';
+import { catchError, debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
 
 declare var $: any;
 
 @Component({
   selector: 'drooltool-neighborhood-explorer',
   templateUrl: './neighborhood-explorer.component.html',
-  styleUrls: ['./neighborhood-explorer.component.scss']
+  styleUrls: ['./neighborhood-explorer.component.scss'],
 })
 export class NeighborhoodExplorerComponent implements OnInit {
   @ViewChild("mapDiv") mapElement: ElementRef;
@@ -55,7 +56,9 @@ export class NeighborhoodExplorerComponent implements OnInit {
   public traceActive: boolean = false;
   public showInstructions: boolean = true;
   public searchActive: boolean = false;
-  public searchAddress: string;
+  public searchAddress: string = null;
+  public searchAddress$: Observable<any>;
+  searchResults$ = new Subject<string>();
   public activeSearchNotFound: boolean = false;
   public currentlySearching: boolean = false;
 
@@ -175,6 +178,22 @@ export class NeighborhoodExplorerComponent implements OnInit {
     this.neighborhoodService.neighborhoodGetServicedNeighborhoodIdsGet().subscribe(result => {
       this.neighborhoodsWhereItIsOkayToClickIDs = result;
     })
+
+    this.searchAddress$ = this.searchResults$.pipe(
+        filter((searchTerm) => searchTerm != null),
+        distinctUntilChanged(),
+        tap((searchTerm) => {
+            this.currentlySearching = true;
+            this.searchAddress = searchTerm;
+        }),
+        debounceTime(800),
+        switchMap((searchTerm) =>
+            this.nominatimService.makeNominatimRequest(searchTerm).pipe(
+                catchError(() => of([])),
+                tap(() => this.currentlySearching = false)
+            )
+        )
+    );
 
     this.initializeMap();
   }
@@ -312,29 +331,26 @@ export class NeighborhoodExplorerComponent implements OnInit {
     );
   }
 
-  public makeNominatimRequest(searchText: any): void {
-    if (!this.currentlySearching) {
-      this.setSearchingAndLoadScreen(true);
-      this.clearSearchResults();
-      this.searchAddress = searchText.value;
-      const element = document.getElementById('searchElement');
-      const y = element.getBoundingClientRect().top;
-      window.scrollTo({top: y, behavior: 'smooth'});
-      this.nominatimService.makeNominatimRequest(this.searchAddress).subscribe(response => {
-        if (response.length === 0) {
-          this.searchAddressNotFoundOrNotServiced();
-          return null;
+    public makeNominatimRequest(result: any): void {
+        let lat = result?.['lat'];
+        let lng = result?.['lon'];
+        if (!result || !result['lat'] || !result['lon']) {
+            this.setSearchingAndLoadScreen(false);
+            return;
         }
 
-        let lat = Number(response[0]['lat']);
-        let lng = Number(response[0]['lon']);
-        let latlng = { 'lat': lat, 'lng': lng };
+        if (!this.currentlySearching) {
+            this.setSearchingAndLoadScreen(true);
+            this.clearSearchResults();
+            const element = document.getElementById('searchElement');
+            const y = element.getBoundingClientRect().top;
+            window.scrollTo({top: y, behavior: 'smooth'});
 
-        this.getNeighborhoodFromLatLong(latlng, false);
-      });
-      searchText.value = '';
+            let latlng = { 'lat': Number(lat), 'lng': Number(lng) };
+
+            this.getNeighborhoodFromLatLong(latlng, false);
+        }
     }
-  }
 
   public getNeighborhoodFromLatLong(latlng: Object, mapClick: boolean): void {
     if (!this.currentlySearching || !mapClick) {
@@ -357,7 +373,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
           this.neighborhoodService.neighborhoodNeighborhoodIDGetStormshedGet(this.selectedNeighborhoodID).subscribe(
             response => this.displayStormshedAndBackboneDetail(JSON.parse(response)),
             null,
-            () => console.log("complete")
           );
           this.addressService.updateSearchedAddress(this.searchAddress);
         }
@@ -537,7 +552,6 @@ export class NeighborhoodExplorerComponent implements OnInit {
   }
 
   public clearSearchResults(): void {
-    this.searchAddress = null;
     this.searchActive = false;
     this.activeSearchNotFound = false;
     this.traceActive = false;

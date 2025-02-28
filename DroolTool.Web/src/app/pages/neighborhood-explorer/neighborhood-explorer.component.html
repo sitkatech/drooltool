@@ -12,13 +12,19 @@
     </div>
 
     <div class="topo-layer-above">
-        <div class="explorer-search">
-            <div #searchElement id="searchElement" class="search-wrapper" style="display:flex; gap: 12px">
-                <img src="/assets/neighborhood-explorer/icons/search.svg">
-                <input name="search" #searchText type="text" class="search-input"
+        <div id="searchElement" style="margin: 0 4rem 2px;">
+            <ng-select
+                name="search"
+                [ngModel]="searchAddress"
+                [items]= "searchAddress$ | async"
+                bindLabel="display_name"
+                [typeahead]="searchResults$"
+                [minTermLength]="4"
+                [loading]="currentlySearching"
                 placeholder="Search for an address"
-                (keyUp.enter)="makeNominatimRequest(searchText)">
-            </div>
+                typeToSearchText="Begin typing to search"
+                (change)="makeNominatimRequest($event)"
+            ></ng-select>
         </div>
         <div class="mobile-stats-containing-div">
             <div id="collapsePanel"
