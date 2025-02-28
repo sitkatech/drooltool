@@ -38,6 +38,7 @@ import { environment } from "src/environments/environment";
 import { CookieStorageService } from "./shared/services/cookies/cookie-storage.service";
 import { ApiModule } from "./shared/generated/api.module";
 import { Configuration } from "./shared/generated";
+import { NgSelectModule } from "@ng-select/ng-select";
 
 export function init_app(appLoadService: AppInitService) {
     return () => appLoadService.init();
@@ -73,6 +74,7 @@ export function init_app(appLoadService: AppInitService) {
         FormsModule,
         ReactiveFormsModule,
         NgxChartsModule,
+        NgSelectModule,
         BrowserAnimationsModule,
         AgGridModule,
         RecaptchaV3Module,

@@ -1,0 +1,38 @@
+@use "/src/scss/abstracts/" as *;
+.alert-panel {
+    color: black;
+    background: $orange;
+    border-radius: 4px;
+    border: 1px solid $gold;
+    padding: 16px;
+    padding-right: 3rem;
+    margin: 12px 0;
+    width: 100%;
+
+    & .close {
+        background: transparent;
+        border: none;
+        color: $white;
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 1rem;
+    }
+
+    & .button-layout {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        color: $white;
+    }
+
+    & .btn {
+        margin: 16px 0;
+
+        @include desktop-small {
+            margin: 0 16px;
+        }
+    }
+}
